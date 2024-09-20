@@ -14,7 +14,7 @@ public class File_Chooser {
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 break;
             case "dat":
-                fileChooser.setFileFilter(new FileNameExtensionFilter("DAT", "dat"));;
+                fileChooser.setFileFilter(new FileNameExtensionFilter("DAT", "dat"));
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 break;
             case "path":
