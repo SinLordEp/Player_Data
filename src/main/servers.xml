@@ -1,0 +1,37 @@
+<gameServers>
+    <region name="North America">
+        <server>Stormterror's Lair</server>
+        <server>Wolvendom</server>
+        <server>Brightcrown Canyon</server>
+        <server>Windrise</server>
+        <server>Dragonspine</server>
+    </region>
+    <region name="Europe">
+        <server>Springvale</server>
+        <server>Dawn Winery</server>
+        <server>Mingyun Village</server>
+        <server>Qingce Village</server>
+        <server>Guyun Stone Forest</server>
+    </region>
+    <region name="Asia">
+        <server>Liyue Harbor</server>
+        <server>Inazuma City</server>
+        <server>Narukami Shrine</server>
+        <server>Mt. Aozang</server>
+        <server>Jueyun Karst</server>
+    </region>
+    <region name="South America">
+        <server>Port Ormos</server>
+        <server>Chasm</server>
+        <server>Mt. Hulao</server>
+        <server>Chongyun's Camp</server>
+        <server>Yaoguang Shoal</server>
+    </region>
+    <region name="Oceania">
+        <server>Serpent's Head</server>
+        <server>Musoujin Gorge</server>
+        <server>Kannazuka</server>
+        <server>Watatsumi Island</server>
+        <server>Tatarasuna</server>
+    </region>
+</gameServers>

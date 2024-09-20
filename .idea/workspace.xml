@@ -4,31 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/MigLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Player_Data.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/miglayout-core-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/miglayout-core-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/miglayout-core.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/miglayout-swing-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/miglayout-swing-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/miglayout-swing.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GUI/Entry.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/model/Person.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/model/Player.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/Dat_Reader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/Dat_Writer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/File_Chooser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/File_Manager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/XML_Reader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/XML_Writer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/ini_Reader.java" afterDir="false" />
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
+      <change afterPath="$PROJECT_DIR$/src/main/player_data.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/servers.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/Dat_Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Dat_Reader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/Dat_Writer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Dat_Writer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/File_Chooser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/File_Chooser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/XML_Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XML_Reader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/XML_Writer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XML_Writer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/ini_Reader.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +31,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;SinLordEp&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/SinLordEp/Player_Data.git&quot;,
+    &quot;accountId&quot;: &quot;29d759ff-85e5-406e-a737-ad43b0eafbcf&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -73,13 +71,23 @@
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "XML"
+    ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Sin\Player_Data\src\main" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
-        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
       </set>
     </attachedChunks>
   </component>
@@ -93,11 +101,34 @@
       <updated>1726680976944</updated>
       <workItem from="1726680977981" duration="1827000" />
       <workItem from="1726752865073" duration="4598000" />
-      <workItem from="1726757500922" duration="10050000" />
+      <workItem from="1726757500922" duration="10873000" />
+      <workItem from="1726843468807" duration="51000" />
+      <workItem from="1726843561966" duration="12563000" />
     </task>
+    <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
+      <option name="closed" value="true" />
+      <created>1726772977525</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1726772977525</updated>
+    </task>
+    <task id="LOCAL-00002" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
+      <option name="closed" value="true" />
+      <created>1726773032680</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1726773032680</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
   </component>
 </project>

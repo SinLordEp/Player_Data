@@ -6,7 +6,7 @@ import java.io.File;
 
 public class File_Chooser {
     public static File get_path(String type) throws Exception {
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(new File("./src/main").getAbsolutePath());
         fileChooser.setDialogTitle("Elegir la carpeta o el fichero");
         switch(type){
             case "xml":

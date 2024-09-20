@@ -1,0 +1,27 @@
+<person>
+    <player id="1">
+        <region>North America</region>
+        <server>Stormterror's Lair</server>
+        <name>John Doe</name>
+    </player>
+    <player id="2">
+        <region>Europe</region>
+        <server>Springvale</server>
+        <name>Jane Smith</name>
+    </player>
+    <player id="3">
+        <region>Asia</region>
+        <server>Liyue Harbor</server>
+        <name>Alex Chen</name>
+    </player>
+    <player id="4">
+        <region>South America</region>
+        <server>Port Ormos</server>
+        <name>Maria Lopez</name>
+    </player>
+    <player id="5">
+        <region>Oceania</region>
+        <server>Serpent's Head</server>
+        <name>Takashi Yamamoto</name>
+    </player>
+</person>
