@@ -5,16 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
-      <change afterPath="$PROJECT_DIR$/src/main/player_data.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/servers.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Entry.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Person.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/Dat_Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Dat_Reader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/Dat_Writer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Dat_Writer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/File_Chooser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/File_Chooser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/XML_Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XML_Reader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/XML_Writer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XML_Writer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/ini_Reader.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +21,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -40,7 +38,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/SinLordEp/Player_Data.git&quot;,
-    &quot;accountId&quot;: &quot;29d759ff-85e5-406e-a737-ad43b0eafbcf&quot;
+    &quot;accountId&quot;: &quot;bd00194e-28d4-4913-a672-e3710d409d32&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -70,7 +68,8 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+    "vue.rearranger.settings.migration": "true",
+    "应用程序.principal.executor": "Run"
   },
   "keyToStringList": {
     "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
@@ -86,8 +85,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.19072.14" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.19072.14" />
       </set>
     </attachedChunks>
   </component>
@@ -104,6 +103,9 @@
       <workItem from="1726757500922" duration="10873000" />
       <workItem from="1726843468807" duration="51000" />
       <workItem from="1726843561966" duration="12563000" />
+      <workItem from="1727023354065" duration="61000" />
+      <workItem from="1727023437297" duration="21000" />
+      <workItem from="1727023509437" duration="9252000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />

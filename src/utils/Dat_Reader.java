@@ -12,7 +12,7 @@ public class Dat_Reader implements File_Manager {
         this.ois = new ObjectInputStream(new FileInputStream(file));
     }
 
-    public HashMap<Integer, Person> parse_player() throws IOException, ClassNotFoundException {
+    public HashMap<Integer, Person> parse_person() throws IOException, ClassNotFoundException {
         HashMap<Integer, Person> person = new HashMap<>();
         try{
             while(true){

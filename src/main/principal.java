@@ -13,72 +13,80 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
 public class principal {
-    static Map<Integer, Person> person;
+    static Map<Integer, Person> person_data = null;
     static Map<String,String[]> region_server = null;
-    static File file = null;
+    static File person_file = null;
+    static boolean file_changed = false;
     static void menu(){
-        String type = "";
-        String[] dialog = {"Dat File","XML File"};
-        while(type.isEmpty()){
+        String file_type = "";
+        String[] options = {"Dat File", "XML File"};
+        while(file_type.isEmpty()){
             try{
-                switch(showSelectionDialog("Choose a database source", dialog)){
-                    case 1: type = "dat";break;
-                    case 2: type = "xml";break;
-                    case 0: System.exit(0);
-                    default: throw new Exception("Option invalid");
-                }
-                second_menu(type);
+                file_type = switch (buildSelectionDialog("Choose a data source", options)) {
+                    case 1 -> "dat";
+                    case 2 -> "xml";
+                    default -> "";
+                };
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }
         }
+        second_menu(file_type);
     }
-    static void second_menu(String type){
-        String[] dialog = {"Read File","Write File","Back to menu"};
+    static void second_menu(String file_type){
+        String[] options = {"Show Data", "Write File", "Back to menu"};
         while(true){
             try{
-                if(file == null || !file.getName().substring(file.getName().lastIndexOf('.')+1).equals(type)){
+                if(person_file == null || !person_file.getName().substring(person_file.getName().lastIndexOf('.')+1).equals(file_type)){
                     JOptionPane.showMessageDialog(null,"Choosing source file");
-                    file = File_Chooser.get_path(type);
+                    person_file = File_Chooser.get_path(file_type);
+                    file_changed = true;
                 }
-                switch(showSelectionDialog("Current data source path: \n"+ file.getAbsolutePath() +"\n\nChoose a operation", dialog)){
-                    case 1: reading_page(type);
-                        show_data();
-                        break;
-                    case 2: writing_page(type); break;
-                    case 3: menu(); break;
-                    case 0: System.exit(0);
-                    default: throw new Exception("Option invalid");
+                if(file_changed || person_data == null) {
+                    reading_process(file_type);
+                    file_changed = false;
+                }
+                switch(buildSelectionDialog("Current path: \n%s\nCurrent data type: %s\nChoose a operation".formatted(person_file.getAbsolutePath(),""), options)){
+                    case 1: show_data(); break;
+                    case 2: writing_process(file_type); break;
+                    case 3: return;
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
-                file = null;
+                person_file = null;
                 menu();
             }
         }
     }
 
-    static void reading_page(String type) throws Exception{
-        switch (type){
+    static void reading_process(String file_type) throws Exception{
+        switch (file_type){
             case "dat":
-                person = new Dat_Reader(file).parse_player();
+                Dat_Reader dat_reader = new Dat_Reader(person_file);
+                person_data = dat_reader.parse_person();
+                person_data = new Dat_Reader(person_file).parse_person();
                 break;
             case "xml":
-                XML_Reader reader = new XML_Reader();
-                person = reader.parse_player(reader.file_reading(file));
-                break;
+                String[] person_type = {"Player", "GM (Currently Not Available)"};
+                XML_Reader xml_reader = new XML_Reader();
+                switch(buildSelectionDialog("Choose a person type", person_type)){
+                    case 1: person_data = xml_reader.parse_player(xml_reader.file_reading(person_file)); break;
+                    case 2: throw new Exception("Currently Not Available");
+                }
         }
     }
     static void show_data(){
-        for(Person temp : person.values()){
+        for(Person temp : person_data.values()){
             JOptionPane.showMessageDialog(null, temp.toString());
         }
     }
-    static void writing_page(String type){
-        Person temp = create_person(type);
-        person.put(temp.getID(), temp);
-        switch (type){
+    static void writing_process(String file_type){
+        Person temp = create_person();
+        if(temp == null) return;
+        person_data.put(temp.getID(), temp);
+        switch (file_type){
             case "dat":
                 //person = new Dat_Writer(file);
                 break;
@@ -88,21 +96,20 @@ public class principal {
 
     }
 
-    static Person create_person(String type) {
+    static Person create_person() {
         Person temp = null;
-        String[] dialog = {"Player","Back to previous menu"};
+        String[] options = {"Player", "Back to previous menu"};
         try{
-            switch(showSelectionDialog("Choose type of person: ", dialog)){
-                case 1: temp = new Player();break;
-                case 2: second_menu(type);
-                case 0: break;
-                default: throw new Exception("Option invalid");
-            }
+            temp = switch (buildSelectionDialog("Choose type of person: ", options)) {
+                case 1 -> new Player();
+                case 2 -> null;
+                default -> throw new Exception("Option invalid");
+            };
             if(temp == null) throw new Exception("Operation canceled");
             if(region_server == null) update_region_server();
             temp.setRegion(region_chooser());
             temp.setServer(server_chooser(temp.getRegion()));
-            temp.setID(ID_verify(type));
+            temp.setID(ID_verify());
             temp.setName(JOptionPane.showInputDialog("Input person Name: "));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
@@ -110,11 +117,10 @@ public class principal {
         return temp;
     }
 
-    static int ID_verify(String type) throws Exception {
-        reading_page(type);
+    static int ID_verify()  {
         while(true){
             int ID = Integer.parseInt(JOptionPane.showInputDialog("Input ID number: "));
-            if(person.containsKey(ID)){
+            if(person_data.containsKey(ID)){
                 JOptionPane.showMessageDialog(null,"ID already exists");
             }else return ID;
         }
@@ -126,19 +132,20 @@ public class principal {
         region_server = reader.parse_region_server(reader.file_reading(temp));
     }
 
-    static String region_chooser() throws Exception {
+    static String region_chooser() {
         Set<String> regions = region_server.keySet();
         List<String> regionList = new ArrayList<>(regions);
-        int option = showSelectionDialog("Choose a region: " ,regionList.toArray(new String[0]));
+        int option = buildSelectionDialog("Choose a region: " ,regionList.toArray(new String[0]));
         return regionList.get(option-1);
     }
 
-    static String server_chooser(String region) throws Exception {
+    static String server_chooser(String region) {
         String[] servers = region_server.get(region);
-        int option = showSelectionDialog("Choose a server: ", servers);
+        int option = buildSelectionDialog("Choose a server: ", servers);
         return servers[option-1];
     }
-    static int showSelectionDialog(String title, String[] options) throws Exception {
+
+    static int buildSelectionDialog(String title, String[] options) {
         StringBuilder dialog = new StringBuilder(title);
         int i = 1;
         for (String option : options) {
@@ -154,18 +161,14 @@ public class principal {
                 } else if (option > 0 && option <= options.length) {
                     return option;
                 } else {
-                    throw new Exception("Option invalid");
+                    throw new Exception();
                 }
-            } catch (RuntimeException e) {
-                throw new Exception(e.getMessage());
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                JOptionPane.showMessageDialog(null, "Option invalid");
             }
         }
     }
-    public static void main(String[] args) {
+    public static void main() {
         menu();
-
-
     }
 }
