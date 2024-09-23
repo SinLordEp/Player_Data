@@ -86,5 +86,4 @@ public class XML_Reader implements File_Manager {
         }
         return "";
     }
-
 }

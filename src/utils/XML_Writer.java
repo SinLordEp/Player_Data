@@ -86,5 +86,4 @@ public class XML_Writer implements File_Manager{
             JOptionPane.showMessageDialog(null, "Error saving to file: " + e.getMessage());
         }
     }
-
 }

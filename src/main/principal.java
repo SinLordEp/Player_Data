@@ -11,7 +11,6 @@ import static main.process_write.*;
 public class principal {
 
     public static void menu(FileOperationData current_data){
-
         String[] options = {"Dat File", "XML File"};
         while(current_data.getFile_type().isEmpty()){
             try{
@@ -31,7 +30,7 @@ public class principal {
 
     public static void second_menu(FileOperationData current_data){
         String[] options = {"Show Data", "Write File", "Convert to .dat File", "Back to menu"};
-        while(true){
+        do{
             try{
                 if(current_data.isFile_valid()){
                     JOptionPane.showMessageDialog(null,"Choosing source file");
@@ -55,12 +54,11 @@ public class principal {
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
-                if(current_data.isFile_changed()){
-                    current_data.setPerson_file(null);
-                    menu(current_data);
-                }
             }
-        }
+        }while(!current_data.isFile_changed());
+        //when file has changed, clear data and back to menu
+        current_data.setPerson_file(null);
+        menu(current_data);
     }
 
     public static int buildSelectionDialog(String title, String[] options) {
