@@ -10,7 +10,7 @@ import static main.process_write.*;
 
 public class principal {
 
-    static void menu(FileOperationData current_data){
+    public static void menu(FileOperationData current_data){
 
         String[] options = {"Dat File", "XML File"};
         while(current_data.getFile_type().isEmpty()){
@@ -29,7 +29,7 @@ public class principal {
         second_menu(current_data);
     }
 
-    static void second_menu(FileOperationData current_data){
+    public static void second_menu(FileOperationData current_data){
         String[] options = {"Show Data", "Write File", "Convert to .dat File", "Back to menu"};
         while(true){
             try{
@@ -39,7 +39,7 @@ public class principal {
                     current_data.setFile_changed(true);
                 }
                 if(current_data.isFile_changed() || current_data.getPerson_data() == null) {
-                    current_data.setPerson_type(read(current_data));
+                    current_data.setPerson_type(read_file(current_data));
                     current_data.setFile_changed(false);
                 }
                 switch(buildSelectionDialog("""
@@ -63,7 +63,7 @@ public class principal {
         }
     }
 
-    static int buildSelectionDialog(String title, String[] options) {
+    public static int buildSelectionDialog(String title, String[] options) {
         StringBuilder dialog = new StringBuilder(title);
         int i = 1;
         for (String option : options) {

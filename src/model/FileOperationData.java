@@ -1,8 +1,6 @@
 package model;
 
-import utils.Dat_Reader;
 import utils.Dat_Writer;
-import utils.XML_Reader;
 import utils.XML_Writer;
 
 import javax.swing.*;
@@ -25,11 +23,8 @@ public class FileOperationData {
         return person_data;
     }
 
-    public void setPerson_data() throws Exception {
-        switch (getFile_type()){
-            case "dat": readFrom_dat(); break;
-            case "xml": readFrom_xml(); break;
-        }
+    public void setPerson_data(Map<Integer, Person> person_data) {
+        this.person_data = person_data;
     }
 
     public Map<String, String[]> getRegion_server() {
@@ -42,6 +37,10 @@ public class FileOperationData {
 
     public void setPerson_file(File person_file) {
         this.person_file = person_file;
+    }
+
+    public File getPerson_file() {
+        return person_file;
     }
 
     public boolean isFile_changed() {
@@ -94,23 +93,6 @@ public class FileOperationData {
     }
     public String[] getServer(String region){
         return region_server.get(region);
-    }
-
-    public void readFrom_dat() throws IOException, ClassNotFoundException {
-        new Dat_Reader(person_file).parse_person();
-    }
-
-    public void readFrom_xml() throws Exception {
-        XML_Reader xml_reader = new XML_Reader();
-        switch(person_type){
-            case "Player":
-                person_data = xml_reader.parse_player(xml_reader.file_reading(person_file));
-                break;
-            case "GM": break;
-        }
-        if(person_data == null){
-            throw new Exception("File does not match the chosen person type");
-        }
     }
 
     public void print_person(){
