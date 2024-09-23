@@ -15,6 +15,7 @@ public class Dat_Reader implements File_Manager {
     public HashMap<Integer, Person> parse_person() throws IOException, ClassNotFoundException {
         HashMap<Integer, Person> person = new HashMap<>();
         try{
+            //readObject will always throw EOFException when reach the end of file
             while(true){
                 Person temp = (Person) ois.readObject();
                 person.put(temp.getID(), temp);

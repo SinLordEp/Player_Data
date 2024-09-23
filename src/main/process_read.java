@@ -29,7 +29,7 @@ public class process_read {
     }
 
     public static void readFrom_dat(FileOperationData current_data) throws IOException, ClassNotFoundException {
-        new Dat_Reader(current_data.getPerson_file()).parse_person();
+        current_data.setPerson_data(new Dat_Reader(current_data.getPerson_file()).parse_person());
     }
 
     public static void readFrom_xml(FileOperationData current_data) throws Exception {
