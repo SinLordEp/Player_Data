@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="已完善写入XML逻辑，下一步计划分离写入和读取到独立class">
+      <change afterPath="$PROJECT_DIR$/src/main/process_read.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/process_write.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/model/FileOperationData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/Dat_Writer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Dat_Writer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/XML_Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XML_Reader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/XML_Writer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XML_Writer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +116,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726773032680</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="已完善写入XML逻辑，下一步计划分离写入和读取到独立class">
+      <option name="closed" value="true" />
+      <created>1727106151823</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727106151823</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,6 +143,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
+    <MESSAGE value="已完善写入XML逻辑，下一步计划分离写入和读取到独立class" />
+    <option name="LAST_COMMIT_MESSAGE" value="已完善写入XML逻辑，下一步计划分离写入和读取到独立class" />
   </component>
 </project>

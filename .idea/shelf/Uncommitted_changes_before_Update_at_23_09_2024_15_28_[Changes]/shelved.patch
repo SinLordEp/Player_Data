@@ -1,0 +1,74 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"45b4eafa-d60b-4d36-a990-928b26a30eb6\" name=\"Changes\" comment=\"添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分\">\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/player_data.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/servers.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/principal.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/principal.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/utils/Dat_Reader.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/utils/Dat_Reader.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/utils/Dat_Writer.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/utils/Dat_Writer.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/utils/File_Chooser.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/utils/File_Chooser.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/utils/XML_Reader.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/utils/XML_Reader.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/utils/XML_Writer.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/utils/XML_Writer.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/utils/ini_Reader.java\" beforeDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;SinLordEp&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/SinLordEp/Player_Data.git&quot;,\r\n    &quot;accountId&quot;: &quot;29d759ff-85e5-406e-a737-ad43b0eafbcf&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 5\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2mFn1QCZUv86TAXPOeIXrBETaKN\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.principal.executor\": \"Run\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"git-widget-placeholder\": \"master\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"project.structure.last.edited\": \"Modules\",\r\n    \"project.structure.proportion\": \"0.0\",\r\n    \"project.structure.side.proportion\": \"0.0\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File\": [\r\n      \"XML\"\r\n    ]\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Sin\\Player_Data\\src\\main\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"45b4eafa-d60b-4d36-a990-928b26a30eb6\" name=\"Changes\" comment=\"\" />\r\n      <created>1726680976944</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1726680976944</updated>\r\n      <workItem from=\"1726680977981\" duration=\"1827000\" />\r\n      <workItem from=\"1726752865073\" duration=\"4598000\" />\r\n      <workItem from=\"1726757500922\" duration=\"10873000\" />\r\n      <workItem from=\"1726843468807\" duration=\"51000\" />\r\n      <workItem from=\"1726843561966\" duration=\"12563000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1726772977525</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1726772977525</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1726773032680</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1726773032680</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 78142f059b3d7e77e12508d7f41c355b62ff2f2d)
++++ b/.idea/workspace.xml	(date 1726859894669)
+@@ -4,17 +4,8 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
+-      <change afterPath="$PROJECT_DIR$/src/main/player_data.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/servers.xml" afterDir="false" />
++    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="完善了xml和dat读取解析的方法，优化了界面逻辑，把界面对话选项单独拉出来做了方法用于生成选项对话。 目前写入菜单的各种方法调用还是空的。">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/utils/Dat_Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Dat_Reader.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/utils/Dat_Writer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Dat_Writer.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/utils/File_Chooser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/File_Chooser.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/utils/XML_Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XML_Reader.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/utils/XML_Writer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XML_Writer.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/utils/ini_Reader.java" beforeDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -103,7 +94,7 @@
+       <workItem from="1726752865073" duration="4598000" />
+       <workItem from="1726757500922" duration="10873000" />
+       <workItem from="1726843468807" duration="51000" />
+-      <workItem from="1726843561966" duration="12563000" />
++      <workItem from="1726843561966" duration="13483000" />
+     </task>
+     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
+       <option name="closed" value="true" />
+@@ -121,7 +112,23 @@
+       <option name="project" value="LOCAL" />
+       <updated>1726773032680</updated>
+     </task>
+-    <option name="localTasksCounter" value="3" />
++    <task id="LOCAL-00003" summary="完善了xml和dat读取解析的方法，优化了界面逻辑，把界面对话选项单独拉出来做了方法用于生成选项对话。 目前写入有问题，待进一步调查。">
++      <option name="closed" value="true" />
++      <created>1726858506216</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1726858506216</updated>
++    </task>
++    <task id="LOCAL-00004" summary="完善了xml和dat读取解析的方法，优化了界面逻辑，把界面对话选项单独拉出来做了方法用于生成选项对话。 目前写入菜单的各种方法调用还是空的。">
++      <option name="closed" value="true" />
++      <created>1726858556684</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1726858556684</updated>
++    </task>
++    <option name="localTasksCounter" value="5" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -129,6 +136,8 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
+-    <option name="LAST_COMMIT_MESSAGE" value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
++    <MESSAGE value="完善了xml和dat读取解析的方法，优化了界面逻辑，把界面对话选项单独拉出来做了方法用于生成选项对话。 目前写入有问题，待进一步调查。" />
++    <MESSAGE value="完善了xml和dat读取解析的方法，优化了界面逻辑，把界面对话选项单独拉出来做了方法用于生成选项对话。 目前写入菜单的各种方法调用还是空的。" />
++    <option name="LAST_COMMIT_MESSAGE" value="完善了xml和dat读取解析的方法，优化了界面逻辑，把界面对话选项单独拉出来做了方法用于生成选项对话。 目前写入菜单的各种方法调用还是空的。" />
+   </component>
+ </project>
+\ No newline at end of file
