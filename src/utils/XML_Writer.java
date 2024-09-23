@@ -1,5 +1,6 @@
 package utils;
 
+import model.FileOperationData;
 import model.Person;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +20,7 @@ public class XML_Writer implements File_Manager{
 
     }
 
-    public void update_Person(File person_file, String person_type, Map<Integer, Person> person_data) {
+    public void update_Person(FileOperationData current_data) {
         Document document = create_document();
         if (document == null) {
             JOptionPane.showMessageDialog(null, "Error creating XML document.");
@@ -28,16 +29,16 @@ public class XML_Writer implements File_Manager{
 
         Element root = document.createElement("person");
         document.appendChild(root);
-        switch (person_type) {
+        switch (current_data.getPerson_type()) {
             case "Player":
-                add_PlayerElements(document, root, person_data);
+                add_PlayerElements(document, root, current_data.getPerson_data());
                 break;
             case "GM":
                 break;
         }
 
-        save_toFile(document, person_file);
-        JOptionPane.showMessageDialog(null, "New %s added".formatted(person_type));
+        save_toFile(document, current_data.getPerson_file());
+        JOptionPane.showMessageDialog(null, "New %s added".formatted(current_data.getPerson_type()));
     }
 
     private Document create_document() {

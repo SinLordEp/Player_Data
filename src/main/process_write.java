@@ -3,10 +3,13 @@ package main;
 import model.FileOperationData;
 import model.Person;
 import model.Player;
+import utils.Dat_Writer;
 import utils.XML_Reader;
+import utils.XML_Writer;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -72,8 +75,8 @@ public class process_write {
 
     public static void writing_process(FileOperationData current_data) throws Exception {
         switch (current_data.getFile_type()){
-            case "dat": current_data.writeTo_dat(); break;
-            case "xml": current_data.writeTo_xml(); break;
+            case "dat": writeTo_dat(current_data); break;
+            case "xml": writeTo_xml(current_data); break;
         }
     }
 
@@ -107,7 +110,13 @@ public class process_write {
             }
         }
     }
+    public static void writeTo_dat(FileOperationData current_data) throws IOException {
+        new Dat_Writer(current_data.getPerson_file()).write_person(current_data.getPerson_data());
+    }
 
+    public static void writeTo_xml(FileOperationData current_data){
+        new XML_Writer().update_Person(current_data);
+    }
     public static void update_region_server(FileOperationData current_data) {
         XML_Reader reader = new XML_Reader();
         File temp = new File("./src/main/servers.xml");

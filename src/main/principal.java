@@ -84,7 +84,7 @@ public class principal {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Option invalid");
+                JOptionPane.showMessageDialog(null, "Option invali");
             }
         }
     }

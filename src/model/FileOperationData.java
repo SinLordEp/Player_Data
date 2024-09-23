@@ -1,11 +1,7 @@
 package model;
 
-import utils.Dat_Writer;
-import utils.XML_Writer;
-
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 public class FileOperationData {
@@ -84,13 +80,6 @@ public class FileOperationData {
         person_data.put(ID,  person);
     }
 
-    public void writeTo_dat() throws IOException {
-        new Dat_Writer(person_file).write_person(person_data);
-    }
-
-    public void writeTo_xml(){
-        new XML_Writer().update_Person(person_file, person_type, person_data);
-    }
     public String[] getServer(String region){
         return region_server.get(region);
     }
