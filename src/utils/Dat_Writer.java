@@ -3,14 +3,14 @@ package utils;
 import model.Person;
 
 import java.io.*;
-import java.util.HashMap;
+import java.util.Map;
 
 public class Dat_Writer implements File_Manager{
     private final ObjectOutputStream oos;
     public Dat_Writer(File file) throws IOException {
         this.oos = new ObjectOutputStream(new FileOutputStream(file,false));
     }
-    public void write_player(HashMap<Integer, Person> person) {
+    public void write_person(Map<Integer, Person> person) {
         try{
             for(Person temp : person.values()){
                 oos.writeObject(temp);

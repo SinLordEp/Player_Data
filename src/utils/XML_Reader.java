@@ -63,6 +63,7 @@ public class XML_Reader implements File_Manager {
         }
         Map<Integer, Person> playerData = new HashMap<>();
         NodeList playerList = document.getElementsByTagName("player");
+        if(playerList == null) return null;
         for (int i = 0; i < playerList.getLength(); i++) {
             Node playerNode = playerList.item(i);
             Player temp = new Player();
