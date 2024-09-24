@@ -1,6 +1,6 @@
 package utils;
 
-import model.FileOperationData;
+import model.PersonOperationData;
 import model.Person;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,13 +14,13 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.Map;
 
-public class XML_Writer implements File_Manager{
+public class XMLWriter implements FileWriter{
 
-    public XML_Writer() {
+    public XMLWriter(PersonOperationData current_data) {
 
     }
 
-    public void update_Person(FileOperationData current_data) {
+    public void update_Person(PersonOperationData current_data) {
         Document document = create_document();
         if (document == null) {
             JOptionPane.showMessageDialog(null, "Error creating XML document.");
@@ -37,7 +37,7 @@ public class XML_Writer implements File_Manager{
                 break;
         }
 
-        save_toFile(document, current_data.getPerson_file());
+        save_toFile(document, current_data.getFile());
         JOptionPane.showMessageDialog(null, "New %s added".formatted(current_data.getPerson_type()));
     }
 
@@ -86,5 +86,10 @@ public class XML_Writer implements File_Manager{
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error saving to file: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void write() {
+
     }
 }

@@ -1,18 +1,15 @@
 package model;
 
 import javax.swing.*;
-import java.io.File;
 import java.util.Map;
 
-public class FileOperationData {
+public class PersonOperationData extends GeneralOperationData{
     private Map<Integer, Person> person_data = null;
     private Map<String, String[]> region_server = null;
-    private File person_file = null;
-    private boolean file_changed = false;
-    private String file_type = "";
     private String person_type = "";
 
-    public FileOperationData() {
+    public PersonOperationData() {
+        super.setData_class("Person");
     }
 
     public Map<Integer, Person> getPerson_data() {
@@ -31,30 +28,6 @@ public class FileOperationData {
         this.region_server = region_server;
     }
 
-    public void setPerson_file(File person_file) {
-        this.person_file = person_file;
-    }
-
-    public File getPerson_file() {
-        return person_file;
-    }
-
-    public boolean isFile_changed() {
-        return file_changed;
-    }
-
-    public void setFile_changed(boolean file_changed) {
-        this.file_changed = file_changed;
-    }
-
-    public String getFile_type() {
-        return file_type;
-    }
-
-    public void setFile_type(String file_type) {
-        this.file_type = file_type;
-    }
-
     public String getPerson_type() {
         return person_type;
     }
@@ -63,13 +36,6 @@ public class FileOperationData {
         this.person_type = person_type;
     }
 
-    public boolean isFile_valid(){
-        return person_file == null || !person_file.getName().substring(person_file.getName().lastIndexOf('.')+1).equals(file_type);
-    }
-
-    public String getAbsolutePath(){
-        return person_file.getAbsolutePath();
-    }
     public boolean containsKey(int ID){
         return person_data.containsKey(ID);
     }
