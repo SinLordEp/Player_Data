@@ -1,11 +1,9 @@
 package utils;
 
-import model.Person;
+import model.Player;
 
-import java.io.IOException;
 import java.util.HashMap;
 
-public interface FileReader<T> {
-    T read() throws Exception;
-    HashMap<Integer, Person> parse_player() throws IOException, ClassNotFoundException;
+public interface FileReader {
+    HashMap<Integer, Player> parse_player() throws Exception;
 }

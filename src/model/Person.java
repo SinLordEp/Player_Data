@@ -1,7 +1,7 @@
 package model;
 
 public class Person implements java.io.Serializable{
-    private int ID;
+    private int ID = 0;
     private String name;
     private String server;
     private String region;
@@ -41,9 +41,14 @@ public class Person implements java.io.Serializable{
 
     @Override
     public String toString() {
-        return "\nRegion: " + this.region
-                +"\nServer: " + this.server
-                +"\nID: " + this.ID
-                +"\nName: " + this.name;
+        return """
+                Region: %s
+                Server: %s
+                ID: %s
+                Name: %s""".formatted(region, server, ID, name);
+    }
+
+    public boolean isValid(){
+        return ID == 0 && name.isBlank() && region.isBlank() && server.isBlank();
     }
 }

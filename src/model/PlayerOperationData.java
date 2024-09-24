@@ -3,21 +3,21 @@ package model;
 import javax.swing.*;
 import java.util.Map;
 
-public class PersonOperationData extends GeneralOperationData{
-    private Map<Integer, Person> person_data = null;
+public class PlayerOperationData extends GeneralOperationData{
+    private Map<Integer, Player> player_data = null;
     private Map<String, String[]> region_server = null;
     private String person_type = "";
 
-    public PersonOperationData() {
+    public PlayerOperationData() {
         super.setData_class("Person");
     }
 
-    public Map<Integer, Person> getPerson_data() {
-        return person_data;
+    public Map<Integer, Player> getPlayer_data() {
+        return player_data;
     }
 
-    public void setPerson_data(Map<Integer, Person> person_data) {
-        this.person_data = person_data;
+    public void setPlayer_data(Map<Integer, Player> player_data) {
+        this.player_data = player_data;
     }
 
     public Map<String, String[]> getRegion_server() {
@@ -37,13 +37,13 @@ public class PersonOperationData extends GeneralOperationData{
     }
 
     public boolean containsKey(int ID){
-        return person_data.containsKey(ID);
+        return player_data.containsKey(ID);
     }
-    public Person getFrom_Map(int ID){
-        return person_data.get(ID);
+    public Player getFrom_Map(int ID){
+        return player_data.get(ID);
     }
-    public void putIn_Map(int ID, Person person){
-        person_data.put(ID,  person);
+    public void putIn_Map(int ID, Player player){
+        player_data.put(ID,  player);
     }
 
     public String[] getServer(String region){
@@ -51,7 +51,7 @@ public class PersonOperationData extends GeneralOperationData{
     }
 
     public void print_person(){
-        for(Person temp : person_data.values()){
+        for(Person temp : player_data.values()){
             JOptionPane.showMessageDialog(null, temp.toString());
         }
     }

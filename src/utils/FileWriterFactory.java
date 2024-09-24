@@ -1,13 +1,14 @@
 package utils;
 
-import model.PersonOperationData;
+import model.GeneralOperationData;
+import model.PlayerOperationData;
 
 public class FileWriterFactory {
     public static FileWriter getFileWriter(Object current_data) throws Exception {
-        if(current_data instanceof PersonOperationData){
-            return switch (((PersonOperationData) current_data).getFile_extension()) {
-                case "dat" -> new DATWriter((PersonOperationData) current_data);
-                case "xml" -> new XMLWriter((PersonOperationData) current_data);
+        if(current_data instanceof PlayerOperationData){
+            return switch (((PlayerOperationData) current_data).getFile_extension()) {
+                case "dat" -> new DATWriter((PlayerOperationData) current_data);
+                case "xml" -> new XMLWriter((PlayerOperationData) current_data);
                 default -> throw new Exception("File type not supported");
             };
         }

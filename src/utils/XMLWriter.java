@@ -1,6 +1,8 @@
 package utils;
 
-import model.PersonOperationData;
+import model.GeneralOperationData;
+import model.Player;
+import model.PlayerOperationData;
 import model.Person;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,11 +18,12 @@ import java.util.Map;
 
 public class XMLWriter implements FileWriter{
 
-    public XMLWriter(PersonOperationData current_data) {
+    public XMLWriter(PlayerOperationData current_data) {
 
     }
 
-    public void update_Person(PersonOperationData current_data) {
+    @Override
+    public void write_player() {
         Document document = create_document();
         if (document == null) {
             JOptionPane.showMessageDialog(null, "Error creating XML document.");
@@ -29,16 +32,10 @@ public class XMLWriter implements FileWriter{
 
         Element root = document.createElement("person");
         document.appendChild(root);
-        switch (current_data.getPerson_type()) {
-            case "Player":
-                add_PlayerElements(document, root, current_data.getPerson_data());
-                break;
-            case "GM":
-                break;
-        }
+        add_PlayerElements(document, root, player_data);
 
         save_toFile(document, current_data.getFile());
-        JOptionPane.showMessageDialog(null, "New %s added".formatted(current_data.getPerson_type()));
+        JOptionPane.showMessageDialog(null, "New Player added");
     }
 
     private Document create_document() {
@@ -84,12 +81,8 @@ public class XMLWriter implements FileWriter{
             StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error saving to file: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
 
-    @Override
-    public void write() {
-
-    }
 }
