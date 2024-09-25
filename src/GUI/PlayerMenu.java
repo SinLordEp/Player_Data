@@ -1,7 +1,7 @@
 package GUI;
 
 
-import model.PlayerOperationData;
+import data.PlayerData;
 import utils.OperationCanceledException;
 
 import javax.swing.*;
@@ -9,57 +9,53 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static GUI.GUI_utils.buildSelectionDialog;
+import static GUI.GeneralMenu.buildSelectionDialog;
 
-public class Player_menu {
-    public static int extension_player() {
-        String[] options = {"Binary DAT File", "XML File","TXT File"};
-        return buildSelectionDialog("Choose a file type", options);
+public class PlayerMenu {
+    public static String extension_player() {
+        String[] options = {"Binary DAT File", "XML File", "TXT File"};
+        return buildSelectionDialog("Extension selector","Choose a file type", options);
     }
 
-    public static int file_menu(){
+    public static String file_menu(){
         String[] options = {"Create new storage file", "Read from existed file"};
-        return buildSelectionDialog("Choose the file source:", options);
+        return buildSelectionDialog("File Operation Menu","Choose the file source:", options);
     }
 
-    public static int operation_menu(String absolutePath){
+    public static String operation_menu(String absolutePath){
         String[] options = {"Show Data", "Modify data", "Export data"};
-        return buildSelectionDialog("""
+        return buildSelectionDialog("Operation Menu","""
                         Path: %s
                         Choose a operation""".formatted(absolutePath), options);
     }
 
-    public static int modify_menu(){
+    public static String modify_menu(){
         String[] options = {"Create new Player", "Modify Player data", "Delete Player"};
-        return buildSelectionDialog("Choose a operation", options);
+        return buildSelectionDialog("Modify Menu","Choose a operation", options);
     }
 
     public static int ID_input_UI() throws NumberFormatException{
         return Integer.parseInt(JOptionPane.showInputDialog("Enter the ID of Player you wish to modify"));
     }
 
-    public static int modify_player_menu(){
+    public static String modify_player_menu(){
         String[] options = {"Region", "Server", "Name", "ALL"};
-        return buildSelectionDialog("Choose the data you need to modify", options);
+        return buildSelectionDialog("Modifying Player","Choose the data you need to modify", options);
     }
 
     public static String name_input_UI(){
         return JOptionPane.showInputDialog("Enter player name: ");
     }
 
-    public static String region_chooser(PlayerOperationData current_data) throws Exception {
+    public static String region_chooser(PlayerData current_data) {
         Set<String> regions = current_data.getRegion_server().keySet();
         List<String> regionList = new ArrayList<>(regions);
-        int option = buildSelectionDialog("Choose a region: " , regionList.toArray(new String[0]));
-        if(option == -1) throw new Exception("Operation canceled");
-        return regionList.get(option-1);
+        return buildSelectionDialog("Region Menu","Choose a region: " , regionList.toArray(new String[0]));
     }
 
-    public static String server_chooser(PlayerOperationData current_data, String region) throws Exception {
+    public static String server_chooser(PlayerData current_data, String region){
         String[] servers = current_data.getServer(region);
-        int option = buildSelectionDialog("Choose a server: ", servers);
-        if(option == -1) throw new Exception("Operation canceled");
-        return servers[option-1];
+        return buildSelectionDialog("Server Menu","Choose a server: ", servers);
     }
 
     public static void message(String msg_type){

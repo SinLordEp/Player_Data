@@ -1,6 +1,6 @@
 package utils;
 
-import model.GeneralOperationData;
+import data.GeneralData;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -8,7 +8,7 @@ import java.io.File;
 
 public class FileManager {
 
-    public void readData(GeneralOperationData current_Data) throws Exception {
+    public void readData(GeneralData current_Data) throws Exception {
         if(current_Data.getReader() != null){
             current_Data.getReader().read(current_Data);
         }else{
@@ -16,7 +16,7 @@ public class FileManager {
         }
     }
 
-    public void writeData(GeneralOperationData currentData) throws Exception {
+    public void writeData(GeneralData currentData) throws Exception {
         if(currentData.getWriter() != null){
             currentData.getWriter().write(currentData);
         }else {
@@ -24,7 +24,7 @@ public class FileManager {
         }
     }
 
-    public void exportData(String file_extension,GeneralOperationData currentData) throws Exception {
+    public void exportData(String file_extension, GeneralData currentData) throws Exception {
         if(currentData.getWriter() != null){
             currentData.getWriter().export(file_extension, currentData);
         }else {
@@ -54,7 +54,7 @@ public class FileManager {
     }
 
     public static File get_path(String file_extension){
-        JFileChooser fileChooser = new JFileChooser(new File("./src/data").getAbsolutePath());
+        JFileChooser fileChooser = new JFileChooser(new File("./src/config").getAbsolutePath());
         fileChooser.setDialogTitle("Elegir la carpeta o el fichero");
         switch(file_extension){
             case "xml":

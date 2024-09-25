@@ -1,4 +1,4 @@
-package model;
+package data;
 
 import utils.DataReader;
 import utils.DataWriter;
@@ -6,7 +6,7 @@ import utils.DataWriter;
 import java.io.File;
 
 
-public abstract class GeneralOperationData {
+public abstract class GeneralData {
     protected File file = null;
     protected boolean file_changed = false;
     protected String file_extension = "";

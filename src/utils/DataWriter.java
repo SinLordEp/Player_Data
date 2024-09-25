@@ -1,8 +1,8 @@
 package utils;
 
-import model.GeneralOperationData;
+import data.GeneralData;
 
 public interface DataWriter {
-    void write(GeneralOperationData current_data) throws Exception;
-    void export(String file_extension, GeneralOperationData current_data ) throws Exception;
+    void write(GeneralData current_data) throws Exception;
+    void export(String file_extension, GeneralData current_data ) throws Exception;
 }

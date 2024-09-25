@@ -1,14 +1,16 @@
-package model;
+package data;
+
+import model.Player;
 
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerOperationData extends GeneralOperationData{
+public class PlayerData extends GeneralData {
     private HashMap<Integer, Player> player_data = null;
     private Map<String, String[]> region_server = null;
 
-    public PlayerOperationData() {
+    public PlayerData() {
     }
 
     public HashMap<Integer, Player> getPlayer_data() {

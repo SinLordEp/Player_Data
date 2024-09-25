@@ -1,8 +1,8 @@
 package utils;
 
-import model.GeneralOperationData;
+import data.GeneralData;
 import model.Player;
-import model.PlayerOperationData;
+import data.PlayerData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -15,15 +15,15 @@ import java.util.Scanner;
 public class PlayerReader implements DataReader {
 
     @Override
-    public void read(GeneralOperationData current_data) throws Exception {
+    public void read(GeneralData current_data) throws Exception {
         switch (current_data.getFile_extension()){
-            case "dat": read_dat((PlayerOperationData)current_data); break;
-            case "xml": read_xml((PlayerOperationData) current_data); break;
-            case "txt": read_txt((PlayerOperationData) current_data); break;
+            case "dat": read_dat((PlayerData)current_data); break;
+            case "xml": read_xml((PlayerData) current_data); break;
+            case "txt": read_txt((PlayerData) current_data); break;
         }
     }
 
-    private void read_dat(PlayerOperationData current_data) throws Exception {
+    private void read_dat(PlayerData current_data) throws Exception {
         String status = "";
         if(current_data.getRegion_server() == null) {
             read_region_server(current_data);
@@ -54,7 +54,7 @@ public class PlayerReader implements DataReader {
         }
     }
 
-    private void read_xml(PlayerOperationData current_data) throws Exception {
+    private void read_xml(PlayerData current_data) throws Exception {
         String status = "";
         // check region_server
         if (current_data.getRegion_server() == null) {
@@ -99,7 +99,7 @@ public class PlayerReader implements DataReader {
         JOptionPane.showMessageDialog(null, status);
     }
 
-    private void read_txt(PlayerOperationData current_data) throws Exception {
+    private void read_txt(PlayerData current_data) throws Exception {
         String status = "";
         if(current_data.getRegion_server() == null) {
             read_region_server(current_data);
@@ -133,8 +133,8 @@ public class PlayerReader implements DataReader {
         }
     }
 
-    public static void read_region_server(PlayerOperationData current_data) throws Exception {
-        Element root = xml_utils.readXml(new File("./src/data/servers.xml"));
+    public static void read_region_server(PlayerData current_data) throws Exception {
+        Element root = xml_utils.readXml(new File("./src/data/region_server.xml"));
         if (!"region_server".equals(root.getNodeName())) {
             throw new RuntimeException("Invalid XML: Root element is not region_server");
         }

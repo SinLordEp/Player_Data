@@ -1,11 +1,11 @@
 package utils;
 
-import model.GeneralOperationData;
-import model.PlayerOperationData;
+import data.GeneralData;
+import data.PlayerData;
 
 public class DataReaderFactory {
-    public static void initialReader(GeneralOperationData current_data) throws Exception {
-        if(current_data instanceof PlayerOperationData){
+    public static void initialReader(GeneralData current_data) throws Exception {
+        if(current_data instanceof PlayerData){
             current_data.setReader(new PlayerReader());
         }else{
             // data class not matched

@@ -1,7 +1,7 @@
 package utils;
 
-import model.GeneralOperationData;
+import data.GeneralData;
 
 public interface DataReader {
-    void read(GeneralOperationData current_data) throws Exception;
+    void read(GeneralData current_data) throws Exception;
 }

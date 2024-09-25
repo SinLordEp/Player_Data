@@ -1,8 +1,8 @@
 package utils;
 
-import model.GeneralOperationData;
+import data.GeneralData;
 import model.Player;
-import model.PlayerOperationData;
+import data.PlayerData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -12,9 +12,9 @@ import java.util.HashMap;
 
 public class PlayerWriter implements DataWriter {
     @Override
-    public void write(GeneralOperationData current_data) throws Exception {
+    public void write(GeneralData current_data) throws Exception {
         File file = current_data.getFile();
-        HashMap<Integer, Player> player_data = ((PlayerOperationData) current_data).getPlayer_data();
+        HashMap<Integer, Player> player_data = ((PlayerData) current_data).getPlayer_data();
         switch (current_data.getFile_extension()){
             case "dat": write_dat(file, player_data); break;
             case "xml": write_xml(file, player_data); break;
@@ -23,9 +23,9 @@ public class PlayerWriter implements DataWriter {
     }
 
     @Override
-    public void export(String file_extension, GeneralOperationData current_data) throws Exception {
+    public void export(String file_extension, GeneralData current_data) throws Exception {
         File exporting_file = FileManager.create_file(file_extension);
-        HashMap<Integer, Player> player_data = ((PlayerOperationData) current_data).getPlayer_data();
+        HashMap<Integer, Player> player_data = ((PlayerData) current_data).getPlayer_data();
         switch(file_extension){
             case "dat": write_dat(exporting_file, player_data); break;
             case "xml": write_xml(exporting_file, player_data); break;

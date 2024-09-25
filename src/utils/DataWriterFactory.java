@@ -1,11 +1,11 @@
 package utils;
 
-import model.GeneralOperationData;
-import model.PlayerOperationData;
+import data.GeneralData;
+import data.PlayerData;
 
 public class DataWriterFactory {
-    public static void initializeWriter(GeneralOperationData current_data) throws Exception {
-        if(current_data instanceof PlayerOperationData){
+    public static void initializeWriter(GeneralData current_data) throws Exception {
+        if(current_data instanceof PlayerData){
             current_data.setWriter(new PlayerWriter());
         }else{
             // data class not matched
