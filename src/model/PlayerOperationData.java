@@ -28,7 +28,11 @@ public class PlayerOperationData extends GeneralOperationData{
     }
 
     public boolean containsKey(int ID){
-        return player_data.containsKey(ID);
+        if(player_data == null){
+            return false;
+        }else{
+            return player_data.containsKey(ID);
+        }
     }
     public Player getFrom_Map(int ID){
         return player_data.get(ID);
@@ -42,8 +46,12 @@ public class PlayerOperationData extends GeneralOperationData{
     }
 
     public void print_person(){
-        for(Person temp : player_data.values()){
-            JOptionPane.showMessageDialog(null, temp.toString());
+        if(player_data == null){
+            JOptionPane.showMessageDialog(null,"No player data registered");
+        }else{
+            for (Player player : player_data.values()) {
+                JOptionPane.showMessageDialog(null, player.toString());
+            }
         }
     }
     public boolean isPlayer_Valid(Player player){

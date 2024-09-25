@@ -6,7 +6,8 @@ import model.PlayerOperationData;
 import javax.swing.*;
 
 import static GUI.GUI_utils.buildSelectionDialog;
-import static GUI.Player_menu.main_menu;
+
+import static main.Player_control.player_main;
 
 
 public class principal {
@@ -18,14 +19,14 @@ public class principal {
             try{
                 current_data = switch (buildSelectionDialog("Choose a data class",options)){
                     case 1 -> new PlayerOperationData();
-                    case 2 -> throw new Exception("Selected class is not available");
+                    case 2 -> throw new Exception("Class not available");
                     case -1 -> throw new Exception("Operation canceled");
                     default -> throw new IllegalStateException("Unrecognized class");
                 };
                 if(current_data instanceof PlayerOperationData){
-                    main_menu((PlayerOperationData) current_data);
+                    player_main((PlayerOperationData) current_data);
                 }else{
-                    throw new Exception("Class is not available");
+                    throw new IllegalStateException("Unrecognized class");
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());

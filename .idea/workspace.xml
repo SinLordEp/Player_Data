@@ -4,30 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="将创建新的架构,首先是工厂生成泛型化,由传入的类决定读写类. 然后是对后缀名的处理移到类的读写类里. 同时创建的读写类放入数据储存类里. 最后就是创建一个新的统筹类,filemanager,用于执行读写的方法, 确保了职责单一原则">
-      <change afterPath="$PROJECT_DIR$/src/utils/DataReader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/DataReaderFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/FileManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/PlayerReader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/PlayerWriter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/xml_utils.java" afterDir="false" />
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="重构">
+      <change afterPath="$PROJECT_DIR$/src/main/Player_control.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/Player_menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player_menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/servers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/servers.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/GeneralOperationData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/GeneralOperationData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Person.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/PlayerOperationData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/PlayerOperationData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/DATReader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/DATWriter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/FileReader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/FileReaderFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/FileWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DataWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/FileWriterFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DataWriterFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/File_Manager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/XMLReader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/XMLWriter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/DataWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DataWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/FileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/File_Chooser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/File_Chooser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/PlayerReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/PlayerReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/PlayerWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/PlayerWriter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +43,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/SinLordEp/Player_Data.git&quot;,
-    &quot;accountId&quot;: &quot;bd00194e-28d4-4913-a672-e3710d409d32&quot;
+    &quot;accountId&quot;: &quot;29d759ff-85e5-406e-a737-ad43b0eafbcf&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -76,6 +65,7 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/DAM2/Downloads/Recursos Tema1-20240923&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -84,8 +74,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
-    &quot;应用程序.principal.executor&quot;: &quot;Run&quot;
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
@@ -101,8 +90,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.19072.14" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.19072.14" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
       </set>
     </attachedChunks>
   </component>
@@ -119,10 +108,7 @@
       <workItem from="1726757500922" duration="10873000" />
       <workItem from="1726843468807" duration="51000" />
       <workItem from="1726843561966" duration="12563000" />
-      <workItem from="1727023354065" duration="61000" />
-      <workItem from="1727023437297" duration="21000" />
-      <workItem from="1727023509437" duration="9252000" />
-      <workItem from="1727249605567" duration="14939000" />
+      <workItem from="1727187815925" duration="10920000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -140,23 +126,84 @@
       <option name="project" value="LOCAL" />
       <updated>1726773032680</updated>
     </task>
-    <task id="LOCAL-00003" summary="将创建新的架构,首先是工厂生成泛型化,由传入的类决定读写类. 然后是对后缀名的处理移到类的读写类里. 同时创建的读写类放入数据储存类里. 最后就是创建一个新的统筹类,filemanager,用于执行读写的方法, 确保了职责单一原则">
+    <task id="LOCAL-00003" summary="已完善写入XML逻辑，下一步计划分离写入和读取到独立class">
       <option name="closed" value="true" />
-      <created>1727221907168</created>
+      <created>1727106151823</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1727221907168</updated>
+      <updated>1727106151823</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃">
+      <option name="closed" value="true" />
+      <created>1727114270574</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727114270574</updated>
+    </task>
+    <task id="LOCAL-00005" summary="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃">
+      <option name="closed" value="true" />
+      <created>1727114776736</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1727114776736</updated>
+    </task>
+    <task id="LOCAL-00006" summary="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃">
+      <option name="closed" value="true" />
+      <created>1727115153943</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1727115153943</updated>
+    </task>
+    <task id="LOCAL-00007" summary="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃">
+      <option name="closed" value="true" />
+      <created>1727115390456</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727115390456</updated>
+    </task>
+    <task id="LOCAL-00008" summary="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃">
+      <option name="closed" value="true" />
+      <created>1727116959370</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1727116959370</updated>
+    </task>
+    <task id="LOCAL-00009" summary="下一步进行file manager的分离，将writer和reader都放入相同的接口里，然后创建factory来匹配使用的方法">
+      <option name="closed" value="true" />
+      <created>1727118198112</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1727118198112</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
-    <MESSAGE value="将创建新的架构,首先是工厂生成泛型化,由传入的类决定读写类. 然后是对后缀名的处理移到类的读写类里. 同时创建的读写类放入数据储存类里. 最后就是创建一个新的统筹类,filemanager,用于执行读写的方法, 确保了职责单一原则" />
-    <option name="LAST_COMMIT_MESSAGE" value="将创建新的架构,首先是工厂生成泛型化,由传入的类决定读写类. 然后是对后缀名的处理移到类的读写类里. 同时创建的读写类放入数据储存类里. 最后就是创建一个新的统筹类,filemanager,用于执行读写的方法, 确保了职责单一原则" />
+    <MESSAGE value="已完善写入XML逻辑，下一步计划分离写入和读取到独立class" />
+    <MESSAGE value="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃" />
+    <MESSAGE value="下一步进行file manager的分离，将writer和reader都放入相同的接口里，然后创建factory来匹配使用的方法" />
+    <option name="LAST_COMMIT_MESSAGE" value="下一步进行file manager的分离，将writer和reader都放入相同的接口里，然后创建factory来匹配使用的方法" />
   </component>
 </project>
