@@ -31,6 +31,7 @@ public class FileManager {
             throw new IllegalStateException("Writer is not initialized");
         }
     }
+
     public static File create_file(String file_extension) throws Exception {
         JOptionPane.showMessageDialog(null,"Choosing file path");
         String path = get_path("path").getPath();
@@ -46,7 +47,7 @@ public class FileManager {
     public File read_file(String file_extension) throws Exception {
         File data_file = get_path(file_extension);
         if(data_file == null){
-            throw new Exception("Operation canceled");
+            throw new OperationCanceledException();
         }else{
             return data_file;
         }
@@ -69,6 +70,6 @@ public class FileManager {
         }
 
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) return fileChooser.getSelectedFile();
-        throw new Exception("Operation canceled");
+        throw new OperationCanceledException();
     }
 }

@@ -2,6 +2,7 @@ package GUI;
 
 
 import model.PlayerOperationData;
+import utils.OperationCanceledException;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -68,5 +69,13 @@ public class Player_menu {
             case "Modify" -> "Modification completed";
             default -> "Unhandled or unknown error";
         });
+    }
+
+    public static void exception_message(Exception e){
+        if(e instanceof OperationCanceledException){
+            JOptionPane.showMessageDialog(null,"Operation canceled");
+        }else{
+            JOptionPane.showMessageDialog(null,e.getMessage());
+        }
     }
 }

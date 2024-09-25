@@ -130,7 +130,6 @@ public class PlayerReader implements DataReader {
             JOptionPane.showMessageDialog(null, status);
         }catch (Exception e) {
             JOptionPane.showMessageDialog(null, "El fichero no está en formato correcto y es ilegible");
-
         }
     }
 

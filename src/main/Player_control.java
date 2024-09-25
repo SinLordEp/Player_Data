@@ -6,11 +6,11 @@ import model.PlayerOperationData;
 import utils.DataReaderFactory;
 import utils.DataWriterFactory;
 import utils.FileManager;
+import utils.OperationCanceledException;
 
 
 import javax.swing.*;
 import java.util.HashMap;
-
 
 public class Player_control {
     public static void player_main(PlayerOperationData current_data){
@@ -22,12 +22,15 @@ public class Player_control {
                 DataWriterFactory.initializeWriter(current_data);
                 FileManager fileManager = new FileManager();
                 file_operation(current_data, fileManager);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-                if(e.getMessage().equals("Operation canceled")) return;
+            }catch (OperationCanceledException e) {
+                Player_menu.exception_message(e);
+                return;
+            }catch (Exception e) {
+                Player_menu.exception_message(e);
             }
         }
     }
+
 
     private static String extension_menu() throws Exception {
         return switch (Player_menu.extension_player()) {
@@ -57,9 +60,11 @@ public class Player_control {
                     fileManager.readData(current_data);
                     current_data.setFile_changed(false);
                 }
+            }catch (OperationCanceledException e) {
+                Player_menu.exception_message(e);
+                return;
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-                if(e.getMessage().equals("Operation canceled")) return;
+                Player_menu.exception_message(e);
             }
         }
         operation(current_data, fileManager);
@@ -72,11 +77,13 @@ public class Player_control {
                     case 1: current_data.print_person(); break;
                     case 2: modify_operation(current_data, fileManager); break;
                     case 3: export_menu(current_data, fileManager); break;
-                    case -1: throw new Exception("Operation canceled");
+                    case -1: throw new OperationCanceledException();
                 }
+            }catch (OperationCanceledException e) {
+                Player_menu.exception_message(e);
+                return;
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-                if(e.getMessage().equals("Operation canceled")) return;
+                Player_menu.exception_message(e);
             }
         }
     }
@@ -88,16 +95,18 @@ public class Player_control {
                     case 1: create_player(current_data); break;
                     case 2: modify_player_operation(current_data); break;
                     case 3: delete_player(current_data); break;
-                    case -1: throw new Exception("Operation canceled");
+                    case -1: throw new OperationCanceledException();
                 }
                 if(current_data.isFile_changed()) {
                     fileManager.writeData(current_data);
                     current_data.setFile_changed(false);
                     return;
                 }
+            }catch (OperationCanceledException e) {
+                Player_menu.exception_message(e);
+                return;
             }catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-                if(e.getMessage().equals("Operation canceled")) return;
+                Player_menu.exception_message(e);
             }
         }
     }
@@ -119,11 +128,11 @@ public class Player_control {
                 player.setServer(Player_menu.server_chooser(current_data, player.getRegion()));
                 player.setName(Player_menu.name_input_UI());
                 break;
-            case -1: throw new Exception("Operation canceled");
+            case -1: throw new OperationCanceledException();
         }
-            current_data.putIn_Map(ID, player);
-            current_data.setFile_changed(true);
-            Player_menu.message("Modify");
+        current_data.putIn_Map(ID, player);
+        current_data.setFile_changed(true);
+        Player_menu.message("Modify");
     }
 
     private static void create_player(PlayerOperationData current_data) throws Exception {
@@ -176,7 +185,4 @@ public class Player_control {
         fileManager.exportData(target_extension,current_data);
     }
 
-    private static void exception_handler(Exception e){
-
-    }
 }
