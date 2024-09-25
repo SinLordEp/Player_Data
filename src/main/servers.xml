@@ -1,4 +1,4 @@
-<gameServers>
+<region_server>
     <region name="North America">
         <server>Stormterror's Lair</server>
         <server>Wolvendom</server>
@@ -34,4 +34,4 @@
         <server>Watatsumi Island</server>
         <server>Tatarasuna</server>
     </region>
-</gameServers>
+</region_server>

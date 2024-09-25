@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Player>
     <player id="1">
         <region>North America</region>
@@ -23,5 +24,10 @@
         <region>Oceania</region>
         <server>Serpent's Head</server>
         <name>Takashi Yamamoto</name>
+    </player>
+    <player id="6">
+        <region>South America</region>
+        <server>Port Ormos</server>
+        <name>sin</name>
     </player>
 </Player>

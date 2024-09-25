@@ -1,22 +1,21 @@
 package model;
 
 import javax.swing.*;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerOperationData extends GeneralOperationData{
-    private Map<Integer, Player> player_data = null;
+    private HashMap<Integer, Player> player_data = null;
     private Map<String, String[]> region_server = null;
-    private String person_type = "";
 
     public PlayerOperationData() {
-        super.setData_class("Person");
     }
 
-    public Map<Integer, Player> getPlayer_data() {
+    public HashMap<Integer, Player> getPlayer_data() {
         return player_data;
     }
 
-    public void setPlayer_data(Map<Integer, Player> player_data) {
+    public void setPlayer_data(HashMap<Integer, Player> player_data) {
         this.player_data = player_data;
     }
 
@@ -26,14 +25,6 @@ public class PlayerOperationData extends GeneralOperationData{
 
     public void setRegion_server(Map<String, String[]> region_server) {
         this.region_server = region_server;
-    }
-
-    public String getPerson_type() {
-        return person_type;
-    }
-
-    public void setPerson_type(String person_type) {
-        this.person_type = person_type;
     }
 
     public boolean containsKey(int ID){
@@ -55,4 +46,43 @@ public class PlayerOperationData extends GeneralOperationData{
             JOptionPane.showMessageDialog(null, temp.toString());
         }
     }
+    public boolean isPlayer_Valid(Player player){
+        if(region_server == null){
+            JOptionPane.showMessageDialog(null, "Region server is null!");
+            return false;
+        }
+        if(!region_server.containsKey(player.getRegion())){
+            JOptionPane.showMessageDialog(null, "Player Region doesn't exist!");
+            return false;
+        }
+        boolean server_valid = false;
+        for(String server : region_server.get(player.getRegion())){
+            if (server.equals(player.getServer())) {
+                server_valid = true;
+                break;
+            }
+        }
+        if(!server_valid){
+            JOptionPane.showMessageDialog(null, "Player Server doesn't exist!");
+            return false;
+        }
+
+        if(player.getID() <= 0){
+            JOptionPane.showMessageDialog(null, "Player ID is ilegal");
+            return false;
+        }
+
+        if(player_data == null) return true;
+        if(player_data.containsKey(player.getID())){
+            JOptionPane.showMessageDialog(null, "Player ID already exists!");
+            return false;
+        }
+
+        if(player.getName().isBlank()){
+            JOptionPane.showMessageDialog(null, "Player Name is blank");
+            return false;
+        }
+        return true;
+    }
+
 }

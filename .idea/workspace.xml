@@ -4,23 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_23_09_2024_15_28__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_23_09_2024_15_28__Changes_.xml" afterDir="false" />
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="将创建新的架构,首先是工厂生成泛型化,由传入的类决定读写类. 然后是对后缀名的处理移到类的读写类里. 同时创建的读写类放入数据储存类里. 最后就是创建一个新的统筹类,filemanager,用于执行读写的方法, 确保了职责单一原则">
+      <change afterPath="$PROJECT_DIR$/src/utils/DataReader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/DataReaderFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/FileManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/PlayerReader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/PlayerWriter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/xml_utils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Person_menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player_menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/player_data.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/player_data.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player_menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player_menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/servers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/servers.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/GeneralOperationData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/GeneralOperationData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Person.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/PersonOperationData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/PlayerOperationData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/DATReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DATReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/DATWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DATWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/FileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/FileReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/FileReaderFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/FileReaderFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/FileWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/FileWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/FileWriterFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/FileWriterFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/XMLReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XMLReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/XMLWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/XMLWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/PlayerOperationData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/PlayerOperationData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/DATReader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/DATWriter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/FileReader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/FileReaderFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/FileWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DataWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/FileWriterFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DataWriterFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/File_Manager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/XMLReader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/XMLWriter.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,6 +122,7 @@
       <workItem from="1727023354065" duration="61000" />
       <workItem from="1727023437297" duration="21000" />
       <workItem from="1727023509437" duration="9252000" />
+      <workItem from="1727249605567" duration="14939000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -132,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726773032680</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="将创建新的架构,首先是工厂生成泛型化,由传入的类决定读写类. 然后是对后缀名的处理移到类的读写类里. 同时创建的读写类放入数据储存类里. 最后就是创建一个新的统筹类,filemanager,用于执行读写的方法, 确保了职责单一原则">
+      <option name="closed" value="true" />
+      <created>1727221907168</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727221907168</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,6 +156,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
+    <MESSAGE value="将创建新的架构,首先是工厂生成泛型化,由传入的类决定读写类. 然后是对后缀名的处理移到类的读写类里. 同时创建的读写类放入数据储存类里. 最后就是创建一个新的统筹类,filemanager,用于执行读写的方法, 确保了职责单一原则" />
+    <option name="LAST_COMMIT_MESSAGE" value="将创建新的架构,首先是工厂生成泛型化,由传入的类决定读写类. 然后是对后缀名的处理移到类的读写类里. 同时创建的读写类放入数据储存类里. 最后就是创建一个新的统筹类,filemanager,用于执行读写的方法, 确保了职责单一原则" />
   </component>
 </project>
