@@ -134,7 +134,7 @@ public class PlayerReader implements DataReader {
     }
 
     public static void read_region_server(PlayerOperationData current_data) throws Exception {
-        Element root = xml_utils.readXml(new File("./src/main/servers.xml"));
+        Element root = xml_utils.readXml(new File("./src/data/servers.xml"));
         if (!"region_server".equals(root.getNodeName())) {
             throw new RuntimeException("Invalid XML: Root element is not region_server");
         }

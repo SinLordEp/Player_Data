@@ -44,7 +44,7 @@ public class FileManager {
         }
     }
 
-    public File read_file(String file_extension) throws Exception {
+    public File read_file(String file_extension) {
         File data_file = get_path(file_extension);
         if(data_file == null){
             throw new OperationCanceledException();
@@ -53,8 +53,8 @@ public class FileManager {
         }
     }
 
-    public static File get_path(String file_extension) throws Exception {
-        JFileChooser fileChooser = new JFileChooser(new File("./src/main").getAbsolutePath());
+    public static File get_path(String file_extension){
+        JFileChooser fileChooser = new JFileChooser(new File("./src/data").getAbsolutePath());
         fileChooser.setDialogTitle("Elegir la carpeta o el fichero");
         switch(file_extension){
             case "xml":
