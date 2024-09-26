@@ -2,7 +2,6 @@ package main;
 
 import control.GeneralControl;
 import control.PlayerControl;
-
 import utils.OperationCanceledException;
 
 import javax.swing.*;

@@ -1,79 +1,68 @@
 package utils;
 
-import data.GeneralData;
+import GUI.GeneralMenu;
 import model.Player;
-import data.PlayerData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.swing.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
-public class PlayerReader implements DataReader {
+public class PlayerReader implements DataReader<Map<?,?>> {
 
     @Override
-    public void read(GeneralData current_data) throws Exception {
-        switch (current_data.getFile_extension()){
-            case "dat": read_dat((PlayerData)current_data); break;
-            case "xml": read_xml((PlayerData) current_data); break;
-            case "txt": read_txt((PlayerData) current_data); break;
-        }
+    public Map<?,?> read(String file_path) throws Exception {
+        File file = new File(file_path);
+        String file_extension = file_path.substring(file_path.lastIndexOf("."));
+        return switch (file_extension){
+            case ".dat" -> read_dat(file);
+            case ".xml" -> read_xml(file);
+            case ".txt" -> read_txt(file);
+            default -> throw new IllegalStateException("Unexpected value: " + file_extension);
+        };
     }
 
-    private void read_dat(PlayerData current_data) throws Exception {
-        String status = "";
-        if(current_data.getRegion_server() == null) {
-            read_region_server(current_data);
-            status += "Region server loaded";
-        }
+    private HashMap<Integer, Player> read_dat(File file) throws Exception {
         HashMap<Integer, Player> player_data = new HashMap<>();
-
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(current_data.getFile()))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             //.readObject will always throw EOFException when reach the end of file
             while (true) {
-                Player player = (Player) ois.readObject();
-                if(player != null && current_data.isPlayer_Valid(player)){
-                    player_data.put(player.getID(), player);
+                Object temp = ois.readObject();
+                if("EOF".equals(temp)){
+                    break;
+                }
+                if(!(temp instanceof Player player)){
+                    throw new Exception("Error reading Dat file, file is corrupted");
                 }else{
-                    throw new RuntimeException("Invalid data: player data is damaged");
+                    player_data.put(player.getID(), player);
                 }
             }
-        } catch (EOFException _) {
-            if (player_data.isEmpty()) {
-                status += "\nNo data found";
-                JOptionPane.showMessageDialog(null, status);
-            } else {
-                current_data.setPlayer_data(player_data);
-                status += "\nPlayer data imported";
-                JOptionPane.showMessageDialog(null, status);
-            }
-            current_data.setFile_changed(false);
         }
+        if (player_data.isEmpty()) {
+            GeneralMenu.message_popup("No data found");
+        } else {
+            GeneralMenu.message_popup("Player data imported");
+        }
+        return player_data;
     }
 
-    private void read_xml(PlayerData current_data) throws Exception {
-        String status = "";
+    private HashMap<Integer, Player> read_xml(File file) throws Exception {
+        HashMap<Integer, Player> player_data = new HashMap<>();
         // check region_server
-        if (current_data.getRegion_server() == null) {
-            read_region_server(current_data);
-            status += "Region server loaded";
-        }
-
-        Element root = xml_utils.readXml(current_data.getFile());
+        Element root = xml_utils.readXml(file);
         if (!"Player".equals(root.getNodeName())) {
             throw new RuntimeException("Invalid XML: Root element is not Player");
         }
         if (!root.hasChildNodes()) {
-            status += "\nNo player data found";
-            current_data.setFile_changed(false);
-            JOptionPane.showMessageDialog(null, status);
-            return;
+            GeneralMenu.message_popup("No player data found");
+            return player_data;
         }
         // parsing
-        HashMap<Integer, Player> player_data = new HashMap<>();
         NodeList playerNodes = root.getElementsByTagName("player");
         for (int i = 0; i < playerNodes.getLength(); i++) {
             Node playerNode = playerNodes.item(i);
@@ -85,30 +74,18 @@ public class PlayerReader implements DataReader {
                 player.setServer(xml_utils.getElementTextContent(playerElement, "server"));
                 player.setName(xml_utils.getElementTextContent(playerElement, "name"));
 
-                // check valid
-                if (current_data.isPlayer_Valid(player)) {
-                    player_data.put(player.getID(), player);
-                } else {
-                    throw new RuntimeException("Invalid XML: player data is damaged");
-                }
+                player_data.put(player.getID(), player);
             }
         }
-        current_data.setPlayer_data(player_data);
-        current_data.setFile_changed(false);
-        status += "\nPlayer data imported";
-        JOptionPane.showMessageDialog(null, status);
+        GeneralMenu.message_popup("Player data imported");
+        return player_data;
     }
 
-    private void read_txt(PlayerData current_data) throws Exception {
-        String status = "";
-        if(current_data.getRegion_server() == null) {
-            read_region_server(current_data);
-            status += "Region server loaded";
-        }
+    private HashMap<Integer, Player> read_txt(File file) {
         HashMap<Integer, Player> player_data = new HashMap<>();
-        try(Scanner scanner = new Scanner(current_data.getFile())){
+        try(Scanner scanner = new Scanner(file)){
             if(!scanner.hasNext()){
-                status += "No data found";
+                GeneralMenu.message_popup("No data found");
             }else{
                 while(scanner.hasNext()){
                     String[] player_txt = scanner.nextLine().split(",");
@@ -117,24 +94,17 @@ public class PlayerReader implements DataReader {
                     player.setRegion(player_txt[1]);
                     player.setServer(player_txt[2]);
                     player.setName(player_txt[3]);
-                    if (current_data.isPlayer_Valid(player)) {
-                        player_data.put(player.getID(), player);
-                    } else {
-                        throw new RuntimeException("Invalid TXT: player data is damaged");
-                    }
                 }
-                status += "\nPlayer data imported";
+                GeneralMenu.message_popup("Player data imported");
             }
-            current_data.setPlayer_data(player_data);
-            current_data.setFile_changed(false);
-            JOptionPane.showMessageDialog(null, status);
         }catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "El fichero no está en formato correcto y es ilegible");
+            throw new RuntimeException("Error reading this txt file");
         }
+        return player_data;
     }
 
-    public static void read_region_server(PlayerData current_data) throws Exception {
-        Element root = xml_utils.readXml(new File("./src/data/region_server.xml"));
+    public static HashMap<String, String[]> read_region_server() throws Exception {
+        Element root = xml_utils.readXml(new File("./src/config/region_server.xml"));
         if (!"region_server".equals(root.getNodeName())) {
             throw new RuntimeException("Invalid XML: Root element is not region_server");
         }
@@ -160,7 +130,7 @@ public class PlayerReader implements DataReader {
                 regionServerMap.put(regionName, servers);
             }
         }
-        current_data.setRegion_server(regionServerMap);
+        return regionServerMap;
     }
 
 }

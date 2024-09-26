@@ -1,8 +1,7 @@
 package utils;
 
-import data.GeneralData;
+import GUI.GeneralMenu;
 import model.Player;
-import data.PlayerData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -10,28 +9,21 @@ import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
 
-public class PlayerWriter implements DataWriter {
+public class PlayerWriter implements DataWriter<HashMap<Integer,Player> > {
     @Override
-    public void write(GeneralData current_data) throws Exception {
-        File file = current_data.getFile();
-        HashMap<Integer, Player> player_data = ((PlayerData) current_data).getPlayer_data();
-        switch (current_data.getFile_extension()){
-            case "dat": write_dat(file, player_data); break;
-            case "xml": write_xml(file, player_data); break;
+    public void write(String file_path, HashMap<Integer,Player> player_data) throws Exception {
+        File file = new File(file_path);
+        if(file.createNewFile()){
+            GeneralMenu.message_popup("New file created");
         }
-        JOptionPane.showMessageDialog(null, "File updated");
-    }
 
-    @Override
-    public void export(String file_extension, GeneralData current_data) throws Exception {
-        File exporting_file = FileManager.create_file(file_extension);
-        HashMap<Integer, Player> player_data = ((PlayerData) current_data).getPlayer_data();
-        switch(file_extension){
-            case "dat": write_dat(exporting_file, player_data); break;
-            case "xml": write_xml(exporting_file, player_data); break;
-            case "txt": write_txt(exporting_file, player_data); break;
+        String file_extension = file_path.substring(file_path.lastIndexOf("."));
+        switch (file_extension){
+            case ".dat": write_dat(file, player_data); break;
+            case ".xml": write_xml(file, player_data); break;
+            case ".txt": write_txt(file, player_data); break;
         }
-        JOptionPane.showMessageDialog(null, "File exporting process finished");
+        GeneralMenu.message_popup("File saved correctly");
     }
 
     private void write_dat(File player_file, HashMap<Integer, Player> player_data) throws Exception {
@@ -41,12 +33,12 @@ public class PlayerWriter implements DataWriter {
                     oos.writeObject(player);
                 }
             }
+            oos.writeObject("EOF");
         }
     }
 
     public void write_xml(File player_file, HashMap<Integer, Player> player_data) throws Exception {
         Document document = xml_utils.createDocument();
-
         // create Player root
         Element root = document.createElement("Player");
         // Add root to file

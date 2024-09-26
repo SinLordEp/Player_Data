@@ -1,6 +1,0 @@
-1,North America,Stormterror's Lair,John Doe,
-2,Europe,Springvale,Jane Smith,
-3,Asia,Liyue Harbor,Alex Chen,
-4,South America,Port Ormos,Maria Lopez,
-5,Oceania,Serpent's Head,Takashi Yamamoto,
-6,South America,Port Ormos,sin,

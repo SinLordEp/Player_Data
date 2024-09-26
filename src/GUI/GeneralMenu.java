@@ -6,6 +6,11 @@ import javax.swing.*;
 
 public class GeneralMenu {
 
+    public static String extension_general() {
+        String[] options = {"Binary DAT File", "XML File", "TXT File"};
+        return buildSelectionDialog("Extension selector","Choose a file type", options);
+    }
+
     public static String buildSelectionDialog(String title, String message, String[] options) {
         int choice = JOptionPane.showOptionDialog(
                 null,
@@ -23,5 +28,9 @@ public class GeneralMenu {
 
     public static String universalInput(String message){
         return JOptionPane.showInputDialog(message);
+    }
+
+    public static void message_popup(String message){
+        JOptionPane.showMessageDialog(null, message);
     }
 }

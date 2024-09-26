@@ -1,16 +1,55 @@
 package data;
 
+import GUI.GeneralMenu;
 import model.Player;
+import utils.PlayerReader;
+import utils.PlayerWriter;
 
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerData extends GeneralData {
+public class PlayerDataAccess extends GeneralDataAccess {
     private HashMap<Integer, Player> player_data = null;
-    private Map<String, String[]> region_server = null;
+    private HashMap<String, String[]> region_server = null;
 
-    public PlayerData() {
+    public PlayerDataAccess() {
+        super.setReader(new PlayerReader());
+        super.setWriter(new PlayerWriter());
+    }
+
+    @SuppressWarnings("unchecked")
+    public void read() throws Exception {
+        if(region_server == null) {
+            region_server = PlayerReader.read_region_server();
+            GeneralMenu.message_popup("Region and server loaded");
+        }
+
+        if(reader != null){
+            player_data = (HashMap<Integer, Player>) reader.read(file_path);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void write() throws Exception {
+        if(writer != null){
+            writer.write(file_path, player_data);
+        }else {
+            throw new IllegalStateException("Writer is not initialized");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void export() throws Exception {
+        if(writer != null){
+            String target_path = get_path("path");
+            String target_extension = choose_extension();
+            String target_name = GeneralMenu.universalInput("Input new file name");
+            target_path += "/" + target_name + target_extension;
+            writer.write(target_path, player_data);
+        }else {
+            throw new IllegalStateException("Writer is not initialized");
+        }
     }
 
     public HashMap<Integer, Player> getPlayer_data() {
@@ -25,10 +64,6 @@ public class PlayerData extends GeneralData {
         return region_server;
     }
 
-    public void setRegion_server(Map<String, String[]> region_server) {
-        this.region_server = region_server;
-    }
-
     public boolean containsKey(int ID){
         if(player_data == null){
             return false;
@@ -36,11 +71,9 @@ public class PlayerData extends GeneralData {
             return player_data.containsKey(ID);
         }
     }
+
     public Player getFrom_Map(int ID){
         return player_data.get(ID);
-    }
-    public void putIn_Map(int ID, Player player){
-        player_data.put(ID,  player);
     }
 
     public String[] getServer(String region){
@@ -56,6 +89,7 @@ public class PlayerData extends GeneralData {
             }
         }
     }
+
     public boolean isPlayer_Valid(Player player){
         if(region_server == null){
             JOptionPane.showMessageDialog(null, "Region server is null!");
@@ -83,10 +117,6 @@ public class PlayerData extends GeneralData {
         }
 
         if(player_data == null) return true;
-        if(player_data.containsKey(player.getID())){
-            JOptionPane.showMessageDialog(null, "Player ID already exists!");
-            return false;
-        }
 
         if(player.getName().isBlank()){
             JOptionPane.showMessageDialog(null, "Player Name is blank");
@@ -95,4 +125,23 @@ public class PlayerData extends GeneralData {
         return true;
     }
 
+    public boolean isPlayerMap_Valid(){
+        if(player_data == null){
+            GeneralMenu.message_popup("No player data registered");
+            return true;
+        }
+        for(Player player : player_data.values()){
+            if(!isPlayer_Valid(player)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void update_changes() throws Exception {
+        if(isFile_changed()) {
+            read();
+            setFile_changed(false);
+        }
+    }
 }
