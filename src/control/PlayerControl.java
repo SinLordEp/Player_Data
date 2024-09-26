@@ -144,6 +144,7 @@ public class PlayerControl implements GeneralControl {
         int ID = PlayerMenu.ID_input_UI();
         if(!PlayerDA.containsKey(ID)) throw new Exception("Player does not exist");
         PlayerDA.getPlayer_data().remove(ID);
+        GeneralMenu.message_popup("Player with ID " + ID + " is deleted");
         PlayerDA.setFile_changed(true);
     }
 
