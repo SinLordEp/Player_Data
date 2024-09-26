@@ -1,10 +1,9 @@
 package main;
 
+import GUI.GeneralMenu;
 import control.GeneralControl;
 import control.PlayerControl;
 import file.OperationCanceledException;
-
-import javax.swing.*;
 
 import static GUI.GeneralMenu.buildSelectionDialog;
 
@@ -16,13 +15,13 @@ public class principal {
         initialize();
         while(true){
             try{
-                String chosen_Class = buildSelectionDialog("Data Class Menu","Choose a data class",ClassRegister.getClassNames());
+                String chosen_Class = buildSelectionDialog("Data Class Menu","Choose a data class", ClassRegister.getClassNames());
                 GeneralControl current_control = ClassRegister.getControl(chosen_Class);
                 current_control.run();
             }catch (OperationCanceledException e){
                 System.exit(0);
             }catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                GeneralMenu.message_popup(e.getMessage());
             }
         }
     }

@@ -90,12 +90,12 @@ public class PlayerControl implements GeneralControl {
         if(!PlayerDA.containsKey(ID)) throw new Exception("Player does not exist");
         switch(PlayerMenu.modify_player_menu()){
             // case 1 is linked to case 2, because after changing region the server has to be changed too.
-            case "Region": PlayerDA.getFrom_Map(ID).setRegion(PlayerMenu.region_chooser(PlayerDA));
-            case "Server": PlayerDA.getFrom_Map(ID).setServer(PlayerMenu.server_chooser(PlayerDA, PlayerDA.getFrom_Map(ID).getRegion())); break;
+            case "Region": PlayerDA.getFrom_Map(ID).setRegion(PlayerMenu.region_chooser(PlayerDA.getRegion_list()));
+            case "Server": PlayerDA.getFrom_Map(ID).setServer(PlayerMenu.server_chooser(PlayerDA.getServer_list(PlayerDA.getFrom_Map(ID).getRegion()))); break;
             case "Name": PlayerDA.getFrom_Map(ID).setName(GeneralMenu.universalInput("Enter player name: ")); break;
             case "ALL":
-                PlayerDA.getFrom_Map(ID).setRegion(PlayerMenu.region_chooser(PlayerDA));
-                PlayerDA.getFrom_Map(ID).setServer(PlayerMenu.server_chooser(PlayerDA, PlayerDA.getFrom_Map(ID).getRegion()));
+                PlayerDA.getFrom_Map(ID).setRegion(PlayerMenu.region_chooser(PlayerDA.getRegion_list()));
+                PlayerDA.getFrom_Map(ID).setServer(PlayerMenu.server_chooser(PlayerDA.getServer_list(PlayerDA.getFrom_Map(ID).getRegion())));
                 PlayerDA.getFrom_Map(ID).setName(GeneralMenu.universalInput("Enter player name: "));
                 break;
         }
@@ -105,8 +105,8 @@ public class PlayerControl implements GeneralControl {
 
     private void create_player() throws Exception {
         Player player = new Player();
-        player.setRegion(PlayerMenu.region_chooser(PlayerDA));
-        player.setServer(PlayerMenu.server_chooser(PlayerDA, player.getRegion()));
+        player.setRegion(PlayerMenu.region_chooser(PlayerDA.getRegion_list()));
+        player.setServer(PlayerMenu.server_chooser(PlayerDA.getServer_list(player.getRegion())));
         player.setID(create_ID());
         player.setName(GeneralMenu.universalInput("Enter player name: "));
         if(PlayerDA.isPlayer_Valid(player)) {

@@ -12,7 +12,7 @@ import java.util.Map;
 public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>> {
     private HashMap<Integer, Player> player_data = null;
     private HashMap<String, String[]> region_server = null;
-
+    private String[] region_list;
     public PlayerDataAccess() {
         super.setReader(new PlayerReader());
         super.setWriter(new PlayerWriter());
@@ -22,6 +22,7 @@ public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>> {
     public void read() throws Exception {
         if(region_server == null) {
             region_server = PlayerReader.read_region_server();
+            region_list = region_server.keySet().toArray(new String[0]);
             GeneralMenu.message_popup("Region and server loaded");
         }
 
@@ -58,8 +59,12 @@ public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>> {
         this.player_data = player_data;
     }
 
-    public Map<String, String[]> getRegion_server() {
-        return region_server;
+    public String[] getRegion_list() {
+        return region_list;
+    }
+
+    public String[] getServer_list(String region){
+        return region_server.get(region);
     }
 
     public boolean containsKey(int ID){
@@ -74,9 +79,6 @@ public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>> {
         return player_data.get(ID);
     }
 
-    public String[] getServer(String region){
-        return region_server.get(region);
-    }
 
     public void print_person(){
         if(player_data == null){

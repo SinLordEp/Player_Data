@@ -1,13 +1,8 @@
 package GUI;
 
-
-import data.PlayerDataAccess;
 import file.OperationCanceledException;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import static GUI.GeneralMenu.buildSelectionDialog;
 
@@ -40,19 +35,16 @@ public class PlayerMenu {
     }
 
 
-    public static String region_chooser(PlayerDataAccess PlayerDA) {
-        Set<String> regions = PlayerDA.getRegion_server().keySet();
-        List<String> regionList = new ArrayList<>(regions);
-        return buildSelectionDialog("Region Menu","Choose a region: " , regionList.toArray(new String[0]));
+    public static String region_chooser(String[] region_list) {
+        return buildSelectionDialog("Region Menu","Choose a region: " , region_list);
     }
 
-    public static String server_chooser(PlayerDataAccess PlayerDA, String region){
-        String[] servers = PlayerDA.getServer(region);
-        return buildSelectionDialog("Server Menu","Choose a server: ", servers);
+    public static String server_chooser(String[] server_list){
+        return buildSelectionDialog("Server Menu","Choose a server: ", server_list);
     }
 
     public static void message(String msg_type){
-        JOptionPane.showMessageDialog(null, switch (msg_type){
+        GeneralMenu.message_popup(switch (msg_type){
             case "Empty Map" -> "No player data registered";
             case "ID Format" -> "ID format incorrect";
             case "Modify" -> "Modification completed";
@@ -62,9 +54,9 @@ public class PlayerMenu {
 
     public static void exception_message(Exception e){
         if(e instanceof OperationCanceledException){
-            JOptionPane.showMessageDialog(null,"Operation canceled");
+            GeneralMenu.message_popup("Operation canceled");
         }else{
-            JOptionPane.showMessageDialog(null,e.getMessage());
+            GeneralMenu.message_popup(e.getMessage());
         }
     }
 }
