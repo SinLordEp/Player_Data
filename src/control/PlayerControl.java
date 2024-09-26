@@ -35,10 +35,10 @@ public class PlayerControl implements GeneralControl {
                     return;
                 }
             }catch (OperationCanceledException e) {
-                PlayerMenu.exception_message(e);
+                exception_message(e);
                 return;
             } catch (Exception e) {
-                PlayerMenu.exception_message(e);
+                exception_message(e);
             }
         }
         operation_control();
@@ -54,10 +54,10 @@ public class PlayerControl implements GeneralControl {
                     case "Export data": export_menu(); break;
                 }
             }catch (OperationCanceledException e) {
-                PlayerMenu.exception_message(e);
+                exception_message(e);
                 return;
             } catch (Exception e) {
-                PlayerMenu.exception_message(e);
+                exception_message(e);
             }
         }
     }
@@ -76,17 +76,17 @@ public class PlayerControl implements GeneralControl {
                 }
                 return;
             }catch (OperationCanceledException e) {
-                PlayerMenu.exception_message(e);
+                exception_message(e);
                 return;
             }catch (Exception e) {
-                PlayerMenu.exception_message(e);
+                exception_message(e);
             }
         }
     }
 
     private void modify_player_operation() throws Exception {
         if(PlayerDA.getPlayer_data() == null){
-            PlayerMenu.message("Empty Map");
+            message("Empty Map");
             return;
         }
         int ID = PlayerMenu.ID_input_UI();
@@ -103,7 +103,7 @@ public class PlayerControl implements GeneralControl {
                 break;
         }
         PlayerDA.setFile_changed(true);
-        PlayerMenu.message("Modify");
+        message("Modify");
     }
 
     private void create_player() throws Exception {
@@ -131,14 +131,14 @@ public class PlayerControl implements GeneralControl {
                     throw new Exception("ID already existed");
                 } else return ID;
             } catch (NumberFormatException e) {
-                PlayerMenu.message("ID Format");
+                message("ID Format");
             }
         }
     }
 
     private void delete_player() throws Exception {
         if(PlayerDA.getPlayer_data() == null){
-            PlayerMenu.message("Empty Map");
+            message("Empty Map");
             return;
         }
         int ID = PlayerMenu.ID_input_UI();
@@ -149,11 +149,26 @@ public class PlayerControl implements GeneralControl {
 
     private void export_menu() throws Exception {
         if(PlayerDA.getPlayer_data() == null){
-            PlayerMenu.message("Empty Map");
+            message("Empty Map");
         }else{
             PlayerDA.export();
         }
     }
+    public static void message(String msg_type){
+        GeneralMenu.message_popup(switch (msg_type){
+            case "Empty Map" -> "No player data registered";
+            case "ID Format" -> "ID format incorrect";
+            case "Modify" -> "Modification completed";
+            default -> "Unhandled or unknown error";
+        });
+    }
 
+    public static void exception_message(Exception e){
+        if(e instanceof OperationCanceledException){
+            GeneralMenu.message_popup("Operation canceled");
+        }else{
+            GeneralMenu.message_popup(e.getMessage());
+        }
+    }
 
 }

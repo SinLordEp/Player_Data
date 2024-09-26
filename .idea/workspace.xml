@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="解耦交互层不该有的数据储存，完善了server region chooser的逻辑和签名">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
-    </list>
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="修改数据时的逻辑问题已修复" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -207,7 +204,31 @@
       <option name="project" value="LOCAL" />
       <updated>1727359723601</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="修改数据时的逻辑问题已修复">
+      <option name="closed" value="true" />
+      <created>1727360166407</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1727360166407</updated>
+    </task>
+    <task id="LOCAL-00015" summary="修改数据时的逻辑问题已修复">
+      <option name="closed" value="true" />
+      <created>1727360252321</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1727360252321</updated>
+    </task>
+    <task id="LOCAL-00016" summary="修改数据时的逻辑问题已修复">
+      <option name="closed" value="true" />
+      <created>1727360363717</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1727360363717</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -232,6 +253,7 @@
     <MESSAGE value="解决了直接用形参的问题" />
     <MESSAGE value="清楚了交互层不该有的数据储存，完善了server region chooser的逻辑和签名" />
     <MESSAGE value="解耦交互层不该有的数据储存，完善了server region chooser的逻辑和签名" />
-    <option name="LAST_COMMIT_MESSAGE" value="解耦交互层不该有的数据储存，完善了server region chooser的逻辑和签名" />
+    <MESSAGE value="修改数据时的逻辑问题已修复" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改数据时的逻辑问题已修复" />
   </component>
 </project>

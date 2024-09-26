@@ -1,7 +1,5 @@
 package GUI;
 
-import main.OperationCanceledException;
-
 import javax.swing.*;
 
 import static GUI.GeneralMenu.buildSelectionDialog;
@@ -43,20 +41,4 @@ public class PlayerMenu {
         return buildSelectionDialog("Server Menu","Choose a server: ", server_list);
     }
 
-    public static void message(String msg_type){
-        GeneralMenu.message_popup(switch (msg_type){
-            case "Empty Map" -> "No player data registered";
-            case "ID Format" -> "ID format incorrect";
-            case "Modify" -> "Modification completed";
-            default -> "Unhandled or unknown error";
-        });
-    }
-
-    public static void exception_message(Exception e){
-        if(e instanceof OperationCanceledException){
-            GeneralMenu.message_popup("Operation canceled");
-        }else{
-            GeneralMenu.message_popup(e.getMessage());
-        }
-    }
 }
