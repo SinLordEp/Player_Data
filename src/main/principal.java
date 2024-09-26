@@ -3,7 +3,6 @@ package main;
 import GUI.GeneralMenu;
 import control.GeneralControl;
 import control.PlayerControl;
-import file.OperationCanceledException;
 
 import static GUI.GeneralMenu.buildSelectionDialog;
 

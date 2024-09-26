@@ -1,6 +1,6 @@
 package GUI;
 
-import file.OperationCanceledException;
+import main.OperationCanceledException;
 
 import javax.swing.*;
 
