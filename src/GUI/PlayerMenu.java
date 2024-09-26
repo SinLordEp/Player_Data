@@ -1,7 +1,5 @@
 package GUI;
 
-import javax.swing.*;
-
 import static GUI.GeneralMenu.buildSelectionDialog;
 
 public class PlayerMenu {
@@ -24,7 +22,7 @@ public class PlayerMenu {
     }
 
     public static int ID_input_UI() throws NumberFormatException{
-        return Integer.parseInt(JOptionPane.showInputDialog("Enter the ID of Player you wish to modify"));
+        return Integer.parseInt(GeneralMenu.universalInput("Enter the ID"));
     }
 
     public static String modify_player_menu(){

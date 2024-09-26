@@ -4,3 +4,4 @@
 4,South America,Port Ormos,Maria Lopez,
 5,Oceania,Serpent's Head,Takashi Yamamoto,
 6,South America,Port Ormos,Pepe,
+7,Asia,Liyue Harbor,Lola,
