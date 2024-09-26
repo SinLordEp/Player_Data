@@ -13,11 +13,11 @@ public class PlayerMenu {
         return buildSelectionDialog("File Operation Menu","Choose the file source:", options);
     }
 
-    public static String operation_menu(String absolutePath){
+    public static String operation_menu(String path){
         String[] options = {"Show Data", "Modify data", "Export data"};
         return buildSelectionDialog("Operation Menu","""
                         Path: %s
-                        Choose a operation""".formatted(absolutePath), options);
+                        Choose a operation""".formatted(path), options);
     }
 
     public static String modify_menu(){
