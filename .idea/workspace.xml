@@ -4,23 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="进一步开始重构代码, 已添加启动main的逻辑, 运行时注册已有的类然后自动生成对应的菜单,选择后自动前往对应的控制器. 接下来仔细看看交互层是否能独立. 最重要的是完善一下数据层, 把逻辑操作转到控制层之类的">
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="重构">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/GeneralMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/GeneralMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/PlayerMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/PlayerMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/player_dat.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/player_txt.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/GeneralData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/DataReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DataReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/DataReaderFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/DataWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DataWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/DataWriterFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/FileManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/PlayerReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/PlayerReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/PlayerWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/PlayerWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/PlayerReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/file/PlayerReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,8 +19,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -47,12 +36,9 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/SinLordEp/Player_Data.git&quot;,
-    &quot;accountId&quot;: &quot;bd00194e-28d4-4913-a672-e3710d409d32&quot;
+    &quot;accountId&quot;: &quot;29d759ff-85e5-406e-a737-ad43b0eafbcf&quot;
   }
 }</component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -81,8 +67,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
-    &quot;应用程序.principal.executor&quot;: &quot;Run&quot;
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
@@ -92,15 +77,14 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="I:\Player_Data\src\config" />
       <recent name="C:\Sin\Player_Data\src\main" />
     </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
       </set>
     </attachedChunks>
   </component>
@@ -118,8 +102,6 @@
       <workItem from="1726843468807" duration="51000" />
       <workItem from="1726843561966" duration="12563000" />
       <workItem from="1727187815925" duration="10920000" />
-      <workItem from="1727304417907" duration="5079000" />
-      <workItem from="1727344560742" duration="8835000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -193,15 +175,7 @@
       <option name="project" value="LOCAL" />
       <updated>1727118198112</updated>
     </task>
-    <task id="LOCAL-00010" summary="进一步开始重构代码, 已添加启动main的逻辑, 运行时注册已有的类然后自动生成对应的菜单,选择后自动前往对应的控制器. 接下来仔细看看交互层是否能独立. 最重要的是完善一下数据层, 把逻辑操作转到控制层之类的">
-      <option name="closed" value="true" />
-      <created>1727307196603</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1727307196603</updated>
-    </task>
-    <option name="localTasksCounter" value="11" />
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,7 +197,6 @@
     <MESSAGE value="已完善写入XML逻辑，下一步计划分离写入和读取到独立class" />
     <MESSAGE value="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃" />
     <MESSAGE value="下一步进行file manager的分离，将writer和reader都放入相同的接口里，然后创建factory来匹配使用的方法" />
-    <MESSAGE value="进一步开始重构代码, 已添加启动main的逻辑, 运行时注册已有的类然后自动生成对应的菜单,选择后自动前往对应的控制器. 接下来仔细看看交互层是否能独立. 最重要的是完善一下数据层, 把逻辑操作转到控制层之类的" />
-    <option name="LAST_COMMIT_MESSAGE" value="进一步开始重构代码, 已添加启动main的逻辑, 运行时注册已有的类然后自动生成对应的菜单,选择后自动前往对应的控制器. 接下来仔细看看交互层是否能独立. 最重要的是完善一下数据层, 把逻辑操作转到控制层之类的" />
+    <option name="LAST_COMMIT_MESSAGE" value="下一步进行file manager的分离，将writer和reader都放入相同的接口里，然后创建factory来匹配使用的方法" />
   </component>
 </project>

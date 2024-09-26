@@ -10,11 +10,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
 
-public abstract class GeneralDataAccess {
+public abstract class GeneralDataAccess<T> {
     protected boolean file_changed = false;
     protected String file_path = null;
-    protected DataReader reader;
-    protected DataWriter writer;
+    protected DataReader<T> reader;
+    protected DataWriter<T> writer;
 
     public String getFile_path() {
         return file_path;
@@ -24,11 +24,11 @@ public abstract class GeneralDataAccess {
         this.file_path = file_path;
     }
 
-    public void setWriter(DataWriter writer) {
+    public void setWriter(DataWriter<T> writer) {
         this.writer = writer;
     }
 
-    public void setReader(DataReader reader) {
+    public void setReader(DataReader<T> reader) {
         this.reader = reader;
     }
 

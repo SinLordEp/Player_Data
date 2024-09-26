@@ -8,11 +8,14 @@ import org.w3c.dom.Element;
 import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
+import java.util.Map;
 
-public class PlayerWriter implements DataWriter<HashMap<Integer,Player> > {
+public class PlayerWriter implements DataWriter<Map<?,?>> {
     @Override
-    public void write(String file_path, HashMap<Integer,Player> player_data) throws Exception {
+    @SuppressWarnings("unchecked")
+    public void write(String file_path, Map<?,?> input_data) throws Exception {
         File file = new File(file_path);
+        HashMap<Integer,Player> player_data = (HashMap<Integer, Player>) input_data;
         if(file.createNewFile()){
             GeneralMenu.message_popup("New file created");
         }

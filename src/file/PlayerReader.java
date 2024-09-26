@@ -15,6 +15,10 @@ import java.util.Scanner;
 
 public class PlayerReader implements DataReader<Map<?,?>> {
 
+    public PlayerReader() {
+
+    }
+
     @Override
     public Map<?,?> read(String file_path) throws Exception {
         File file = new File(file_path);

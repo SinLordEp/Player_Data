@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerDataAccess extends GeneralDataAccess {
+public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>> {
     private HashMap<Integer, Player> player_data = null;
     private HashMap<String, String[]> region_server = null;
 
@@ -30,7 +30,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void write() throws Exception {
         if(writer != null){
             writer.write(file_path, player_data);
@@ -39,7 +38,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void export() throws Exception {
         if(writer != null){
             String target_path = get_path("path");
