@@ -34,7 +34,6 @@ public class PlayerReader implements DataReader<Map<?,?>> {
     private HashMap<Integer, Player> read_dat(File file) throws Exception {
         HashMap<Integer, Player> player_data = new HashMap<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            //.readObject will always throw EOFException when reach the end of file
             while (true) {
                 Object temp = ois.readObject();
                 if("EOF".equals(temp)){
@@ -57,7 +56,6 @@ public class PlayerReader implements DataReader<Map<?,?>> {
 
     private HashMap<Integer, Player> read_xml(File file) throws Exception {
         HashMap<Integer, Player> player_data = new HashMap<>();
-        // check region_server
         Element root = xml_utils.readXml(file);
         if (!"Player".equals(root.getNodeName())) {
             throw new RuntimeException("Invalid XML: Root element is not Player");
@@ -115,7 +113,6 @@ public class PlayerReader implements DataReader<Map<?,?>> {
         if (!root.hasChildNodes()) {
             throw new RuntimeException("Empty XML: No region_server data found");
         }
-
         // parsing
         HashMap<String, String[]> regionServerMap = new HashMap<>();
         NodeList regionList = root.getElementsByTagName("region");

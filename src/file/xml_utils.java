@@ -24,7 +24,7 @@ public class xml_utils {
         return document.getDocumentElement();
     }
 
-    // 写入XML文件，传入根元素和文件路径
+    // write to file, receive root and path
     public static void writeXml(Document document, File file) throws Exception {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -38,7 +38,7 @@ public class xml_utils {
         }
     }
 
-    // 创建XML文档
+    // create a raw xml
     public static Document createDocument() throws Exception {
         try {
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
@@ -49,14 +49,14 @@ public class xml_utils {
         }
     }
 
-    // 添加带文本内容的元素到父元素
+    // add element with text to parent element
     public static void createElementWithText(Document document, Element parent, String tagName, String textContent) {
         Element element = document.createElement(tagName);
         element.setTextContent(textContent);
         parent.appendChild(element);
     }
 
-    // 获取子元素文本内容
+    // get element text
     public static String getElementTextContent(Element element, String tagName) {
         NodeList nodeList = element.getElementsByTagName(tagName);
         if (nodeList.getLength() > 0 && nodeList.item(0).getNodeType() == Node.ELEMENT_NODE) {
