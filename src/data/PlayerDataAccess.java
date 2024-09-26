@@ -2,8 +2,8 @@ package data;
 
 import GUI.GeneralMenu;
 import model.Player;
-import utils.PlayerReader;
-import utils.PlayerWriter;
+import file.PlayerReader;
+import file.PlayerWriter;
 
 import javax.swing.*;
 import java.util.HashMap;
