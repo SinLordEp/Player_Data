@@ -82,10 +82,10 @@ public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>> {
 
     public void print_person(){
         if(player_data == null){
-            JOptionPane.showMessageDialog(null,"No player data registered");
+            GeneralMenu.message_popup("No player data registered");
         }else{
             for (Player player : player_data.values()) {
-                JOptionPane.showMessageDialog(null, player.toString());
+                GeneralMenu.message_popup(player.toString());
             }
         }
     }

@@ -96,6 +96,7 @@ public class PlayerReader implements DataReader<Map<?,?>> {
                     player.setRegion(player_txt[1]);
                     player.setServer(player_txt[2]);
                     player.setName(player_txt[3]);
+                    player_data.put(player.getID(),player);
                 }
                 GeneralMenu.message_popup("Player data imported");
             }
