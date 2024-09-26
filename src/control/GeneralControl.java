@@ -1,5 +1,5 @@
 package control;
 
 public interface GeneralControl {
-    void run();
+    void run() throws Exception;
 }

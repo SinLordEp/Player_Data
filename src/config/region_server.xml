@@ -35,4 +35,11 @@
         <server>Watatsumi Island</server>
         <server>Tatarasuna</server>
     </region>
+    <region name="Oceania">
+        <server>Serpent's Head</server>
+        <server>Musoujin Gorge</server>
+        <server>Kannazuka</server>
+        <server>Watatsumi Island</server>
+        <server>Tatarasuna</server>
+    </region>
 </region_server>

@@ -1,5 +1,5 @@
 package file;
 
-public interface DataReader<T> {
+public interface FileDataReader<T> {
     T read(String file_path) throws Exception;
 }

@@ -1,8 +1,9 @@
 package data;
 
+import DB.GeneralDBA;
 import GUI.GeneralMenu;
-import file.DataReader;
-import file.DataWriter;
+import file.FileDataReader;
+import file.FileDataWriter;
 import main.OperationCanceledException;
 
 import javax.swing.*;
@@ -10,11 +11,22 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
 
-public abstract class GeneralDataAccess<T> {
+public abstract class GeneralDataAccess<T,K,V> {
     protected boolean file_changed = false;
     protected String file_path = null;
-    protected DataReader<T> reader;
-    protected DataWriter<T> writer;
+    protected FileDataReader<T> reader = null;
+    protected FileDataWriter<T> writer = null;
+    protected GeneralDBA DBAccess = null;
+    protected boolean isDBSource = false;
+
+    abstract void read() throws Exception;
+    abstract void write() throws Exception;
+    abstract void refresh() throws Exception;
+    abstract void export() throws Exception;
+    abstract String delete(V id) throws Exception;
+    abstract String add(K data) throws Exception;
+    abstract K pop(V id) throws Exception;
+    abstract String update(K data) throws Exception;
 
     public String getFile_path() {
         return file_path;
@@ -22,14 +34,7 @@ public abstract class GeneralDataAccess<T> {
 
     public void setFile_path(String file_path) {
         this.file_path = file_path;
-    }
-
-    public void setWriter(DataWriter<T> writer) {
-        this.writer = writer;
-    }
-
-    public void setReader(DataReader<T> reader) {
-        this.reader = reader;
+        setFile_changed(true);
     }
 
     public boolean isFile_changed() {
@@ -75,4 +80,5 @@ public abstract class GeneralDataAccess<T> {
         target_path += "/" +target_file_name + target_extension;
         return target_path;
     }
+
 }

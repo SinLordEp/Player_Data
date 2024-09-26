@@ -21,13 +21,18 @@
         <name>Maria Lopez</name>
     </player>
     <player id="5">
-        <region>Oceania</region>
-        <server>Serpent's Head</server>
-        <name>Takashi Yamamoto</name>
+        <region>North America</region>
+        <server>Wolvendom</server>
+        <name>Uno</name>
     </player>
     <player id="6">
         <region>South America</region>
         <server>Port Ormos</server>
         <name>Pepe</name>
+    </player>
+    <player id="7">
+        <region>Asia</region>
+        <server>Liyue Harbor</server>
+        <name>Lola</name>
     </player>
 </Player>

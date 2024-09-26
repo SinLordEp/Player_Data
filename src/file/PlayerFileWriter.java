@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerWriter implements DataWriter<Map<?,?>> {
+public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
     @Override
     @SuppressWarnings("unchecked")
     public void write(String file_path, Map<?,?> input_data) throws Exception {

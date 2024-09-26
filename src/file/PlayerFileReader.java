@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class PlayerReader implements DataReader<Map<?,?>> {
+public class PlayerFileReader implements FileDataReader<Map<?,?>> {
 
-    public PlayerReader() {
+    public PlayerFileReader() {
 
     }
 
