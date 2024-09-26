@@ -70,7 +70,10 @@ public class PlayerControl implements GeneralControl {
                     case "Modify Player data": modify_player_operation(); break;
                     case "Delete Player": delete_player(); break;
                 }
-                PlayerDA.update_changes();
+                if(PlayerDA.isFile_changed()){
+                    PlayerDA.write();
+                    PlayerDA.update_changes();
+                }
                 return;
             }catch (OperationCanceledException e) {
                 PlayerMenu.exception_message(e);
