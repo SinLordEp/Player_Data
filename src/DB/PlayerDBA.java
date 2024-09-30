@@ -1,6 +1,5 @@
 package DB;
 
-import GUI.GeneralMenu;
 import model.Player;
 
 import java.sql.*;
@@ -13,9 +12,13 @@ public class PlayerDBA implements GeneralDBA<HashMap<?,?>, Player, Integer> {
     private String table = "player";
     private Connection connection;
 
-    @Override
-    public void initialize() throws Exception {
+    public PlayerDBA() throws SQLException {
         connect();
+    }
+
+    @Override
+    public boolean connected() {
+        return connection != null;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class PlayerDBA implements GeneralDBA<HashMap<?,?>, Player, Integer> {
 
     @Override
     public HashMap<Integer, Player> read() throws SQLException {
-        String query = "Select id_player, region, server, name from players";
+        String query = "Select id_player, region, server, name from player";
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
         HashMap<Integer, Player> player_map = new HashMap<>();
@@ -43,37 +46,34 @@ public class PlayerDBA implements GeneralDBA<HashMap<?,?>, Player, Integer> {
     public void wipe() throws SQLException {
         String query = "TRUNCATE TABLE player";
         Statement statement = connection.createStatement();
-        statement.executeQuery(query);
+        statement.executeUpdate(query);
     }
 
     public void add(Player player) throws SQLException {
-        String query = "Insert into player (id, region, server, name) VALUES (?, ?, ?, ?)";
+        String query = "Insert into player (id_player, region, server, name) VALUES (?, ?, ?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1, player.getID());
         preparedStatement.setString(2, player.getRegion());
         preparedStatement.setString(3, player.getServer());
         preparedStatement.setString(4, player.getName());
         preparedStatement.executeUpdate();
-        GeneralMenu.message_popup("Player added to DB");
     }
 
     public void modify(Player player) throws SQLException {
-        String query = "UPDATE player set region = ?, server = ?, name = ? where id = ? ()";
+        String query = "UPDATE player set region = ?, server = ?, name = ? where id_player = ? ()";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(4, player.getID());
         preparedStatement.setString(1, player.getRegion());
         preparedStatement.setString(2, player.getServer());
         preparedStatement.setString(3, player.getName());
         preparedStatement.executeUpdate();
-        GeneralMenu.message_popup("Player update in DB");
     }
 
     public void delete(Integer ID) throws SQLException {
-        String query = "DELETE from player where id = ?";
+        String query = "DELETE from player where id_player = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1, ID);
         preparedStatement.executeUpdate();
-        GeneralMenu.message_popup("Player added");
     }
 
 }

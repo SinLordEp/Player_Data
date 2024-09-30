@@ -1,7 +1,7 @@
 package DB;
 
 public interface GeneralDBA<T,K,V> {
-    void initialize() throws Exception;
+    boolean connected();
     void connect() throws Exception;
     T read() throws Exception;
     void wipe() throws Exception;

@@ -5,7 +5,6 @@ import model.Player;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,11 +68,11 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
                 bw.write(player.getID() + ",");
                 bw.write(player.getRegion() + ",");
                 bw.write(player.getServer() + ",");
-                bw.write(player.getName() + ",");
+                bw.write(player.getName());
                 bw.newLine();
             }
         }catch (Exception e){
-            JOptionPane.showMessageDialog(null,"Datos inválidos");
+            GeneralMenu.message_popup("Datos inválidos");
         }
     }
 }

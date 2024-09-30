@@ -18,12 +18,13 @@ public class PlayerControl implements GeneralControl {
                     case "Create new storage file":
                         PlayerDA.setFile_path(GeneralDataAccess.new_path_builder());
                         PlayerDA.write();
+                        PlayerDA.setData_changed(true);
                         break;
                     case "Read from existed file":
                         PlayerDA.setFile_path(GeneralDataAccess.get_path(GeneralDataAccess.choose_extension()));
                         break;
                     case "Read from DataBase":
-                        PlayerDA.read();
+                        PlayerDA.setDB(true);
                         break;
                 }
                 PlayerDA.refresh();
@@ -41,7 +42,7 @@ public class PlayerControl implements GeneralControl {
     private void operation_control(){
         while (true){
             try{
-                switch(PlayerMenu.operation_menu(PlayerDA.getFile_path())){
+                switch(PlayerMenu.operation_menu(PlayerDA.isDBConnected())){
                     case "Show Data": PlayerDA.print_person(); break;
                     case "Modify data": modify_control(); break;
                     case "Export data": export_control(); break;

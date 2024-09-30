@@ -1,9 +1,6 @@
 package data;
 
-import DB.GeneralDBA;
 import GUI.GeneralMenu;
-import file.FileDataReader;
-import file.FileDataWriter;
 import main.OperationCanceledException;
 
 import javax.swing.*;
@@ -11,38 +8,35 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
 
-public abstract class GeneralDataAccess<T,K,V> {
-    protected boolean file_changed = false;
+public abstract class GeneralDataAccess {
+    protected boolean data_changed = false;
     protected String file_path = null;
-    protected FileDataReader<T> reader = null;
-    protected FileDataWriter<T> writer = null;
-    protected GeneralDBA DBAccess = null;
-    protected boolean isDBSource = false;
+    protected boolean isDB = false;
+    //protected boolean DBConnected = false;
 
     abstract void read() throws Exception;
     abstract void write() throws Exception;
-    abstract void refresh() throws Exception;
-    abstract void export() throws Exception;
-    abstract String delete(V id) throws Exception;
-    abstract String add(K data) throws Exception;
-    abstract K pop(V id) throws Exception;
-    abstract String update(K data) throws Exception;
 
-    public String getFile_path() {
-        return file_path;
+    public boolean isDB() {
+        return isDB;
+    }
+
+    public void setDB(boolean DB) {
+        isDB = DB;
+        setData_changed(true);
     }
 
     public void setFile_path(String file_path) {
         this.file_path = file_path;
-        setFile_changed(true);
+        setData_changed(true);
     }
 
-    public boolean isFile_changed() {
-        return file_changed;
+    public boolean isData_changed() {
+        return data_changed;
     }
 
-    public void setFile_changed(boolean file_changed) {
-        this.file_changed = file_changed;
+    public void setData_changed(boolean data_changed) {
+        this.data_changed = data_changed;
     }
 
     public static String choose_extension(){

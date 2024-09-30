@@ -8,71 +8,70 @@ import file.PlayerFileWriter;
 
 import javax.swing.*;
 import java.util.HashMap;
-import java.util.Map;
 
-public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>, Player, Integer> {
+public class PlayerDataAccess extends GeneralDataAccess {
     private HashMap<Integer, Player> player_map = null;
     private final HashMap<String, String[]> region_server_map;
     private final String[] region_list;
+    private final PlayerDBA DBAccess;
+    private final PlayerFileReader fileReader;
+    private final PlayerFileWriter fileWriter;
+
     public PlayerDataAccess() throws Exception {
-        reader = new PlayerFileReader();
-        writer = new PlayerFileWriter();
+        fileReader = new PlayerFileReader();
+        fileWriter = new PlayerFileWriter();
         DBAccess = new PlayerDBA();
         region_server_map = PlayerFileReader.read_region_server();
         region_list = region_server_map.keySet().toArray(new String[0]);
-        DBAccess.initialize();
     }
 
     @SuppressWarnings("unchecked")
     public void read() throws Exception {
-        if(reader != null && file_path != null){
-            player_map = (HashMap<Integer, Player>) reader.read(file_path);
+        if(isDB()){
+            player_map = DBAccess.read();
         }else{
-            player_map = (HashMap<Integer, Player>) DBAccess.read();
-            isDBSource = true;
+            player_map = (HashMap<Integer, Player>) fileReader.read(file_path);
         }
+        setData_changed(false);
     }
 
     public void write() throws Exception {
-        if(writer != null && !isDBSource){
-            writer.write(file_path, player_map);
-            setFile_changed(true);
+        if(fileWriter != null && !isDB){
+            fileWriter.write(file_path, player_map);
         }else {
             throw new IllegalStateException("Writer is not initialized");
         }
     }
 
     public void refresh() throws Exception {
-        if(isFile_changed()) {
+        if(isData_changed()) {
             read();
             if(!isPlayerMap_Valid()){
                 throw new Exception("Player data corrupted");
             }
-            setFile_changed(false);
         }
     }
 
     public void export() throws Exception {
-        if(writer != null){
+        if(fileWriter != null){
             String target_extension = choose_extension();
             String target_path = get_path("path");
             String target_name = GeneralMenu.universalInput("Input new file name");
             target_path += "/" + target_name + target_extension;
-            writer.write(target_path, player_map);
+            fileWriter.write(target_path, player_map);
         }else {
             throw new IllegalStateException("Writer is not initialized");
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void export_DB() throws Exception {
         DBAccess.wipe();
         for(Player player : player_map.values()){
             DBAccess.add(player);
         }
+        GeneralMenu.message_popup("Players from map are added to DB");
     }
 
-    @SuppressWarnings("unchecked")
     public String delete(Integer ID) throws Exception {
         if(player_map == null){
             return "Empty Map";
@@ -81,32 +80,41 @@ public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>, Player, Intege
             return "Player does not exist";
         }
         player_map.remove(ID);
-        setFile_changed(true);
         DBAccess.delete(ID);
+        setData_changed(true);
         return "Player with ID " + ID + " is deleted";
     }
 
     public String add(Player player) throws Exception {
-        if(isPlayer_Valid(player)) {
-            if(player_map == null){
-                player_map = new HashMap<>();
-            }
-            player_map.put(player.getID(), player);
-            write();
-        }else{
+        if(isPlayer_Invalid(player)) {
             throw new Exception("Player data is invalid");
         }
+        if(player_map == null){
+            player_map = new HashMap<>();
+        }
+        player_map.put(player.getID(), player);
+        DBAccess.add(player);
+        setData_changed(true);
+        write();
         return "Player with ID " + player.getID() + "is added";
     }
 
-    @SuppressWarnings("unchecked")
     public String update(Player player) throws Exception {
-        if(isPlayer_Valid(player)) {
-            player_map.put(player.getID(), player);
-            DBAccess.modify(player);
-            write();
+        if(isPlayer_Invalid(player)) {
+            throw new Exception("Player data is invalid");
         }
+        player_map.put(player.getID(), player);
+        DBAccess.modify(player);
+        write();
         return  "Player with ID " + player.getID() + "is modified";
+    }
+
+    public String isDBConnected() {
+        if(DBAccess.connected()){
+            return "DataBase is connected";
+        }else{
+            return "DataBase is not connected";
+        }
     }
 
     public Player pop(Integer ID) throws Exception {
@@ -153,14 +161,14 @@ public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>, Player, Intege
         }
     }
 
-    public boolean isPlayer_Valid(Player player){
+    public boolean isPlayer_Invalid(Player player){
         if(region_server_map == null){
             JOptionPane.showMessageDialog(null, "Region server is null!");
-            return false;
+            return true;
         }
         if(!region_server_map.containsKey(player.getRegion())){
             JOptionPane.showMessageDialog(null, "Player Region doesn't exist!");
-            return false;
+            return true;
         }
         boolean server_valid = false;
         for(String server : region_server_map.get(player.getRegion())){
@@ -170,22 +178,22 @@ public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>, Player, Intege
             }
         }
         if(!server_valid){
-            JOptionPane.showMessageDialog(null, "Player Server doesn't exist!");
-            return false;
+            GeneralMenu.message_popup("Player Server doesn't exist!");
+            return true;
         }
 
         if(player.getID() <= 0){
-            JOptionPane.showMessageDialog(null, "Player ID is ilegal");
-            return false;
+            GeneralMenu.message_popup("Player ID is ilegal");
+            return true;
         }
 
-        if(player_map == null) return true;
+        if(player_map == null) return false;
 
         if(player.getName().isBlank()){
-            JOptionPane.showMessageDialog(null, "Player Name is blank");
-            return false;
+            GeneralMenu.message_popup("Player Name is blank");
+            return true;
         }
-        return true;
+        return false;
     }
 
     public boolean isPlayerMap_Valid(){
@@ -194,7 +202,7 @@ public class PlayerDataAccess extends GeneralDataAccess<Map<?,?>, Player, Intege
             return true;
         }
         for(Player player : player_map.values()){
-            if(!isPlayer_Valid(player)){
+            if(isPlayer_Invalid(player)){
                 return false;
             }
         }
