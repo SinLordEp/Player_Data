@@ -15,17 +15,34 @@ public class PlayerTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return 0;
+        return player_data.size();
     }
 
     @Override
     public int getColumnCount() {
-        return 0;
+        return columns_name.length;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return null;
+        Player player = player_data.get(rowIndex+1);
+        return switch (columnIndex){
+            case 1 -> player.getID();
+            case 2 -> player.getRegion();
+            case 3 -> player.getServer();
+            case 4 -> player.getName();
+            default -> throw new IllegalStateException("Unexpected value reading player column data ");
+        };
     }
+
+    @Override
+    public String getColumnName(int column) {
+        return columns_name[column];
+    }
+
+    public void update_data(TreeMap<Integer, Player> player_data) {
+        this.player_data = player_data;
+    }
+
 
 }
