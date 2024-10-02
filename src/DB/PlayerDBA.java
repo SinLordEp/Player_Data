@@ -3,13 +3,13 @@ package DB;
 import model.Player;
 
 import java.sql.*;
-import java.util.HashMap;
+import java.util.TreeMap;
 
-public class PlayerDBA implements GeneralDBA<HashMap<?,?>, Player, Integer> {
+public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
     private String URL = "jdbc:mysql://localhost:3306/person";
     private String user = "root";
     private String password = "root";
-    private String table = "player";
+    //private String table = "player";
     private Connection connection;
 
     public PlayerDBA() throws SQLException {
@@ -27,11 +27,11 @@ public class PlayerDBA implements GeneralDBA<HashMap<?,?>, Player, Integer> {
     }
 
     @Override
-    public HashMap<Integer, Player> read() throws SQLException {
+    public TreeMap<Integer, Player> read() throws SQLException {
         String query = "Select id_player, region, server, name from player";
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-        HashMap<Integer, Player> player_map = new HashMap<>();
+        TreeMap<Integer, Player> player_map = new TreeMap<>();
         while (resultSet.next()){
             Player player = new Player();
             player.setID(resultSet.getInt("id_player"));

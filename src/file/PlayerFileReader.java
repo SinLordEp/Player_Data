@@ -9,9 +9,8 @@ import org.w3c.dom.NodeList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.TreeMap;
 
 public class PlayerFileReader implements FileDataReader<Map<?,?>> {
 
@@ -20,7 +19,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
     }
 
     @Override
-    public Map<?,?> read(String file_path) throws Exception {
+    public TreeMap<?,?> read(String file_path) throws Exception {
         File file = new File(file_path);
         String file_extension = file_path.substring(file_path.lastIndexOf("."));
         return switch (file_extension){
@@ -31,8 +30,8 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         };
     }
 
-    private HashMap<Integer, Player> read_dat(File file) throws Exception {
-        HashMap<Integer, Player> player_data = new HashMap<>();
+    private TreeMap<Integer, Player> read_dat(File file) throws Exception {
+        TreeMap<Integer, Player> player_data = new TreeMap<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             while (true) {
                 Object temp = ois.readObject();
@@ -54,8 +53,8 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         return player_data;
     }
 
-    private HashMap<Integer, Player> read_xml(File file) throws Exception {
-        HashMap<Integer, Player> player_data = new HashMap<>();
+    private TreeMap<Integer, Player> read_xml(File file) throws Exception {
+        TreeMap<Integer, Player> player_data = new TreeMap<>();
         Element root = xml_utils.readXml(file);
         if (!"Player".equals(root.getNodeName())) {
             throw new RuntimeException("Invalid XML: Root element is not Player");
@@ -83,8 +82,8 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         return player_data;
     }
 
-    private HashMap<Integer, Player> read_txt(File file) {
-        HashMap<Integer, Player> player_data = new HashMap<>();
+    private TreeMap<Integer, Player> read_txt(File file) {
+        TreeMap<Integer, Player> player_data = new TreeMap<>();
         try(Scanner scanner = new Scanner(file)){
             if(!scanner.hasNext()){
                 GeneralMenu.message_popup("No data found");

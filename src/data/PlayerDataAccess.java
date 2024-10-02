@@ -8,9 +8,10 @@ import file.PlayerFileWriter;
 
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class PlayerDataAccess extends GeneralDataAccess {
-    private HashMap<Integer, Player> player_map = null;
+    private TreeMap<Integer, Player> player_map = null;
     private final HashMap<String, String[]> region_server_map;
     private final String[] region_list;
     private final PlayerDBA DBAccess;
@@ -30,7 +31,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         if(isDB()){
             player_map = DBAccess.read();
         }else{
-            player_map = (HashMap<Integer, Player>) fileReader.read(file_path);
+            player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
         }
         setData_changed(false);
     }
@@ -90,7 +91,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
             throw new Exception("Player data is invalid");
         }
         if(player_map == null){
-            player_map = new HashMap<>();
+            player_map = new TreeMap<>();
         }
         player_map.put(player.getID(), player);
         DBAccess.add(player);
@@ -131,7 +132,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return player_map == null;
     }
 
-    public HashMap<Integer, Player> getPlayer_map() {
+    public TreeMap<Integer, Player> getPlayer_map() {
         return player_map;
     }
 

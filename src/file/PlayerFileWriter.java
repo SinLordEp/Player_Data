@@ -6,15 +6,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
     @Override
     @SuppressWarnings("unchecked")
     public void write(String file_path, Map<?,?> input_data) throws Exception {
         File file = new File(file_path);
-        HashMap<Integer,Player> player_data = (HashMap<Integer, Player>) input_data;
+        TreeMap<Integer,Player> player_data = (TreeMap<Integer, Player>) input_data;
         if(file.createNewFile()){
             GeneralMenu.message_popup("New file created");
         }
@@ -28,7 +28,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         GeneralMenu.message_popup("File saved correctly");
     }
 
-    private void write_dat(File player_file, HashMap<Integer, Player> player_data) throws Exception {
+    private void write_dat(File player_file, TreeMap<Integer, Player> player_data) throws Exception {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(player_file,false))){
             if(player_data != null) {
                 for (Player player : player_data.values()) {
@@ -39,7 +39,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         }
     }
 
-    public void write_xml(File player_file, HashMap<Integer, Player> player_data) throws Exception {
+    public void write_xml(File player_file, TreeMap<Integer, Player> player_data) throws Exception {
         Document document = xml_utils.createDocument();
         // create Player root
         Element root = document.createElement("Player");
@@ -51,7 +51,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         xml_utils.writeXml(document, player_file);
     }
 
-    private void add_PlayerElements(Document document, Element root, HashMap<Integer, Player> player_data) {
+    private void add_PlayerElements(Document document, Element root, TreeMap<Integer, Player> player_data) {
         for (Player player : player_data.values()) {
             Element playerElement = document.createElement("player");
             playerElement.setAttribute("id", String.valueOf(player.getID()));
@@ -62,7 +62,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         }
     }
 
-    private void write_txt(File player_file, HashMap<Integer, Player> player_data){
+    private void write_txt(File player_file, TreeMap<Integer, Player> player_data){
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(player_file,false))){
             for(Player player : player_data.values()){
                 bw.write(player.getID() + ",");
