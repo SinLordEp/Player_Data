@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 public class PlayerTableModel extends AbstractTableModel {
     private final String[] columns_name = {"id_player","region","server","name"};
+    //private Object[][] data;
     private TreeMap<Integer, Player> player_data;
 
     public PlayerTableModel(TreeMap<Integer, Player> player_data) {
@@ -27,10 +28,10 @@ public class PlayerTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Player player = player_data.get(rowIndex+1);
         return switch (columnIndex){
-            case 1 -> player.getID();
-            case 2 -> player.getRegion();
-            case 3 -> player.getServer();
-            case 4 -> player.getName();
+            case 0 -> player.getID();
+            case 1 -> player.getRegion();
+            case 2 -> player.getServer();
+            case 3 -> player.getName();
             default -> throw new IllegalStateException("Unexpected value reading player column data ");
         };
     }
@@ -42,6 +43,7 @@ public class PlayerTableModel extends AbstractTableModel {
 
     public void update_data(TreeMap<Integer, Player> player_data) {
         this.player_data = player_data;
+        fireTableDataChanged();
     }
 
 

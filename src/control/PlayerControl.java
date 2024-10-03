@@ -1,11 +1,14 @@
 package control;
 
 import GUI.GeneralMenu;
+import GUI.Player.PlayerUI;
 import GUI.PlayerMenu;
 import data.GeneralDataAccess;
 import data.PlayerDataAccess;
 import model.Player;
 import main.OperationCanceledException;
+
+import javax.swing.*;
 
 public class PlayerControl implements GeneralControl {
     private PlayerDataAccess PlayerDA;
@@ -40,13 +43,24 @@ public class PlayerControl implements GeneralControl {
     }
 
     private void operation_control(){
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            PlayerUI playerUI = new PlayerUI(PlayerDA.getPlayer_map());
+            JFrame frame = new JFrame("Player Menu");
+            frame.setContentPane(playerUI.getMain_panel());
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setVisible(true);
+        });
         while (true){
             try{
-                switch(PlayerMenu.operation_menu(PlayerDA.isDBConnected())){
+                Thread.sleep(5000);
+                System.out.println("running");
+                /*switch(PlayerMenu.operation_menu(PlayerDA.isDBConnected())){
                     case "Show Data": PlayerDA.print_person(); break;
                     case "Modify data": modify_control(); break;
                     case "Export data": export_control(); break;
-                }
+                }*/
+
             }catch (OperationCanceledException e) {
                 exception_message(e);
                 return;
