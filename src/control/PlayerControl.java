@@ -48,6 +48,7 @@ public class PlayerControl implements GeneralControl {
             JFrame frame = new JFrame("Player Menu");
             frame.setContentPane(playerUI.getMain_panel());
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
             frame.pack();
             frame.setVisible(true);
         });

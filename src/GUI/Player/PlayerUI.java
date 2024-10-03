@@ -19,7 +19,11 @@ public class PlayerUI {
 
     public PlayerUI(TreeMap<Integer, Player> player_data) throws HeadlessException {
         tableModel = new PlayerTableModel(player_data);
+        search_listener();
         Table_data.setModel(tableModel);
+    }
+
+    private void search_listener(){
         Field_search.getDocument().addDocumentListener(new SearchListener() {
             @Override
             public void update() {
@@ -30,6 +34,8 @@ public class PlayerUI {
                             Table_data.setRowSelectionInterval(i, i);
                             Table_data.scrollRectToVisible(Table_data.getCellRect(i, 0, true));
                             break;
+                        }else{
+                            Table_data.clearSelection();
                         }
                     }
                 } else {
@@ -38,7 +44,6 @@ public class PlayerUI {
             }
         });
     }
-
     public JPanel getMain_panel() {
         return main_panel;
     }
