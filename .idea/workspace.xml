@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="初步将简陋UI添加到operation control里面， 接下来需要将业务逻辑转到窗口上">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
-    </list>
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="初步将简陋UI添加到operation control里面， 接下来需要将业务逻辑转到窗口上" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -123,7 +118,7 @@
       <workItem from="1727892615021" duration="2141000" />
       <workItem from="1727894780452" duration="1675000" />
       <workItem from="1727962014794" duration="5584000" />
-      <workItem from="1727969571994" duration="1827000" />
+      <workItem from="1727969571994" duration="2259000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -341,7 +336,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727970857319</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="初步将简陋UI添加到operation control里面， 接下来需要将业务逻辑转到窗口上">
+      <option name="closed" value="true" />
+      <created>1727971692112</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1727971692112</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
