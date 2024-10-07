@@ -9,18 +9,6 @@ public class PlayerMenu {
         return buildSelectionDialog("File Operation Menu","Choose the data.file source:", options);
     }
 
-    public static String operation_menu(String isDBConnected){
-        String[] options = {"Show Data", "Modify data", "Export data"};
-        return buildSelectionDialog("Operation Menu","""
-                        Status: %s
-                       
-                        Choose a operation""".formatted(isDBConnected), options);
-    }
-
-    public static String modify_menu(){
-        String[] options = {"Create new Player", "Modify Player data", "Delete Player"};
-        return buildSelectionDialog("Modify Menu","Choose a operation", options);
-    }
 
     public static int ID_input_UI() throws NumberFormatException{
         return Integer.parseInt(GeneralMenu.universalInput("Enter the ID"));
