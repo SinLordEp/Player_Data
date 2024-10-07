@@ -11,19 +11,17 @@ import java.awt.*;
 
 
 public class PlayerUI implements GeneralUI {
-    private final PlayerControl playerControl;
+    private PlayerControl playerControl;
     private final JFrame frame;
     private JTable table_data;
     private JButton button_add;
     private JButton button_modify;
-    private JButton Button_export;
-    private JScrollPane Scroll_data;
+    private JButton button_export;
     private JTextField field_search;
-    private JLabel Label_search;
     private JPanel main_panel;
     private JButton button_delete;
-    private final PlayerTableModel tableModel;
-    private final PlayerDataAccess playerDA;
+    private PlayerTableModel tableModel;
+    private PlayerDataAccess playerDA;
     private int selected_player_id;
 
     public PlayerUI(PlayerControl control) throws HeadlessException {
@@ -59,7 +57,7 @@ public class PlayerUI implements GeneralUI {
                 throw new RuntimeException(e);
             }
         });
-        Button_export.addActionListener(_ -> {
+        button_export.addActionListener(_ -> {
             try {
                 playerControl.export_control();
             } catch (Exception ex) {
