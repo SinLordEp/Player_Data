@@ -17,12 +17,12 @@ public class PlayerControl implements GeneralControl {
         while (playerDA.getPlayer_map().isEmpty()){
             try{
                 switch (PlayerMenu.run_menu()){
-                    case "Create new storage file":
+                    case "Create new storage data.file":
                         playerDA.setFile_path(GeneralDataAccess.new_path_builder());
                         playerDA.write();
                         playerDA.setData_changed(true);
                         break;
-                    case "Read from existed file":
+                    case "Read from existed data.file":
                         playerDA.setFile_path(GeneralDataAccess.get_path(GeneralDataAccess.choose_extension()));
                         break;
                     case "Read from DataBase":
@@ -108,7 +108,7 @@ public class PlayerControl implements GeneralControl {
             message("Empty Map");
         }else{
             switch (PlayerMenu.export_menu()){
-                case "Export to file": playerDA.export(); break;
+                case "Export to data.file": playerDA.export(); break;
                 case "Export all to database (Not recommended)": playerDA.export_DB(); break;
             }
         }

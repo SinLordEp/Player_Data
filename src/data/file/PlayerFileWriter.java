@@ -1,4 +1,4 @@
-package file;
+package data.file;
 
 import GUI.GeneralMenu;
 import model.Player;
@@ -16,7 +16,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         File file = new File(file_path);
         TreeMap<Integer,Player> player_data = (TreeMap<Integer, Player>) input_data;
         if(file.createNewFile()){
-            GeneralMenu.message_popup("New file created");
+            GeneralMenu.message_popup("New data.file created");
         }
 
         String file_extension = file_path.substring(file_path.lastIndexOf("."));
@@ -43,11 +43,11 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         Document document = xml_utils.createDocument();
         // create Player root
         Element root = document.createElement("Player");
-        // Add root to file
+        // Add root to data.file
         document.appendChild(root);
         // read data and transform to xml element then add to root
         if(player_data != null) add_PlayerElements(document, root, player_data);
-        // save to file
+        // save to data.file
         xml_utils.writeXml(document, player_file);
     }
 

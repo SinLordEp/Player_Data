@@ -1,4 +1,4 @@
-package file;
+package data.file;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,7 +24,7 @@ public class xml_utils {
         return document.getDocumentElement();
     }
 
-    // write to file, receive root and path
+    // write to data.file, receive root and path
     public static void writeXml(Document document, File file) throws Exception {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();

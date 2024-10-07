@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="初步将简陋UI添加到operation control里面， 接下来需要将业务逻辑转到窗口上">
-      <change afterPath="$PROJECT_DIR$/src/GUI/GeneralUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DB/PlayerDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DB/PlayerDBA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/player_xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/player_xml.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
-    </list>
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="已将业务操作转移到UI上，接下来进行代码清理" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,7 +121,7 @@
       <workItem from="1727969571994" duration="2259000" />
       <workItem from="1727971913843" duration="2025000" />
       <workItem from="1728053299017" duration="59000" />
-      <workItem from="1728311251913" duration="7271000" />
+      <workItem from="1728311251913" duration="7481000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -365,7 +355,23 @@
       <option name="project" value="LOCAL" />
       <updated>1727971942343</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="已将业务操作转移到UI上，接下来进行代码清理">
+      <option name="closed" value="true" />
+      <created>1728319912328</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1728319912328</updated>
+    </task>
+    <task id="LOCAL-00031" summary="已将业务操作转移到UI上，接下来进行代码清理">
+      <option name="closed" value="true" />
+      <created>1728320009119</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1728320009119</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -398,6 +404,7 @@
     <MESSAGE value="DB支持已添加，目前需要完善业务逻辑并添加JTABLE支持" />
     <MESSAGE value="开始设计UI， 修改playerdata为treemap" />
     <MESSAGE value="初步将简陋UI添加到operation control里面， 接下来需要将业务逻辑转到窗口上" />
-    <option name="LAST_COMMIT_MESSAGE" value="初步将简陋UI添加到operation control里面， 接下来需要将业务逻辑转到窗口上" />
+    <MESSAGE value="已将业务操作转移到UI上，接下来进行代码清理" />
+    <option name="LAST_COMMIT_MESSAGE" value="已将业务操作转移到UI上，接下来进行代码清理" />
   </component>
 </project>

@@ -1,10 +1,10 @@
 package data;
 
-import DB.PlayerDBA;
+import data.DB.PlayerDBA;
 import GUI.GeneralMenu;
 import model.Player;
-import file.PlayerFileReader;
-import file.PlayerFileWriter;
+import data.file.PlayerFileReader;
+import data.file.PlayerFileWriter;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         if(fileWriter != null){
             String target_extension = choose_extension();
             String target_path = get_path("path");
-            String target_name = GeneralMenu.universalInput("Input new file name");
+            String target_name = GeneralMenu.universalInput("Input new data.file name");
             target_path += "/" + target_name + target_extension;
             fileWriter.write(target_path, player_map);
         }else {
@@ -68,7 +68,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         for(Player player : player_map.values()){
             DBAccess.add(player);
         }
-        GeneralMenu.message_popup("Players from map are added to DB");
+        GeneralMenu.message_popup("Players from map are added to data.DB");
     }
 
     public String delete(int selected_player_id) throws Exception {

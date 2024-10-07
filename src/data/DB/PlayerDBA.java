@@ -1,4 +1,4 @@
-package DB;
+package data.DB;
 
 import model.Player;
 

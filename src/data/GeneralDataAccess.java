@@ -70,7 +70,7 @@ public abstract class GeneralDataAccess {
     public static String new_path_builder(){
         String target_path = GeneralDataAccess.get_path("path");
         String target_extension = choose_extension();
-        String target_file_name = GeneralMenu.universalInput("Input a file name");
+        String target_file_name = GeneralMenu.universalInput("Input a data.file name");
         target_path += "/" +target_file_name + target_extension;
         return target_path;
     }

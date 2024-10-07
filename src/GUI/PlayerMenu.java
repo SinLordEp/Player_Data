@@ -5,8 +5,8 @@ import static GUI.GeneralMenu.buildSelectionDialog;
 public class PlayerMenu {
 
     public static String run_menu(){
-        String[] options = {"Create new source", "Read from existed file", "Read from DataBase"};
-        return buildSelectionDialog("File Operation Menu","Choose the file source:", options);
+        String[] options = {"Create new source", "Read from existed data.file", "Read from DataBase"};
+        return buildSelectionDialog("File Operation Menu","Choose the data.file source:", options);
     }
 
     public static String operation_menu(String isDBConnected){
@@ -41,7 +41,7 @@ public class PlayerMenu {
     }
 
     public static String export_menu(){
-        String[] options = {"Export to file", "Export all to database (Not recommended)"};
+        String[] options = {"Export to data.file", "Export all to database (Not recommended)"};
         return buildSelectionDialog("Exporting data","Choose the export type", options);
     }
 

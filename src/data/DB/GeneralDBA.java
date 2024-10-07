@@ -1,4 +1,4 @@
-package DB;
+package data.DB;
 
 public interface GeneralDBA<T,K,V> {
     boolean connected();

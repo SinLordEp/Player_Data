@@ -1,4 +1,4 @@
-package file;
+package data.file;
 
 import GUI.GeneralMenu;
 import model.Player;
@@ -39,7 +39,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                     break;
                 }
                 if(!(temp instanceof Player player)){
-                    throw new Exception("Error reading Dat file, file is corrupted");
+                    throw new Exception("Error reading Dat data.file, data.file is corrupted");
                 }else{
                     player_data.put(player.getID(), player);
                 }
@@ -100,7 +100,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                 GeneralMenu.message_popup("Player data imported");
             }
         }catch (Exception e) {
-            throw new RuntimeException("Error reading this txt file");
+            throw new RuntimeException("Error reading this txt data.file");
         }
         return player_data;
     }
