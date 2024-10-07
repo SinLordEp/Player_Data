@@ -8,29 +8,28 @@ import data.PlayerDataAccess;
 import model.Player;
 import main.OperationCanceledException;
 
-import javax.swing.*;
-
 public class PlayerControl implements GeneralControl {
-    private PlayerDataAccess PlayerDA;
+    private PlayerDataAccess playerDA;
+
     @Override
     public void run() throws Exception {
-        PlayerDA = new PlayerDataAccess();
-        while (PlayerDA.getPlayer_map() == null){
+        playerDA = new PlayerDataAccess();
+        while (playerDA.getPlayer_map().isEmpty()){
             try{
                 switch (PlayerMenu.run_menu()){
                     case "Create new storage file":
-                        PlayerDA.setFile_path(GeneralDataAccess.new_path_builder());
-                        PlayerDA.write();
-                        PlayerDA.setData_changed(true);
+                        playerDA.setFile_path(GeneralDataAccess.new_path_builder());
+                        playerDA.write();
+                        playerDA.setData_changed(true);
                         break;
                     case "Read from existed file":
-                        PlayerDA.setFile_path(GeneralDataAccess.get_path(GeneralDataAccess.choose_extension()));
+                        playerDA.setFile_path(GeneralDataAccess.get_path(GeneralDataAccess.choose_extension()));
                         break;
                     case "Read from DataBase":
-                        PlayerDA.setDB(true);
+                        playerDA.setDBOnly(true);
                         break;
                 }
-                PlayerDA.refresh();
+                playerDA.refresh();
                 break;
             }catch (OperationCanceledException e) {
                 exception_message(e);
@@ -43,25 +42,12 @@ public class PlayerControl implements GeneralControl {
     }
 
     private void operation_control(){
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            PlayerUI playerUI = new PlayerUI(PlayerDA.getPlayer_map());
-            JFrame frame = new JFrame("Player Menu");
-            frame.setContentPane(playerUI.getMain_panel());
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setLocationRelativeTo(null);
-            frame.pack();
-            frame.setVisible(true);
-        });
+        PlayerUI playerUI = new PlayerUI(this);
+        playerUI.run();
         while (true){
             try{
                 Thread.sleep(5000);
-                System.out.println("running");
-                /*switch(PlayerMenu.operation_menu(PlayerDA.isDBConnected())){
-                    case "Show Data": PlayerDA.print_person(); break;
-                    case "Modify data": modify_control(); break;
-                    case "Export data": export_control(); break;
-                }*/
-
+                System.out.println("Operation UI is running");
             }catch (OperationCanceledException e) {
                 exception_message(e);
                 return;
@@ -71,59 +57,40 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    private void modify_control(){
-        while(true){
-            try {
-                switch(PlayerMenu.modify_menu()){
-                    case "Create new Player": create_player_control(); break;
-                    case "Modify Player data": modify_player_control(); break;
-                    case "Delete Player": delete_control(); break;
-                }
-                PlayerDA.refresh();
-                return;
-            }catch (OperationCanceledException e) {
-                exception_message(e);
-                return;
-            }catch (Exception e) {
-                exception_message(e);
-            }
-        }
-    }
-
-    private void modify_player_control() throws Exception {
-        if(PlayerDA.isEmpty()){
+    public void modify_player_control(int selected_player_id) throws Exception {
+        if(playerDA.isEmpty()){
             message("Empty Map");
             return;
         }
-        Player player = PlayerDA.pop(PlayerMenu.ID_input_UI());
+        Player player = playerDA.getPlayer_map().get(selected_player_id);
         switch(PlayerMenu.modify_player_menu()){
             // case 1 is linked to case 2, because after changing region the server has to be changed too.
-            case "Region": player.setRegion(PlayerMenu.region_chooser(PlayerDA.getRegion_list()));
-            case "Server": player.setServer(PlayerMenu.server_chooser(PlayerDA.getServer_list(player.getRegion()))); break;
+            case "Region": player.setRegion(PlayerMenu.region_chooser(playerDA.getRegion_list()));
+            case "Server": player.setServer(PlayerMenu.server_chooser(playerDA.getServer_list(player.getRegion()))); break;
             case "Name": player.setName(GeneralMenu.universalInput("Enter player name: ")); break;
             case "ALL":
-                player.setRegion(PlayerMenu.region_chooser(PlayerDA.getRegion_list()));
-                player.setServer(PlayerMenu.server_chooser(PlayerDA.getServer_list(player.getRegion())));
+                player.setRegion(PlayerMenu.region_chooser(playerDA.getRegion_list()));
+                player.setServer(PlayerMenu.server_chooser(playerDA.getServer_list(player.getRegion())));
                 player.setName(GeneralMenu.universalInput("Enter player name: "));
                 break;
         }
-        GeneralMenu.message_popup(PlayerDA.update(player));
+        GeneralMenu.message_popup(playerDA.update(player));
     }
 
-    private void create_player_control() throws Exception {
+    public void create_player_control() throws Exception {
         Player player = new Player();
-        player.setRegion(PlayerMenu.region_chooser(PlayerDA.getRegion_list()));
-        player.setServer(PlayerMenu.server_chooser(PlayerDA.getServer_list(player.getRegion())));
+        player.setRegion(PlayerMenu.region_chooser(playerDA.getRegion_list()));
+        player.setServer(PlayerMenu.server_chooser(playerDA.getServer_list(player.getRegion())));
         player.setID(create_ID_control());
         player.setName(GeneralMenu.universalInput("Enter player name: "));
-        GeneralMenu.message_popup(PlayerDA.add(player));
+        GeneralMenu.message_popup(playerDA.add(player));
     }
 
     private int create_ID_control() throws Exception {
         while (true) {
             try {
                 int ID = PlayerMenu.ID_input_UI();
-                if (PlayerDA.containsKey(ID)) {
+                if (playerDA.containsKey(ID)) {
                     throw new Exception("ID already existed");
                 } else return ID;
             } catch (NumberFormatException e) {
@@ -132,18 +99,17 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    private void delete_control() throws Exception {
-        int ID = PlayerMenu.ID_input_UI();
-        GeneralMenu.message_popup(PlayerDA.delete(ID));
+    public void delete_control(int selected_player_id) throws Exception {
+        GeneralMenu.message_popup(playerDA.delete(selected_player_id));
     }
 
-    private void export_control() throws Exception {
-        if(PlayerDA.isEmpty()){
+    public void export_control() throws Exception {
+        if(playerDA.isEmpty()){
             message("Empty Map");
         }else{
             switch (PlayerMenu.export_menu()){
-                case "Export to file": PlayerDA.export(); break;
-                case "Export all to database (Not recommended)": PlayerDA.export_DB(); break;
+                case "Export to file": playerDA.export(); break;
+                case "Export all to database (Not recommended)": playerDA.export_DB(); break;
             }
         }
     }
@@ -165,4 +131,7 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
+    public PlayerDataAccess getPlayerDA() {
+        return playerDA;
+    }
 }

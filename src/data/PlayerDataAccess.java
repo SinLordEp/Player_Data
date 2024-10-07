@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 public class PlayerDataAccess extends GeneralDataAccess {
-    private TreeMap<Integer, Player> player_map = null;
+    private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<String, String[]> region_server_map;
     private final String[] region_list;
     private final PlayerDBA DBAccess;
@@ -28,7 +28,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     @SuppressWarnings("unchecked")
     public void read() throws Exception {
-        if(isDB()){
+        if(isDBOnly()){
             player_map = DBAccess.read();
         }else{
             player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
@@ -37,10 +37,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void write() throws Exception {
-        if(fileWriter != null && !isDB){
+        if(!isDBOnly){
             fileWriter.write(file_path, player_map);
-        }else {
-            throw new IllegalStateException("Writer is not initialized");
         }
     }
 
@@ -73,31 +71,22 @@ public class PlayerDataAccess extends GeneralDataAccess {
         GeneralMenu.message_popup("Players from map are added to DB");
     }
 
-    public String delete(Integer ID) throws Exception {
-        if(player_map == null){
-            return "Empty Map";
-        }
-        if(player_map.containsKey(ID)){
-            return "Player does not exist";
-        }
-        player_map.remove(ID);
-        DBAccess.delete(ID);
+    public String delete(int selected_player_id) throws Exception {
+        player_map.remove(selected_player_id);
+        DBAccess.delete(selected_player_id);
         setData_changed(true);
-        return "Player with ID " + ID + " is deleted";
+        return "Player with ID " + selected_player_id + " is deleted";
     }
 
     public String add(Player player) throws Exception {
         if(isPlayer_Invalid(player)) {
             throw new Exception("Player data is invalid");
         }
-        if(player_map == null){
-            player_map = new TreeMap<>();
-        }
         player_map.put(player.getID(), player);
         DBAccess.add(player);
         setData_changed(true);
         write();
-        return "Player with ID " + player.getID() + "is added";
+        return "Player with ID " + player.getID() + " is added";
     }
 
     public String update(Player player) throws Exception {
@@ -107,25 +96,22 @@ public class PlayerDataAccess extends GeneralDataAccess {
         player_map.put(player.getID(), player);
         DBAccess.modify(player);
         write();
-        return  "Player with ID " + player.getID() + "is modified";
+        return  "Player with ID " + player.getID() + " is modified";
     }
 
     public String isDBConnected() {
+        String db_status = "Data Source: ";
+        if(isDBOnly){
+            db_status += "DataBase";
+        }else{
+            db_status += file_path.substring(file_path.lastIndexOf(".")) + " File";
+        }
         if(DBAccess.connected()){
-            return "DataBase is connected";
+            db_status += "              DataBase is connected";
         }else{
-            return "DataBase is not connected";
+            db_status += "              DataBase is not connected";
         }
-    }
-
-    public Player pop(Integer ID) throws Exception {
-        if(player_map.containsKey(ID)){
-            Player player = player_map.get(ID);
-            player_map.remove(ID);
-            return player;
-        }else{
-            throw new Exception("Player does not exist");
-        }
+        return db_status;
     }
 
     public boolean isEmpty(){
@@ -149,16 +135,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
             return false;
         }else{
             return player_map.containsKey(ID);
-        }
-    }
-
-    public void print_person(){
-        if(player_map == null){
-            GeneralMenu.message_popup("No player data registered");
-        }else{
-            for (Player player : player_map.values()) {
-                GeneralMenu.message_popup(player.toString());
-            }
         }
     }
 

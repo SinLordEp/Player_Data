@@ -60,7 +60,7 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
     }
 
     public void modify(Player player) throws SQLException {
-        String query = "UPDATE player set region = ?, server = ?, name = ? where id_player = ? ()";
+        String query = "UPDATE player set region = ?, server = ?, name = ? where id_player = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(4, player.getID());
         preparedStatement.setString(1, player.getRegion());
