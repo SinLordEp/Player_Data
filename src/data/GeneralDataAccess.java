@@ -12,7 +12,6 @@ public abstract class GeneralDataAccess {
     protected boolean data_changed = false;
     protected String file_path = null;
     protected boolean isDBOnly = false;
-    //protected boolean DBConnected = false;
 
     abstract void read() throws Exception;
     abstract void write() throws Exception;
