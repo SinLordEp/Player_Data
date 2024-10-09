@@ -1,10 +1,6 @@
 package GUI;
 
-import data.GeneralDataAccess;
-
 public interface GeneralUI {
-    GeneralDataAccess DATA_ACCESS = null;
-    void run();
-    void close();
+    void run() throws Exception;
     void refresh() throws Exception;
 }

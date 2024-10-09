@@ -11,17 +11,17 @@ import java.io.File;
 public abstract class GeneralDataAccess {
     protected boolean data_changed = false;
     protected String file_path = null;
-    protected boolean isDBOnly = false;
+    protected boolean DBOnly = false;
 
     abstract void read() throws Exception;
     abstract void write() throws Exception;
 
     public boolean isDBOnly() {
-        return isDBOnly;
+        return DBOnly;
     }
 
     public void setDBOnly(boolean DBOnly) {
-        this.isDBOnly = DBOnly;
+        this.DBOnly = DBOnly;
         setData_changed(true);
     }
 

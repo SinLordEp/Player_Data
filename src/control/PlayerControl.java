@@ -2,7 +2,7 @@ package control;
 
 import GUI.GeneralMenu;
 import GUI.Player.PlayerUI;
-import GUI.PlayerMenu;
+import GUI.Player.PlayerMenu;
 import data.GeneralDataAccess;
 import data.PlayerDataAccess;
 import model.Player;
@@ -20,7 +20,6 @@ public class PlayerControl implements GeneralControl {
                     case "Create new storage data.file":
                         playerDA.setFile_path(GeneralDataAccess.new_path_builder());
                         playerDA.write();
-                        playerDA.setData_changed(true);
                         break;
                     case "Read from existed data.file":
                         playerDA.setFile_path(GeneralDataAccess.get_path(GeneralDataAccess.choose_extension()));
@@ -29,7 +28,7 @@ public class PlayerControl implements GeneralControl {
                         playerDA.setDBOnly(true);
                         break;
                 }
-                playerDA.refresh();
+                playerDA.setData_changed(true);
                 break;
             }catch (OperationCanceledException e) {
                 exception_message(e);
@@ -41,7 +40,7 @@ public class PlayerControl implements GeneralControl {
         operation_control();
     }
 
-    private void operation_control(){
+    private void operation_control() throws Exception {
         PlayerUI playerUI = new PlayerUI(this);
         playerUI.run();
         while (true){

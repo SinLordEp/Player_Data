@@ -37,7 +37,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void write() throws Exception {
-        if(!isDBOnly){
+        if(!DBOnly){
             fileWriter.write(file_path, player_map);
         }
     }
@@ -64,6 +64,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void export_DB() throws Exception {
+        if(!DBAccess.connected()){
+            GeneralMenu.message_popup("Database is not connected");
+            return;
+        }
         DBAccess.wipe();
         for(Player player : player_map.values()){
             DBAccess.add(player);
@@ -73,7 +77,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public String delete(int selected_player_id) throws Exception {
         player_map.remove(selected_player_id);
-        DBAccess.delete(selected_player_id);
+        if(DBAccess.connected()){
+            DBAccess.delete(selected_player_id);
+        }
         setData_changed(true);
         return "Player with ID " + selected_player_id + " is deleted";
     }
@@ -83,7 +89,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
             throw new Exception("Player data is invalid");
         }
         player_map.put(player.getID(), player);
-        DBAccess.add(player);
+        if(DBAccess.connected()){
+            DBAccess.add(player);
+        }
         setData_changed(true);
         write();
         return "Player with ID " + player.getID() + " is added";
@@ -94,24 +102,21 @@ public class PlayerDataAccess extends GeneralDataAccess {
             throw new Exception("Player data is invalid");
         }
         player_map.put(player.getID(), player);
-        DBAccess.modify(player);
+        if(DBAccess.connected()){
+            DBAccess.modify(player);
+        }
         write();
         return  "Player with ID " + player.getID() + " is modified";
     }
 
-    public String isDBConnected() {
-        String db_status = "Data Source: ";
-        if(isDBOnly){
-            db_status += "DataBase";
+    public String dataSource() {
+        String data_source = "Data Source: ";
+        if(DBOnly){
+            data_source += "DataBase";
         }else{
-            db_status += file_path.substring(file_path.lastIndexOf(".")) + " File";
+            data_source += file_path.substring(file_path.lastIndexOf(".")) + " File";
         }
-        if(DBAccess.connected()){
-            db_status += "              DataBase is connected";
-        }else{
-            db_status += "              DataBase is not connected";
-        }
-        return db_status;
+        return data_source;
     }
 
     public boolean isEmpty(){
@@ -186,4 +191,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return true;
     }
 
+    public PlayerDBA getDBAccess() {
+        return DBAccess;
+    }
 }

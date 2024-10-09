@@ -6,14 +6,11 @@ import java.sql.*;
 import java.util.TreeMap;
 
 public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
-    private String URL = "jdbc:mysql://localhost:3306/person";
-    private String user = "root";
-    private String password = "root";
-    //private String table = "player";
+    private String URL, database, table, user, password;
     private Connection connection;
 
-    public PlayerDBA() throws SQLException {
-        connect();
+    public PlayerDBA()  {
+
     }
 
     @Override
@@ -23,12 +20,12 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
 
     @Override
     public void connect() throws SQLException {
-        connection = DriverManager.getConnection(URL, user, password);
+        connection = DriverManager.getConnection(URL + "/" + database, user, password);
     }
 
     @Override
     public TreeMap<Integer, Player> read() throws SQLException {
-        String query = "Select id_player, region, server, name from player";
+        String query = "Select id_player, region, server, name from %s".formatted(table);
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
         TreeMap<Integer, Player> player_map = new TreeMap<>();
@@ -50,7 +47,7 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
     }
 
     public void add(Player player) throws SQLException {
-        String query = "Insert into player (id_player, region, server, name) VALUES (?, ?, ?, ?)";
+        String query = "Insert into %s (id_player, region, server, name) VALUES (?, ?, ?, ?)".formatted(table);
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1, player.getID());
         preparedStatement.setString(2, player.getRegion());
@@ -60,7 +57,7 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
     }
 
     public void modify(Player player) throws SQLException {
-        String query = "UPDATE player set region = ?, server = ?, name = ? where id_player = ?";
+        String query = "UPDATE %s set region = ?, server = ?, name = ? where id_player = ?".formatted(table);
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(4, player.getID());
         preparedStatement.setString(1, player.getRegion());
@@ -70,11 +67,32 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
     }
 
     public void delete(Integer ID) throws SQLException {
-        String query = "DELETE from player where id_player = ?";
+        String query = "DELETE from %s where id_player = ?".formatted(table);
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1, ID);
         preparedStatement.executeUpdate();
     }
 
+
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
+
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
 }
 

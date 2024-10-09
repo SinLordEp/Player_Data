@@ -1,4 +1,6 @@
-package GUI;
+package GUI.Player;
+
+import GUI.GeneralMenu;
 
 import static GUI.GeneralMenu.buildSelectionDialog;
 
