@@ -26,7 +26,6 @@ public class principal {
     }
 
     public static void initialize(){
-        // register class
         ClassRegister.registerClass("Player", PlayerControl.class);
         ClassRegister.registerClass("Not available", GeneralControl.class);
     }
