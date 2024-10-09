@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="添加了填写连接数据库所需数值的界面，并稍微修改了启动选择数据来源后的逻辑，以及有无数据库时的数据读写逻辑">
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="优化了初始化时的class自动匹配">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config/player_txt.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/player_txt.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/file/PlayerFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/file/PlayerFileReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/GeneralControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/GeneralControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ClassRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ClassRegister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +136,7 @@
       <workItem from="1728053299017" duration="59000" />
       <workItem from="1728311251913" duration="7481000" />
       <workItem from="1728324456975" duration="2227000" />
-      <workItem from="1728482106606" duration="10557000" />
+      <workItem from="1728482106606" duration="13110000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -423,7 +426,23 @@
       <option name="project" value="LOCAL" />
       <updated>1728489021559</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="解决了无序列表会无法读取到JTABLE的问题">
+      <option name="closed" value="true" />
+      <created>1728495154788</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1728495154788</updated>
+    </task>
+    <task id="LOCAL-00038" summary="解决了无序列表会无法读取到JTABLE的问题">
+      <option name="closed" value="true" />
+      <created>1728495173322</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1728495173322</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -458,20 +477,13 @@
     <MESSAGE value="初步将简陋UI添加到operation control里面， 接下来需要将业务逻辑转到窗口上" />
     <MESSAGE value="已将业务操作转移到UI上，接下来进行代码清理" />
     <MESSAGE value="添加了填写连接数据库所需数值的界面，并稍微修改了启动选择数据来源后的逻辑，以及有无数据库时的数据读写逻辑" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加了填写连接数据库所需数值的界面，并稍微修改了启动选择数据来源后的逻辑，以及有无数据库时的数据读写逻辑" />
+    <MESSAGE value="解决了无序列表会无法读取到JTABLE的问题" />
+    <MESSAGE value="优化了初始化时的class自动匹配" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化了初始化时的class自动匹配" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/data/file/PlayerFileReader.java</url>
-          <line>84</line>
-          <properties class="data.file.PlayerFileReader" method="read_txt">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java</url>
           <line>38</line>
@@ -480,11 +492,6 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/GUI/Player/PlayerUI.java</url>
-          <line>65</line>
-          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

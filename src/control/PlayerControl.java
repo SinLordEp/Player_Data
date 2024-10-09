@@ -8,12 +8,10 @@ import data.PlayerDataAccess;
 import model.Player;
 import main.OperationCanceledException;
 
-public class PlayerControl implements GeneralControl {
+public class PlayerControl implements GeneralControl<PlayerDataAccess> {
     private PlayerDataAccess playerDA;
-
     @Override
     public void run() throws Exception {
-        playerDA = new PlayerDataAccess();
         while (playerDA.getPlayer_map().isEmpty()){
             try{
                 switch (PlayerMenu.run_menu()){
@@ -38,6 +36,11 @@ public class PlayerControl implements GeneralControl {
             }
         }
         operation_control();
+    }
+
+    @Override
+    public void setDA(GeneralDataAccess DA) {
+        this.playerDA = (PlayerDataAccess) DA;
     }
 
     private void operation_control() throws Exception {
@@ -130,7 +133,9 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    public PlayerDataAccess getPlayerDA() {
+    @Override
+    public PlayerDataAccess getDA() {
         return playerDA;
     }
+
 }

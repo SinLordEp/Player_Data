@@ -1,5 +1,9 @@
 package control;
 
-public interface GeneralControl {
+import data.GeneralDataAccess;
+
+public interface GeneralControl<T extends GeneralDataAccess> {
     void run() throws Exception;
+    void setDA(GeneralDataAccess DA);
+    T getDA();
 }

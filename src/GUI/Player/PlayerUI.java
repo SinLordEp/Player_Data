@@ -43,7 +43,7 @@ public class PlayerUI implements GeneralUI {
     public PlayerUI(PlayerControl control) {
         playerControl = control;
         frame = new JFrame("Player Menu");
-        playerDA = playerControl.getPlayerDA();
+        playerDA = playerControl.getDA();
         search_listener();
         button_listener();
         table_listener();
@@ -55,7 +55,7 @@ public class PlayerUI implements GeneralUI {
     @Override
     public void run() throws Exception {
         frame.setContentPane(main_panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         frame.pack();
         frame.setResizable(false);
