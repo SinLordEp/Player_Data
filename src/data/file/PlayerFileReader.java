@@ -97,11 +97,12 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                     player.setName(player_txt[3]);
                     player_data.put(player.getID(),player);
                 }
-                GeneralMenu.message_popup("Player data imported");
+                System.out.println("Txt file reached the end");
             }
         }catch (Exception e) {
             throw new RuntimeException("Error reading this txt data.file");
         }
+        GeneralMenu.message_popup("Player data imported");
         return player_data;
     }
 

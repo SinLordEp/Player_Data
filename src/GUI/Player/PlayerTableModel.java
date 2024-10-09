@@ -3,14 +3,26 @@ package GUI.Player;
 import model.Player;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class PlayerTableModel extends AbstractTableModel {
     private final String[] columns_name = {"id_player","region","server","name"};
     private TreeMap<Integer, Player> player_data;
+    private Object[][] data;
 
     public PlayerTableModel(TreeMap<Integer, Player> player_data) {
         this.player_data = player_data;
+        this.data = new Object[player_data.size()][2];
+        int rowIndex = 0;
+        Set<Map.Entry<Integer, Player>> entrySet = player_data.entrySet();
+
+        for (Map.Entry<Integer, Player> entry : entrySet) {
+            data[rowIndex][0] = entry.getKey();
+            data[rowIndex][1] = entry.getValue();
+            rowIndex++;
+        }
     }
 
     @Override
@@ -25,7 +37,7 @@ public class PlayerTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Player player = player_data.get(rowIndex+1);
+        Player player = (Player) data[rowIndex][1];
         return switch (columnIndex){
             case 0 -> player.getID();
             case 1 -> player.getRegion();
