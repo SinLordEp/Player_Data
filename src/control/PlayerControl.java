@@ -80,8 +80,8 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
             PlayerMenu.error_message("Empty Map");
         }else{
             switch (PlayerMenu.export_menu()){
-                case "Export to data.file": playerDA.export(); break;
-                case "Export all to database (Not recommended)": playerDA.export_DB(); break;
+                case "Export to File": playerDA.export(); break;
+                case "Overwrite Database": playerDA.export_DB(); break;
             }
         }
     }

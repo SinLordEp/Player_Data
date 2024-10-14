@@ -40,9 +40,9 @@ public abstract class GeneralDataAccess {
 
     public static String choose_extension(){
         return switch (GeneralMenu.extension_general()) {
-            case "Binary DAT File" -> ".dat";
-            case "XML File" -> ".xml";
-            case "TXT File" -> ".txt";
+            case "DAT" -> ".dat";
+            case "XML" -> ".xml";
+            case "TXT" -> ".txt";
             default -> throw new IllegalArgumentException("Unknown extension!!!");
         };
     }

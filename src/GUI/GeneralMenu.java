@@ -7,7 +7,7 @@ import javax.swing.*;
 public class GeneralMenu {
 
     public static String extension_general() {
-        String[] options = {"Binary DAT File", "XML File", "TXT File"};
+        String[] options = {"DAT", "XML", "TXT"};
         return buildSelectionDialog("Extension selector","Choose a data.file type", options);
     }
 

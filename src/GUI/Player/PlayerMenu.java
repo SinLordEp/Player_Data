@@ -25,7 +25,7 @@ public class PlayerMenu {
     }
 
     public static String export_menu(){
-        String[] options = {"Export to data.file", "Export all to database (Not recommended)"};
+        String[] options = {"Export to File", "Overwrite Database"};
         return buildSelectionDialog("Exporting data","Choose the export type", options);
     }
 
