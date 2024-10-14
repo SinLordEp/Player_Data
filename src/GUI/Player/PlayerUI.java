@@ -112,18 +112,20 @@ public class PlayerUI implements GeneralUI {
             try {
                 playerControl.create_player_control();
                 refresh();
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
+            } catch (Exception e) {
+                GeneralMenu.exception_message(e);
             }
         });
+
         button_modify.addActionListener(_ -> {
             try {
                 playerControl.modify_player_control(selected_player_id);
                 refresh();
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                GeneralMenu.exception_message(e);
             }
         });
+
         button_delete.addActionListener(_ -> {
             try {
                 playerControl.delete_control(selected_player_id);
@@ -132,6 +134,7 @@ public class PlayerUI implements GeneralUI {
                 throw new RuntimeException(e);
             }
         });
+
         button_export.addActionListener(_ -> {
             try {
                 playerControl.export_control();
@@ -139,6 +142,7 @@ public class PlayerUI implements GeneralUI {
                 throw new RuntimeException(ex);
             }
         });
+
         button_connectDB.addActionListener(_ -> {
             try {
                 db_connect();
@@ -146,38 +150,37 @@ public class PlayerUI implements GeneralUI {
                 throw new RuntimeException(e);
             }
         });
+
         button_createFile.addActionListener(_ -> {
-            playerDA.setFile_path(GeneralDataAccess.new_path_builder());
             try {
+                playerDA.setFile_path(GeneralDataAccess.new_path_builder());
                 playerDA.write();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            playerDA.setData_changed(true);
-            try {
+                playerDA.setData_changed(true);
                 refresh();
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                GeneralMenu.exception_message(e);
             }
         });
+
         button_importFile.addActionListener(_ -> {
-            playerDA.setFile_path(GeneralDataAccess.get_path("file"));
-            playerDA.setDB_source(false);
-            playerDA.setData_changed(true);
             try {
+                playerDA.setFile_path(GeneralDataAccess.get_path("file"));
+                playerDA.setDB_source(false);
+                playerDA.setData_changed(true);
                 refresh();
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                GeneralMenu.exception_message(e);
             }
             button_importDB.setEnabled(true);
         });
+
         button_importDB.addActionListener(_ -> {
             playerDA.setDB_source(true);
             playerDA.setData_changed(true);
             try {
                 refresh();
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                GeneralMenu.exception_message(e);
             }
             button_importDB.setEnabled(false);
         });

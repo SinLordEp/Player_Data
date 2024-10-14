@@ -33,4 +33,12 @@ public class GeneralMenu {
     public static void message_popup(String message){
         JOptionPane.showMessageDialog(null, message);
     }
+
+    public static void exception_message(Exception e){
+        if(e instanceof OperationCanceledException){
+            System.out.println("Operation canceled");
+        }else{
+            GeneralMenu.message_popup(e.getMessage());
+        }
+    }
 }

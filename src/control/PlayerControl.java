@@ -6,7 +6,6 @@ import GUI.Player.PlayerMenu;
 import data.GeneralDataAccess;
 import data.PlayerDataAccess;
 import model.Player;
-import main.OperationCanceledException;
 
 public class PlayerControl implements GeneralControl<PlayerDataAccess> {
     private PlayerDataAccess playerDA;
@@ -18,11 +17,8 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
             try{
                 Thread.sleep(5000);
                 System.out.println("Operation UI is running");
-            }catch (OperationCanceledException e) {
-                exception_message(e);
-                return;
-            } catch (Exception e) {
-                exception_message(e);
+            }catch (Exception e) {
+                GeneralMenu.exception_message(e);
             }
         }
     }
@@ -83,14 +79,6 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
                 case "Export to File": playerDA.export(); break;
                 case "Overwrite Database": playerDA.export_DB(); break;
             }
-        }
-    }
-
-    public static void exception_message(Exception e){
-        if(e instanceof OperationCanceledException){
-            GeneralMenu.message_popup("Operation canceled");
-        }else{
-            GeneralMenu.message_popup(e.getMessage());
         }
     }
 
