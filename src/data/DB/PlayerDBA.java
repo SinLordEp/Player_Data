@@ -26,6 +26,7 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
     @Override
     public void disconnect() throws Exception {
         connection.close();
+        connection = null;
     }
 
     @Override

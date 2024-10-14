@@ -50,7 +50,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
         if(!isPlayerMap_Valid()){
             throw new Exception("Player data corrupted");
         }
-
     }
 
     public void export() throws Exception {

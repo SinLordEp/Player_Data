@@ -123,7 +123,6 @@ public class PlayerUI implements GeneralUI {
                 throw new RuntimeException(e);
             }
         });
-
         button_delete.addActionListener(_ -> {
             try {
                 playerControl.delete_control(selected_player_id);
@@ -169,6 +168,7 @@ public class PlayerUI implements GeneralUI {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            button_importDB.setEnabled(true);
         });
         button_importDB.addActionListener(_ -> {
             playerDA.setDB_source(true);
@@ -178,6 +178,7 @@ public class PlayerUI implements GeneralUI {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            button_importDB.setEnabled(false);
         });
     }
 
@@ -250,6 +251,7 @@ public class PlayerUI implements GeneralUI {
                     text_URL.setEnabled(true);
                     text_database.setEnabled(true);
                     text_user.setEnabled(true);
+                    text_table.setEnabled(true);
                     passwordField_pwd.setEnabled(true);
                     button_importDB.setEnabled(false);
                 }else{

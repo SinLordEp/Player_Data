@@ -16,7 +16,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         File file = new File(file_path);
         TreeMap<Integer,Player> player_data = (TreeMap<Integer, Player>) input_data;
         if(file.createNewFile()){
-            GeneralMenu.message_popup("New data.file created");
+            GeneralMenu.message_popup("New file created");
         }
 
         String file_extension = file_path.substring(file_path.lastIndexOf("."));

@@ -34,13 +34,9 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
 
 
     public void modify_player_control(int selected_player_id) throws Exception {
-        if(playerDA.isEmpty()){
-            message("Empty Map");
-            return;
-        }
         Player player = playerDA.getPlayer_map().get(selected_player_id);
         switch(PlayerMenu.modify_player_menu()){
-            // case 1 is linked to case 2, because after changing region the server has to be changed too.
+            // After changing region the server has to be changed too.
             case "Region": player.setRegion(PlayerMenu.region_chooser(playerDA.getRegion_list()));
             case "Server": player.setServer(PlayerMenu.server_chooser(playerDA.getServer_list(player.getRegion()))); break;
             case "Name": player.setName(GeneralMenu.universalInput("Enter player name: ")); break;
@@ -70,7 +66,7 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
                     throw new Exception("ID already existed");
                 } else return ID;
             } catch (NumberFormatException e) {
-                message("ID Format");
+                PlayerMenu.error_message("ID Format");
             }
         }
     }
@@ -81,22 +77,13 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
 
     public void export_control() throws Exception {
         if(playerDA.isEmpty()){
-            message("Empty Map");
+            PlayerMenu.error_message("Empty Map");
         }else{
             switch (PlayerMenu.export_menu()){
                 case "Export to data.file": playerDA.export(); break;
                 case "Export all to database (Not recommended)": playerDA.export_DB(); break;
             }
         }
-    }
-
-    public static void message(String msg_type){
-        GeneralMenu.message_popup(switch (msg_type){
-            case "Empty Map" -> "No player data registered";
-            case "ID Format" -> "ID format incorrect";
-            case "Modify" -> "Modification completed";
-            default -> "Unhandled or unknown error";
-        });
     }
 
     public static void exception_message(Exception e){
