@@ -11,17 +11,17 @@ import java.io.File;
 public abstract class GeneralDataAccess {
     protected boolean data_changed = false;
     protected String file_path = null;
-    protected boolean DBOnly = false;
+    protected boolean DB_source = false;
 
     abstract void read() throws Exception;
     abstract void write() throws Exception;
 
-    public boolean isDBOnly() {
-        return DBOnly;
+    public boolean isDB_source() {
+        return DB_source;
     }
 
-    public void setDBOnly(boolean DBOnly) {
-        this.DBOnly = DBOnly;
+    public void setDB_source(boolean DB_source) {
+        this.DB_source = DB_source;
         setData_changed(true);
     }
 
@@ -47,20 +47,20 @@ public abstract class GeneralDataAccess {
         };
     }
 
-    public static String get_path(String file_extension){
+    public String getFile_path() {
+        return file_path;
+    }
+
+    public static String get_path(String path_or_file){
         JFileChooser fileChooser = new JFileChooser(new File("./src/config").getAbsolutePath());
-        fileChooser.setDialogTitle("Choosing " + file_extension);
-        switch(file_extension){
-            case ".xml":
-                fileChooser.setFileFilter(new FileNameExtensionFilter(".xml", "xml"));
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                break;
-            case ".dat":
-                fileChooser.setFileFilter(new FileNameExtensionFilter(".dat", "dat"));
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                break;
+        fileChooser.setDialogTitle("Choosing " + path_or_file);
+        switch(path_or_file){
             case "path":
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);break;
+            case "file":
+                fileChooser.setFileFilter(new FileNameExtensionFilter("File source", "xml", "txt", "dat"));
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                break;
         }
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) return fileChooser.getSelectedFile().getPath();
         throw new OperationCanceledException();

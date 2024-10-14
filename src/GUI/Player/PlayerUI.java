@@ -3,12 +3,12 @@ package GUI.Player;
 import GUI.GeneralMenu;
 import GUI.GeneralUI;
 import control.PlayerControl;
+import data.GeneralDataAccess;
 import data.PlayerDataAccess;
 
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import java.sql.SQLException;
 import java.util.Arrays;
 
 
@@ -36,6 +36,9 @@ public class PlayerUI implements GeneralUI {
     private JLabel label_database;
     private JTextField text_table;
     private JLabel label_table;
+    private JButton button_importFile;
+    private JButton button_importDB;
+    private JButton button_createFile;
     private PlayerTableModel tableModel;
     private final PlayerDataAccess playerDA;
     private int selected_player_id;
@@ -48,33 +51,39 @@ public class PlayerUI implements GeneralUI {
         button_listener();
         table_listener();
         db_initialize();
-        TitledBorder border = BorderFactory.createTitledBorder(playerDA.dataSource());
+        TitledBorder border = BorderFactory.createTitledBorder("Data source: null");
         main_panel.setBorder(border);
+        table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     @Override
-    public void run() throws Exception {
+    public void run() {
         frame.setContentPane(main_panel);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
-        if(playerDA.isDBOnly()){
-            db_connect();
-        }
-        playerDA.refresh();
-        tableModel = new PlayerTableModel(playerDA.getPlayer_map());
-        table_data.setModel(tableModel);
         frame.setVisible(true);
     }
 
     @Override
     public void refresh() throws Exception {
         playerDA.refresh();
-        tableModel.update_data(playerDA.getPlayer_map());
+        tableModel = new PlayerTableModel(playerDA.getPlayer_map());
+        table_data.setModel(tableModel);
+        TitledBorder border = BorderFactory.createTitledBorder(data_source());
+        main_panel.setBorder(border);
     }
-
+    private String data_source(){
+        String data_source = "Data Source: ";
+        if(playerDA.isDB_source()){
+            data_source += "DataBase";
+        }else{
+            String path = playerDA.getFile_path();
+            data_source += path.substring(path.lastIndexOf(".")) + " File";
+        }
+        return data_source;
+    }
     private void search_listener(){
         field_search.getDocument().addDocumentListener(new SearchListener() {
             @Override
@@ -133,11 +142,43 @@ public class PlayerUI implements GeneralUI {
         button_connectDB.addActionListener(_ -> {
             try {
                 db_connect();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
-
+        button_createFile.addActionListener(_ -> {
+            playerDA.setFile_path(GeneralDataAccess.new_path_builder());
+            try {
+                playerDA.write();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            playerDA.setData_changed(true);
+            try {
+                refresh();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        button_importFile.addActionListener(_ -> {
+            playerDA.setFile_path(GeneralDataAccess.get_path("file"));
+            playerDA.setDB_source(false);
+            playerDA.setData_changed(true);
+            try {
+                refresh();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        button_importDB.addActionListener(_ -> {
+            playerDA.setDB_source(true);
+            playerDA.setData_changed(true);
+            try {
+                refresh();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void table_listener(){
@@ -166,27 +207,57 @@ public class PlayerUI implements GeneralUI {
         return (text_URL.getText().isBlank()) && (text_database.getText().isBlank()) && (text_table.getText().isBlank()) && (text_user.getText().isBlank()) && (Arrays.toString(passwordField_pwd.getPassword()).isBlank());
     }
 
-    private void db_connect() throws SQLException {
-        if(db_isBlank()){
-            GeneralMenu.message_popup("One or more Database field maybe empty");
-        }else{
-            playerDA.getDBAccess().setURL(text_URL.getText());
-            playerDA.getDBAccess().setDatabase(text_database.getText());
-            playerDA.getDBAccess().setUser(text_user.getText());
-            playerDA.getDBAccess().setTable(text_table.getText());
-            char[] password = passwordField_pwd.getPassword();
-            String password_str = new String(password);
-            playerDA.getDBAccess().setPassword(password_str);
-            playerDA.getDBAccess().connect();
-        }
-        if(playerDA.getDBAccess().connected()){
-            label_DBStatus.setText("Database Connected");
-            text_URL.setEnabled(false);
-            text_database.setEnabled(false);
-            text_table.setEnabled(false);
-            text_user.setEnabled(false);
-            passwordField_pwd.setEnabled(false);
-            button_connectDB.setEnabled(false);
+    private void db_connect() throws Exception {
+        switch(button_connectDB.getText()){
+            case "Connect to DB":
+                if(db_isBlank()){
+                    GeneralMenu.message_popup("One or more Database field maybe empty");
+                    return;
+                }
+                button_connectDB.setText("Connecting...");
+                button_connectDB.setEnabled(false);
+                playerDA.getDBAccess().setURL(text_URL.getText());
+                playerDA.getDBAccess().setDatabase(text_database.getText());
+                playerDA.getDBAccess().setUser(text_user.getText());
+                playerDA.getDBAccess().setTable(text_table.getText());
+                char[] password = passwordField_pwd.getPassword();
+                String password_str = new String(password);
+                playerDA.getDBAccess().setPassword(password_str);
+                playerDA.getDBAccess().connect();
+                if(playerDA.getDBAccess().connected()){
+                    label_DBStatus.setText("Database Connected");
+                    button_connectDB.setText("Disconnect");
+                    button_connectDB.setEnabled(true);
+                    text_URL.setEnabled(false);
+                    text_database.setEnabled(false);
+                    text_table.setEnabled(false);
+                    text_user.setEnabled(false);
+                    passwordField_pwd.setEnabled(false);
+                    button_importDB.setEnabled(true);
+                }else{
+                    GeneralMenu.message_popup("Failed to connect to the database, please check the login info");
+                    button_connectDB.setText("Connect to DB");
+                    button_connectDB.setEnabled(true);
+                }
+                break;
+            case "Disconnect":
+                button_connectDB.setText("Disconnecting...");
+                button_connectDB.setEnabled(false);
+                playerDA.getDBAccess().disconnect();
+                if(!playerDA.getDBAccess().connected()){
+                    button_connectDB.setText("Connect to DB");
+                    button_connectDB.setEnabled(true);
+                    text_URL.setEnabled(true);
+                    text_database.setEnabled(true);
+                    text_user.setEnabled(true);
+                    passwordField_pwd.setEnabled(true);
+                    button_importDB.setEnabled(false);
+                }else{
+                    GeneralMenu.message_popup("Some errors have occurred while disconnecting, please try again");
+                    button_connectDB.setText("Disconnect");
+                    button_connectDB.setEnabled(true);
+                }
+                break;
         }
     }
 

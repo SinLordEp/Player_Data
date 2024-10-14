@@ -24,6 +24,11 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
     }
 
     @Override
+    public void disconnect() throws Exception {
+        connection.close();
+    }
+
+    @Override
     public TreeMap<Integer, Player> read() throws SQLException {
         String query = "Select id_player, region, server, name from %s".formatted(table);
         Statement statement = connection.createStatement();

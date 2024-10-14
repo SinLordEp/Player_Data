@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="GUI.Player.PlayerUI">
-  <grid id="27dc6" binding="main_panel" layout-manager="GridLayoutManager" row-count="6" column-count="4" same-size-horizontally="true" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="main_panel" layout-manager="GridLayoutManager" row-count="7" column-count="4" same-size-horizontally="true" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="15" width="634" height="403"/>
+      <xy x="20" y="15" width="678" height="403"/>
     </constraints>
     <properties>
       <autoscrolls value="false"/>
@@ -13,7 +13,7 @@
     <children>
       <scrollpane id="49590" binding="Scroll_data">
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="0" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-9539469"/>
@@ -28,15 +28,15 @@
       </scrollpane>
       <component id="ef966" class="javax.swing.JButton" binding="button_add">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Add Data"/>
+          <text value="Add New Data"/>
         </properties>
       </component>
       <component id="3ddea" class="javax.swing.JButton" binding="button_modify">
         <constraints>
-          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="false"/>
@@ -45,7 +45,7 @@
       </component>
       <component id="8997d" class="javax.swing.JButton" binding="button_export">
         <constraints>
-          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Export data"/>
@@ -69,7 +69,7 @@
       </component>
       <component id="92d8c" class="javax.swing.JButton" binding="button_delete">
         <constraints>
-          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="false"/>
@@ -173,6 +173,31 @@
           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
+      </component>
+      <component id="946fd" class="javax.swing.JButton" binding="button_importDB">
+        <constraints>
+          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <text value="Import data from DB"/>
+        </properties>
+      </component>
+      <component id="40ba" class="javax.swing.JButton" binding="button_importFile">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Import data from file"/>
+        </properties>
+      </component>
+      <component id="172ae" class="javax.swing.JButton" binding="button_createFile">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Create new file"/>
+        </properties>
       </component>
     </children>
   </grid>

@@ -10,14 +10,13 @@ import java.util.TreeMap;
 public class PlayerTableModel extends AbstractTableModel {
     private final String[] columns_name = {"id_player","region","server","name"};
     private TreeMap<Integer, Player> player_data;
-    private Object[][] data;
+    private final Object[][] data;
 
     public PlayerTableModel(TreeMap<Integer, Player> player_data) {
         this.player_data = player_data;
         this.data = new Object[player_data.size()][2];
         int rowIndex = 0;
         Set<Map.Entry<Integer, Player>> entrySet = player_data.entrySet();
-
         for (Map.Entry<Integer, Player> entry : entrySet) {
             data[rowIndex][0] = entry.getKey();
             data[rowIndex][1] = entry.getValue();

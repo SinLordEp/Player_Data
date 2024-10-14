@@ -11,39 +11,7 @@ import main.OperationCanceledException;
 public class PlayerControl implements GeneralControl<PlayerDataAccess> {
     private PlayerDataAccess playerDA;
     @Override
-    public void run() throws Exception {
-        while (playerDA.getPlayer_map().isEmpty()){
-            try{
-                switch (PlayerMenu.run_menu()){
-                    case "Create new storage data.file":
-                        playerDA.setFile_path(GeneralDataAccess.new_path_builder());
-                        playerDA.write();
-                        break;
-                    case "Read from existed data.file":
-                        playerDA.setFile_path(GeneralDataAccess.get_path(GeneralDataAccess.choose_extension()));
-                        break;
-                    case "Read from DataBase":
-                        playerDA.setDBOnly(true);
-                        break;
-                }
-                playerDA.setData_changed(true);
-                break;
-            }catch (OperationCanceledException e) {
-                exception_message(e);
-                return;
-            } catch (Exception e) {
-                exception_message(e);
-            }
-        }
-        operation_control();
-    }
-
-    @Override
-    public void setDA(GeneralDataAccess DA) {
-        this.playerDA = (PlayerDataAccess) DA;
-    }
-
-    private void operation_control() throws Exception {
+    public void run() {
         PlayerUI playerUI = new PlayerUI(this);
         playerUI.run();
         while (true){
@@ -58,6 +26,12 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
             }
         }
     }
+
+    @Override
+    public void setDA(GeneralDataAccess DA) {
+        this.playerDA = (PlayerDataAccess) DA;
+    }
+
 
     public void modify_player_control(int selected_player_id) throws Exception {
         if(playerDA.isEmpty()){

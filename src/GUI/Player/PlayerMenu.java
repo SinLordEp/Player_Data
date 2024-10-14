@@ -6,12 +6,6 @@ import static GUI.GeneralMenu.buildSelectionDialog;
 
 public class PlayerMenu {
 
-    public static String run_menu(){
-        String[] options = {"Create new source", "Read from existed data.file", "Read from DataBase"};
-        return buildSelectionDialog("File Operation Menu","Choose the data.file source:", options);
-    }
-
-
     public static int ID_input_UI() throws NumberFormatException{
         return Integer.parseInt(GeneralMenu.universalInput("Enter the ID"));
     }

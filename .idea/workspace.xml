@@ -6,12 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="优化了初始化时的class自动匹配">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/player_txt.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/player_txt.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/control/GeneralControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/GeneralControl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/ClassRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ClassRegister.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +139,10 @@
       <workItem from="1728053299017" duration="59000" />
       <workItem from="1728311251913" duration="7481000" />
       <workItem from="1728324456975" duration="2227000" />
-      <workItem from="1728482106606" duration="13110000" />
+      <workItem from="1728482106606" duration="13330000" />
+      <workItem from="1728498172780" duration="7000" />
+      <workItem from="1728569161272" duration="4227000" />
+      <workItem from="1728915433093" duration="5548000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -442,7 +448,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728495173322</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="优化了初始化时的class自动匹配">
+      <option name="closed" value="true" />
+      <created>1728497511894</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1728497511894</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -480,20 +494,5 @@
     <MESSAGE value="解决了无序列表会无法读取到JTABLE的问题" />
     <MESSAGE value="优化了初始化时的class自动匹配" />
     <option name="LAST_COMMIT_MESSAGE" value="优化了初始化时的class自动匹配" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java</url>
-          <line>38</line>
-          <properties class="GUI.Player.PlayerTableModel" method="getValueAt">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

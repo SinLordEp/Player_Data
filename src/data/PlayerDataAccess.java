@@ -28,7 +28,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     @SuppressWarnings("unchecked")
     public void read() throws Exception {
-        if(isDBOnly()){
+        if(!isData_changed()){
+            return;
+        }
+        if(isDB_source()){
             player_map = DBAccess.read();
         }else{
             player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
@@ -37,18 +40,17 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void write() throws Exception {
-        if(!DBOnly){
+        if(!DB_source){
             fileWriter.write(file_path, player_map);
         }
     }
 
     public void refresh() throws Exception {
-        if(isData_changed()) {
-            read();
-            if(!isPlayerMap_Valid()){
-                throw new Exception("Player data corrupted");
-            }
+        read();
+        if(!isPlayerMap_Valid()){
+            throw new Exception("Player data corrupted");
         }
+
     }
 
     public void export() throws Exception {
@@ -107,16 +109,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
         write();
         return  "Player with ID " + player.getID() + " is modified";
-    }
-
-    public String dataSource() {
-        String data_source = "Data Source: ";
-        if(DBOnly){
-            data_source += "DataBase";
-        }else{
-            data_source += file_path.substring(file_path.lastIndexOf(".")) + " File";
-        }
-        return data_source;
     }
 
     public boolean isEmpty(){
