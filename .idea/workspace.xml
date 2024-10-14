@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="已将初始化逻辑全部转至UI， 目前DB断连有bug">
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="简化了部分交互文本">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/file/PlayerFileWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/file/PlayerFileWriter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +134,7 @@
       <workItem from="1728482106606" duration="13330000" />
       <workItem from="1728498172780" duration="7000" />
       <workItem from="1728569161272" duration="4227000" />
-      <workItem from="1728915433093" duration="6268000" />
+      <workItem from="1728915433093" duration="7599000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -461,7 +456,31 @@
       <option name="project" value="LOCAL" />
       <updated>1728921111610</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="DB断连按钮bug已修复，目前未发现问题">
+      <option name="closed" value="true" />
+      <created>1728921862534</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1728921862534</updated>
+    </task>
+    <task id="LOCAL-00042" summary="简化了部分交互文本">
+      <option name="closed" value="true" />
+      <created>1728922101140</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1728922101140</updated>
+    </task>
+    <task id="LOCAL-00043" summary="简化了部分交互文本">
+      <option name="closed" value="true" />
+      <created>1728922132087</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1728922132087</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -499,6 +518,8 @@
     <MESSAGE value="解决了无序列表会无法读取到JTABLE的问题" />
     <MESSAGE value="优化了初始化时的class自动匹配" />
     <MESSAGE value="已将初始化逻辑全部转至UI， 目前DB断连有bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="已将初始化逻辑全部转至UI， 目前DB断连有bug" />
+    <MESSAGE value="DB断连按钮bug已修复，目前未发现问题" />
+    <MESSAGE value="简化了部分交互文本" />
+    <option name="LAST_COMMIT_MESSAGE" value="简化了部分交互文本" />
   </component>
 </project>

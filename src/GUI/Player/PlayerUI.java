@@ -10,6 +10,7 @@ import data.PlayerDataAccess;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.util.Arrays;
+import java.util.TreeMap;
 
 
 public class PlayerUI implements GeneralUI {
@@ -258,6 +259,10 @@ public class PlayerUI implements GeneralUI {
                     GeneralMenu.message_popup("Some errors have occurred while disconnecting, please try again");
                     button_connectDB.setText("Disconnect");
                     button_connectDB.setEnabled(true);
+                }
+                if(playerDA.isDB_source()){
+                    tableModel = new PlayerTableModel(new TreeMap<>());
+                    table_data.setModel(tableModel);
                 }
                 break;
         }
