@@ -13,22 +13,23 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
 
     }
 
+
     @Override
-    public boolean connected() {
+    public boolean connect() throws SQLException {
+        connection = DriverManager.getConnection(URL + "/" + database, user, password);
         return connection != null;
     }
 
     @Override
-    public void connect() throws SQLException {
-        connection = DriverManager.getConnection(URL + "/" + database, user, password);
-    }
-
-    @Override
-    public void disconnect() throws Exception {
+    public boolean disconnect() throws Exception {
         connection.close();
         connection = null;
+        return true;
     }
 
+    public boolean connected(){
+        return connection != null;
+    }
     @Override
     public TreeMap<Integer, Player> read() throws SQLException {
         String query = "Select id_player, region, server, name from %s".formatted(table);

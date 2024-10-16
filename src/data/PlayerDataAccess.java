@@ -7,6 +7,7 @@ import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
 
 import javax.swing.*;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -14,14 +15,14 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<String, String[]> region_server_map;
     private final String[] region_list;
-    private final PlayerDBA DBAccess;
+    private final PlayerDBA playerDBA;
     private final PlayerFileReader fileReader;
     private final PlayerFileWriter fileWriter;
 
     public PlayerDataAccess() throws Exception {
         fileReader = new PlayerFileReader();
         fileWriter = new PlayerFileWriter();
-        DBAccess = new PlayerDBA();
+        playerDBA = new PlayerDBA();
         region_server_map = PlayerFileReader.read_region_server();
         region_list = region_server_map.keySet().toArray(new String[0]);
     }
@@ -31,8 +32,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
         if(!isData_changed()){
             return;
         }
-        if(isDB_source()){
-            player_map = DBAccess.read();
+        if(DB_source()){
+            player_map = playerDBA.read();
         }else{
             player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
         }
@@ -65,21 +66,21 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void export_DB() throws Exception {
-        if(!DBAccess.connected()){
+        if(!playerDBA.connected()){
             GeneralMenu.message_popup("Database is not connected");
             return;
         }
-        DBAccess.wipe();
+        playerDBA.wipe();
         for(Player player : player_map.values()){
-            DBAccess.add(player);
+            playerDBA.add(player);
         }
         GeneralMenu.message_popup("Players from map are added to data.DB");
     }
 
     public String delete(int selected_player_id) throws Exception {
         player_map.remove(selected_player_id);
-        if(DBAccess.connected()){
-            DBAccess.delete(selected_player_id);
+        if(playerDBA.connected()){
+            playerDBA.delete(selected_player_id);
         }
         setData_changed(true);
         return "Player with ID " + selected_player_id + " is deleted";
@@ -90,8 +91,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
             throw new Exception("Player data is invalid");
         }
         player_map.put(player.getID(), player);
-        if(DBAccess.connected()){
-            DBAccess.add(player);
+        if(playerDBA.connected()){
+            playerDBA.add(player);
         }
         setData_changed(true);
         write();
@@ -103,8 +104,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
             throw new Exception("Player data is invalid");
         }
         player_map.put(player.getID(), player);
-        if(DBAccess.connected()){
-            DBAccess.modify(player);
+        if(playerDBA.connected()){
+            playerDBA.modify(player);
         }
         write();
         return  "Player with ID " + player.getID() + " is modified";
@@ -182,7 +183,19 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return true;
     }
 
-    public PlayerDBA getDBAccess() {
-        return DBAccess;
+    public void configure_db(String URL, String database, String user, String password, String table) {
+        playerDBA.setURL(URL);
+        playerDBA.setDatabase(database);
+        playerDBA.setUser(user);
+        playerDBA.setPassword(password);
+        playerDBA.setTable(table);
+    }
+
+    public boolean connect_db() throws SQLException {
+        return playerDBA.connect();
+    }
+
+    public boolean disconnect_db() throws Exception {
+        return playerDBA.disconnect();
     }
 }

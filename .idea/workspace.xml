@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="简化了部分交互文本">
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="优化了exception处理">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/GeneralMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/GeneralMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +141,8 @@
       <workItem from="1728498172780" duration="7000" />
       <workItem from="1728569161272" duration="4227000" />
       <workItem from="1728915433093" duration="8225000" />
-      <workItem from="1728927780640" duration="964000" />
+      <workItem from="1728927780640" duration="1269000" />
+      <workItem from="1729089784682" duration="2756000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -491,7 +496,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728924559709</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="优化了exception处理">
+      <option name="closed" value="true" />
+      <created>1728929053958</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1728929053958</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -531,6 +544,7 @@
     <MESSAGE value="已将初始化逻辑全部转至UI， 目前DB断连有bug" />
     <MESSAGE value="DB断连按钮bug已修复，目前未发现问题" />
     <MESSAGE value="简化了部分交互文本" />
-    <option name="LAST_COMMIT_MESSAGE" value="简化了部分交互文本" />
+    <MESSAGE value="优化了exception处理" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化了exception处理" />
   </component>
 </project>

@@ -7,6 +7,9 @@ import data.GeneralDataAccess;
 import data.PlayerDataAccess;
 import model.Player;
 
+import java.sql.SQLException;
+import java.util.TreeMap;
+
 public class PlayerControl implements GeneralControl<PlayerDataAccess> {
     private PlayerDataAccess playerDA;
     @Override
@@ -28,6 +31,57 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
         this.playerDA = (PlayerDataAccess) DA;
     }
 
+    public void refresh_DA() throws Exception {
+        playerDA.refresh();
+    }
+
+    public String data_source(){
+        String data_source = "Data Source: ";
+        if(playerDA.DB_source()){
+            data_source += "DataBase";
+        }else{
+            String path = playerDA.getFile_path();
+            data_source += path.substring(path.lastIndexOf(".")) + " File";
+        }
+        return data_source;
+    }
+
+    public void create_file() throws Exception {
+        playerDA.setFile_path(GeneralDataAccess.new_path_builder());
+        playerDA.write();
+        playerDA.setData_changed(true);
+    }
+
+    public void import_file() {
+        playerDA.setFile_path(GeneralDataAccess.get_path("file"));
+        playerDA.setDB_source(false);
+        playerDA.setData_changed(true);
+    }
+
+    public void configure_db(String URL, String database, String user, String password, String table) {
+        playerDA.configure_db(URL, database, user, password, table);
+    }
+
+    public void import_db()  {
+        playerDA.setDB_source(true);
+        playerDA.setData_changed(true);
+    }
+
+    public boolean connect_db() throws SQLException {
+        return playerDA.connect_db();
+    }
+
+    public boolean disconnect_db() throws Exception {
+        return playerDA.disconnect_db();
+    }
+
+    public boolean DB_source() {
+        return playerDA.DB_source();
+    }
+
+    public TreeMap<Integer,Player> getMap(){
+        return playerDA.getPlayer_map();
+    }
 
     public void modify_player_control(int selected_player_id) throws Exception {
         Player player = playerDA.getPlayer_map().get(selected_player_id);

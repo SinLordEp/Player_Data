@@ -9,11 +9,13 @@ import java.util.TreeMap;
 
 public class PlayerTableModel extends AbstractTableModel {
     private final String[] columns_name = {"id_player","region","server","name"};
-    private TreeMap<Integer, Player> player_data;
-    private final Object[][] data;
+    private Object[][] data;
 
     public PlayerTableModel(TreeMap<Integer, Player> player_data) {
-        this.player_data = player_data;
+        parse_data(player_data);
+    }
+
+    private void parse_data(TreeMap<Integer, Player> player_data){
         this.data = new Object[player_data.size()][2];
         int rowIndex = 0;
         Set<Map.Entry<Integer, Player>> entrySet = player_data.entrySet();
@@ -23,10 +25,9 @@ public class PlayerTableModel extends AbstractTableModel {
             rowIndex++;
         }
     }
-
     @Override
     public int getRowCount() {
-        return player_data.size();
+        return data.length;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class PlayerTableModel extends AbstractTableModel {
     }
 
     public void update_data(TreeMap<Integer, Player> player_data) {
-        this.player_data = player_data;
+        parse_data(player_data);
         fireTableDataChanged();
     }
 
