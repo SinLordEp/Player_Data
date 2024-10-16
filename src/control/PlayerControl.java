@@ -35,13 +35,15 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
         playerDA.refresh();
     }
 
-    public String data_source(){
+    public String data_source(String SQL_Type){
         String data_source = "Data Source: ";
         if(playerDA.DB_source()){
-            data_source += "DataBase";
-        }else{
+            data_source += SQL_Type;
+        }else if(playerDA.getFile_path() != null){
             String path = playerDA.getFile_path();
             data_source += path.substring(path.lastIndexOf(".")) + " File";
+        }else{
+            data_source += "null";
         }
         return data_source;
     }
@@ -67,8 +69,8 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
         playerDA.setData_changed(true);
     }
 
-    public boolean connect_db() throws SQLException {
-        return playerDA.connect_db();
+    public boolean connect_db(String SQL_type) throws SQLException {
+        return playerDA.connect_db(SQL_type);
     }
 
     public boolean disconnect_db() throws Exception {

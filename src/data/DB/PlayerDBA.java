@@ -27,6 +27,11 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
         return true;
     }
 
+    public boolean connect_sqlite() throws SQLException {
+        connection = DriverManager.getConnection("jdbc:sqlite:person.db");
+        return connection != null;
+    }
+
     public boolean connected(){
         return connection != null;
     }
@@ -48,7 +53,7 @@ public class PlayerDBA implements GeneralDBA<TreeMap<?,?>, Player, Integer> {
     }
 
     public void wipe() throws SQLException {
-        String query = "TRUNCATE TABLE player";
+        String query = "DELETE from player";
         Statement statement = connection.createStatement();
         statement.executeUpdate(query);
     }

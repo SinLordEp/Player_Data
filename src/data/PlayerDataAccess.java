@@ -191,11 +191,24 @@ public class PlayerDataAccess extends GeneralDataAccess {
         playerDBA.setTable(table);
     }
 
-    public boolean connect_db() throws SQLException {
-        return playerDBA.connect();
+    public boolean connect_db(String SQL_type) throws SQLException {
+        if(switch(SQL_type){
+            case "MySQL" -> playerDBA.connect();
+            case "SQLite" -> playerDBA.connect_sqlite();
+            default -> throw new IllegalStateException("Unexpected value: " + SQL_type);
+        }){
+            file_path = null;
+            return true;
+        }else return false;
     }
 
     public boolean disconnect_db() throws Exception {
-        return playerDBA.disconnect();
+        if(playerDBA.disconnect()){
+            if(DB_source){
+                DB_source = false;
+                player_map = null;
+            }
+            return true;
+        }else return false;
     }
 }

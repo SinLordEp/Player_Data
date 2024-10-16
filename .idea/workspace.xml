@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="优化了exception处理">
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="清理了UI对DA的调用，全部转到control类。 对tablemodel的更新逻辑进行了优化，更新数据时不再创建新实例，减少开销">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerTableModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -142,7 +140,7 @@
       <workItem from="1728569161272" duration="4227000" />
       <workItem from="1728915433093" duration="8225000" />
       <workItem from="1728927780640" duration="1269000" />
-      <workItem from="1729089784682" duration="2756000" />
+      <workItem from="1729089784682" duration="7876000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -504,7 +502,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728929053958</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="清理了UI对DA的调用，全部转到control类。 对tablemodel的更新逻辑进行了优化，更新数据时不再创建新实例，减少开销">
+      <option name="closed" value="true" />
+      <created>1729092694818</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1729092694818</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -545,6 +551,7 @@
     <MESSAGE value="DB断连按钮bug已修复，目前未发现问题" />
     <MESSAGE value="简化了部分交互文本" />
     <MESSAGE value="优化了exception处理" />
-    <option name="LAST_COMMIT_MESSAGE" value="优化了exception处理" />
+    <MESSAGE value="清理了UI对DA的调用，全部转到control类。 对tablemodel的更新逻辑进行了优化，更新数据时不再创建新实例，减少开销" />
+    <option name="LAST_COMMIT_MESSAGE" value="清理了UI对DA的调用，全部转到control类。 对tablemodel的更新逻辑进行了优化，更新数据时不再创建新实例，减少开销" />
   </component>
 </project>

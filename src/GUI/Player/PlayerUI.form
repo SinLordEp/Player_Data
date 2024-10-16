@@ -51,22 +51,6 @@
           <text value="Export data"/>
         </properties>
       </component>
-      <component id="1fbf8" class="javax.swing.JTextField" binding="field_search">
-        <constraints>
-          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="14cdc" class="javax.swing.JLabel" binding="label_search">
-        <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <foreground color="-16777216"/>
-          <labelFor value="1fbf8"/>
-          <text value="Search by ID:"/>
-        </properties>
-      </component>
       <component id="92d8c" class="javax.swing.JButton" binding="button_delete">
         <constraints>
           <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -90,14 +74,6 @@
           <foreground color="-16777216"/>
           <labelFor value="bec15"/>
           <text value="URL: "/>
-        </properties>
-      </component>
-      <component id="ac795" class="javax.swing.JButton" binding="button_connectDB">
-        <constraints>
-          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Connect to DB"/>
         </properties>
       </component>
       <component id="45110" class="javax.swing.JLabel" binding="label_user">
@@ -132,16 +108,6 @@
           <text value="Password: "/>
         </properties>
       </component>
-      <component id="950c0" class="javax.swing.JLabel" binding="label_DBStatus">
-        <constraints>
-          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <foreground color="-16777216"/>
-          <labelFor value="49590"/>
-          <text value=""/>
-        </properties>
-      </component>
       <component id="7e4eb" class="javax.swing.JLabel" binding="label_database">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -174,29 +140,61 @@
         </constraints>
         <properties/>
       </component>
+      <component id="172ae" class="javax.swing.JButton" binding="button_createFile">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Create new file"/>
+        </properties>
+      </component>
+      <component id="14cdc" class="javax.swing.JLabel" binding="label_search">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <foreground color="-16777216"/>
+          <labelFor value="1fbf8"/>
+          <text value="Search by ID:"/>
+        </properties>
+      </component>
+      <component id="1fbf8" class="javax.swing.JTextField" binding="field_search">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="40ba" class="javax.swing.JButton" binding="button_importFile">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Import data from file"/>
+        </properties>
+      </component>
       <component id="946fd" class="javax.swing.JButton" binding="button_importDB">
         <constraints>
-          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="false"/>
           <text value="Import data from DB"/>
         </properties>
       </component>
-      <component id="40ba" class="javax.swing.JButton" binding="button_importFile">
+      <component id="ac795" class="javax.swing.JButton" binding="button_connectDB">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Import data from file"/>
+          <text value="Connect to DB"/>
         </properties>
       </component>
-      <component id="172ae" class="javax.swing.JButton" binding="button_createFile">
+      <component id="5367e" class="javax.swing.JComboBox" binding="comboBox_SQL">
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Create new file"/>
+          <toolTipText value=""/>
         </properties>
       </component>
     </children>

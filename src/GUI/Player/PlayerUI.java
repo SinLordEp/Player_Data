@@ -27,7 +27,6 @@ public class PlayerUI implements GeneralUI {
     private JPasswordField passwordField_pwd;
     private JButton button_connectDB;
     private JTextField text_user;
-    private JLabel label_DBStatus;
     private JLabel label_pwd;
     private JLabel label_user;
     private JLabel label_URL;
@@ -37,6 +36,7 @@ public class PlayerUI implements GeneralUI {
     private JButton button_importFile;
     private JButton button_importDB;
     private JButton button_createFile;
+    private JComboBox<String> comboBox_SQL;
     private final PlayerTableModel tableModel;
     private int selected_player_id;
 
@@ -47,11 +47,12 @@ public class PlayerUI implements GeneralUI {
         button_listener();
         table_listener();
         db_initialize();
-        TitledBorder border = BorderFactory.createTitledBorder("Data source: null");
+        TitledBorder border = BorderFactory.createTitledBorder("Data Source: null");
         main_panel.setBorder(border);
         tableModel = new PlayerTableModel(new TreeMap<>());
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        comboBox_SQL.setSelectedIndex(0);
     }
 
     @Override
@@ -67,11 +68,9 @@ public class PlayerUI implements GeneralUI {
     @Override
     public void refresh() throws Exception {
         playerControl.refresh_DA();
-        //tableModel = new PlayerTableModel(playerControl.getMap());
         tableModel.update_data(playerControl.getMap());
         table_data.setModel(tableModel);
-        TitledBorder border = BorderFactory.createTitledBorder(playerControl.data_source());
-        main_panel.setBorder(border);
+        configure_title();
     }
 
     private void search_listener(){
@@ -190,6 +189,9 @@ public class PlayerUI implements GeneralUI {
         text_table.setText("player");
         text_user.setText("root");
         passwordField_pwd.setText("root");
+
+        comboBox_SQL.addItem("MySQL");
+        comboBox_SQL.addItem("SQLite");
     }
 
     private boolean db_isBlank(){
@@ -213,7 +215,7 @@ public class PlayerUI implements GeneralUI {
                         text_user.getText(),
                         password,
                         text_table.getText());
-                if(playerControl.connect_db()){
+                if(playerControl.connect_db((String)comboBox_SQL.getSelectedItem())){
                     lock_db_input();
                 }else{
                     GeneralMenu.message_popup("Failed to connect to the database, please check the login info");
@@ -241,7 +243,6 @@ public class PlayerUI implements GeneralUI {
 
     private void lock_db_input(){
         //when database connected
-        label_DBStatus.setText("Database Connected");
         button_connectDB.setText("Disconnect");
         button_connectDB.setEnabled(true);
         button_importDB.setEnabled(true);
@@ -250,6 +251,7 @@ public class PlayerUI implements GeneralUI {
         text_table.setEnabled(false);
         text_user.setEnabled(false);
         passwordField_pwd.setEnabled(false);
+        comboBox_SQL.setEnabled(false);
     }
 
     private void unlock_db_input(){
@@ -261,8 +263,14 @@ public class PlayerUI implements GeneralUI {
         text_table.setEnabled(true);
         passwordField_pwd.setEnabled(true);
         button_importDB.setEnabled(false);
+        comboBox_SQL.setEnabled(true);
+        configure_title();
     }
 
+    private void configure_title(){
+        TitledBorder border = BorderFactory.createTitledBorder(playerControl.data_source((String)comboBox_SQL.getSelectedItem()));
+        main_panel.setBorder(border);
+    }
 }
 
 
