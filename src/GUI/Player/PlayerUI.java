@@ -226,16 +226,16 @@ public class PlayerUI implements GeneralUI {
             case "Disconnect":
                 button_connectDB.setText("Disconnecting...");
                 button_connectDB.setEnabled(false);
+                if(playerControl.DB_source()){
+                    tableModel.update_data(new TreeMap<>());
+                    table_data.setModel(tableModel);
+                }
                 if(playerControl.disconnect_db()){
                     unlock_db_input();
                 }else{
                     GeneralMenu.message_popup("Some errors have occurred while disconnecting, please try again");
                     button_connectDB.setText("Disconnect");
                     button_connectDB.setEnabled(true);
-                }
-                if(playerControl.DB_source()){
-                    tableModel.update_data(new TreeMap<>());
-                    table_data.setModel(tableModel);
                 }
                 break;
         }

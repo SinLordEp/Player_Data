@@ -205,9 +205,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public boolean disconnect_db() throws Exception {
         if(playerDBA.disconnect()){
             if(DB_source){
-                DB_source = false;
                 player_map = null;
             }
+            DB_source = false;
             return true;
         }else return false;
     }
