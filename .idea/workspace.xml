@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑">
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑以及表格的清楚数据逻辑">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ClassRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ClassRegister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,6 +141,7 @@
       <workItem from="1728915433093" duration="8225000" />
       <workItem from="1728927780640" duration="1269000" />
       <workItem from="1729089784682" duration="9422000" />
+      <workItem from="1729176237613" duration="964000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -516,7 +519,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729099506684</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑以及表格的清楚数据逻辑">
+      <option name="closed" value="true" />
+      <created>1729172615252</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1729172615252</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -534,7 +545,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分" />
     <MESSAGE value="已完善写入XML逻辑，下一步计划分离写入和读取到独立class" />
     <MESSAGE value="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃" />
     <MESSAGE value="下一步进行file manager的分离，将writer和reader都放入相同的接口里，然后创建factory来匹配使用的方法" />
@@ -559,6 +569,7 @@
     <MESSAGE value="优化了exception处理" />
     <MESSAGE value="清理了UI对DA的调用，全部转到control类。 对tablemodel的更新逻辑进行了优化，更新数据时不再创建新实例，减少开销" />
     <MESSAGE value="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑" />
+    <MESSAGE value="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑以及表格的清楚数据逻辑" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑以及表格的清楚数据逻辑" />
   </component>
 </project>
