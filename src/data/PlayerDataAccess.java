@@ -74,7 +74,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         for(Player player : player_map.values()){
             playerDBA.add(player);
         }
-        GeneralMenu.message_popup("Players from map are added to data.DB");
+        GeneralMenu.message_popup("Players data were exported to database");
     }
 
     public String delete(int selected_player_id) throws Exception {

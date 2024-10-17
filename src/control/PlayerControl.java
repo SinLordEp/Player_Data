@@ -10,20 +10,13 @@ import model.Player;
 import java.sql.SQLException;
 import java.util.TreeMap;
 
-public class PlayerControl implements GeneralControl<PlayerDataAccess> {
+public class PlayerControl implements GeneralControl {
     private PlayerDataAccess playerDA;
     @Override
     public void run() {
         PlayerUI playerUI = new PlayerUI(this);
         playerUI.run();
-        while (true){
-            try{
-                Thread.sleep(5000);
-                System.out.println("Operation UI is running");
-            }catch (Exception e) {
-                GeneralMenu.exception_message(e);
-            }
-        }
+        System.out.println("Operation UI is running");
     }
 
     @Override
@@ -136,11 +129,6 @@ public class PlayerControl implements GeneralControl<PlayerDataAccess> {
                 case "Overwrite Database": playerDA.export_DB(); break;
             }
         }
-    }
-
-    @Override
-    public PlayerDataAccess getDA() {
-        return playerDA;
     }
 
 }
