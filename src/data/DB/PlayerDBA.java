@@ -1,18 +1,19 @@
 package data.DB;
 
+import GUI.GeneralMenu;
 import model.Player;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import java.util.List;
 import java.util.TreeMap;
 
-public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>, Player> {
+public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
     Configuration configuration = new Configuration();
     SessionFactory sessionFactory;
-    Session session;
 
     public PlayerDBA()  {
     }
@@ -21,54 +22,75 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>, Player> {
     @Override
     public boolean connect() {
         sessionFactory = configuration.configure("config/hibernate.cfg.xml").buildSessionFactory();
-        session = sessionFactory.openSession();
-        return session.isOpen();
+        return sessionFactory.isOpen();
     }
 
     @Override
     public boolean disconnect(){
-        session.close();
-        return !session.isOpen();
+        sessionFactory.close();
+        return !sessionFactory.isOpen();
     }
 
     public boolean connected(){
-        return session.isOpen();
+        return sessionFactory.isOpen();
     }
     @Override
     public TreeMap<Integer, Player> read() {
-        String HQL = "From Player";
-        Query<Player> query = session.createQuery(HQL, Player.class);
-        List<Player> list = query.list();
         TreeMap<Integer, Player> player_map = new TreeMap<>();
-        for(Player player : list){
-            player_map.put(player.getID(), player);
+        try (Session session = sessionFactory.openSession()) {
+            String HQL = "From Player";
+            Query<Player> query = session.createQuery(HQL, Player.class);
+            List<Player> list = query.list();
+            for(Player player : list){
+                player_map.put(player.getID(), player);
+            }
         }
         return player_map;
     }
 
-    public void importFile(TreeMap<Integer,Player> player_map) {
-        TreeMap<Integer, Player> temp = read();
-        for(Player player : temp.values()){
-            if(!player_map.containsKey(player.getID())){
-                delete(player);
+    public void new_transaction(String operation, Player player){
+        Transaction transaction = null;
+        try(Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
+            switch(operation){
+                case "add": session.persist(player); break;
+                case "modify": session.merge(player); break;
+                case "remove": session.remove(player); break;
+            }
+            transaction.commit();
+        }catch(Exception e){
+            if(transaction != null){
+                transaction.rollback();
             }
         }
+    }
 
-        for(Player player : player_map.values()){
-            modify(player);
+    public void new_transaction(String operation, TreeMap<Integer,Player> player_map){
+        Transaction transaction = null;
+        try(Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
+            switch(operation){
+                case "import":
+                    TreeMap<Integer, Player> temp = read();
+                    for(Player player : temp.values()){
+                        if(!player_map.containsKey(player.getID())){
+                            session.remove(player);
+                        }
+                    }
+                    for(Player player : player_map.values()){
+                        session.merge(player);
+                    }
+                    break;
+                case "future operation":
+                    break;
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            GeneralMenu.exception_message(e);
         }
-    }
-
-    public void add(Player player) {
-        session.persist(player);
-    }
-
-    public void modify(Player player) {
-        session.merge(player);
-    }
-
-    public void delete(Player player) {
-        session.remove(player);
     }
 
     public void setURL(String URL) {

@@ -4,22 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="优化了程序入口，目前发现BD断连会重置标题数据来源为null">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/hibernate_orm_community_dialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/jakarta_persistence_api.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Player_Data.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Player_Data.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Person.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Player.java" afterDir="false" />
-    </list>
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="新增hibernate支持， 简化了对数据库的操作，目前数据库读取正常， 删除有问题，也许写入也有问题" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -158,15 +143,7 @@
       <workItem from="1729089784682" duration="9422000" />
       <workItem from="1729176237613" duration="1481000" />
       <workItem from="1729520982867" duration="1245000" />
-      <workItem from="1730305236064" duration="10251000" />
-    </task>
-    <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
-      <option name="closed" value="true" />
-      <created>1726772977525</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1726772977525</updated>
+      <workItem from="1730305236064" duration="10865000" />
     </task>
     <task id="LOCAL-00002" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -552,7 +529,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729178073718</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="新增hibernate支持， 简化了对数据库的操作，目前数据库读取正常， 删除有问题，也许写入也有问题">
+      <option name="closed" value="true" />
+      <created>1730317512146</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1730317512146</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -570,7 +555,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃" />
     <MESSAGE value="下一步进行file manager的分离，将writer和reader都放入相同的接口里，然后创建factory来匹配使用的方法" />
     <MESSAGE value="解决了直接用形参的问题" />
     <MESSAGE value="清楚了交互层不该有的数据储存，完善了server region chooser的逻辑和签名" />
@@ -595,21 +579,7 @@
     <MESSAGE value="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑" />
     <MESSAGE value="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑以及表格的清楚数据逻辑" />
     <MESSAGE value="优化了程序入口，目前发现BD断连会重置标题数据来源为null" />
-    <option name="LAST_COMMIT_MESSAGE" value="优化了程序入口，目前发现BD断连会重置标题数据来源为null" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/data/DB/PlayerDBA.java</url>
-          <line>48</line>
-          <properties class="data.DB.PlayerDBA" method="importFile">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="新增hibernate支持， 简化了对数据库的操作，目前数据库读取正常， 删除有问题，也许写入也有问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增hibernate支持， 简化了对数据库的操作，目前数据库读取正常， 删除有问题，也许写入也有问题" />
   </component>
 </project>

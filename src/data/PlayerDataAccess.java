@@ -69,13 +69,13 @@ public class PlayerDataAccess extends GeneralDataAccess {
             GeneralMenu.message_popup("Database is not connected");
             return;
         }
-        playerDBA.importFile(player_map);
+        playerDBA.new_transaction("import",player_map);
         GeneralMenu.message_popup("Players data were exported to database");
     }
 
     public String delete(int selected_player_id) {
         if(playerDBA.connected()){
-            playerDBA.delete(player_map.get(selected_player_id));
+            playerDBA.new_transaction("remove",player_map.get(selected_player_id));
         }
         player_map.remove(selected_player_id);
         setData_changed(true);
@@ -88,7 +88,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
         player_map.put(player.getID(), player);
         if(playerDBA.connected()){
-            playerDBA.add(player);
+            playerDBA.new_transaction("add",player);
         }
         setData_changed(true);
         write();
@@ -101,7 +101,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
         player_map.put(player.getID(), player);
         if(playerDBA.connected()){
-            playerDBA.modify(player);
+            playerDBA.new_transaction("update",player);
         }
         write();
         return  "Player with ID " + player.getID() + " is modified";
