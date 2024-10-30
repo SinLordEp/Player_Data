@@ -7,7 +7,6 @@ import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
 
 import javax.swing.*;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -65,23 +64,20 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
     }
 
-    public void export_DB() throws Exception {
+    public void export_DB(){
         if(!playerDBA.connected()){
             GeneralMenu.message_popup("Database is not connected");
             return;
         }
-        playerDBA.wipe();
-        for(Player player : player_map.values()){
-            playerDBA.add(player);
-        }
+        playerDBA.importFile(player_map);
         GeneralMenu.message_popup("Players data were exported to database");
     }
 
-    public String delete(int selected_player_id) throws Exception {
-        player_map.remove(selected_player_id);
+    public String delete(int selected_player_id) {
         if(playerDBA.connected()){
-            playerDBA.delete(selected_player_id);
+            playerDBA.delete(player_map.get(selected_player_id));
         }
+        player_map.remove(selected_player_id);
         setData_changed(true);
         return "Player with ID " + selected_player_id + " is deleted";
     }
@@ -183,26 +179,24 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return true;
     }
 
-    public void configure_db(String URL, String database, String user, String password, String table) {
-        playerDBA.setURL(URL);
-        playerDBA.setDatabase(database);
+    public void configure_db(String URL, String port, String database, String user, String password) {
+        playerDBA.setURL(URL + ":" + port + "/" + database);
         playerDBA.setUser(user);
         playerDBA.setPassword(password);
-        playerDBA.setTable(table);
     }
 
-    public boolean connect_db(String SQL_type) throws SQLException {
-        if(switch(SQL_type){
-            case "MySQL" -> playerDBA.connect();
-            case "SQLite" -> playerDBA.connect_sqlite();
-            default -> throw new IllegalStateException("Unexpected value: " + SQL_type);
-        }){
+    public void configure_db(String URL) {
+        playerDBA.setURL(URL);
+    }
+
+    public boolean connect_db() {
+        if(playerDBA.connect()){
             file_path = null;
             return true;
         }else return false;
     }
 
-    public boolean disconnect_db() throws Exception {
+    public boolean disconnect_db(){
         if(playerDBA.disconnect()){
             if(DB_source){
                 player_map = null;
@@ -211,4 +205,5 @@ public class PlayerDataAccess extends GeneralDataAccess {
             return true;
         }else return false;
     }
+
 }

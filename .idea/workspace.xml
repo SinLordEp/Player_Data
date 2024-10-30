@@ -4,10 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑以及表格的清楚数据逻辑">
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="优化了程序入口，目前发现BD断连会重置标题数据来源为null">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/hibernate_orm_community_dialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/jakarta_persistence_api.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/ClassRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ClassRegister.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Player_Data.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Player_Data.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Person.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,39 +69,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.principal.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH&quot;: &quot;331&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Sin/sqlite-jdbc-3.46.1.3.jar&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Global Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.principal.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "true",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "331",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Sin/hibernate-reactive-core-2.4.2.Final.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "Errors",
+    "show.migrate.to.gradle.popup": "false",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;,
-      &quot;sqlite&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql",
+      "sqlite"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;XML&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "XML"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Sin\Player_Data\src" />
@@ -102,8 +117,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
       </set>
     </attachedChunks>
   </component>
@@ -141,7 +156,9 @@
       <workItem from="1728915433093" duration="8225000" />
       <workItem from="1728927780640" duration="1269000" />
       <workItem from="1729089784682" duration="9422000" />
-      <workItem from="1729176237613" duration="964000" />
+      <workItem from="1729176237613" duration="1481000" />
+      <workItem from="1729520982867" duration="1245000" />
+      <workItem from="1730305236064" duration="10251000" />
     </task>
     <task id="LOCAL-00001" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
       <option name="closed" value="true" />
@@ -527,7 +544,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729172615252</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="优化了程序入口，目前发现BD断连会重置标题数据来源为null">
+      <option name="closed" value="true" />
+      <created>1729178073718</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1729178073718</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -545,7 +570,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="已完善写入XML逻辑，下一步计划分离写入和读取到独立class" />
     <MESSAGE value="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃" />
     <MESSAGE value="下一步进行file manager的分离，将writer和reader都放入相同的接口里，然后创建factory来匹配使用的方法" />
     <MESSAGE value="解决了直接用形参的问题" />
@@ -570,6 +594,22 @@
     <MESSAGE value="清理了UI对DA的调用，全部转到control类。 对tablemodel的更新逻辑进行了优化，更新数据时不再创建新实例，减少开销" />
     <MESSAGE value="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑" />
     <MESSAGE value="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑以及表格的清楚数据逻辑" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增对多种SQL支持的接口，新增SQLite的支持，优化了标题对数据来源更新的逻辑以及表格的清楚数据逻辑" />
+    <MESSAGE value="优化了程序入口，目前发现BD断连会重置标题数据来源为null" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化了程序入口，目前发现BD断连会重置标题数据来源为null" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/data/DB/PlayerDBA.java</url>
+          <line>48</line>
+          <properties class="data.DB.PlayerDBA" method="importFile">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -1,7 +1,15 @@
 package model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Person implements java.io.Serializable{
+    @Id
+    @Column(name = "id")
     private int ID = 0;
+
+    @Column(name = "name")
     private String name;
 
     private static final long serialVersion = 1L;

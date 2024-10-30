@@ -1,7 +1,15 @@
 package model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "player")
 public class Player extends Person {
+    @Column(name = "server")
     private String server;
+    @Column(name = "region")
     private String region;
 
     public Player() {

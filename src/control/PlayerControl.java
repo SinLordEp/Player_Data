@@ -6,8 +6,6 @@ import GUI.Player.PlayerMenu;
 import data.GeneralDataAccess;
 import data.PlayerDataAccess;
 import model.Player;
-
-import java.sql.SQLException;
 import java.util.TreeMap;
 
 public class PlayerControl implements GeneralControl {
@@ -53,8 +51,12 @@ public class PlayerControl implements GeneralControl {
         playerDA.setData_changed(true);
     }
 
-    public void configure_db(String URL, String database, String user, String password, String table) {
-        playerDA.configure_db(URL, database, user, password, table);
+    public void configure_db(String URL, String port, String database, String user, String password) {
+        playerDA.configure_db(URL, port, database, user, password);
+    }
+
+    public void configure_db(String URL) {
+        playerDA.configure_db(URL);
     }
 
     public void import_db()  {
@@ -62,8 +64,8 @@ public class PlayerControl implements GeneralControl {
         playerDA.setData_changed(true);
     }
 
-    public boolean connect_db(String SQL_type) throws SQLException {
-        return playerDA.connect_db(SQL_type);
+    public boolean connect_db(){
+        return playerDA.connect_db();
     }
 
     public boolean disconnect_db() throws Exception {
@@ -116,7 +118,7 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    public void delete_control(int selected_player_id) throws Exception {
+    public void delete_control(int selected_player_id){
         GeneralMenu.message_popup(playerDA.delete(selected_player_id));
     }
 
@@ -130,5 +132,6 @@ public class PlayerControl implements GeneralControl {
             }
         }
     }
+
 
 }

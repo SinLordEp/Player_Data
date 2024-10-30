@@ -7,6 +7,7 @@ import control.PlayerControl;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.TreeMap;
 
 
@@ -31,8 +32,8 @@ public class PlayerUI implements GeneralUI {
     private JLabel label_user;
     private JLabel label_URL;
     private JLabel label_database;
-    private JTextField text_table;
-    private JLabel label_table;
+    private JTextField text_port;
+    private JLabel label_port;
     private JButton button_importFile;
     private JButton button_importDB;
     private JButton button_createFile;
@@ -43,16 +44,12 @@ public class PlayerUI implements GeneralUI {
     public PlayerUI(PlayerControl control) {
         playerControl = control;
         frame = new JFrame("Player Menu");
-        search_listener();
-        button_listener();
-        table_listener();
-        db_initialize();
         TitledBorder border = BorderFactory.createTitledBorder("Data Source: null");
         main_panel.setBorder(border);
         tableModel = new PlayerTableModel(new TreeMap<>());
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        comboBox_SQL.setSelectedIndex(0);
+        db_initialize();
     }
 
     @Override
@@ -183,19 +180,49 @@ public class PlayerUI implements GeneralUI {
         });
     }
 
-    private void db_initialize(){
-        text_URL.setText("jdbc:mysql://localhost:3306");
-        text_database.setText("person");
-        text_table.setText("player");
-        text_user.setText("root");
-        passwordField_pwd.setText("root");
+    private void comboBox_listener(){
+        comboBox_SQL.addActionListener(_ -> {
+            switch((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
+                case "MySQL":
+                    label_URL.setText("jdbc:mysql://");
+                    text_URL.setText("localhost");
+                    text_database.setText("person");
+                    text_database.setEnabled(true);
+                    text_port.setText("3306");
+                    text_port.setEnabled(true);
+                    text_user.setText("root");
+                    text_user.setEnabled(true);
+                    passwordField_pwd.setText("root");
+                    passwordField_pwd.setEnabled(true);
+                    break;
+                case "SQLite":
+                    label_URL.setText("jdbc:sqlite:");
+                    text_URL.setText("person.db");
+                    text_database.setText("");
+                    text_database.setEditable(false);
+                    text_port.setText("");
+                    text_port.setEditable(false);
+                    text_user.setText("");
+                    text_user.setEditable(false);
+                    passwordField_pwd.setText("");
+                    passwordField_pwd.setEditable(false);
+                    break;
+            }
+        });
+    }
 
+    private void db_initialize(){
         comboBox_SQL.addItem("MySQL");
         comboBox_SQL.addItem("SQLite");
+        search_listener();
+        button_listener();
+        table_listener();
+        comboBox_listener();
+        comboBox_SQL.setSelectedIndex(0);
     }
 
     private boolean db_isBlank(){
-        return (text_URL.getText().isBlank()) && (text_database.getText().isBlank()) && (text_table.getText().isBlank()) && (text_user.getText().isBlank()) && (Arrays.toString(passwordField_pwd.getPassword()).isBlank());
+        return (text_URL.getText().isBlank()) && (text_database.getText().isBlank()) && (text_port.getText().isBlank()) && (text_user.getText().isBlank()) && (Arrays.toString(passwordField_pwd.getPassword()).isBlank());
     }
 
     private void db_connect() throws Exception {
@@ -207,15 +234,8 @@ public class PlayerUI implements GeneralUI {
                 }
                 button_connectDB.setText("Connecting...");
                 button_connectDB.setEnabled(false);
-                char[] pwd = passwordField_pwd.getPassword();
-                String password = new String(pwd);
-                playerControl.configure_db(
-                        text_URL.getText(),
-                        text_database.getText(),
-                        text_user.getText(),
-                        password,
-                        text_table.getText());
-                if(playerControl.connect_db((String)comboBox_SQL.getSelectedItem())){
+                db_configuration();
+                if(playerControl.connect_db()){
                     lock_db_input();
                 }else{
                     GeneralMenu.message_popup("Failed to connect to the database, please check the login info");
@@ -241,6 +261,27 @@ public class PlayerUI implements GeneralUI {
         }
     }
 
+    private void db_configuration(){
+        String URL = label_URL.getText() + text_URL.getText();
+        switch ((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
+            case "MySQL":
+                char[] pwd = passwordField_pwd.getPassword();
+                String password = new String(pwd);
+                playerControl.configure_db(
+                        URL,
+                        text_port.getText(),
+                        text_database.getText(),
+                        text_user.getText(),
+                        password);
+                break;
+            case "SQLite":
+                playerControl.configure_db(URL);
+                break;
+        }
+
+
+    }
+
     private void lock_db_input(){
         //when database connected
         button_connectDB.setText("Disconnect");
@@ -248,7 +289,7 @@ public class PlayerUI implements GeneralUI {
         button_importDB.setEnabled(true);
         text_URL.setEnabled(false);
         text_database.setEnabled(false);
-        text_table.setEnabled(false);
+        text_port.setEnabled(false);
         text_user.setEnabled(false);
         passwordField_pwd.setEnabled(false);
         comboBox_SQL.setEnabled(false);
@@ -260,7 +301,7 @@ public class PlayerUI implements GeneralUI {
         text_URL.setEnabled(true);
         text_database.setEnabled(true);
         text_user.setEnabled(true);
-        text_table.setEnabled(true);
+        text_port.setEnabled(true);
         passwordField_pwd.setEnabled(true);
         button_importDB.setEnabled(false);
         comboBox_SQL.setEnabled(true);
