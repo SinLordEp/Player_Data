@@ -69,7 +69,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
             GeneralMenu.message_popup("Database is not connected");
             return;
         }
-        playerDBA.new_transaction("import",player_map);
+        playerDBA.new_transaction("import", player_map);
         GeneralMenu.message_popup("Players data were exported to database");
     }
 
