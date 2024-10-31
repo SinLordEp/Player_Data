@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class PlayerTableModel extends AbstractTableModel {
-    private final String[] columns_name = {"id_player","region","server","name"};
+    private final String[] columns_name = {"id","region","server","name"};
     private Object[][] data;
 
     public PlayerTableModel(TreeMap<Integer, Player> player_data) {

@@ -16,24 +16,19 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
     SessionFactory sessionFactory;
 
     public PlayerDBA()  {
+        configuration.configure("config/hibernate.cfg.xml");
     }
-
 
     @Override
     public boolean connect() {
-        sessionFactory = configuration.configure("config/hibernate.cfg.xml").buildSessionFactory();
+        sessionFactory = configuration.buildSessionFactory();
         return sessionFactory.isOpen();
-    }
-
-    @Override
-    public boolean disconnect(){
-        sessionFactory.close();
-        return !sessionFactory.isOpen();
     }
 
     public boolean connected(){
         return sessionFactory.isOpen();
     }
+
     @Override
     public TreeMap<Integer, Player> read() {
         TreeMap<Integer, Player> player_map = new TreeMap<>();
@@ -48,7 +43,7 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
         return player_map;
     }
 
-    public void new_transaction(String operation, Player player){
+    public void update(String operation, Player player){
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
@@ -65,7 +60,7 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
         }
     }
 
-    public void new_transaction(String operation, TreeMap<Integer,Player> player_map){
+    public void update(String operation, TreeMap<Integer,Player> player_map){
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
