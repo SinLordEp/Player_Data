@@ -143,23 +143,7 @@
       <workItem from="1729089784682" duration="9422000" />
       <workItem from="1729176237613" duration="1481000" />
       <workItem from="1729520982867" duration="1245000" />
-      <workItem from="1730305236064" duration="10865000" />
-    </task>
-    <task id="LOCAL-00002" summary="添加了dat文件的读取， 写入部分还在完善， 正在写读取区域和服务器的部分">
-      <option name="closed" value="true" />
-      <created>1726773032680</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1726773032680</updated>
-    </task>
-    <task id="LOCAL-00003" summary="已完善写入XML逻辑，下一步计划分离写入和读取到独立class">
-      <option name="closed" value="true" />
-      <created>1727106151823</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1727106151823</updated>
+      <workItem from="1730305236064" duration="12761000" />
     </task>
     <task id="LOCAL-00004" summary="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃">
       <option name="closed" value="true" />
@@ -537,7 +521,23 @@
       <option name="project" value="LOCAL" />
       <updated>1730317512146</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="新增hibernate支持， 简化了对数据库的操作，目前数据库读取正常， 删除有问题，也许写入也有问题">
+      <option name="closed" value="true" />
+      <created>1730319468838</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1730319468839</updated>
+    </task>
+    <task id="LOCAL-00052" summary="新增hibernate支持， 简化了对数据库的操作，目前数据库读取正常， 删除有问题，也许写入也有问题">
+      <option name="closed" value="true" />
+      <created>1730319485736</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1730319485736</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
