@@ -5,7 +5,9 @@ import GUI.Player.PlayerUI;
 import GUI.Player.PlayerMenu;
 import data.GeneralDataAccess;
 import data.PlayerDataAccess;
+import main.OperationException;
 import model.Player;
+
 import java.util.TreeMap;
 
 public class PlayerControl implements GeneralControl {
@@ -39,10 +41,14 @@ public class PlayerControl implements GeneralControl {
         return data_source;
     }
 
-    public void create_file() throws Exception {
-        playerDA.setFile_path(GeneralDataAccess.new_path_builder());
-        playerDA.write();
-        playerDA.setData_changed(true);
+    public void create_file() throws OperationException {
+        try {
+            playerDA.setFile_path(GeneralDataAccess.new_path_builder());
+            playerDA.write();
+            playerDA.setData_changed(true);
+        } catch (Exception e) {
+            throw new OperationException("Failed to create new file\n" + e.getMessage());
+        }
     }
 
     public void import_file() {
@@ -68,7 +74,7 @@ public class PlayerControl implements GeneralControl {
         return playerDA.connect_db();
     }
 
-    public boolean disconnect_db() throws Exception {
+    public boolean disconnect_db() {
         return playerDA.disconnect_db();
     }
 
@@ -96,24 +102,28 @@ public class PlayerControl implements GeneralControl {
         GeneralMenu.message_popup(playerDA.update(player));
     }
 
-    public void create_player_control() throws Exception {
-        Player player = new Player();
-        player.setRegion(PlayerMenu.region_chooser(playerDA.getRegion_list()));
-        player.setServer(PlayerMenu.server_chooser(playerDA.getServer_list(player.getRegion())));
-        player.setID(create_ID_control());
-        player.setName(GeneralMenu.universalInput("Enter player name: "));
-        GeneralMenu.message_popup(playerDA.add(player));
+    public void create_player_control() {
+        try {
+            Player player = new Player();
+            player.setRegion(PlayerMenu.region_chooser(playerDA.getRegion_list()));
+            player.setServer(PlayerMenu.server_chooser(playerDA.getServer_list(player.getRegion())));
+            player.setID(create_ID_control());
+            player.setName(GeneralMenu.universalInput("Enter player name: "));
+            GeneralMenu.message_popup(playerDA.add(player));
+        } catch (Exception e) {
+            throw new OperationException("Creating player failed\n" + e.getMessage());
+        }
     }
 
-    private int create_ID_control() throws Exception {
+    private int create_ID_control() {
         while (true) {
             try {
                 int ID = PlayerMenu.ID_input_UI();
                 if (playerDA.containsKey(ID)) {
-                    throw new Exception("ID already existed");
+                    throw new OperationException("ID already existed\n");
                 } else return ID;
             } catch (NumberFormatException e) {
-                PlayerMenu.error_message("ID Format");
+                GeneralMenu.message_popup("Number format invalid");
             }
         }
     }
@@ -122,14 +132,18 @@ public class PlayerControl implements GeneralControl {
         GeneralMenu.message_popup(playerDA.delete(selected_player_id));
     }
 
-    public void export_control() throws Exception {
-        if(playerDA.isEmpty()){
-            PlayerMenu.error_message("Empty Map");
-        }else{
-            switch (PlayerMenu.export_menu()){
-                case "Export to File": playerDA.export(); break;
-                case "Overwrite Database": playerDA.export_DB(); break;
+    public void export_control() {
+        try {
+            if(playerDA.isEmpty()){
+                GeneralMenu.message_popup("No player registered");
+            }else{
+                switch (PlayerMenu.export_menu()){
+                    case "Export to File": playerDA.export(); break;
+                    case "Overwrite Database": playerDA.export_DB(); break;
+                }
             }
+        } catch (Exception e) {
+            throw new OperationException("Export failed\n" + e.getMessage());
         }
     }
 

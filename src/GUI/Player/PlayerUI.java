@@ -98,7 +98,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.create_player_control();
                 refresh();
             } catch (Exception e) {
-                GeneralMenu.exception_message(e);
+                GeneralMenu.message_popup(e.getMessage());
             }
         });
 
@@ -107,7 +107,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.modify_player_control(selected_player_id);
                 refresh();
             } catch (Exception e) {
-                GeneralMenu.exception_message(e);
+                GeneralMenu.message_popup(e.getMessage());
             }
         });
 
@@ -116,7 +116,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.delete_control(selected_player_id);
                 refresh();
             } catch (Exception e) {
-                GeneralMenu.exception_message(e);
+                GeneralMenu.message_popup(e.getMessage());
             }
         });
 
@@ -124,7 +124,7 @@ public class PlayerUI implements GeneralUI {
             try {
                 playerControl.export_control();
             } catch (Exception e) {
-                GeneralMenu.exception_message(e);
+                GeneralMenu.message_popup(e.getMessage());
             }
         });
 
@@ -132,7 +132,7 @@ public class PlayerUI implements GeneralUI {
             try {
                 db_connect();
             } catch (Exception e) {
-                GeneralMenu.exception_message(e);
+                GeneralMenu.message_popup(e.getMessage());
             }
         });
 
@@ -141,7 +141,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.create_file();
                 refresh();
             } catch (Exception e) {
-                GeneralMenu.exception_message(e);
+                GeneralMenu.message_popup(e.getMessage());
             }
         });
 
@@ -150,7 +150,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.import_file();
                 refresh();
             } catch (Exception e) {
-                GeneralMenu.exception_message(e);
+                GeneralMenu.message_popup(e.getMessage());
             }
             button_importDB.setEnabled(true);
         });
@@ -160,7 +160,7 @@ public class PlayerUI implements GeneralUI {
             try {
                 refresh();
             } catch (Exception e) {
-                GeneralMenu.exception_message(e);
+                GeneralMenu.message_popup(e.getMessage());
             }
             button_importDB.setEnabled(false);
         });
@@ -225,7 +225,7 @@ public class PlayerUI implements GeneralUI {
         return (text_URL.getText().isBlank()) && (text_database.getText().isBlank()) && (text_port.getText().isBlank()) && (text_user.getText().isBlank()) && (Arrays.toString(passwordField_pwd.getPassword()).isBlank());
     }
 
-    private void db_connect() throws Exception {
+    private void db_connect() {
         switch(button_connectDB.getText()){
             case "Connect to DB":
                 if(db_isBlank()){

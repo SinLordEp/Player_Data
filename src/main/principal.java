@@ -31,7 +31,7 @@ public class principal {
                 GeneralControl current_control = ClassRegister.getControl(chosen_Class);
                 current_control.setDA(ClassRegister.getDA(chosen_Class));
                 return current_control;
-            }catch (OperationCanceledException e){
+            }catch (OperationException e){
                 System.exit(0);
             }catch (Exception e) {
                 GeneralMenu.message_popup(e.getMessage());

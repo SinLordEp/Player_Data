@@ -1,6 +1,6 @@
 package GUI;
 
-import main.OperationCanceledException;
+import main.OperationException;
 
 import javax.swing.*;
 
@@ -22,7 +22,7 @@ public class GeneralMenu {
                 options,
                 options[0]
         );
-        if (choice == -1) throw new OperationCanceledException();
+        if (choice == -1) throw new OperationException("Selection is invalid\n");
         return options[choice];
     }
 
@@ -34,11 +34,4 @@ public class GeneralMenu {
         JOptionPane.showMessageDialog(null, message);
     }
 
-    public static void exception_message(Exception e){
-        if(e instanceof OperationCanceledException){
-            System.out.println("Operation canceled");
-        }else{
-            GeneralMenu.message_popup(e.getMessage());
-        }
-    }
 }

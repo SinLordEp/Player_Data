@@ -1,6 +1,6 @@
 package data.DB;
 
-import GUI.GeneralMenu;
+import main.OperationException;
 import model.Player;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -84,7 +84,7 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
             if (transaction != null) {
                 transaction.rollback();
             }
-            GeneralMenu.exception_message(e);
+            throw new OperationException("Updating database failed\n" + e.getMessage());
         }
     }
 

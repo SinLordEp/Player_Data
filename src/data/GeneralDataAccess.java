@@ -1,7 +1,7 @@
 package data;
 
 import GUI.GeneralMenu;
-import main.OperationCanceledException;
+import main.OperationException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -63,7 +63,7 @@ public abstract class GeneralDataAccess {
                 break;
         }
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) return fileChooser.getSelectedFile().getPath();
-        throw new OperationCanceledException();
+        throw new OperationException("Operation canceled\n");
     }
 
     public static String new_path_builder(){

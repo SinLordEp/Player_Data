@@ -29,12 +29,4 @@ public class PlayerMenu {
         return buildSelectionDialog("Exporting data","Choose the export type", options);
     }
 
-    public static void error_message(String msg_type){
-        GeneralMenu.message_popup(switch (msg_type){
-            case "Empty Map" -> "No player data registered";
-            case "ID Format" -> "ID format incorrect";
-            case "Modify" -> "Modification completed";
-            default -> "Unhandled or unknown error";
-        });
-    }
 }
