@@ -51,5 +51,6 @@
     </orderEntry>
     <orderEntry type="library" name="jakarta.persistence.api" level="project" />
     <orderEntry type="library" name="hibernate.orm.community.dialects" level="project" />
+    <orderEntry type="library" name="reflections" level="project" />
   </component>
 </module>

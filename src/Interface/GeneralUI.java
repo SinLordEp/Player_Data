@@ -1,4 +1,4 @@
-package GUI;
+package Interface;
 
 public interface GeneralUI {
     void run() throws Exception;

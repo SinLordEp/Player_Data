@@ -3,6 +3,7 @@ package control;
 import GUI.GeneralMenu;
 import GUI.Player.PlayerUI;
 import GUI.Player.PlayerMenu;
+import Interface.GeneralControl;
 import data.GeneralDataAccess;
 import data.PlayerDataAccess;
 import main.OperationException;

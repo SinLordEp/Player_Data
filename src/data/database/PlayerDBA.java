@@ -1,5 +1,6 @@
-package data.DB;
+package data.database;
 
+import Interface.GeneralDBA;
 import main.OperationException;
 import model.Player;
 import org.hibernate.Session;

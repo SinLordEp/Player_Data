@@ -1,7 +1,7 @@
 package main;
 
 import GUI.GeneralMenu;
-import control.GeneralControl;
+import Interface.GeneralControl;
 import control.PlayerControl;
 import data.PlayerDataAccess;
 

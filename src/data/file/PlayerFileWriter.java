@@ -1,6 +1,7 @@
 package data.file;
 
 import GUI.GeneralMenu;
+import Interface.FileDataWriter;
 import model.Player;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

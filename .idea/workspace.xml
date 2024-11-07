@@ -5,15 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="引入hibernate后断连DB的操作已没有意义，去除了相关逻辑">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/GeneralMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/GeneralMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/GeneralUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Interface/GeneralUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/GeneralControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Interface/GeneralControl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/OperationCanceledException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/OperationException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/DB/GeneralDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Interface/GeneralDBA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/DB/PlayerDBA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/database/PlayerDBA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/PlayerDataAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/file/FileDataReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Interface/FileDataReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/file/FileDataWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Interface/FileDataWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/file/PlayerFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/file/PlayerFileReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/file/PlayerFileWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/file/PlayerFileWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ClassRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ClassRegister.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,12 +41,15 @@
     &quot;assignee&quot;: &quot;SinLordEp&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/SinLordEp/Player_Data.git&quot;,
-    &quot;accountId&quot;: &quot;29d759ff-85e5-406e-a737-ad43b0eafbcf&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/SinLordEp/Player_Data.git",
+    "accountId": "b8d929e8-810e-4305-93bd-2236e70072a8"
   }
-}</component>
+}]]></component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="true" />
+  </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -65,43 +71,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.principal.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH&quot;: &quot;331&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Sin/hibernate-reactive-core-2.4.2.Final.jar&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.principal.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "true",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "331",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "master",
+    "go.import.settings.migrated": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Sin/hibernate-reactive-core-2.4.2.Final.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "库",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "Errors",
+    "show.migrate.to.gradle.popup": "false",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;,
-      &quot;sqlite&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql",
+      "sqlite"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;XML&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "XML"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Sin\Player_Data\src" />
@@ -158,6 +167,7 @@
       <workItem from="1730384784164" duration="3091000" />
       <workItem from="1730734239198" duration="4277000" />
       <workItem from="1730903849524" duration="3426000" />
+      <workItem from="1730977516246" duration="167000" />
     </task>
     <task id="LOCAL-00006" summary="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃">
       <option name="closed" value="true" />
@@ -595,5 +605,9 @@
     <MESSAGE value="修复了SQLite里ID名未修改的问题" />
     <MESSAGE value="引入hibernate后断连DB的操作已没有意义，去除了相关逻辑" />
     <option name="LAST_COMMIT_MESSAGE" value="引入hibernate后断连DB的操作已没有意义，去除了相关逻辑" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>false</integration-enabled>
+    <settings-migrated>true</settings-migrated>
   </component>
 </project>

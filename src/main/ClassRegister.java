@@ -1,6 +1,6 @@
 package main;
 
-import control.GeneralControl;
+import Interface.GeneralControl;
 import data.GeneralDataAccess;
 
 import java.util.HashMap;

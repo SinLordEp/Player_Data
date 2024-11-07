@@ -1,6 +1,6 @@
 package data;
 
-import data.DB.PlayerDBA;
+import data.database.PlayerDBA;
 import GUI.GeneralMenu;
 import model.Player;
 import data.file.PlayerFileReader;

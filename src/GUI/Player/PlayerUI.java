@@ -1,7 +1,7 @@
 package GUI.Player;
 
 import GUI.GeneralMenu;
-import GUI.GeneralUI;
+import Interface.GeneralUI;
 import control.PlayerControl;
 
 import javax.swing.*;
