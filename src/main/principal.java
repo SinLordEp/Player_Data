@@ -2,37 +2,26 @@ package main;
 
 import GUI.GeneralMenu;
 import Interface.GeneralControl;
-import control.PlayerControl;
-import data.PlayerDataAccess;
 
 import static GUI.GeneralMenu.buildSelectionDialog;
 
 
 
 public class principal {
-
+    static final ClassRegister classRegister = ClassRegister.getInstance();
     public static void main(String[] args) throws Exception {
-        class_register();
-        GeneralControl current_control = control_chooser();
+        GeneralControl current_control = initialize();
         current_control.run();
     }
 
-    public static void class_register(){
-        ClassRegister.registerControl("Player", PlayerControl.class);
-        ClassRegister.registerDataAccess("Player", PlayerDataAccess.class);
-        ClassRegister.registerControl("Not available", null);
-        ClassRegister.registerDataAccess("Not available", null);
-    }
-
-    public static GeneralControl control_chooser(){
+    public static GeneralControl initialize(){
         while(true){
             try{
-                String chosen_Class = buildSelectionDialog("Data Class Menu","Choose a data class", ClassRegister.getClassNames());
-                GeneralControl current_control = ClassRegister.getControl(chosen_Class);
-                current_control.setDA(ClassRegister.getDA(chosen_Class));
+                String chosen_control = buildSelectionDialog("Controller menu","Choose a controller", classRegister.getControlClasses());
+                GeneralControl current_control = classRegister.getControl(chosen_control);
+                String chosen_dataAccess = buildSelectionDialog("Data access menu","Choose a data access", classRegister.getDataAccessClasses());
+                current_control.setDA(classRegister.getDA(chosen_dataAccess));
                 return current_control;
-            }catch (OperationException e){
-                System.exit(0);
             }catch (Exception e) {
                 GeneralMenu.message_popup(e.getMessage());
             }
