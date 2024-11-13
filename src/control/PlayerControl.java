@@ -29,7 +29,7 @@ public class PlayerControl implements GeneralControl {
     }
 
     public String data_source(String SQL_Type){
-        String data_source = PlayerDialog.get().get_UI("data_source");
+        String data_source = PlayerDialog.get().get_text("data_source");
         if(playerDA.DB_source()){
             data_source += SQL_Type;
         }else if(playerDA.getFile_path() != null){

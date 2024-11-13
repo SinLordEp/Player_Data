@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="正在重构文本来源，引入外部文本YAML配置对话和UI" />
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="已完全重构结构, 目前结构为控制层,交互层,数据层,文件层. 文件层目前有形参类原始使用问题, 后续解决">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/player_dialog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/player_dialog.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,12 +35,12 @@
     &quot;assignee&quot;: &quot;SinLordEp&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/SinLordEp/Player_Data.git&quot;,
-    &quot;accountId&quot;: &quot;29d759ff-85e5-406e-a737-ad43b0eafbcf&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/SinLordEp/Player_Data.git",
+    "accountId": "bd00194e-28d4-4913-a672-e3710d409d32"
   }
-}</component>
+}]]></component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="true" />
   </component>
@@ -87,7 +95,7 @@
     "settings.editor.selected.configurable": "advanced.settings",
     "show.migrate.to.gradle.popup": "false",
     "vue.rearranger.settings.migration": "true",
-    "应用程序.principal.executor": "Run"
+    "应用程序.principal.executor": "Debug"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -101,6 +109,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="I:\Player_Data\src\GUI\Player" />
       <recent name="C:\Sin\Player_Data\src" />
       <recent name="C:\Sin\Player_Data\src\config" />
       <recent name="C:\Sin\Player_Data\src\GUI\Player" />
@@ -110,8 +119,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
       </set>
     </attachedChunks>
   </component>
@@ -158,6 +167,7 @@
       <workItem from="1730977516246" duration="1578000" />
       <workItem from="1731514104488" duration="280000" />
       <workItem from="1731514393225" duration="12776000" />
+      <workItem from="1731532402270" duration="2245000" />
     </task>
     <task id="LOCAL-00008" summary="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃">
       <option name="closed" value="true" />
@@ -599,5 +609,16 @@
   <component name="VgoProject">
     <integration-enabled>false</integration-enabled>
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/GUI/Player/PlayerDialog.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

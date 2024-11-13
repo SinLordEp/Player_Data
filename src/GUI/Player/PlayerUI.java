@@ -43,8 +43,8 @@ public class PlayerUI implements GeneralUI {
 
     public PlayerUI(PlayerControl control) {
         playerControl = control;
-        frame = new JFrame(PlayerDialog.get().get_UI("frame_title"));
-        TitledBorder border = BorderFactory.createTitledBorder(PlayerDialog.get().get_UI("default_data_source"));
+        frame = new JFrame(PlayerDialog.get().get_text("frame_title"));
+        TitledBorder border = BorderFactory.createTitledBorder(PlayerDialog.get().get_text("default_data_source"));
         main_panel.setBorder(border);
         tableModel = new PlayerTableModel(new TreeMap<>());
         table_data.setModel(tableModel);

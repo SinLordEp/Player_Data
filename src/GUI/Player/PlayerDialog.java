@@ -5,11 +5,17 @@ import main.OperationException;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.swing.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 public class PlayerDialog {
     private static PlayerDialog instance;
-    private Map<String,Object> dialogs;
+    private Map<String,Object> texts;
+    private Map<String,Object> inputs;
+    private Map<String,Object> popups;
+    private Map<String,Object> options;
     private String language;
 
     private PlayerDialog() {
@@ -17,9 +23,18 @@ public class PlayerDialog {
         language = "en";
     }
 
+    @SuppressWarnings("unchecked")
     private void initialize_dialogs() {
         Yaml yaml = new Yaml();
-        dialogs = yaml.load("src/GUI/Player/player_dialog.yaml");
+        try(InputStream inputStream = new FileInputStream("src/GUI/Player/player_dialog.yaml")){
+            Map<String,Object> dialogs = yaml.load(inputStream);
+            texts = (Map<String, Object>) dialogs.get("text");
+            inputs = (Map<String, Object>) dialogs.get("input");
+            popups = (Map<String, Object>) dialogs.get("popup");
+            options = (Map<String, Object>) dialogs.get("options");
+        }catch (IOException e){
+            throw new OperationException("Initializing dialogs failed\n"+e.getMessage());
+        }
     }
 
     public static PlayerDialog get() {
@@ -33,48 +48,41 @@ public class PlayerDialog {
         this.language = language;
     }
 
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> get_main(String main_type) {
-        return (Map<String, Object>) dialogs.get(main_type);
-    }
 
     @SuppressWarnings("unchecked")
-    public String get_UI(String sub_type) {
-        return (String) ((Map<String, Object>)(get_main("UI").get(sub_type))).get(sub_type);
+    public String get_text(String sub_type) {
+        return (String) ((Map<String, Object>)(texts.get(sub_type))).get(language);
     }
 
     @SuppressWarnings("unchecked")
     public void popup(String sub_type) {
-        Map<String, String> sub_dialog = (Map<String, String>) get_main("popup").get(sub_type);
-        GeneralUtil.popup(sub_dialog.get(language));
+        GeneralUtil.popup((String) ((Map<String, Object>) popups.get(sub_type)).get(language));
     }
 
     @SuppressWarnings("unchecked")
     public String input(String sub_type) {
-        Map<String, String> sub_dialog = (Map<String, String>) get_main("input").get(sub_type);
-        return GeneralUtil.input(sub_dialog.get(language));
+        return GeneralUtil.input((String) ((Map<String, Object>) inputs.get(sub_type)).get(language));
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String,Object> options(String sub_type){
-        Map<String, Object> dialog = (Map<String, Object>) dialogs.get("options");
-        return (Map<String, Object>) dialog.get(sub_type);
+    public Map<String,Object> option(String sub_type){
+        return (Map<String, Object>) options.get(sub_type);
     }
 
     public int modify_player(){
-        return selectionDialog(options("modify_player"));
+        return selectionDialog(option("modify_player"));
     }
 
     public String region_chooser(String[] region_list) {
-        return selectionDialog(options("region_menu"),region_list);
+        return selectionDialog(option("region_menu"),region_list);
     }
 
     public String server_chooser(String[] server_list){
-        return selectionDialog(options("region_menu"),server_list);
+        return selectionDialog(option("region_menu"),server_list);
     }
 
     public int export_player(){
-        return selectionDialog(options("export_player"));
+        return selectionDialog(option("export_player"));
     }
     @SuppressWarnings("unchecked")
     private String get_title(Map<String, Object> dialog) {
