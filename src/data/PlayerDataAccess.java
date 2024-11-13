@@ -1,12 +1,11 @@
 package data;
 
+import GUI.Player.PlayerDialog;
 import data.database.PlayerDBA;
-import GUI.GeneralMenu;
 import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
 
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -56,7 +55,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         if(fileWriter != null){
             String target_extension = choose_extension();
             String target_path = get_path("path");
-            String target_name = GeneralMenu.universalInput("Input new data.file name");
+            String target_name = PlayerDialog.get().input("new_file_name");
             target_path += "/" + target_name + target_extension;
             fileWriter.write(target_path, player_map);
         }else {
@@ -66,23 +65,23 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public void export_DB(){
         if(!playerDBA.connected()){
-            GeneralMenu.message_popup("Database is not connected");
+            PlayerDialog.get().popup("db_not_connected");
             return;
         }
         playerDBA.update("import", player_map);
-        GeneralMenu.message_popup("Players data were exported to database");
+        PlayerDialog.get().popup("exported_db");
     }
 
-    public String delete(int selected_player_id) {
+    public void delete(int selected_player_id) {
         if(playerDBA.connected()){
             playerDBA.update("remove",player_map.get(selected_player_id));
         }
         player_map.remove(selected_player_id);
         setData_changed(true);
-        return "Player with ID " + selected_player_id + " is deleted";
+        PlayerDialog.get().popup( "deleted_player");
     }
 
-    public String add(Player player) throws Exception {
+    public void add(Player player) throws Exception {
         if(isPlayer_Invalid(player)) {
             throw new Exception("Player data is invalid");
         }
@@ -92,10 +91,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
         setData_changed(true);
         write();
-        return "Player with ID " + player.getID() + " is added";
+        PlayerDialog.get().popup( "added_player");
     }
 
-    public String update(Player player) throws Exception {
+    public void update(Player player) throws Exception {
         if(isPlayer_Invalid(player)) {
             throw new Exception("Player data is invalid");
         }
@@ -104,7 +103,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
             playerDBA.update("update",player);
         }
         write();
-        return  "Player with ID " + player.getID() + " is modified";
+        PlayerDialog.get().popup( "modified_player");
     }
 
     public boolean isEmpty(){
@@ -133,11 +132,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public boolean isPlayer_Invalid(Player player){
         if(region_server_map == null){
-            JOptionPane.showMessageDialog(null, "Region server is null!");
+            PlayerDialog.get().popup("region_server_null");
             return true;
         }
         if(!region_server_map.containsKey(player.getRegion())){
-            JOptionPane.showMessageDialog(null, "Player Region doesn't exist!");
+            PlayerDialog.get().popup("region_invalid");
             return true;
         }
         boolean server_valid = false;
@@ -148,19 +147,18 @@ public class PlayerDataAccess extends GeneralDataAccess {
             }
         }
         if(!server_valid){
-            GeneralMenu.message_popup("Player Server doesn't exist!");
+            PlayerDialog.get().popup("server_invalid");
             return true;
         }
 
         if(player.getID() <= 0){
-            GeneralMenu.message_popup("Player ID is ilegal");
+            PlayerDialog.get().popup("id_invalid");
             return true;
         }
 
         if(player_map == null) return false;
-
         if(player.getName().isBlank()){
-            GeneralMenu.message_popup("Player Name is blank");
+            PlayerDialog.get().popup("name_invalid");
             return true;
         }
         return false;
@@ -168,7 +166,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public boolean isPlayerMap_Valid(){
         if(player_map == null){
-            GeneralMenu.message_popup("No player data registered");
+            PlayerDialog.get().popup("player_map_null");
             return true;
         }
         for(Player player : player_map.values()){

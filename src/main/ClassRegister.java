@@ -49,13 +49,13 @@ public class ClassRegister {
         if (controlClass != null) {
             return controlClass.getDeclaredConstructor().newInstance();
         }
-        throw new OperationException("Failed to get control class");
+        throw new OperationException("Failed to get_main control class");
     }
     public GeneralDataAccess getDA(String class_name) throws Exception {
         Class<? extends GeneralDataAccess> dataAccessClass = dataAccessMap.get(class_name);
         if (dataAccessClass != null) {
             return dataAccessClass.getDeclaredConstructor().newInstance();
         }
-        throw new OperationException("Failed to get data access class");
+        throw new OperationException("Failed to get_main data access class");
     }
 }

@@ -1,8 +1,7 @@
 package control;
 
-import GUI.GeneralMenu;
 import GUI.Player.PlayerUI;
-import GUI.Player.PlayerMenu;
+import GUI.Player.PlayerDialog;
 import Interface.GeneralControl;
 import data.GeneralDataAccess;
 import data.PlayerDataAccess;
@@ -30,12 +29,12 @@ public class PlayerControl implements GeneralControl {
     }
 
     public String data_source(String SQL_Type){
-        String data_source = "Data Source: ";
+        String data_source = PlayerDialog.get().get_UI("data_source");
         if(playerDA.DB_source()){
             data_source += SQL_Type;
         }else if(playerDA.getFile_path() != null){
             String path = playerDA.getFile_path();
-            data_source += path.substring(path.lastIndexOf(".")) + " File";
+            data_source += path.substring(path.lastIndexOf("."));
         }else{
             data_source += "null";
         }
@@ -89,28 +88,28 @@ public class PlayerControl implements GeneralControl {
 
     public void modify_player_control(int selected_player_id) throws Exception {
         Player player = playerDA.getPlayer_map().get(selected_player_id);
-        switch(PlayerMenu.modify_player_menu()){
+        switch(PlayerDialog.get().modify_player()){
             // After changing region the server has to be changed too.
-            case "Region": player.setRegion(PlayerMenu.region_chooser(playerDA.getRegion_list()));
-            case "Server": player.setServer(PlayerMenu.server_chooser(playerDA.getServer_list(player.getRegion()))); break;
-            case "Name": player.setName(GeneralMenu.universalInput("Enter player name: ")); break;
-            case "ALL":
-                player.setRegion(PlayerMenu.region_chooser(playerDA.getRegion_list()));
-                player.setServer(PlayerMenu.server_chooser(playerDA.getServer_list(player.getRegion())));
-                player.setName(GeneralMenu.universalInput("Enter player name: "));
+            case 0: player.setRegion(PlayerDialog.get().region_chooser(playerDA.getRegion_list()));
+            case 1: player.setServer(PlayerDialog.get().server_chooser(playerDA.getServer_list(player.getRegion()))); break;
+            case 2: player.setName(PlayerDialog.get().input("player_name")); break;
+            case 3:
+                player.setRegion(PlayerDialog.get().region_chooser(playerDA.getRegion_list()));
+                player.setServer(PlayerDialog.get().server_chooser(playerDA.getServer_list(player.getRegion())));
+                player.setName(PlayerDialog.get().input("player_name"));
                 break;
         }
-        GeneralMenu.message_popup(playerDA.update(player));
+        playerDA.update(player);
     }
 
     public void create_player_control() {
         try {
             Player player = new Player();
-            player.setRegion(PlayerMenu.region_chooser(playerDA.getRegion_list()));
-            player.setServer(PlayerMenu.server_chooser(playerDA.getServer_list(player.getRegion())));
+            player.setRegion(PlayerDialog.get().region_chooser(playerDA.getRegion_list()));
+            player.setServer(PlayerDialog.get().server_chooser(playerDA.getServer_list(player.getRegion())));
             player.setID(create_ID_control());
-            player.setName(GeneralMenu.universalInput("Enter player name: "));
-            GeneralMenu.message_popup(playerDA.add(player));
+            player.setName(PlayerDialog.get().input("player_name"));
+            playerDA.add(player);
         } catch (Exception e) {
             throw new OperationException("Creating player failed\n" + e.getMessage());
         }
@@ -119,34 +118,33 @@ public class PlayerControl implements GeneralControl {
     private int create_ID_control() {
         while (true) {
             try {
-                int ID = PlayerMenu.ID_input_UI();
+                int ID = Integer.parseInt(PlayerDialog.get().input("id"));
                 if (playerDA.containsKey(ID)) {
                     throw new OperationException("ID already existed\n");
                 } else return ID;
             } catch (NumberFormatException e) {
-                GeneralMenu.message_popup("Number format invalid");
+                PlayerDialog.get().popup("number_format_invalid");
             }
         }
     }
 
     public void delete_control(int selected_player_id){
-        GeneralMenu.message_popup(playerDA.delete(selected_player_id));
+        playerDA.delete(selected_player_id);
     }
 
     public void export_control() {
         try {
             if(playerDA.isEmpty()){
-                GeneralMenu.message_popup("No player registered");
+                PlayerDialog.get().popup("player_map_null");
             }else{
-                switch (PlayerMenu.export_menu()){
-                    case "Export to File": playerDA.export(); break;
-                    case "Overwrite Database": playerDA.export_DB(); break;
+                switch (PlayerDialog.get().export_player()){
+                    case 0: playerDA.export(); break;
+                    case 1: playerDA.export_DB(); break;
                 }
             }
         } catch (Exception e) {
             throw new OperationException("Export failed\n" + e.getMessage());
         }
     }
-
 
 }

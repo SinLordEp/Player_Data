@@ -1,6 +1,6 @@
 package data;
 
-import GUI.GeneralMenu;
+import GUI.GeneralUtil;
 import main.OperationException;
 
 import javax.swing.*;
@@ -39,7 +39,7 @@ public abstract class GeneralDataAccess {
     }
 
     public static String choose_extension(){
-        return switch (GeneralMenu.extension_general()) {
+        return switch (GeneralUtil.extension_general()) {
             case "DAT" -> ".dat";
             case "XML" -> ".xml";
             case "TXT" -> ".txt";
@@ -69,7 +69,7 @@ public abstract class GeneralDataAccess {
     public static String new_path_builder(){
         String target_path = GeneralDataAccess.get_path("path");
         String target_extension = choose_extension();
-        String target_file_name = GeneralMenu.universalInput("Input a data.file name");
+        String target_file_name = GeneralUtil.input("Input file name");
         target_path += "/" +target_file_name + target_extension;
         return target_path;
     }

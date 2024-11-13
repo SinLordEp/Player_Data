@@ -1,6 +1,6 @@
 package data.file;
 
-import GUI.GeneralMenu;
+import GUI.GeneralUtil;
 import Interface.FileDataWriter;
 import model.Player;
 import org.w3c.dom.Document;
@@ -17,7 +17,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         File file = new File(file_path);
         TreeMap<Integer,Player> player_data = (TreeMap<Integer, Player>) input_data;
         if(file.createNewFile()){
-            GeneralMenu.message_popup("New file created");
+            GeneralUtil.popup("New file created");
         }
 
         String file_extension = file_path.substring(file_path.lastIndexOf("."));
@@ -26,7 +26,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
             case ".xml": write_xml(file, player_data); break;
             case ".txt": write_txt(file, player_data); break;
         }
-        GeneralMenu.message_popup("File saved correctly");
+        GeneralUtil.popup("File saved correctly");
     }
 
     private void write_dat(File player_file, TreeMap<Integer, Player> player_data) throws Exception {
@@ -73,7 +73,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
                 bw.newLine();
             }
         }catch (Exception e){
-            GeneralMenu.message_popup("Datos inválidos");
+            GeneralUtil.popup("Datos inválidos");
         }
     }
 }

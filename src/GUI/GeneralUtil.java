@@ -4,7 +4,7 @@ import main.OperationException;
 
 import javax.swing.*;
 
-public class GeneralMenu {
+public class GeneralUtil {
 
     public static String extension_general() {
         String[] options = {"DAT", "XML", "TXT"};
@@ -26,11 +26,11 @@ public class GeneralMenu {
         return options[choice];
     }
 
-    public static String universalInput(String message){
+    public static String input(String message){
         return JOptionPane.showInputDialog(message);
     }
 
-    public static void message_popup(String message){
+    public static void popup(String message){
         JOptionPane.showMessageDialog(null, message);
     }
 

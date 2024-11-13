@@ -56,7 +56,7 @@ public class xml_utils {
         parent.appendChild(element);
     }
 
-    // get element text
+    // get_main element text
     public static String getElementTextContent(Element element, String tagName) {
         NodeList nodeList = element.getElementsByTagName(tagName);
         if (nodeList.getLength() > 0 && nodeList.item(0).getNodeType() == Node.ELEMENT_NODE) {
