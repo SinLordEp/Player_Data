@@ -2,7 +2,12 @@ UI:
   data_source:
     en: "Data Source: "
     es: "Fuente de datos"
-
+  default_data_source:
+    en: "Data Source: null"
+    es: "Fuente de datos: null"
+  frame_title:
+    en: "Player Menu"
+    es: "Menú de Jugador"
 
 input:
   player_name:
