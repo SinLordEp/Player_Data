@@ -1,6 +1,6 @@
 package GUI.Player;
 
-import GUI.GeneralUtil;
+import GUI.GeneralDialog;
 import Interface.GeneralUI;
 import control.PlayerControl;
 
@@ -98,7 +98,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.create_player_control();
                 refresh();
             } catch (Exception e) {
-                GeneralUtil.popup(e.getMessage());
+                GeneralDialog.get().message(e.getMessage());
             }
         });
 
@@ -107,7 +107,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.modify_player_control(selected_player_id);
                 refresh();
             } catch (Exception e) {
-                GeneralUtil.popup(e.getMessage());
+                GeneralDialog.get().message(e.getMessage());
             }
         });
 
@@ -116,7 +116,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.delete_control(selected_player_id);
                 refresh();
             } catch (Exception e) {
-                GeneralUtil.popup(e.getMessage());
+                GeneralDialog.get().message(e.getMessage());
             }
         });
 
@@ -124,7 +124,7 @@ public class PlayerUI implements GeneralUI {
             try {
                 playerControl.export_control();
             } catch (Exception e) {
-                GeneralUtil.popup(e.getMessage());
+                GeneralDialog.get().message(e.getMessage());
             }
         });
 
@@ -132,7 +132,7 @@ public class PlayerUI implements GeneralUI {
             try {
                 db_connect();
             } catch (Exception e) {
-                GeneralUtil.popup(e.getMessage());
+                GeneralDialog.get().message(e.getMessage());
             }
         });
 
@@ -141,7 +141,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.create_file();
                 refresh();
             } catch (Exception e) {
-                GeneralUtil.popup(e.getMessage());
+                GeneralDialog.get().message(e.getMessage());
             }
         });
 
@@ -150,7 +150,7 @@ public class PlayerUI implements GeneralUI {
                 playerControl.import_file();
                 refresh();
             } catch (Exception e) {
-                GeneralUtil.popup(e.getMessage());
+                GeneralDialog.get().message(e.getMessage());
             }
             button_importDB.setEnabled(true);
         });
@@ -160,7 +160,7 @@ public class PlayerUI implements GeneralUI {
             try {
                 refresh();
             } catch (Exception e) {
-                GeneralUtil.popup(e.getMessage());
+                GeneralDialog.get().message(e.getMessage());
             }
             button_importDB.setEnabled(false);
         });
@@ -229,7 +229,7 @@ public class PlayerUI implements GeneralUI {
         switch(button_connectDB.getText()){
             case "Connect to DB":
                 if(db_isBlank()){
-                    GeneralUtil.popup("One or more Database field maybe empty");
+                    GeneralDialog.get().popup("db_field_empty");
                     return;
                 }
                 button_connectDB.setText("Connecting...");
@@ -238,7 +238,7 @@ public class PlayerUI implements GeneralUI {
                 if(playerControl.connect_db()){
                     lock_db_input();
                 }else{
-                    GeneralUtil.popup("Failed to connect to the database, please check the login info");
+                    GeneralDialog.get().popup("db_login_failed");
                     button_connectDB.setText("Connect to DB");
                     button_connectDB.setEnabled(true);
                 }
@@ -253,7 +253,7 @@ public class PlayerUI implements GeneralUI {
                 if(playerControl.disconnect_db()){
                     unlock_db_input();
                 }else{
-                    GeneralUtil.popup("Some errors have occurred while disconnecting, please try again");
+                    GeneralDialog.get().popup("db_disconnect_failed");
                     button_connectDB.setText("Disconnect");
                     button_connectDB.setEnabled(true);
                 }

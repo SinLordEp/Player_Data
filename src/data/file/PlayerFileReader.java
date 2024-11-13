@@ -1,6 +1,6 @@
 package data.file;
 
-import GUI.GeneralUtil;
+import GUI.GeneralDialog;
 import Interface.FileDataReader;
 import model.Player;
 import org.w3c.dom.Element;
@@ -47,7 +47,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
             }
         }
         if (player_data.isEmpty()) {
-            GeneralUtil.popup("No data found");
+            GeneralDialog.get().popup("No data found");
         }
         return player_data;
     }
@@ -59,7 +59,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
             throw new RuntimeException("Invalid XML: Root element is not Player");
         }
         if (!root.hasChildNodes()) {
-            GeneralUtil.popup("No player data found");
+            GeneralDialog.get().popup("No player data found");
             return player_data;
         }
         // parsing
@@ -84,7 +84,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         try(Scanner scanner = new Scanner(file)){
             if(!scanner.hasNext()){
-                GeneralUtil.popup("No data found");
+                GeneralDialog.get().popup("No data found");
             }else{
                 while(scanner.hasNext()){
                     String[] player_txt = scanner.nextLine().split(",");

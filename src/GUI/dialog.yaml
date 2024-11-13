@@ -19,6 +19,10 @@ input:
   id:
     en: "Enter the ID"
     es: "Introducir ID"
+  file_name:
+    en: "Input file name"
+    es: "Introducir nombre del fichero"
+
 popup:
   db_not_connected:
     en: "Database is not connected"
@@ -56,6 +60,16 @@ popup:
   number_format_invalid:
     en: "Number format invalid"
     es: "Formato del número no es valido"
+  db_field_empty:
+    en: "One or more Database field maybe empty"
+    es: "Uno o varios campos de base de datos vacíos"
+  db_login_failed:
+    en: "Failed to connect to the database, please check the login info"
+    es: "No ha podido conectar a base de datos, revisa los datos de login"
+  db_disconnect_failed:
+    en: "Some errors have occurred while disconnecting, please try again"
+    es: "Ha producido errores desconectando, inténtalo otra vez"
+
 options:
   modify_player:
     title:

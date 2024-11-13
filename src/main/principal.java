@@ -1,9 +1,9 @@
 package main;
 
-import GUI.GeneralUtil;
+import GUI.GeneralDialog;
 import Interface.GeneralControl;
 
-import static GUI.GeneralUtil.buildSelectionDialog;
+import static GUI.GeneralDialog.buildSelectionDialog;
 
 
 
@@ -23,7 +23,7 @@ public class principal {
                 current_control.setDA(classRegister.getDA(chosen_dataAccess));
                 return current_control;
             }catch (Exception e) {
-                GeneralUtil.popup(e.getMessage());
+                GeneralDialog.get().message(e.getMessage());
             }
         }
     }

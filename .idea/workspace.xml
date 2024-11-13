@@ -4,14 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="已完全重构结构, 目前结构为控制层,交互层,数据层,文件层. 文件层目前有形参类原始使用问题, 后续解决">
+    <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="修正了不能正确加载YAML文件的问题,后续继续完善文本迁移">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/GeneralUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/GeneralDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/Player/player_dialog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/player_dialog.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/player_dialog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/dialog.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/GeneralDataAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/file/PlayerFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/file/PlayerFileReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/file/PlayerFileWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/file/PlayerFileWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/principal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,12 +38,12 @@
     &quot;assignee&quot;: &quot;SinLordEp&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/SinLordEp/Player_Data.git",
-    "accountId": "bd00194e-28d4-4913-a672-e3710d409d32"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/SinLordEp/Player_Data.git&quot;,
+    &quot;accountId&quot;: &quot;bd00194e-28d4-4913-a672-e3710d409d32&quot;
   }
-}]]></component>
+}</component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="true" />
   </component>
@@ -65,62 +68,62 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.principal.executor": "Run",
-    "Downloaded.Files.Path.Enabled": "true",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "331",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "master",
-    "go.import.settings.migrated": "true",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Sin/hibernate-reactive-core-2.4.2.Final.jar",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "advanced.settings",
-    "show.migrate.to.gradle.popup": "false",
-    "vue.rearranger.settings.migration": "true",
-    "应用程序.principal.executor": "Debug"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.principal.executor&quot;: &quot;Run&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH&quot;: &quot;331&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Sin/hibernate-reactive-core-2.4.2.Final.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;应用程序.principal.executor&quot;: &quot;Debug&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql",
-      "sqlite"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;,
+      &quot;sqlite&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "XML"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;XML&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="I:\Player_Data\src\GUI" />
+      <recent name="I:\Player_Data\src\config" />
       <recent name="I:\Player_Data\src\GUI\Player" />
       <recent name="C:\Sin\Player_Data\src" />
       <recent name="C:\Sin\Player_Data\src\config" />
-      <recent name="C:\Sin\Player_Data\src\GUI\Player" />
-      <recent name="C:\Sin\Player_Data\src\main" />
     </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
       </set>
     </attachedChunks>
   </component>
@@ -167,15 +170,9 @@
       <workItem from="1730977516246" duration="1578000" />
       <workItem from="1731514104488" duration="280000" />
       <workItem from="1731514393225" duration="12776000" />
-      <workItem from="1731532402270" duration="2245000" />
-    </task>
-    <task id="LOCAL-00008" summary="写入和读取的操作步骤已从main分离， 由于static全局变量的不可控性，同时为了避免parameter sprawl， 已将全局经常调用的东西封装至FileOperationData里， 同时也将一些方法的计算流程转入该class，方便内部直接调用，省去getting套娃">
-      <option name="closed" value="true" />
-      <created>1727116959370</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1727116959370</updated>
+      <workItem from="1731532402270" duration="2597000" />
+      <workItem from="1731535376751" duration="16000" />
+      <workItem from="1731538311150" duration="1448000" />
     </task>
     <task id="LOCAL-00009" summary="下一步进行file manager的分离，将writer和reader都放入相同的接口里，然后创建factory来匹配使用的方法">
       <option name="closed" value="true" />
@@ -561,7 +558,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731528778347</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="修正了不能正确加载YAML文件的问题,后续继续完善文本迁移">
+      <option name="closed" value="true" />
+      <created>1731535263668</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1731535263668</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -579,7 +584,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="修改数据时的逻辑问题已修复" />
     <MESSAGE value="移动了交互层里处理错误信息和弹窗信息的逻辑到控制层" />
     <MESSAGE value="修复了txt读取的bug" />
     <MESSAGE value="添加了删除成功弹窗" />
@@ -604,21 +608,11 @@
     <MESSAGE value="引入hibernate后断连DB的操作已没有意义，去除了相关逻辑" />
     <MESSAGE value="引入reflections" />
     <MESSAGE value="正在重构文本来源，引入外部文本YAML配置对话和UI" />
-    <option name="LAST_COMMIT_MESSAGE" value="正在重构文本来源，引入外部文本YAML配置对话和UI" />
+    <MESSAGE value="修正了不能正确加载YAML文件的问题,后续继续完善文本迁移" />
+    <option name="LAST_COMMIT_MESSAGE" value="修正了不能正确加载YAML文件的问题,后续继续完善文本迁移" />
   </component>
   <component name="VgoProject">
     <integration-enabled>false</integration-enabled>
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/GUI/Player/PlayerDialog.java</url>
-          <line>27</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
