@@ -32,7 +32,7 @@ public class GeneralDialog {
     @SuppressWarnings("unchecked")
     protected void initialize_dialogs() {
         Yaml yaml = new Yaml();
-        try(InputStream inputStream = new FileInputStream("GUI/dialog.yaml")){
+        try(InputStream inputStream = new FileInputStream("src/GUI/dialog.yaml")){
             Map<String,Object> dialogs = yaml.load(inputStream);
             texts = (Map<String, Object>) dialogs.get("text");
             inputs = (Map<String, Object>) dialogs.get("input");
