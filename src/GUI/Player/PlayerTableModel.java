@@ -8,10 +8,11 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class PlayerTableModel extends AbstractTableModel {
-    private final String[] columns_name = {"id","region","server","name"};
+    private String[] columns_name;
     private Object[][] data;
 
     public PlayerTableModel(TreeMap<Integer, Player> player_data) {
+        columns_name = PlayerDialog.get().get_options("table_column");
         parse_data(player_data);
     }
 
@@ -55,6 +56,11 @@ public class PlayerTableModel extends AbstractTableModel {
     public void update_data(TreeMap<Integer, Player> player_data) {
         parse_data(player_data);
         fireTableDataChanged();
+    }
+
+    public void language_changed() {
+        columns_name = PlayerDialog.get().get_options("table_column");
+        fireTableStructureChanged();
     }
 
 

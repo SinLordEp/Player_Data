@@ -88,6 +88,12 @@ public class GeneralDialog {
         Map<String, Object> options_dialog = (Map<String, Object>) dialog.get("option");
         return ((java.util.List<String>)options_dialog.get(language)).toArray(new String[0]);
     }
+
+    @SuppressWarnings("unchecked")
+    public String[] get_options(String sub_type) {
+        return ((java.util.List<String>)(((Map<String, Object>) option(sub_type).get("option")).get(language))).toArray(new String[0]);
+    }
+
     public int selectionDialog(String sub_type) {
         Map<String, Object> dialog = option(sub_type);
         String[] options = get_options(dialog);

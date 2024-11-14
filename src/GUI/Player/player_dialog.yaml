@@ -33,14 +33,17 @@ text:
     en: "Disconnecting..."
     es: "Desconectando..."
   button_importFile:
-    en: "Import data from file"
-    es: "Importar dato desde fichero"
+    en: "Import from file"
+    es: "Importar desde fichero"
   button_importDB:
-    en: "Import data from DB"
-    es: "Importar dato desde BD"
+    en: "Import from DB"
+    es: "Importar desde BD"
   button_createFile:
     en: "Create new file"
     es: "Crear nuevo fichero"
+  button_language:
+    en: "Language"
+    es: "Idioma"
   label_port:
     en: "Port:"
     es: "Puerto:"
@@ -53,9 +56,6 @@ text:
   label_user:
     en: "User:"
     es: "Usuario:"
-  label_URL:
-    en: "URL:"
-    es: "URL:"
   label_database:
     en: "Database:"
     es: "Base de datos:"
@@ -147,3 +147,15 @@ options:
     message:
       en: "Choose a server"
       es: "Elige una servidor"
+  table_column:
+    option:
+      en:
+        - "ID"
+        - "Region"
+        - "Server"
+        - "Name"
+      es:
+        - "ID"
+        - "Region"
+        - "Servidor"
+        - "Nombre"

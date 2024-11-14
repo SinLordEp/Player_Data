@@ -24,6 +24,7 @@ public class PlayerUI implements GeneralUI {
     private JButton button_importFile;
     private JButton button_importDB;
     private JButton button_createFile;
+    private JButton button_language;
 
     private JLabel label_port;
     private JLabel label_search;
@@ -81,17 +82,21 @@ public class PlayerUI implements GeneralUI {
         button_modify.setText(PlayerDialog.get().get_text("button_modify"));
         button_delete.setText(PlayerDialog.get().get_text("button_delete"));
         button_export.setText(PlayerDialog.get().get_text("button_export"));
-        button_connectDB.setText(PlayerDialog.get().get_text("button_connectDB"));
+        if(!db_connected){
+            button_connectDB.setText(PlayerDialog.get().get_text("button_connectDB"));
+        }else{
+            button_connectDB.setText(PlayerDialog.get().get_text("button_disconnectDB"));
+        }
         button_importFile.setText(PlayerDialog.get().get_text("button_importFile"));
         button_importDB.setText(PlayerDialog.get().get_text("button_importDB"));
         button_createFile.setText(PlayerDialog.get().get_text("button_createFile"));
+        button_language.setText(PlayerDialog.get().get_text("button_language"));
         label_port.setText(PlayerDialog.get().get_text("label_port"));
         label_search.setText(PlayerDialog.get().get_text("label_search"));
         label_pwd.setText(PlayerDialog.get().get_text("label_pwd"));
         label_user.setText(PlayerDialog.get().get_text("label_user"));
-        label_URL.setText(PlayerDialog.get().get_text("label_URL"));
         label_database.setText(PlayerDialog.get().get_text("label_database"));
-
+        frame.pack();
     }
 
     private void search_listener(){
@@ -188,6 +193,12 @@ public class PlayerUI implements GeneralUI {
             }
             button_importDB.setEnabled(false);
         });
+
+        button_language.addActionListener(_ -> {
+            playerControl.change_language();
+            setUIText();
+            tableModel.language_changed();
+        });
     }
 
     private void table_listener(){
@@ -261,6 +272,7 @@ public class PlayerUI implements GeneralUI {
             db_configuration();
             if(playerControl.connect_db()){
                 lock_db_input();
+                db_connected = true;
             }else{
                 GeneralDialog.get().popup("db_login_failed");
                 button_connectDB.setText(PlayerDialog.get().get_text("button_connectDB"));
@@ -275,6 +287,7 @@ public class PlayerUI implements GeneralUI {
             }
             if(playerControl.disconnect_db()){
                 unlock_db_input();
+                db_connected = false;
             }else{
                 GeneralDialog.get().popup("db_disconnect_failed");
                 button_connectDB.setText(PlayerDialog.get().get_text("button_disconnectDB"));
@@ -305,7 +318,7 @@ public class PlayerUI implements GeneralUI {
 
     private void lock_db_input(){
         //when database connected
-        button_connectDB.setText("Disconnect");
+        button_connectDB.setText(PlayerDialog.get().get_text("button_disconnectDB"));
         button_connectDB.setEnabled(true);
         button_importDB.setEnabled(true);
         text_URL.setEnabled(false);
@@ -317,7 +330,7 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void unlock_db_input(){
-        button_connectDB.setText("Connect to DB");
+        button_connectDB.setText(PlayerDialog.get().get_text("button_connectDB"));
         button_connectDB.setEnabled(true);
         text_URL.setEnabled(true);
         text_database.setEnabled(true);

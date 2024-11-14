@@ -39,13 +39,6 @@ options:
     message:
       en: "Choose a controller"
       es: "Elige una controlador"
-  dao:
-    title:
-      en: "DataAccess menu"
-      es: "Menú de acceso a datos"
-    message:
-      en: "Choose a DataAccess"
-      es: "Elige un acceso a datos"
   extension_general:
      title:
        en: "Extension selector"
@@ -53,3 +46,17 @@ options:
      message:
        en: "Choose a File type"
        es: ""
+  language:
+    title:
+      en: "Language"
+      es: "Idioma"
+    message:
+      en: "Choose a language"
+      es: "Elige un idioma"
+    option:
+      en:
+        - "English"
+        - "Spanish"
+      es:
+        - "Inglés"
+        - "Español"

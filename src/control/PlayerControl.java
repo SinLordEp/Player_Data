@@ -1,5 +1,6 @@
 package control;
 
+import GUI.GeneralDialog;
 import GUI.Player.PlayerUI;
 import GUI.Player.PlayerDialog;
 import Interface.GeneralControl;
@@ -149,4 +150,15 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
+    public void change_language(){
+        String language = switch(GeneralDialog.get().selectionDialog("language")){
+            case 0 -> "en";
+            case 1 -> "es";
+            case 2 -> "cn";
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + GeneralDialog.get().selectionDialog("language"));
+        };
+        GeneralDialog.get().setLanguage(language);
+        PlayerDialog.get().setLanguage(language);
+    }
 }
