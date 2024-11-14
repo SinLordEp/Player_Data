@@ -31,7 +31,7 @@ public class PlayerControl implements GeneralControl {
 
     public String dataSource(String SQL_Type){
         String data_source = PlayerDialog.get().getText("dataSource");
-        if(playerDA.DBSource()){
+        if(playerDA.isDBSource()){
             data_source += SQL_Type;
         }else if(playerDA.getFilePath() != null){
             String path = playerDA.getFilePath();
@@ -80,7 +80,7 @@ public class PlayerControl implements GeneralControl {
     }
 
     public boolean DBSource() {
-        return playerDA.DBSource();
+        return playerDA.isDBSource();
     }
 
     public TreeMap<Integer,Player> getMap(){

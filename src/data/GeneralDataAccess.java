@@ -16,7 +16,7 @@ public abstract class GeneralDataAccess {
     abstract void read() throws Exception;
     abstract void write() throws Exception;
 
-    public boolean DBSource() {
+    public boolean isDBSource() {
         return DB_source;
     }
 

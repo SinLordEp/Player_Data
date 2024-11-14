@@ -30,7 +30,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         if(!isDataChanged()){
             return;
         }
-        if(DBSource()){
+        if(isDBSource()){
             player_map = playerDBA.read();
         }else{
             player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
