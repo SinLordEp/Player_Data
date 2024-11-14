@@ -1,18 +1,6 @@
 text:
-  data_source:
-    en: "Data Source: "
-    es: "Fuente de datos"
-  default_data_source:
-    en: "Data Source: null"
-    es: "Fuente de datos: null"
-  frame_title:
-    en: "Player Menu"
-    es: "Menú de Jugador"
 
 input:
-  player_name:
-    en: "Enter player name"
-    es: "Introducir nombre de jugador"
   new_file_name:
     en: "Input new file name"
     es: "Introducir nombre del nuevo fichero"
@@ -27,36 +15,9 @@ popup:
   db_not_connected:
     en: "Database is not connected"
     es: "Base de datos no está conectada"
-  exported_db:
-    en: "Players data were exported to database"
-    es: "Datos de jugadores exportados correctamente a base de datos"
-  deleted_player:
-    en: "Player deleted"
-    es: "Jugador eliminada"
-  added_player:
-    en: "Player added"
-    es: "Jugador añadida"
-  modified_player:
-    en: "Player  modified"
-    es: "Jugador modificada"
-  region_server_null:
-    en: "Region and server null"
-    es: "Region y servidor null"
-  region_invalid:
-    en: "Region doesn't exist"
-    es: "Region no existe"
-  server_invalid:
-    en: "Server doesn't exist"
-    es: "Servidor no existe"
   id_invalid:
     en: "ID format is invalid"
     es: "Formato de ID no es valido"
-  name_invalid:
-    en: "Player Name is blank"
-    es: "Nombre de jugador está vacío"
-  player_map_null:
-    en: "No player data registered"
-    es: "No hay jugador registrada"
   number_format_invalid:
     en: "Number format invalid"
     es: "Formato del número no es valido"
@@ -71,49 +32,4 @@ popup:
     es: "Ha producido errores desconectando, inténtalo otra vez"
 
 options:
-  modify_player:
-    title:
-      en: "Modify Player"
-      es: "Modificar Jugador"
-    message:
-      en: "Choose the player info you want to modify"
-      es: "Elige la información de jugador que desea modificar"
-    option:
-      en:
-        - "Region"
-        - "Server"
-        - "Name"
-        - "All"
-      es:
-        - "Region"
-        - "Servidor"
-        - "Nombre"
-        - "Todo"
-  export_player:
-    title:
-      en: "Export Player"
-      es: "Exportar Jugador"
-    message:
-      en: "Choose the export type"
-      es: "Elige el tipo objetivo para exportar"
-    option:
-      en:
-        - "Export to File"
-        - "Export to Database"
-      es:
-        - "Exportar al fichero"
-        - "Exportar a base de datos"
-  region_menu:
-    title:
-      en: "Region Menu"
-      es: "Menu de Region"
-    message:
-      en: "Choose a region"
-      es: "Elige una region"
-  server_menu:
-    title:
-      en: "Server Menu"
-      es: "Menu de Servidor"
-    message:
-      en: "Choose a server"
-      es: "Elige una servidor"
+

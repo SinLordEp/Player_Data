@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="45b4eafa-d60b-4d36-a990-928b26a30eb6" name="Changes" comment="继续完善文本了迁移">
+      <change afterPath="$PROJECT_DIR$/src/GUI/Player/player_dialog.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/GeneralDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/GeneralDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Player/PlayerUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/dialog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/dialog.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/PlayerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/PlayerControl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +40,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/SinLordEp/Player_Data.git&quot;,
-    &quot;accountId&quot;: &quot;bd00194e-28d4-4913-a672-e3710d409d32&quot;
+    &quot;accountId&quot;: &quot;b8d929e8-810e-4305-93bd-2236e70072a8&quot;
   }
 }</component>
   <component name="GoLibraries">
@@ -78,7 +85,7 @@
     "go.import.settings.migrated": "true",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Sin/hibernate-reactive-core-2.4.2.Final.jar",
+    "last_opened_file_path": "C:/Sin/Player_Data/src/GUI/Player",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -103,6 +110,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Sin\Player_Data\src\GUI\Player" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="I:\Player_Data\src\GUI" />
       <recent name="I:\Player_Data\src\config" />
@@ -114,8 +124,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
       </set>
     </attachedChunks>
   </component>
@@ -165,6 +175,8 @@
       <workItem from="1731532402270" duration="2597000" />
       <workItem from="1731535376751" duration="16000" />
       <workItem from="1731538311150" duration="2255000" />
+      <workItem from="1731576052606" duration="50000" />
+      <workItem from="1731580541396" duration="2238000" />
     </task>
     <task id="LOCAL-00010" summary="解决了直接用形参的问题">
       <option name="closed" value="true" />
@@ -606,30 +618,5 @@
   <component name="VgoProject">
     <integration-enabled>false</integration-enabled>
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/GUI/Player/PlayerUI.java</url>
-          <line>46</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/GUI/Player/PlayerUI.java</url>
-          <line>45</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/GUI/Player/PlayerUI.java</url>
-          <line>43</line>
-          <properties class="GUI.Player.PlayerUI" method="&lt;init&gt;">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

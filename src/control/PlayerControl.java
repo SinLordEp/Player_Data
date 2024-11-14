@@ -88,14 +88,16 @@ public class PlayerControl implements GeneralControl {
 
     public void modify_player_control(int selected_player_id) throws Exception {
         Player player = playerDA.getPlayer_map().get(selected_player_id);
-        switch(PlayerDialog.get().modify_player()){
+        switch(PlayerDialog.get().selectionDialog("modify_player")){
             // After changing region the server has to be changed too.
-            case 0: player.setRegion(PlayerDialog.get().region_chooser(playerDA.getRegion_list()));
-            case 1: player.setServer(PlayerDialog.get().server_chooser(playerDA.getServer_list(player.getRegion()))); break;
-            case 2: player.setName(PlayerDialog.get().input("player_name")); break;
+            case 0: player.setRegion(PlayerDialog.get().selectionDialog("region_menu",playerDA.getRegion_list()));
+            case 1: player.setServer(PlayerDialog.get().selectionDialog("server_menu",playerDA.getServer_list(player.getRegion())));
+                break;
+            case 2: player.setName(PlayerDialog.get().input("player_name"));
+                break;
             case 3:
-                player.setRegion(PlayerDialog.get().region_chooser(playerDA.getRegion_list()));
-                player.setServer(PlayerDialog.get().server_chooser(playerDA.getServer_list(player.getRegion())));
+                player.setRegion(PlayerDialog.get().selectionDialog("region_menu",playerDA.getRegion_list()));
+                player.setServer(PlayerDialog.get().selectionDialog("server_menu",playerDA.getServer_list(player.getRegion())));
                 player.setName(PlayerDialog.get().input("player_name"));
                 break;
         }
@@ -105,8 +107,8 @@ public class PlayerControl implements GeneralControl {
     public void create_player_control() {
         try {
             Player player = new Player();
-            player.setRegion(PlayerDialog.get().region_chooser(playerDA.getRegion_list()));
-            player.setServer(PlayerDialog.get().server_chooser(playerDA.getServer_list(player.getRegion())));
+            player.setRegion(PlayerDialog.get().selectionDialog("region_menu",playerDA.getRegion_list()));
+            player.setServer(PlayerDialog.get().selectionDialog("server_menu",playerDA.getServer_list(player.getRegion())));
             player.setID(create_ID_control());
             player.setName(PlayerDialog.get().input("player_name"));
             playerDA.add(player);
@@ -137,7 +139,7 @@ public class PlayerControl implements GeneralControl {
             if(playerDA.isEmpty()){
                 PlayerDialog.get().popup("player_map_null");
             }else{
-                switch (PlayerDialog.get().export_player()){
+                switch (PlayerDialog.get().selectionDialog("export_player")){
                     case 0: playerDA.export(); break;
                     case 1: playerDA.export_DB(); break;
                 }

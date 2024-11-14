@@ -70,6 +70,10 @@ public class PlayerUI implements GeneralUI {
         configure_title();
     }
 
+    public void setText(){
+
+    }
+
     private void search_listener(){
         field_search.getDocument().addDocumentListener(new SearchListener() {
             @Override

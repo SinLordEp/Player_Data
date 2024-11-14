@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 public class GeneralDialog {
-    public static GeneralDialog instance;
+    private static GeneralDialog instance;
     protected Map<String,Object> texts;
     protected Map<String,Object> inputs;
     protected Map<String,Object> popups;
@@ -18,8 +18,7 @@ public class GeneralDialog {
     protected String language;
 
     public GeneralDialog() {
-        initialize_dialogs();
-        this.language = "en";
+        initialize_dialogs("src/GUI/dialog.yaml");
     }
 
     public static GeneralDialog get() {
@@ -30,9 +29,9 @@ public class GeneralDialog {
     }
 
     @SuppressWarnings("unchecked")
-    protected void initialize_dialogs() {
+    protected void initialize_dialogs(String yaml_path) {
         Yaml yaml = new Yaml();
-        try(InputStream inputStream = new FileInputStream("src/GUI/dialog.yaml")){
+        try(InputStream inputStream = new FileInputStream(yaml_path)){
             Map<String,Object> dialogs = yaml.load(inputStream);
             texts = (Map<String, Object>) dialogs.get("text");
             inputs = (Map<String, Object>) dialogs.get("input");
@@ -41,6 +40,7 @@ public class GeneralDialog {
         }catch (IOException e){
             throw new OperationException("Initializing dialogs failed\n"+e.getMessage());
         }
+        this.language = "en";
     }
 
     public void setLanguage(String language) {
@@ -108,7 +108,8 @@ public class GeneralDialog {
         Map<String, Object> options_dialog = (Map<String, Object>) dialog.get("option");
         return ((java.util.List<String>)options_dialog.get(language)).toArray(new String[0]);
     }
-    public int selectionDialog( Map<String, Object> dialog) {
+    public int selectionDialog(String sub_type) {
+        Map<String, Object> dialog = option(sub_type);
         String[] options = get_options(dialog);
         int choice = JOptionPane.showOptionDialog(
                 null,
@@ -124,7 +125,8 @@ public class GeneralDialog {
         return choice;
     }
 
-    public String selectionDialog( Map<String, Object> dialog, String[] options) {
+    public String selectionDialog(String sub_type, String[] options) {
+        Map<String, Object> dialog = option(sub_type);
         int choice = JOptionPane.showOptionDialog(
                 null,
                 get_title(dialog),
