@@ -17,7 +17,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         File file = new File(file_path);
         TreeMap<Integer,Player> player_data = (TreeMap<Integer, Player>) input_data;
         if(file.createNewFile()){
-            GeneralDialog.get().popup("New file created");
+            GeneralDialog.get().popup("file_created");
         }
 
         String file_extension = file_path.substring(file_path.lastIndexOf("."));
@@ -26,7 +26,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
             case ".xml": write_xml(file, player_data); break;
             case ".txt": write_txt(file, player_data); break;
         }
-        GeneralDialog.get().popup("File saved correctly");
+        GeneralDialog.get().popup("file_saved");
     }
 
     private void write_dat(File player_file, TreeMap<Integer, Player> player_data) throws Exception {
@@ -73,7 +73,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
                 bw.newLine();
             }
         }catch (Exception e){
-            GeneralDialog.get().popup("Datos inválidos");
+            GeneralDialog.get().popup("data_invalid");
         }
     }
 }

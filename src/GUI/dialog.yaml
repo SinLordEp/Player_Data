@@ -38,6 +38,18 @@ popup:
     en: "Some errors have occurred while disconnecting, please try again"
     es: "Ha producido errores desconectando, inténtalo otra vez"
     cn: "尝试断开连接时发生错误，请再试一次"
+  file_created:
+    en: "New file created"
+    es: "Nuevo fichero creado"
+    cn: "已创建新文件"
+  file_saved:
+    en: "File saved correctly"
+    es: "Fichero guardado correctamente"
+    cn: "已保存文件"
+  data_invalid:
+    en: "Data invalid"
+    es: "Datos inválidos"
+    cn: "无效数据"
 
 options:
   controller:

@@ -14,7 +14,7 @@ public abstract class GeneralDataAccess {
     protected boolean DB_source = false;
 
     abstract void read() throws Exception;
-    abstract void write() throws Exception;
+    abstract void update() throws Exception;
 
     public boolean isDBSource() {
         return DB_source;
@@ -22,12 +22,12 @@ public abstract class GeneralDataAccess {
 
     public void setDBSource(boolean DB_source) {
         this.DB_source = DB_source;
-        setDataChanged(true);
+        data_changed = true;
     }
 
     public void setFilePath(String file_path) {
         this.file_path = file_path;
-        setDataChanged(true);
+        data_changed = true;
     }
 
     public boolean isDataChanged() {

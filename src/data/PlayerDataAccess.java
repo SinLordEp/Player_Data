@@ -35,10 +35,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }else{
             player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
         }
-        setDataChanged(false);
+        data_changed = false;
     }
 
-    public void write() throws Exception {
+    public void update() throws Exception {
         if(!DB_source){
             fileWriter.write(file_path, player_map);
         }
@@ -72,12 +72,13 @@ public class PlayerDataAccess extends GeneralDataAccess {
         PlayerDialog.get().popup("exported_db");
     }
 
-    public void delete(int selected_player_id) {
-        if(playerDBA.connected()){
+    public void delete(int selected_player_id) throws Exception {
+        if(isDBSource() && playerDBA.connected()){
             playerDBA.update("remove",player_map.get(selected_player_id));
         }
         player_map.remove(selected_player_id);
-        setDataChanged(true);
+        update();
+        data_changed = true;
         PlayerDialog.get().popup( "deleted_player");
     }
 
@@ -86,11 +87,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
             throw new Exception("Player data is invalid");
         }
         player_map.put(player.getID(), player);
-        if(playerDBA.connected()){
+        if(isDBSource() && playerDBA.connected()){
             playerDBA.update("add",player);
+        }else{
+            fileWriter.write(file_path, player_map);
         }
-        setDataChanged(true);
-        write();
+        data_changed = true;
         PlayerDialog.get().popup( "added_player");
     }
 
@@ -99,10 +101,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
             throw new Exception("Player data is invalid");
         }
         player_map.put(player.getID(), player);
-        if(playerDBA.connected()){
+        if(isDBSource() && playerDBA.connected()){
             playerDBA.update("update",player);
+        }else{
+            fileWriter.write(file_path, player_map);
         }
-        write();
+        data_changed = true;
         PlayerDialog.get().popup( "modified_player");
     }
 

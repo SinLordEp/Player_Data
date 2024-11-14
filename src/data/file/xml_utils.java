@@ -24,7 +24,7 @@ public class xml_utils {
         return document.getDocumentElement();
     }
 
-    // write to data.file, receive root and path
+    // update to data.file, receive root and path
     public static void writeXml(Document document, File file) throws Exception {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();

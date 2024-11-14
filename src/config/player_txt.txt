@@ -1,4 +1,4 @@
 1,North America,Stormterror's Lair,John Doe
+2,Asia,Narukami Shrine,SB
 3,Asia,Jueyun Karst,Jaime
 5,North America,Wolvendom,Uno
-7,Asia,Liyue Harbor,AS

@@ -1,6 +1,7 @@
 package data.file;
 
-import GUI.GeneralDialog;
+
+import GUI.Player.PlayerDialog;
 import Interface.FileDataReader;
 import model.Player;
 import org.w3c.dom.Element;
@@ -47,7 +48,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
             }
         }
         if (player_data.isEmpty()) {
-            GeneralDialog.get().popup("No data found");
+            PlayerDialog.get().popup("player_map_null");
         }
         return player_data;
     }
@@ -59,7 +60,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
             throw new RuntimeException("Invalid XML: Root element is not Player");
         }
         if (!root.hasChildNodes()) {
-            GeneralDialog.get().popup("No player data found");
+            PlayerDialog.get().popup("player_map_null");
             return player_data;
         }
         // parsing
@@ -73,7 +74,6 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                 player.setRegion(xml_utils.getElementTextContent(playerElement, "region"));
                 player.setServer(xml_utils.getElementTextContent(playerElement, "server"));
                 player.setName(xml_utils.getElementTextContent(playerElement, "name"));
-
                 player_data.put(player.getID(), player);
             }
         }
@@ -84,7 +84,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         try(Scanner scanner = new Scanner(file)){
             if(!scanner.hasNext()){
-                GeneralDialog.get().popup("No data found");
+                PlayerDialog.get().popup("player_map_null");
             }else{
                 while(scanner.hasNext()){
                     String[] player_txt = scanner.nextLine().split(",");

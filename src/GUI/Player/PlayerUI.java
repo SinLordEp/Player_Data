@@ -13,7 +13,7 @@ import java.util.TreeMap;
 
 public class PlayerUI implements GeneralUI {
     private final PlayerControl playerControl;
-    private final JFrame frame;
+    private JFrame frame;
     private JTable table_data;
 
     private JButton button_add;
@@ -43,15 +43,16 @@ public class PlayerUI implements GeneralUI {
     private JScrollPane Scroll_data;
     private JPasswordField passwordField_pwd;
     private JComboBox<String> comboBox_SQL;
-    private final PlayerTableModel tableModel;
+    private PlayerTableModel tableModel;
     private int selected_player_id;
     private boolean db_connected;
 
     public PlayerUI(PlayerControl control) {
         playerControl = control;
-        frame = new JFrame(PlayerDialog.get().getText("frame_title"));
-        TitledBorder border = BorderFactory.createTitledBorder(PlayerDialog.get().getText("default_data_source"));
-        main_panel.setBorder(border);
+    }
+
+    private void initialize(){
+        main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.get().getText("default_data_source")));
         tableModel = new PlayerTableModel(new TreeMap<>());
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -61,6 +62,8 @@ public class PlayerUI implements GeneralUI {
 
     @Override
     public void run() {
+        initialize();
+        frame = new JFrame(PlayerDialog.get().getText("frame_title"));
         frame.setContentPane(main_panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -96,7 +99,6 @@ public class PlayerUI implements GeneralUI {
         label_pwd.setText(PlayerDialog.get().getText("label_pwd"));
         label_user.setText(PlayerDialog.get().getText("label_user"));
         label_database.setText(PlayerDialog.get().getText("label_database"));
-        frame.pack();
     }
 
     private void searchListener(){
@@ -257,19 +259,19 @@ public class PlayerUI implements GeneralUI {
         db_connected = false;
     }
 
-    private boolean dbIsBlank(){
+    private boolean isDbBlank(){
         return (text_URL.getText().isBlank()) && (text_database.getText().isBlank()) && (text_port.getText().isBlank()) && (text_user.getText().isBlank()) && (Arrays.toString(passwordField_pwd.getPassword()).isBlank());
     }
 
     private void dbConnect() {
         if (!db_connected) {
-            if(dbIsBlank()){
+            if(isDbBlank()){
                 GeneralDialog.get().popup("db_field_empty");
                 return;
             }
             button_connectDB.setText(PlayerDialog.get().getText("button_connectingDB"));
             button_connectDB.setEnabled(false);
-            dbConfiguration();
+            dbConfigure();
             if(playerControl.connectDB()){
                 lockInput();
                 db_connected = true;
@@ -286,8 +288,8 @@ public class PlayerUI implements GeneralUI {
                 table_data.setModel(tableModel);
             }
             if(playerControl.disconnectDB()){
-                unlockInput();
                 db_connected = false;
+                unlockInput();
             }else{
                 GeneralDialog.get().popup("db_disconnect_failed");
                 button_connectDB.setText(PlayerDialog.get().getText("button_disconnectDB"));
@@ -296,7 +298,7 @@ public class PlayerUI implements GeneralUI {
         }
     }
 
-    private void dbConfiguration(){
+    private void dbConfigure(){
         String URL = label_URL.getText() + text_URL.getText();
         switch ((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
             case "MySQL":
@@ -343,7 +345,12 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void configureTitle(){
-        TitledBorder border = BorderFactory.createTitledBorder(playerControl.dataSource((String)comboBox_SQL.getSelectedItem()));
+        TitledBorder border;
+        if(db_connected){
+            border = BorderFactory.createTitledBorder(PlayerDialog.get().getText("data_source")+comboBox_SQL.getSelectedItem());
+        }else{
+            border = BorderFactory.createTitledBorder(PlayerDialog.get().getText("data_source")+ playerControl.dataSource());
+        }
         main_panel.setBorder(border);
     }
 }

@@ -29,15 +29,11 @@ public class PlayerControl implements GeneralControl {
         playerDA.refresh();
     }
 
-    public String dataSource(String SQL_Type){
-        String data_source = PlayerDialog.get().getText("dataSource");
-        if(playerDA.isDBSource()){
-            data_source += SQL_Type;
-        }else if(playerDA.getFilePath() != null){
+    public String dataSource(){
+        String data_source = "";
+        if(playerDA.getFilePath() != null){
             String path = playerDA.getFilePath();
             data_source += path.substring(path.lastIndexOf("."));
-        }else{
-            data_source += "null";
         }
         return data_source;
     }
@@ -45,7 +41,7 @@ public class PlayerControl implements GeneralControl {
     public void createFile() throws OperationException {
         try {
             playerDA.setFilePath(GeneralDataAccess.newPathBuilder());
-            playerDA.write();
+            playerDA.export();
             playerDA.setDataChanged(true);
         } catch (Exception e) {
             throw new OperationException("Failed to create new file\n" + e.getMessage());
@@ -131,7 +127,7 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    public void delete(int selected_player_id){
+    public void delete(int selected_player_id) throws Exception {
         playerDA.delete(selected_player_id);
     }
 
