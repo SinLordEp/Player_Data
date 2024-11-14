@@ -107,7 +107,7 @@ public class GeneralDialog {
                 options,
                 options[0]
         );
-        if (choice == -1) throw new OperationException("Selection is invalid\n");
+        if (choice == -1) throw new OperationException("Operation canceled\n");
         return choice;
     }
 
@@ -123,7 +123,7 @@ public class GeneralDialog {
                 options,
                 options[0]
         );
-        if (choice == -1) throw new OperationException("Selection is invalid\n");
+        if (choice == -1) throw new OperationException("Operation canceled\n");
         return options[choice];
     }
 
