@@ -67,26 +67,6 @@ public class GeneralDialog {
         return (Map<String, Object>) options.get(sub_type);
     }
 
-    public static String extension_general() {
-        String[] options = {"DAT", "XML", "TXT"};
-        return buildSelectionDialog("Extension selector","Choose a File type", options);
-    }
-
-    public static String buildSelectionDialog(String title, String message, String[] options) {
-        int choice = JOptionPane.showOptionDialog(
-                null,
-                message,
-                title,
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]
-        );
-        if (choice == -1) throw new OperationException("Selection is invalid\n");
-        return options[choice];
-    }
-
     public void message(String message) {
         JOptionPane.showMessageDialog(null, message);
     }
@@ -113,8 +93,8 @@ public class GeneralDialog {
         String[] options = get_options(dialog);
         int choice = JOptionPane.showOptionDialog(
                 null,
-                get_title(dialog),
                 get_message(dialog),
+                get_title(dialog),
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
@@ -129,8 +109,8 @@ public class GeneralDialog {
         Map<String, Object> dialog = option(sub_type);
         int choice = JOptionPane.showOptionDialog(
                 null,
-                get_title(dialog),
                 get_message(dialog),
+                get_title(dialog),
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,

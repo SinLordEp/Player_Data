@@ -25,7 +25,7 @@ public class ClassRegister {
         Reflections reflections = new Reflections("control");
         Set<Class<? extends GeneralControl>> controlSet = reflections.getSubTypesOf(GeneralControl.class);
         for (Class<? extends GeneralControl> controlClass : controlSet) {
-            classMap.put(controlClass.getSimpleName(), controlClass);
+            classMap.put(controlClass.getSimpleName().replace("Control",""), controlClass);
         }
     }
 
@@ -33,21 +33,20 @@ public class ClassRegister {
         Reflections reflections = new Reflections("data");
         Set<Class<? extends GeneralDataAccess>> dataSet = reflections.getSubTypesOf(GeneralDataAccess.class);
         for (Class<? extends GeneralDataAccess> dataClass : dataSet) {
-            dataAccessMap.put(dataClass.getSimpleName(), dataClass);
+            dataAccessMap.put(dataClass.getSimpleName().replace("DataAccess",""), dataClass);
         }
     }
 
     public String[] getControlClasses() {
         return classMap.keySet().toArray(new String[0]);
     }
-    public String[] getDataAccessClasses() {
-        return dataAccessMap.keySet().toArray(new String[0]);
-    }
 
     public GeneralControl getControl(String class_name) throws Exception {
         Class<? extends GeneralControl> controlClass = classMap.get(class_name);
         if (controlClass != null) {
-            return controlClass.getDeclaredConstructor().newInstance();
+            GeneralControl control = controlClass.getDeclaredConstructor().newInstance();
+            control.setDA(getDA(class_name));
+            return control;
         }
         throw new OperationException("Failed to get_main control class");
     }

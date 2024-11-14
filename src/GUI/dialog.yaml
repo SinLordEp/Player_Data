@@ -32,4 +32,24 @@ popup:
     es: "Ha producido errores desconectando, inténtalo otra vez"
 
 options:
-
+  controller:
+    title:
+      en: "Controller menu"
+      es: "Menú de controlador"
+    message:
+      en: "Choose a controller"
+      es: "Elige una controlador"
+  dao:
+    title:
+      en: "DataAccess menu"
+      es: "Menú de acceso a datos"
+    message:
+      en: "Choose a DataAccess"
+      es: "Elige un acceso a datos"
+  extension_general:
+     title:
+       en: "Extension selector"
+       es: ""
+     message:
+       en: "Choose a File type"
+       es: ""

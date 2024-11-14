@@ -39,7 +39,8 @@ public abstract class GeneralDataAccess {
     }
 
     public static String choose_extension(){
-        return switch (GeneralDialog.extension_general()) {
+        String[] options = {"DAT", "XML", "TXT"};
+        return switch (GeneralDialog.get().selectionDialog("extension_general", options)) {
             case "DAT" -> ".dat";
             case "XML" -> ".xml";
             case "TXT" -> ".txt";

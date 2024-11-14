@@ -3,10 +3,6 @@ package main;
 import GUI.GeneralDialog;
 import Interface.GeneralControl;
 
-import static GUI.GeneralDialog.buildSelectionDialog;
-
-
-
 public class principal {
     static final ClassRegister classRegister = ClassRegister.getInstance();
     public static void main(String[] args) throws Exception {
@@ -17,11 +13,8 @@ public class principal {
     public static GeneralControl initialize(){
         while(true){
             try{
-                String chosen_control = buildSelectionDialog("Controller menu","Choose a controller", classRegister.getControlClasses());
-                GeneralControl current_control = classRegister.getControl(chosen_control);
-                String chosen_dataAccess = buildSelectionDialog("Data access menu","Choose a data access", classRegister.getDataAccessClasses());
-                current_control.setDA(classRegister.getDA(chosen_dataAccess));
-                return current_control;
+                String chosen_control = GeneralDialog.get().selectionDialog("controller", classRegister.getControlClasses());
+                return classRegister.getControl(chosen_control);
             }catch (Exception e) {
                 GeneralDialog.get().message(e.getMessage());
             }

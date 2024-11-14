@@ -4,6 +4,9 @@ out/
 !**/src/test/**/out/
 .idea/datasources/
 .idea/libraries/
+.idea/dataSources.local.xml
+.idea/misc.xml
+.idea/workspace.xml
 
 ### Eclipse ###
 .apt_generated
