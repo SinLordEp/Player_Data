@@ -8,6 +8,57 @@ text:
   frame_title:
     en: "Player Menu"
     es: "Menú de Jugador"
+  button_add:
+    en: "Add new data"
+    es: "Añadir nuevo dato"
+  button_modify:
+    en: "Modify data"
+    es: "Modificar dato"
+  button_delete:
+    en: "Delete data"
+    es: "Eliminar dato"
+  button_export:
+    en: "Export data"
+    es: "Exportar dato"
+  button_connectDB:
+    en: "Connect to DB"
+    es: "Conectar a BD"
+  button_connectingDB:
+    en: "Connecting..."
+    es: "Conectando..."
+  button_disconnectDB:
+    en: "Disconnect DB"
+    es: "Desconectar DB"
+  button_disconnectingDB:
+    en: "Disconnecting..."
+    es: "Desconectando..."
+  button_importFile:
+    en: "Import data from file"
+    es: "Importar dato desde fichero"
+  button_importDB:
+    en: "Import data from DB"
+    es: "Importar dato desde BD"
+  button_createFile:
+    en: "Create new file"
+    es: "Crear nuevo fichero"
+  label_port:
+    en: "Port:"
+    es: "Puerto:"
+  label_search:
+    en: "Search by ID:"
+    es: "Buscar por ID: "
+  label_pwd:
+    en: "Password:"
+    es: "Contraseña:"
+  label_user:
+    en: "User:"
+    es: "Usuario:"
+  label_URL:
+    en: "URL:"
+    es: "URL:"
+  label_database:
+    en: "Database:"
+    es: "Base de datos:"
 
 input:
   player_name:

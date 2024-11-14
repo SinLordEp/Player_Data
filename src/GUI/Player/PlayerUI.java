@@ -15,31 +15,36 @@ public class PlayerUI implements GeneralUI {
     private final PlayerControl playerControl;
     private final JFrame frame;
     private JTable table_data;
+
     private JButton button_add;
     private JButton button_modify;
-    private JButton button_export;
-    private JTextField field_search;
-    private JPanel main_panel;
     private JButton button_delete;
-    private JScrollPane Scroll_data;
-    private JLabel label_search;
-    private JTextField text_URL;
-    private JTextField text_database;
-    private JPasswordField passwordField_pwd;
+    private JButton button_export;
     private JButton button_connectDB;
-    private JTextField text_user;
+    private JButton button_importFile;
+    private JButton button_importDB;
+    private JButton button_createFile;
+
+    private JLabel label_port;
+    private JLabel label_search;
     private JLabel label_pwd;
     private JLabel label_user;
     private JLabel label_URL;
     private JLabel label_database;
+
+    private JTextField field_search;
+    private JTextField text_URL;
+    private JTextField text_database;
+    private JTextField text_user;
     private JTextField text_port;
-    private JLabel label_port;
-    private JButton button_importFile;
-    private JButton button_importDB;
-    private JButton button_createFile;
+
+    private JPanel main_panel;
+    private JScrollPane Scroll_data;
+    private JPasswordField passwordField_pwd;
     private JComboBox<String> comboBox_SQL;
     private final PlayerTableModel tableModel;
     private int selected_player_id;
+    private boolean db_connected;
 
     public PlayerUI(PlayerControl control) {
         playerControl = control;
@@ -49,6 +54,7 @@ public class PlayerUI implements GeneralUI {
         tableModel = new PlayerTableModel(new TreeMap<>());
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        setUIText();
         db_initialize();
     }
 
@@ -70,7 +76,21 @@ public class PlayerUI implements GeneralUI {
         configure_title();
     }
 
-    public void setText(){
+    public void setUIText(){
+        button_add.setText(PlayerDialog.get().get_text("button_add"));
+        button_modify.setText(PlayerDialog.get().get_text("button_modify"));
+        button_delete.setText(PlayerDialog.get().get_text("button_delete"));
+        button_export.setText(PlayerDialog.get().get_text("button_export"));
+        button_connectDB.setText(PlayerDialog.get().get_text("button_connectDB"));
+        button_importFile.setText(PlayerDialog.get().get_text("button_importFile"));
+        button_importDB.setText(PlayerDialog.get().get_text("button_importDB"));
+        button_createFile.setText(PlayerDialog.get().get_text("button_createFile"));
+        label_port.setText(PlayerDialog.get().get_text("label_port"));
+        label_search.setText(PlayerDialog.get().get_text("label_search"));
+        label_pwd.setText(PlayerDialog.get().get_text("label_pwd"));
+        label_user.setText(PlayerDialog.get().get_text("label_user"));
+        label_URL.setText(PlayerDialog.get().get_text("label_URL"));
+        label_database.setText(PlayerDialog.get().get_text("label_database"));
 
     }
 
@@ -223,6 +243,7 @@ public class PlayerUI implements GeneralUI {
         table_listener();
         comboBox_listener();
         comboBox_SQL.setSelectedIndex(0);
+        db_connected = false;
     }
 
     private boolean db_isBlank(){
@@ -230,38 +251,35 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void db_connect() {
-        switch(button_connectDB.getText()){
-            case "Connect to DB":
-                if(db_isBlank()){
-                    GeneralDialog.get().popup("db_field_empty");
-                    return;
-                }
-                button_connectDB.setText("Connecting...");
-                button_connectDB.setEnabled(false);
-                db_configuration();
-                if(playerControl.connect_db()){
-                    lock_db_input();
-                }else{
-                    GeneralDialog.get().popup("db_login_failed");
-                    button_connectDB.setText("Connect to DB");
-                    button_connectDB.setEnabled(true);
-                }
-                break;
-            case "Disconnect":
-                button_connectDB.setText("Disconnecting...");
-                button_connectDB.setEnabled(false);
-                if(playerControl.DB_source()){
-                    tableModel.update_data(new TreeMap<>());
-                    table_data.setModel(tableModel);
-                }
-                if(playerControl.disconnect_db()){
-                    unlock_db_input();
-                }else{
-                    GeneralDialog.get().popup("db_disconnect_failed");
-                    button_connectDB.setText("Disconnect");
-                    button_connectDB.setEnabled(true);
-                }
-                break;
+        if (!db_connected) {
+            if(db_isBlank()){
+                GeneralDialog.get().popup("db_field_empty");
+                return;
+            }
+            button_connectDB.setText(PlayerDialog.get().get_text("button_connectingDB"));
+            button_connectDB.setEnabled(false);
+            db_configuration();
+            if(playerControl.connect_db()){
+                lock_db_input();
+            }else{
+                GeneralDialog.get().popup("db_login_failed");
+                button_connectDB.setText(PlayerDialog.get().get_text("button_connectDB"));
+                button_connectDB.setEnabled(true);
+            }
+        }else{
+            button_connectDB.setText(PlayerDialog.get().get_text("button_disconnectingDB"));
+            button_connectDB.setEnabled(false);
+            if(playerControl.DB_source()){
+                tableModel.update_data(new TreeMap<>());
+                table_data.setModel(tableModel);
+            }
+            if(playerControl.disconnect_db()){
+                unlock_db_input();
+            }else{
+                GeneralDialog.get().popup("db_disconnect_failed");
+                button_connectDB.setText(PlayerDialog.get().get_text("button_disconnectDB"));
+                button_connectDB.setEnabled(true);
+            }
         }
     }
 
