@@ -63,7 +63,7 @@ public class GeneralDialog {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String,Object> option(String sub_type){
+    protected Map<String,Object> option(String sub_type){
         return (Map<String, Object>) options.get(sub_type);
     }
 
@@ -72,19 +72,19 @@ public class GeneralDialog {
     }
 
     @SuppressWarnings("unchecked")
-    public String getTitle(Map<String, Object> dialog) {
+    protected String getTitle(Map<String, Object> dialog) {
         Map<String, Object> title_dialog = (Map<String, Object>) dialog.get("title");
         return (String) title_dialog.get(language);
     }
 
     @SuppressWarnings("unchecked")
-    public String getMessage(Map<String, Object> dialog) {
+    protected String getMessage(Map<String, Object> dialog) {
         Map<String, Object> message_dialog = (Map<String, Object>) dialog.get("message");
         return (String) message_dialog.get(language);
     }
 
     @SuppressWarnings("unchecked")
-    public String[] getOptions(Map<String, Object> dialog) {
+    protected String[] getOptions(Map<String, Object> dialog) {
         Map<String, Object> options_dialog = (Map<String, Object>) dialog.get("option");
         return ((java.util.List<String>)options_dialog.get(language)).toArray(new String[0]);
     }
