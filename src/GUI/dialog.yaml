@@ -4,59 +4,79 @@ input:
   new_file_name:
     en: "Input new file name"
     es: "Introducir nombre del nuevo fichero"
+    cn: "输入新文件名"
   id:
     en: "Enter the ID"
     es: "Introducir ID"
+    cn: "输入ID"
   file_name:
     en: "Input file name"
     es: "Introducir nombre del fichero"
-
+    cn: "输入文件名"
 popup:
   db_not_connected:
     en: "Database is not connected"
     es: "Base de datos no está conectada"
+    cn: "未连接数据库"
   id_invalid:
     en: "ID format is invalid"
     es: "Formato de ID no es valido"
+    cn: "无效ID格式"
   number_format_invalid:
     en: "Number format invalid"
     es: "Formato del número no es valido"
+    cn: "无效数字格式"
   db_field_empty:
     en: "One or more Database field maybe empty"
     es: "Uno o varios campos de base de datos vacíos"
+    cn: "一个或多个数据库参数为空"
   db_login_failed:
     en: "Failed to connect to the database, please check the login info"
     es: "No ha podido conectar a base de datos, revisa los datos de login"
+    cn: "连接数据库失败，请检查登录参数"
   db_disconnect_failed:
     en: "Some errors have occurred while disconnecting, please try again"
     es: "Ha producido errores desconectando, inténtalo otra vez"
+    cn: "尝试断开连接时发生错误，请再试一次"
 
 options:
   controller:
     title:
       en: "Controller menu"
       es: "Menú de controlador"
+      cn: "控制器目录"
     message:
       en: "Choose a controller"
       es: "Elige una controlador"
+      cn: "选择一个控制器"
   extension_general:
      title:
        en: "Extension selector"
-       es: ""
+       es: "Selector de extensión"
+       cn: "后缀选择"
      message:
        en: "Choose a File type"
-       es: ""
+       es: "Elige un tipo de fichero"
+       cn: "选择一个文件后缀"
   language:
     title:
       en: "Language"
       es: "Idioma"
+      cn: "语言"
     message:
       en: "Choose a language"
       es: "Elige un idioma"
+      cn: "选择一个语言"
     option:
       en:
         - "English"
         - "Spanish"
+        - "Chinese"
       es:
         - "Inglés"
         - "Español"
+        - "Chino"
+      cn:
+        - "英语"
+        - "西班牙语"
+        - "简体中文"

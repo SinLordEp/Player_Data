@@ -2,112 +2,142 @@ text:
   data_source:
     en: "Data Source: "
     es: "Fuente de datos"
+    cn: "数据来源："
   default_data_source:
     en: "Data Source: null"
     es: "Fuente de datos: null"
+    cn: "数据来源：空"
   frame_title:
     en: "Player Menu"
     es: "Menú de Jugador"
+    cn: "玩家菜单"
   button_add:
     en: "Add new data"
     es: "Añadir nuevo dato"
+    cn: "新增数据"
   button_modify:
     en: "Modify data"
     es: "Modificar dato"
+    cn: "修改数据"
   button_delete:
     en: "Delete data"
     es: "Eliminar dato"
+    cn: "删除数据"
   button_export:
     en: "Export data"
     es: "Exportar dato"
+    cn: "导出数据"
   button_connectDB:
     en: "Connect to DB"
     es: "Conectar a BD"
+    cn: "连接数据库"
   button_connectingDB:
     en: "Connecting..."
     es: "Conectando..."
+    cn: "连接中..."
   button_disconnectDB:
     en: "Disconnect DB"
     es: "Desconectar DB"
+    cn: "断连数据库"
   button_disconnectingDB:
     en: "Disconnecting..."
     es: "Desconectando..."
+    cn: "断连中..."
   button_importFile:
     en: "Import from file"
     es: "Importar desde fichero"
+    cn: "从文件读取"
   button_importDB:
     en: "Import from DB"
     es: "Importar desde BD"
+    cn: "从数据库读取"
   button_createFile:
     en: "Create new file"
     es: "Crear nuevo fichero"
+    cn: "创建新文件"
   button_language:
     en: "Language"
     es: "Idioma"
+    cn: "语言"
   label_port:
     en: "Port:"
     es: "Puerto:"
+    cn: "端口"
   label_search:
     en: "Search by ID:"
     es: "Buscar por ID: "
+    cn: "按ID搜索："
   label_pwd:
     en: "Password:"
     es: "Contraseña:"
+    cn: "密码："
   label_user:
     en: "User:"
     es: "Usuario:"
+    cn: "用户："
   label_database:
     en: "Database:"
     es: "Base de datos:"
+    cn: "数据库："
 
 input:
   player_name:
     en: "Enter player name"
     es: "Introducir nombre de jugador"
+    cn: "输入玩家名字"
   id:
     en: "Enter the ID"
     es: "Introducir ID"
+    cn: "输入ID"
 
 popup:
   exported_db:
     en: "Players data were exported to database"
     es: "Datos de jugadores exportados correctamente a base de datos"
+    cn: "玩家数据已导出至数据库"
   deleted_player:
     en: "Player deleted"
     es: "Jugador eliminada"
+    cn: "已删除玩家"
   added_player:
     en: "Player added"
     es: "Jugador añadida"
+    cn: "已添加玩家"
   modified_player:
     en: "Player  modified"
     es: "Jugador modificada"
+    cn: "已修改玩家"
   region_server_null:
     en: "Region and server null"
     es: "Region y servidor null"
+    cn: "地区和服务器为空"
   region_invalid:
     en: "Region doesn't exist"
     es: "Region no existe"
+    cn: "地区不存在"
   server_invalid:
     en: "Server doesn't exist"
     es: "Servidor no existe"
-  id_invalid:
-    en: "ID format is invalid"
-    es: "Formato de ID no es valido"
+    cn: "服务器不存在"
   name_invalid:
     en: "Player Name is blank"
     es: "Nombre de jugador está vacío"
+    cn: "玩家名字为空"
   player_map_null:
     en: "No player data registered"
     es: "No hay jugador registrada"
+    cn: "无玩家数据"
 
 options:
   modify_player:
     title:
       en: "Modify Player"
       es: "Modificar Jugador"
+      cn: "修改玩家"
     message:
       en: "Choose the player info you want to modify"
       es: "Elige la información de jugador que desea modificar"
+      cn: "选择希望修改的玩家数据"
     option:
       en:
         - "Region"
@@ -119,13 +149,20 @@ options:
         - "Servidor"
         - "Nombre"
         - "Todo"
+      cn:
+        - "地区"
+        - "服务器"
+        - "名字"
+        - "全部"
   export_player:
     title:
       en: "Export Player"
       es: "Exportar Jugador"
+      cn: "导出玩家"
     message:
       en: "Choose the export type"
       es: "Elige el tipo objetivo para exportar"
+      cn: "选择导出目标格式"
     option:
       en:
         - "Export to File"
@@ -133,20 +170,27 @@ options:
       es:
         - "Exportar al fichero"
         - "Exportar a base de datos"
+      cn:
+        - "导出至文件"
+        - "导出至数据库"
   region_menu:
     title:
       en: "Region Menu"
       es: "Menu de Region"
+      cn: "地区菜单"
     message:
       en: "Choose a region"
       es: "Elige una region"
+      cn: "选择一个地区"
   server_menu:
     title:
       en: "Server Menu"
       es: "Menu de Servidor"
+      cn: "服务器菜单"
     message:
       en: "Choose a server"
       es: "Elige una servidor"
+      cn: "选择一个服务器"
   table_column:
     option:
       en:
@@ -159,3 +203,8 @@ options:
         - "Region"
         - "Servidor"
         - "Nombre"
+      cn:
+        - "ID"
+        - "地区"
+        - "服务器"
+        - "名字"
