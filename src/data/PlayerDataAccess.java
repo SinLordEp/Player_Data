@@ -27,15 +27,15 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     @SuppressWarnings("unchecked")
     public void read() throws Exception {
-        if(!isData_changed()){
+        if(!isDataChanged()){
             return;
         }
-        if(DB_source()){
+        if(DBSource()){
             player_map = playerDBA.read();
         }else{
             player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
         }
-        setData_changed(false);
+        setDataChanged(false);
     }
 
     public void write() throws Exception {
@@ -46,15 +46,15 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public void refresh() throws Exception {
         read();
-        if(!isPlayerMap_Valid()){
+        if(!isPlayerMapValid()){
             throw new Exception("Player data corrupted");
         }
     }
 
     public void export() throws Exception {
         if(fileWriter != null){
-            String target_extension = choose_extension();
-            String target_path = get_path("path");
+            String target_extension = chooseExtension();
+            String target_path = getPath("path");
             String target_name = PlayerDialog.get().input("new_file_name");
             target_path += "/" + target_name + target_extension;
             fileWriter.write(target_path, player_map);
@@ -63,7 +63,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
     }
 
-    public void export_DB(){
+    public void exportDB(){
         if(!playerDBA.connected()){
             PlayerDialog.get().popup("db_not_connected");
             return;
@@ -77,25 +77,25 @@ public class PlayerDataAccess extends GeneralDataAccess {
             playerDBA.update("remove",player_map.get(selected_player_id));
         }
         player_map.remove(selected_player_id);
-        setData_changed(true);
+        setDataChanged(true);
         PlayerDialog.get().popup( "deleted_player");
     }
 
     public void add(Player player) throws Exception {
-        if(isPlayer_Invalid(player)) {
+        if(isPlayerInvalid(player)) {
             throw new Exception("Player data is invalid");
         }
         player_map.put(player.getID(), player);
         if(playerDBA.connected()){
             playerDBA.update("add",player);
         }
-        setData_changed(true);
+        setDataChanged(true);
         write();
         PlayerDialog.get().popup( "added_player");
     }
 
     public void update(Player player) throws Exception {
-        if(isPlayer_Invalid(player)) {
+        if(isPlayerInvalid(player)) {
             throw new Exception("Player data is invalid");
         }
         player_map.put(player.getID(), player);
@@ -110,15 +110,15 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return player_map == null;
     }
 
-    public TreeMap<Integer, Player> getPlayer_map() {
+    public TreeMap<Integer, Player> getPlayerMap() {
         return player_map;
     }
 
-    public String[] getRegion_list() {
+    public String[] getRegionList() {
         return region_list;
     }
 
-    public String[] getServer_list(String region){
+    public String[] getServerList(String region){
         return region_server_map.get(region);
     }
 
@@ -130,7 +130,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
     }
 
-    public boolean isPlayer_Invalid(Player player){
+    public boolean isPlayerInvalid(Player player){
         if(region_server_map == null){
             PlayerDialog.get().popup("region_server_null");
             return true;
@@ -164,37 +164,37 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return false;
     }
 
-    public boolean isPlayerMap_Valid(){
+    public boolean isPlayerMapValid(){
         if(player_map == null){
             PlayerDialog.get().popup("player_map_null");
             return true;
         }
         for(Player player : player_map.values()){
-            if(isPlayer_Invalid(player)){
+            if(isPlayerInvalid(player)){
                 return false;
             }
         }
         return true;
     }
 
-    public void configure_db(String URL, String port, String database, String user, String password) {
+    public void configureDB(String URL, String port, String database, String user, String password) {
         playerDBA.setURL(URL + ":" + port + "/" + database);
         playerDBA.setUser(user);
         playerDBA.setPassword(password);
     }
 
-    public void configure_db(String URL) {
+    public void configureDB(String URL) {
         playerDBA.setURL(URL);
     }
 
-    public boolean connect_db() {
+    public boolean connectDB() {
         if(playerDBA.connect()){
             file_path = null;
             return true;
         }else return false;
     }
 
-    public boolean disconnect_db(){
+    public boolean disconnectDB(){
         if(DB_source){
             player_map = null;
         }

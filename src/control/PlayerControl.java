@@ -25,16 +25,16 @@ public class PlayerControl implements GeneralControl {
         this.playerDA = (PlayerDataAccess) DA;
     }
 
-    public void refresh_DA() throws Exception {
+    public void refreshDA() throws Exception {
         playerDA.refresh();
     }
 
-    public String data_source(String SQL_Type){
-        String data_source = PlayerDialog.get().get_text("data_source");
-        if(playerDA.DB_source()){
+    public String dataSource(String SQL_Type){
+        String data_source = PlayerDialog.get().getText("dataSource");
+        if(playerDA.DBSource()){
             data_source += SQL_Type;
-        }else if(playerDA.getFile_path() != null){
-            String path = playerDA.getFile_path();
+        }else if(playerDA.getFilePath() != null){
+            String path = playerDA.getFilePath();
             data_source += path.substring(path.lastIndexOf("."));
         }else{
             data_source += "null";
@@ -42,75 +42,75 @@ public class PlayerControl implements GeneralControl {
         return data_source;
     }
 
-    public void create_file() throws OperationException {
+    public void createFile() throws OperationException {
         try {
-            playerDA.setFile_path(GeneralDataAccess.new_path_builder());
+            playerDA.setFilePath(GeneralDataAccess.newPathBuilder());
             playerDA.write();
-            playerDA.setData_changed(true);
+            playerDA.setDataChanged(true);
         } catch (Exception e) {
             throw new OperationException("Failed to create new file\n" + e.getMessage());
         }
     }
 
-    public void import_file() {
-        playerDA.setFile_path(GeneralDataAccess.get_path("file"));
-        playerDA.setDB_source(false);
-        playerDA.setData_changed(true);
+    public void importFile() {
+        playerDA.setFilePath(GeneralDataAccess.getPath("file"));
+        playerDA.setDBSource(false);
+        playerDA.setDataChanged(true);
     }
 
-    public void configure_db(String URL, String port, String database, String user, String password) {
-        playerDA.configure_db(URL, port, database, user, password);
+    public void configureDB(String URL, String port, String database, String user, String password) {
+        playerDA.configureDB(URL, port, database, user, password);
     }
 
-    public void configure_db(String URL) {
-        playerDA.configure_db(URL);
+    public void configureDB(String URL) {
+        playerDA.configureDB(URL);
     }
 
-    public void import_db()  {
-        playerDA.setDB_source(true);
-        playerDA.setData_changed(true);
+    public void importDB()  {
+        playerDA.setDBSource(true);
+        playerDA.setDataChanged(true);
     }
 
-    public boolean connect_db(){
-        return playerDA.connect_db();
+    public boolean connectDB(){
+        return playerDA.connectDB();
     }
 
-    public boolean disconnect_db() {
-        return playerDA.disconnect_db();
+    public boolean disconnectDB() {
+        return playerDA.disconnectDB();
     }
 
-    public boolean DB_source() {
-        return playerDA.DB_source();
+    public boolean DBSource() {
+        return playerDA.DBSource();
     }
 
     public TreeMap<Integer,Player> getMap(){
-        return playerDA.getPlayer_map();
+        return playerDA.getPlayerMap();
     }
 
-    public void modify_player_control(int selected_player_id) throws Exception {
-        Player player = playerDA.getPlayer_map().get(selected_player_id);
+    public void modifyPlayer(int selected_player_id) throws Exception {
+        Player player = playerDA.getPlayerMap().get(selected_player_id);
         switch(PlayerDialog.get().selectionDialog("modify_player")){
             // After changing region the server has to be changed too.
-            case 0: player.setRegion(PlayerDialog.get().selectionDialog("region_menu",playerDA.getRegion_list()));
-            case 1: player.setServer(PlayerDialog.get().selectionDialog("server_menu",playerDA.getServer_list(player.getRegion())));
+            case 0: player.setRegion(PlayerDialog.get().selectionDialog("region_menu",playerDA.getRegionList()));
+            case 1: player.setServer(PlayerDialog.get().selectionDialog("server_menu",playerDA.getServerList(player.getRegion())));
                 break;
             case 2: player.setName(PlayerDialog.get().input("player_name"));
                 break;
             case 3:
-                player.setRegion(PlayerDialog.get().selectionDialog("region_menu",playerDA.getRegion_list()));
-                player.setServer(PlayerDialog.get().selectionDialog("server_menu",playerDA.getServer_list(player.getRegion())));
+                player.setRegion(PlayerDialog.get().selectionDialog("region_menu",playerDA.getRegionList()));
+                player.setServer(PlayerDialog.get().selectionDialog("server_menu",playerDA.getServerList(player.getRegion())));
                 player.setName(PlayerDialog.get().input("player_name"));
                 break;
         }
         playerDA.update(player);
     }
 
-    public void create_player_control() {
+    public void createPlayer() {
         try {
             Player player = new Player();
-            player.setRegion(PlayerDialog.get().selectionDialog("region_menu",playerDA.getRegion_list()));
-            player.setServer(PlayerDialog.get().selectionDialog("server_menu",playerDA.getServer_list(player.getRegion())));
-            player.setID(create_ID_control());
+            player.setRegion(PlayerDialog.get().selectionDialog("region_menu",playerDA.getRegionList()));
+            player.setServer(PlayerDialog.get().selectionDialog("server_menu",playerDA.getServerList(player.getRegion())));
+            player.setID(createID());
             player.setName(PlayerDialog.get().input("player_name"));
             playerDA.add(player);
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    private int create_ID_control() {
+    private int createID() {
         while (true) {
             try {
                 int ID = Integer.parseInt(PlayerDialog.get().input("id"));
@@ -131,18 +131,18 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    public void delete_control(int selected_player_id){
+    public void delete(int selected_player_id){
         playerDA.delete(selected_player_id);
     }
 
-    public void export_control() {
+    public void export() {
         try {
             if(playerDA.isEmpty()){
                 PlayerDialog.get().popup("player_map_null");
             }else{
                 switch (PlayerDialog.get().selectionDialog("export_player")){
                     case 0: playerDA.export(); break;
-                    case 1: playerDA.export_DB(); break;
+                    case 1: playerDA.exportDB(); break;
                 }
             }
         } catch (Exception e) {
@@ -150,7 +150,7 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    public void change_language(){
+    public void changeLanguage(){
         String language = switch(GeneralDialog.get().selectionDialog("language")){
             case 0 -> "en";
             case 1 -> "es";

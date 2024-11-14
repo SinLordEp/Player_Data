@@ -18,7 +18,7 @@ public class GeneralDialog {
     protected String language;
 
     public GeneralDialog() {
-        initialize_dialogs("src/GUI/dialog.yaml");
+        initialize("src/GUI/dialog.yaml");
     }
 
     public static GeneralDialog get() {
@@ -29,7 +29,7 @@ public class GeneralDialog {
     }
 
     @SuppressWarnings("unchecked")
-    protected void initialize_dialogs(String yaml_path) {
+    protected void initialize(String yaml_path) {
         Yaml yaml = new Yaml();
         try(InputStream inputStream = new FileInputStream(yaml_path)){
             Map<String,Object> dialogs = yaml.load(inputStream);
@@ -48,7 +48,7 @@ public class GeneralDialog {
     }
 
     @SuppressWarnings("unchecked")
-    public String get_text(String sub_type) {
+    public String getText(String sub_type) {
         return (String) ((Map<String, Object>)(texts.get(sub_type))).get(language);
     }
 
@@ -72,35 +72,35 @@ public class GeneralDialog {
     }
 
     @SuppressWarnings("unchecked")
-    public String get_title(Map<String, Object> dialog) {
+    public String getTitle(Map<String, Object> dialog) {
         Map<String, Object> title_dialog = (Map<String, Object>) dialog.get("title");
         return (String) title_dialog.get(language);
     }
 
     @SuppressWarnings("unchecked")
-    public String get_message(Map<String, Object> dialog) {
+    public String getMessage(Map<String, Object> dialog) {
         Map<String, Object> message_dialog = (Map<String, Object>) dialog.get("message");
         return (String) message_dialog.get(language);
     }
 
     @SuppressWarnings("unchecked")
-    public String[] get_options(Map<String, Object> dialog) {
+    public String[] getOptions(Map<String, Object> dialog) {
         Map<String, Object> options_dialog = (Map<String, Object>) dialog.get("option");
         return ((java.util.List<String>)options_dialog.get(language)).toArray(new String[0]);
     }
 
     @SuppressWarnings("unchecked")
-    public String[] get_options(String sub_type) {
+    public String[] getOptions(String sub_type) {
         return ((java.util.List<String>)(((Map<String, Object>) option(sub_type).get("option")).get(language))).toArray(new String[0]);
     }
 
     public int selectionDialog(String sub_type) {
         Map<String, Object> dialog = option(sub_type);
-        String[] options = get_options(dialog);
+        String[] options = getOptions(dialog);
         int choice = JOptionPane.showOptionDialog(
                 null,
-                get_message(dialog),
-                get_title(dialog),
+                getMessage(dialog),
+                getTitle(dialog),
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
@@ -115,8 +115,8 @@ public class GeneralDialog {
         Map<String, Object> dialog = option(sub_type);
         int choice = JOptionPane.showOptionDialog(
                 null,
-                get_message(dialog),
-                get_title(dialog),
+                getMessage(dialog),
+                getTitle(dialog),
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,

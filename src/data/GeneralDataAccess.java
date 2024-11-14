@@ -16,29 +16,29 @@ public abstract class GeneralDataAccess {
     abstract void read() throws Exception;
     abstract void write() throws Exception;
 
-    public boolean DB_source() {
+    public boolean DBSource() {
         return DB_source;
     }
 
-    public void setDB_source(boolean DB_source) {
+    public void setDBSource(boolean DB_source) {
         this.DB_source = DB_source;
-        setData_changed(true);
+        setDataChanged(true);
     }
 
-    public void setFile_path(String file_path) {
+    public void setFilePath(String file_path) {
         this.file_path = file_path;
-        setData_changed(true);
+        setDataChanged(true);
     }
 
-    public boolean isData_changed() {
+    public boolean isDataChanged() {
         return data_changed;
     }
 
-    public void setData_changed(boolean data_changed) {
+    public void setDataChanged(boolean data_changed) {
         this.data_changed = data_changed;
     }
 
-    public static String choose_extension(){
+    public static String chooseExtension(){
         String[] options = {"DAT", "XML", "TXT"};
         return switch (GeneralDialog.get().selectionDialog("extension_general", options)) {
             case "DAT" -> ".dat";
@@ -48,11 +48,11 @@ public abstract class GeneralDataAccess {
         };
     }
 
-    public String getFile_path() {
+    public String getFilePath() {
         return file_path;
     }
 
-    public static String get_path(String path_or_file){
+    public static String getPath(String path_or_file){
         JFileChooser fileChooser = new JFileChooser(new File("./src/config").getAbsolutePath());
         fileChooser.setDialogTitle("Choosing " + path_or_file);
         switch(path_or_file){
@@ -67,9 +67,9 @@ public abstract class GeneralDataAccess {
         throw new OperationException("Operation canceled\n");
     }
 
-    public static String new_path_builder(){
-        String target_path = GeneralDataAccess.get_path("path");
-        String target_extension = choose_extension();
+    public static String newPathBuilder(){
+        String target_path = GeneralDataAccess.getPath("path");
+        String target_extension = chooseExtension();
         String target_file_name = GeneralDialog.get().input("file_name");
         target_path += "/" +target_file_name + target_extension;
         return target_path;
