@@ -1,9 +1,7 @@
 package GUI.Player;
 
-import GUI.GeneralDialog;
 import Interface.GeneralUI;
 import control.PlayerControl;
-import data.DataSource;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -58,7 +56,18 @@ public class PlayerUI implements GeneralUI {
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setUIText();
-        dbInitialize();
+        searchListener();
+        buttonListener();
+        tableListener();
+        comboBoxListener();
+        initializeDB();
+    }
+
+    private void initializeDB(){
+        comboBox_SQL.addItem("MySQL");
+        comboBox_SQL.addItem("SQLite");
+        comboBox_SQL.setSelectedIndex(0);
+        db_connected = false;
     }
 
     @Override
@@ -73,8 +82,7 @@ public class PlayerUI implements GeneralUI {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                playerControl.save();
-                System.exit(0);
+                playerControl.onWindowClosing();
             }
         });
     }
@@ -130,47 +138,23 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void buttonListener(){
-        button_add.addActionListener(_ -> {
-            playerControl.add();
-            refresh();
-        });
+        button_add.addActionListener(_ -> playerControl.add());
 
-        button_modify.addActionListener(_ -> {
-            playerControl.modify(selected_player_id);
-            refresh();
-        });
+        button_modify.addActionListener(_ -> playerControl.modify(selected_player_id));
 
-        button_delete.addActionListener(_ -> {
-            playerControl.delete(selected_player_id);
-            refresh();
-        });
+        button_delete.addActionListener(_ -> playerControl.delete(selected_player_id));
 
         button_export.addActionListener(_ -> playerControl.export());
 
-        button_connectDB.addActionListener(_ -> dbConnect());
+        button_connectDB.addActionListener(_ -> playerControl.DBConnection());
 
-        button_createFile.addActionListener(_ -> {
-            playerControl.createFile();
-            refresh();
-        });
+        button_createFile.addActionListener(_ -> playerControl.createFile());
 
-        button_importFile.addActionListener(_ -> {
-            playerControl.importFile();
-            refresh();
-            button_importDB.setEnabled(true);
-        });
+        button_importFile.addActionListener(_ -> playerControl.importFile());
 
-        button_importDB.addActionListener(_ -> {
-            playerControl.importDB(Objects.requireNonNull(comboBox_SQL.getSelectedItem()).toString());
-            refresh();
-            button_importDB.setEnabled(false);
-        });
+        button_importDB.addActionListener(_ -> playerControl.importDB(Objects.requireNonNull(comboBox_SQL.getSelectedItem()).toString()));
 
-        button_language.addActionListener(_ -> {
-            playerControl.changeLanguage();
-            setUIText();
-            tableModel.language_changed();
-        });
+        button_language.addActionListener(_ -> playerControl.changeLanguage());
     }
 
     private void tableListener(){
@@ -188,134 +172,98 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void comboBoxListener(){
-        comboBox_SQL.addActionListener(_ -> {
-            switch((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
-                case "MySQL":
-                    label_URL.setText("jdbc:mysql://");
-                    text_URL.setText("localhost");
-                    text_database.setText("person");
-                    text_database.setEnabled(true);
-                    text_port.setText("3306");
-                    text_port.setEnabled(true);
-                    text_user.setText("root");
-                    text_user.setEnabled(true);
-                    passwordField_pwd.setText("root");
-                    passwordField_pwd.setEnabled(true);
-                    break;
-                case "SQLite":
-                    label_URL.setText("jdbc:sqlite:");
-                    text_URL.setText("person.db");
-                    text_database.setText("");
-                    text_database.setEditable(false);
-                    text_port.setText("");
-                    text_port.setEditable(false);
-                    text_user.setText("");
-                    text_user.setEditable(false);
-                    passwordField_pwd.setText("");
-                    passwordField_pwd.setEditable(false);
-                    break;
-            }
-        });
+        comboBox_SQL.addActionListener(_ -> playerControl.comboBoxSQL((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())));
     }
 
-    private void dbInitialize(){
-        comboBox_SQL.addItem("MySQL");
-        comboBox_SQL.addItem("SQLite");
-        searchListener();
-        buttonListener();
-        tableListener();
-        comboBoxListener();
-        comboBox_SQL.setSelectedIndex(0);
-        db_connected = false;
+    public void configureMySQL(){
+        label_URL.setText("jdbc:mysql://");
+        text_URL.setText("localhost");
+        text_database.setText("person");
+        text_database.setEnabled(true);
+        text_port.setText("3306");
+        text_port.setEnabled(true);
+        text_user.setText("root");
+        text_user.setEnabled(true);
+        passwordField_pwd.setText("root");
+        passwordField_pwd.setEnabled(true);
     }
 
-    private boolean isDbBlank(){
+    public void configureSQLite(){
+        label_URL.setText("jdbc:sqlite:");
+        text_URL.setText("person.db");
+        text_database.setText("");
+        text_database.setEditable(false);
+        text_port.setText("");
+        text_port.setEditable(false);
+        text_user.setText("");
+        text_user.setEditable(false);
+        passwordField_pwd.setText("");
+        passwordField_pwd.setEditable(false);
+    }
+
+    public boolean hasBlank(){
         return (text_URL.getText().isBlank()) && (text_database.getText().isBlank()) && (text_port.getText().isBlank()) && (text_user.getText().isBlank()) && (Arrays.toString(passwordField_pwd.getPassword()).isBlank());
     }
 
-    private void dbConnect() {
-        if (!db_connected) {
-            if(isDbBlank()){
-                GeneralDialog.getDialog().popup("db_field_empty");
-                return;
-            }
-            button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectingDB"));
-            button_connectDB.setEnabled(false);
-            dbConfigure();
-            if(playerControl.connectDB()){
-                lockInput();
-                db_connected = true;
-            }else{
-                GeneralDialog.getDialog().popup("db_login_failed");
-                button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
-                button_connectDB.setEnabled(true);
-            }
-        }else{
-            button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectingDB"));
-            button_connectDB.setEnabled(false);
-            if(playerControl.getDataSource().equals(DataSource.MYSQL) || playerControl.getDataSource().equals(DataSource.SQLITE)){
-                tableModel.update_data(new TreeMap<>());
-                table_data.setModel(tableModel);
-            }
-            if(playerControl.disconnectDB()){
-                db_connected = false;
-                unlockInput();
-            }else{
-                GeneralDialog.getDialog().popup("db_disconnect_failed");
-                button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
-                button_connectDB.setEnabled(true);
-            }
-        }
+    public void connecting(){
+        button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectingDB"));
+        button_connectDB.setEnabled(false);
     }
 
-    private void dbConfigure(){
-        String URL = label_URL.getText() + text_URL.getText();
+    public void disconnecting(){
+        button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectingDB"));
+        button_connectDB.setEnabled(false);
+    }
+
+    public void connected(){
+        button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
+        inputSwitch(false);
+    }
+
+    public void disconnected(){
+        tableModel.update_data(new TreeMap<>());
+        table_data.setModel(tableModel);
+        button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
+        button_connectDB.setEnabled(true);
+        configureTitle();
+        inputSwitch(true);
+    }
+
+    private void inputSwitch(boolean state){
+        button_connectDB.setEnabled(!state);
+        button_importDB.setEnabled(!state);
+        text_URL.setEnabled(state);
+        text_database.setEnabled(state);
+        text_port.setEnabled(state);
+        text_user.setEnabled(state);
+        passwordField_pwd.setEnabled(state);
+        comboBox_SQL.setEnabled(state);
+    }
+
+    public void getDBLoginInfo(){
         switch ((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
             case "MySQL":
-                char[] pwd = passwordField_pwd.getPassword();
-                String password = new String(pwd);
                 playerControl.configureDB(
-                        URL,
+                        label_URL.getText() + text_URL.getText(),
                         text_port.getText(),
                         text_database.getText(),
                         text_user.getText(),
-                        password);
+                        passwordField_pwd.getPassword());
                 break;
             case "SQLite":
-                playerControl.configureDB(URL);
+                playerControl.configureDB(label_URL.getText() + text_URL.getText());
                 break;
         }
 
-    }
-
-    private void lockInput(){
-        //when database connected
-        button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
-        button_connectDB.setEnabled(true);
-        button_importDB.setEnabled(true);
-        text_URL.setEnabled(false);
-        text_database.setEnabled(false);
-        text_port.setEnabled(false);
-        text_user.setEnabled(false);
-        passwordField_pwd.setEnabled(false);
-        comboBox_SQL.setEnabled(false);
-    }
-
-    private void unlockInput(){
-        button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
-        button_connectDB.setEnabled(true);
-        text_URL.setEnabled(true);
-        text_database.setEnabled(true);
-        text_user.setEnabled(true);
-        text_port.setEnabled(true);
-        passwordField_pwd.setEnabled(true);
-        button_importDB.setEnabled(false);
-        comboBox_SQL.setEnabled(true);
-        configureTitle();
     }
 
     private void configureTitle(){
         main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.getDialog().getText("data_source") + playerControl.getDataSource()));
+    }
+
+    public void changeLanguage(){
+        setUIText();
+        tableModel.language_changed();
     }
 }
 

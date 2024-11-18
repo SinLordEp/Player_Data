@@ -15,7 +15,7 @@ input:
     cn: "输入文件名"
 popup:
   db_not_connected:
-    en: "Database is not connected"
+    en: "Database is not isDBConnected"
     es: "Base de datos no está conectada"
     cn: "未连接数据库"
   id_invalid:

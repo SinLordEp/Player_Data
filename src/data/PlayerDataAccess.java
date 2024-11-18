@@ -146,7 +146,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void exportDB(){
-        if(!playerDBA.connected()){
+        if(!playerDBA.isConnected()){
             PlayerDialog.getDialog().popup("db_not_connected");
             return;
         }
@@ -210,10 +210,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return true;
     }
 
-    public void configureDB(String URL, String port, String database, String user, String password) {
+    public void configureDB(String URL, String port, String database, String user, char[] password) {
+        String pwd = new String(password);
         playerDBA.setURL(URL + ":" + port + "/" + database);
         playerDBA.setUser(user);
-        playerDBA.setPassword(password);
+        playerDBA.setPassword(pwd);
     }
 
     public void configureDB(String URL) {
@@ -221,10 +222,13 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public boolean connectDB() {
-        if(playerDBA.connect()){
+        playerDBA.connect();
+        if(isDBConnected()){
             file_path = null;
             return true;
-        }else return false;
+        }else{
+            return false;
+        }
     }
 
     public boolean disconnectDB(){
@@ -232,6 +236,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
             save();
             player_map = new TreeMap<>();
         }
-        return true;
+        playerDBA.disconnect();
+        return playerDBA.isConnected();
+    }
+
+    public boolean isDBConnected(){
+        return playerDBA.isConnected();
     }
 }

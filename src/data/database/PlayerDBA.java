@@ -23,13 +23,17 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
     }
 
     @Override
-    public boolean connect() {
+    public void connect() {
         sessionFactory = configuration.buildSessionFactory();
-        return sessionFactory.isOpen();
     }
 
-    public boolean connected(){
-        return sessionFactory.isOpen();
+    public boolean isConnected(){
+        return sessionFactory != null;
+    }
+
+    public boolean disconnect(){
+        sessionFactory = null;
+        return true;
     }
 
     @Override
