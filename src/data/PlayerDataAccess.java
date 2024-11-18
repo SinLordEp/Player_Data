@@ -230,6 +230,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public boolean disconnectDB(){
         if(dataSource.equals(DataSource.MYSQL) || dataSource.equals(DataSource.SQLITE)){
+            save();
             player_map = new TreeMap<>();
         }
         return true;
