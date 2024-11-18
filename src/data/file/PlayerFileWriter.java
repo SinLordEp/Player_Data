@@ -16,9 +16,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
     public void write(String file_path, Map<?,?> input_data) throws Exception {
         File file = new File(file_path);
         TreeMap<Integer,Player> player_data = (TreeMap<Integer, Player>) input_data;
-        if(file.createNewFile()){
-            GeneralDialog.get().popup("file_created");
-        }
+
 
         String file_extension = file_path.substring(file_path.lastIndexOf("."));
         switch (file_extension){

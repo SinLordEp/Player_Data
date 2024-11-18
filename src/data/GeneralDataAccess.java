@@ -9,33 +9,13 @@ import java.io.File;
 
 
 public abstract class GeneralDataAccess {
-    protected boolean data_changed = false;
     protected String file_path = null;
-    protected boolean DB_source = false;
+    protected DataSource dataSource = DataSource.NONE;
 
-    abstract void read() throws Exception;
-    abstract void update() throws Exception;
-
-    public boolean isDBSource() {
-        return DB_source;
-    }
-
-    public void setDBSource(boolean DB_source) {
-        this.DB_source = DB_source;
-        data_changed = true;
-    }
 
     public void setFilePath(String file_path) {
         this.file_path = file_path;
-        data_changed = true;
-    }
-
-    public boolean isDataChanged() {
-        return data_changed;
-    }
-
-    public void setDataChanged(boolean data_changed) {
-        this.data_changed = data_changed;
+        this.dataSource = DataSource.FILE;
     }
 
     public static String chooseExtension(){
@@ -46,10 +26,6 @@ public abstract class GeneralDataAccess {
             case "TXT" -> ".txt";
             default -> throw new IllegalArgumentException("Unknown extension!!!");
         };
-    }
-
-    public String getFilePath() {
-        return file_path;
     }
 
     public static String getPath(String path_or_file){
@@ -75,4 +51,11 @@ public abstract class GeneralDataAccess {
         return target_path;
     }
 
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 }

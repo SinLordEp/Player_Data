@@ -1,7 +1,8 @@
 package data.database;
 
+import GUI.GeneralDialog;
 import Interface.GeneralDBA;
-import main.OperationException;
+import data.DataOperation;
 import model.Player;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,6 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -44,16 +46,19 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
         return player_map;
     }
 
-    public void update(String operation, Player player){
+    public void update(HashMap<Player,DataOperation> changed_player_map){
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            switch(operation){
-                case "add": session.persist(player); break;
-                case "modify": session.merge(player); break;
-                case "remove": session.remove(player); break;
+            for(Player player : changed_player_map.keySet()){
+                switch(changed_player_map.get(player)){
+                    case DataOperation.ADD: session.persist(player); break;
+                    case DataOperation.MODIFY: session.merge(player); break;
+                    case DataOperation.DELETE: session.remove(player); break;
+                }
             }
             transaction.commit();
+            changed_player_map.clear();
         }catch(Exception e){
             if(transaction != null){
                 transaction.rollback();
@@ -61,31 +66,28 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
         }
     }
 
-    public void update(String operation, TreeMap<Integer,Player> player_map){
+    public void update(DataOperation dataOperation, TreeMap<Integer,Player> player_map){
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            switch(operation){
-                case "import":
-                    TreeMap<Integer, Player> temp = read();
-                    for(Player player : temp.values()){
-                        if(!player_map.containsKey(player.getID())){
-                            session.remove(player);
-                        }
+            if(dataOperation.equals(DataOperation.EXPORT)){
+                // read database first to remove non-exist data
+                TreeMap<Integer, Player> temp = read();
+                for(Player player : temp.values()){
+                    if(!player_map.containsKey(player.getID())){
+                        session.remove(player);
                     }
-                    for(Player player : player_map.values()){
-                        session.merge(player);
-                    }
-                    break;
-                case "future operation":
-                    break;
+                }
+                for(Player player : player_map.values()){
+                    session.merge(player);
+                }
             }
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new OperationException("Updating database failed\n" + e.getMessage());
+            GeneralDialog.get().message("Updating database failed\n" + e.getMessage());
         }
     }
 

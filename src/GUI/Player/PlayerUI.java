@@ -3,13 +3,14 @@ package GUI.Player;
 import GUI.GeneralDialog;
 import Interface.GeneralUI;
 import control.PlayerControl;
+import data.DataSource;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.TreeMap;
-
 
 public class PlayerUI implements GeneralUI {
     private final PlayerControl playerControl;
@@ -65,16 +66,21 @@ public class PlayerUI implements GeneralUI {
         initialize();
         frame = new JFrame(PlayerDialog.get().getText("frame_title"));
         frame.setContentPane(main_panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                playerControl.save();
+                System.exit(0);
+            }
+        });
     }
 
     @Override
-    public void refresh() throws Exception {
-        playerControl.refreshDA();
+    public void refresh() {
         tableModel.update_data(playerControl.getMap());
         table_data.setModel(tableModel);
         configureTitle();
@@ -125,74 +131,38 @@ public class PlayerUI implements GeneralUI {
 
     private void buttonListener(){
         button_add.addActionListener(_ -> {
-            try {
-                playerControl.createPlayer();
-                refresh();
-            } catch (Exception e) {
-                GeneralDialog.get().message(e.getMessage());
-            }
+            playerControl.createPlayer();
+            refresh();
         });
 
         button_modify.addActionListener(_ -> {
-            try {
-                playerControl.modifyPlayer(selected_player_id);
-                refresh();
-            } catch (Exception e) {
-                GeneralDialog.get().message(e.getMessage());
-            }
+            playerControl.modifyPlayer(selected_player_id);
+            refresh();
         });
 
         button_delete.addActionListener(_ -> {
-            try {
-                playerControl.delete(selected_player_id);
-                refresh();
-            } catch (Exception e) {
-                GeneralDialog.get().message(e.getMessage());
-            }
+            playerControl.delete(selected_player_id);
+            refresh();
         });
 
-        button_export.addActionListener(_ -> {
-            try {
-                playerControl.export();
-            } catch (Exception e) {
-                GeneralDialog.get().message(e.getMessage());
-            }
-        });
+        button_export.addActionListener(_ -> playerControl.export());
 
-        button_connectDB.addActionListener(_ -> {
-            try {
-                dbConnect();
-            } catch (Exception e) {
-                GeneralDialog.get().message(e.getMessage());
-            }
-        });
+        button_connectDB.addActionListener(_ -> dbConnect());
 
         button_createFile.addActionListener(_ -> {
-            try {
-                playerControl.createFile();
-                refresh();
-            } catch (Exception e) {
-                GeneralDialog.get().message(e.getMessage());
-            }
+            playerControl.createFile();
+            refresh();
         });
 
         button_importFile.addActionListener(_ -> {
-            try {
-                playerControl.importFile();
-                refresh();
-            } catch (Exception e) {
-                GeneralDialog.get().message(e.getMessage());
-            }
+            playerControl.importFile();
+            refresh();
             button_importDB.setEnabled(true);
         });
 
         button_importDB.addActionListener(_ -> {
-            playerControl.importDB();
-            try {
-                refresh();
-            } catch (Exception e) {
-                GeneralDialog.get().message(e.getMessage());
-            }
+            playerControl.importDB(Objects.requireNonNull(comboBox_SQL.getSelectedItem()).toString());
+            refresh();
             button_importDB.setEnabled(false);
         });
 
@@ -283,7 +253,7 @@ public class PlayerUI implements GeneralUI {
         }else{
             button_connectDB.setText(PlayerDialog.get().getText("button_disconnectingDB"));
             button_connectDB.setEnabled(false);
-            if(playerControl.DBSource()){
+            if(playerControl.getDataSource().equals(DataSource.MYSQL) || playerControl.getDataSource().equals(DataSource.SQLITE)){
                 tableModel.update_data(new TreeMap<>());
                 table_data.setModel(tableModel);
             }
@@ -345,13 +315,7 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void configureTitle(){
-        TitledBorder border;
-        if(db_connected){
-            border = BorderFactory.createTitledBorder(PlayerDialog.get().getText("data_source")+comboBox_SQL.getSelectedItem());
-        }else{
-            border = BorderFactory.createTitledBorder(PlayerDialog.get().getText("data_source")+ playerControl.dataSource());
-        }
-        main_panel.setBorder(border);
+        main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.get().getText("data_source") + playerControl.getDataSource()));
     }
 }
 

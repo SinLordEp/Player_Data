@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.management.openmbean.OpenDataException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -41,7 +42,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                     break;
                 }
                 if(!(temp instanceof Player player)){
-                    throw new Exception("Error reading Dat data.file, data.file is corrupted");
+                    throw new OpenDataException("Error reading DAT file, data is corrupted");
                 }else{
                     player_data.put(player.getID(), player);
                 }

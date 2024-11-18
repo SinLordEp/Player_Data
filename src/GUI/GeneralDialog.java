@@ -38,7 +38,7 @@ public class GeneralDialog {
             popups = (Map<String, Object>) dialogs.get("popup");
             options = (Map<String, Object>) dialogs.get("options");
         }catch (IOException e){
-            throw new OperationException("Initializing dialogs failed\n"+e.getMessage());
+            message("Initializing dialogs failed\n"+e.getMessage());
         }
         this.language = "en";
     }

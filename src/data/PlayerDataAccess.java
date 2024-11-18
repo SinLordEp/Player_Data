@@ -1,16 +1,19 @@
 package data;
 
+import GUI.GeneralDialog;
 import GUI.Player.PlayerDialog;
 import data.database.PlayerDBA;
 import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
 
+import javax.management.openmbean.OpenDataException;
 import java.util.HashMap;
 import java.util.TreeMap;
 
 public class PlayerDataAccess extends GeneralDataAccess {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
+    private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
     private final HashMap<String, String[]> region_server_map;
     private final String[] region_list;
     private final PlayerDBA playerDBA;
@@ -26,29 +29,57 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     @SuppressWarnings("unchecked")
-    public void read() throws Exception {
-        if(!isDataChanged()){
-            return;
-        }
-        if(isDBSource()){
-            player_map = playerDBA.read();
-        }else{
-            player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
-        }
-        data_changed = false;
-    }
-
-    public void update() throws Exception {
-        if(!DB_source){
-            fileWriter.write(file_path, player_map);
+    public void read() {
+        try {
+            switch (dataSource){
+                case FILE -> player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
+                case MYSQL, SQLITE -> player_map = playerDBA.read();
+            }
+            if(player_map != null && !isDataValid()){
+                throw new OpenDataException("Data is corrupted");
+            }
+        } catch (Exception e) {
+            GeneralDialog.get().message("Failed to read data\n" + e.getMessage());
+            player_map = new TreeMap<>();
+            dataSource = DataSource.NONE;
         }
     }
 
-    public void refresh() throws Exception {
-        read();
-        if(!isPlayerMapValid()){
-            throw new Exception("Player data corrupted");
+    public void save(){
+        try{
+            switch (dataSource){
+                case FILE -> fileWriter.write(file_path, player_map);
+                case MYSQL, SQLITE -> playerDBA.update(changed_player_map);
+            }
+        } catch (Exception e) {
+            GeneralDialog.get().message("Failed to save data\n" + e.getMessage());
         }
+    }
+
+    public void add(Player player) {
+        switch(dataSource){
+            //case FILE ->
+            case MYSQL, SQLITE -> changed_player_map.put(player, DataOperation.ADD);
+        }
+        player_map.put(player.getID(), player);
+        PlayerDialog.get().popup( "added_player");
+    }
+
+    public void modify(Player player) {
+        switch(dataSource){
+            //case FILE ->
+            case MYSQL, SQLITE  -> changed_player_map.put(player, DataOperation.MODIFY);
+        }
+        player_map.put(player.getID(), player);
+    }
+
+    public void delete(int selected_player_id) {
+        switch(dataSource){
+            //case FILE ->
+            case MYSQL, SQLITE -> changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
+        }
+        player_map.remove(selected_player_id);
+        PlayerDialog.get().popup( "deleted_player");
     }
 
     public void export() throws Exception {
@@ -68,47 +99,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
             PlayerDialog.get().popup("db_not_connected");
             return;
         }
-        playerDBA.update("import", player_map);
+        playerDBA.update(DataOperation.EXPORT, player_map);
         PlayerDialog.get().popup("exported_db");
     }
 
-    public void delete(int selected_player_id) throws Exception {
-        if(isDBSource() && playerDBA.connected()){
-            playerDBA.update("remove",player_map.get(selected_player_id));
-        }
-        player_map.remove(selected_player_id);
-        update();
-        data_changed = true;
-        PlayerDialog.get().popup( "deleted_player");
-    }
-
-    public void add(Player player) throws Exception {
-        if(isPlayerInvalid(player)) {
-            throw new Exception("Player data is invalid");
-        }
-        player_map.put(player.getID(), player);
-        if(isDBSource() && playerDBA.connected()){
-            playerDBA.update("add",player);
-        }else{
-            fileWriter.write(file_path, player_map);
-        }
-        data_changed = true;
-        PlayerDialog.get().popup( "added_player");
-    }
-
-    public void update(Player player) throws Exception {
-        if(isPlayerInvalid(player)) {
-            throw new Exception("Player data is invalid");
-        }
-        player_map.put(player.getID(), player);
-        if(isDBSource() && playerDBA.connected()){
-            playerDBA.update("update",player);
-        }else{
-            fileWriter.write(file_path, player_map);
-        }
-        data_changed = true;
-        PlayerDialog.get().popup( "modified_player");
-    }
 
     public boolean isEmpty(){
         return player_map == null;
@@ -168,7 +162,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return false;
     }
 
-    public boolean isPlayerMapValid(){
+    public boolean isDataValid(){
         if(player_map == null){
             PlayerDialog.get().popup("player_map_null");
             return true;
@@ -199,11 +193,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public boolean disconnectDB(){
-        if(DB_source){
-            player_map = null;
+        if(dataSource.equals(DataSource.MYSQL) || dataSource.equals(DataSource.SQLITE)){
+            player_map = new TreeMap<>();
         }
-        DB_source = false;
         return true;
     }
-
 }
