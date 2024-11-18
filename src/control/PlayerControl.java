@@ -70,67 +70,14 @@ public class PlayerControl implements GeneralControl {
         return playerDA.getPlayerMap();
     }
 
-    public void modifyPlayer(int selected_player_id){
-        Player player = playerDA.getPlayerMap().get(selected_player_id);
-        switch(PlayerDialog.get().selectionDialog("modify_player")){
-            // After changing region the server has to be changed too.
-            case 0: player.setRegion(PlayerDialog
-                    .get()
-                    .selectionDialog("region_menu",playerDA.getRegionList()));
-            case 1: player.setServer(PlayerDialog
-                    .get()
-                    .selectionDialog("server_menu",playerDA.getServerList(player.getRegion())));
-                break;
-            case 2: player.setName(PlayerDialog
-                    .get()
-                    .input("player_name"));
-                break;
-            case 3:
-                player.setRegion(PlayerDialog
-                        .get()
-                        .selectionDialog("region_menu",playerDA.getRegionList()));
-                player.setServer(PlayerDialog
-                        .get()
-                        .selectionDialog("server_menu",playerDA.getServerList(player.getRegion())));
-                player.setName(PlayerDialog
-                        .get()
-                        .input("player_name"));
-                break;
-        }
-        playerDA.modify(player);
+    public void modify(int selected_player_id){
+        playerDA.modify(selected_player_id);
     }
 
-    public void createPlayer() {
-        try {
-            Player player = new Player();
-            player.setRegion(PlayerDialog
-                    .get()
-                    .selectionDialog("region_menu",playerDA.getRegionList()));
-            player.setServer(PlayerDialog
-                    .get()
-                    .selectionDialog("server_menu",playerDA.getServerList(player.getRegion())));
-            player.setID(createID());
-            player.setName(PlayerDialog
-                    .get()
-                    .input("player_name"));
-            playerDA.add(player);
-        } catch (Exception e) {
-            GeneralDialog.get().message("Creating player failed\n" + e.getMessage());
-        }
+    public void add() {
+        playerDA.add();
     }
 
-    private int createID() {
-        while (true) {
-            try {
-                int ID = Integer.parseInt(PlayerDialog.get().input("id"));
-                if (playerDA.containsKey(ID)) {
-                    throw new OperationException("ID already existed\n");
-                } else return ID;
-            } catch (NumberFormatException e) {
-                PlayerDialog.get().popup("number_format_invalid");
-            }
-        }
-    }
 
     public void delete(int selected_player_id) {
         playerDA.delete(selected_player_id);

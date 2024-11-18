@@ -131,12 +131,12 @@ public class PlayerUI implements GeneralUI {
 
     private void buttonListener(){
         button_add.addActionListener(_ -> {
-            playerControl.createPlayer();
+            playerControl.add();
             refresh();
         });
 
         button_modify.addActionListener(_ -> {
-            playerControl.modifyPlayer(selected_player_id);
+            playerControl.modify(selected_player_id);
             refresh();
         });
 

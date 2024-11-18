@@ -3,6 +3,7 @@ package data;
 import GUI.GeneralDialog;
 import GUI.Player.PlayerDialog;
 import data.database.PlayerDBA;
+import main.OperationException;
 import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
@@ -56,16 +57,67 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
     }
 
-    public void add(Player player) {
-        switch(dataSource){
-            //case FILE ->
-            case MYSQL, SQLITE -> changed_player_map.put(player, DataOperation.ADD);
-        }
-        player_map.put(player.getID(), player);
-        PlayerDialog.get().popup( "added_player");
+    public void add() {
+            Player player = new Player();
+            player.setRegion(PlayerDialog
+                    .get()
+                    .selectionDialog("region_menu", region_list));
+            player.setServer(PlayerDialog
+                    .get()
+                    .selectionDialog("server_menu", region_server_map.get(player.getRegion())));
+            player.setID(createID());
+            player.setName(PlayerDialog
+                    .get()
+                    .input("player_name"));
+            switch(dataSource){
+                //case FILE ->
+                case MYSQL, SQLITE -> changed_player_map.put(player, DataOperation.ADD);
+            }
+            player_map.put(player.getID(), player);
+            PlayerDialog.get().popup( "added_player");
     }
 
-    public void modify(Player player) {
+    private int createID() {
+        while (true) {
+            try {
+                int ID = Integer.parseInt(PlayerDialog.get().input("id"));
+                if (player_map.containsKey(ID)) {
+                    throw new OperationException("ID already existed\n");
+                } else return ID;
+            } catch (NumberFormatException e) {
+                PlayerDialog.get().popup("number_format_invalid");
+            }
+        }
+    }
+
+    public void modify(int selected_player_id) {
+
+        Player player = player_map.get(selected_player_id);
+        switch(PlayerDialog.get().selectionDialog("modify_player")){
+            // After changing region the server has to be changed too.
+            case 0: player.setRegion(PlayerDialog
+                    .get()
+                    .selectionDialog("region_menu", region_list));
+            case 1: player.setServer(PlayerDialog
+                    .get()
+                    .selectionDialog("server_menu", region_server_map.get(player.getRegion())));
+                break;
+            case 2: player.setName(PlayerDialog
+                    .get()
+                    .input("player_name"));
+                break;
+            case 3:
+                player.setRegion(PlayerDialog
+                        .get()
+                        .selectionDialog("region_menu", region_list));
+                player.setServer(PlayerDialog
+                        .get()
+                        .selectionDialog("server_menu",region_server_map.get(player.getRegion())));
+                player.setName(PlayerDialog
+                        .get()
+                        .input("player_name"));
+                break;
+        }
         switch(dataSource){
             //case FILE ->
             case MYSQL, SQLITE  -> changed_player_map.put(player, DataOperation.MODIFY);
@@ -110,22 +162,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public TreeMap<Integer, Player> getPlayerMap() {
         return player_map;
-    }
-
-    public String[] getRegionList() {
-        return region_list;
-    }
-
-    public String[] getServerList(String region){
-        return region_server_map.get(region);
-    }
-
-    public boolean containsKey(int ID){
-        if(player_map == null){
-            return false;
-        }else{
-            return player_map.containsKey(ID);
-        }
     }
 
     public boolean isPlayerInvalid(Player player){
