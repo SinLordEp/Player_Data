@@ -21,7 +21,7 @@ public class GeneralDialog {
         initialize("src/GUI/dialog.yaml");
     }
 
-    public static GeneralDialog get() {
+    public static GeneralDialog getDialog() {
         if (instance == null) {
             instance = new GeneralDialog();
         }

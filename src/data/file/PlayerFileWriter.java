@@ -24,7 +24,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
             case ".xml": write_xml(file, player_data); break;
             case ".txt": write_txt(file, player_data); break;
         }
-        GeneralDialog.get().popup("file_saved");
+        GeneralDialog.getDialog().popup("file_saved");
     }
 
     private void write_dat(File player_file, TreeMap<Integer, Player> player_data) throws Exception {
@@ -71,7 +71,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
                 bw.newLine();
             }
         }catch (Exception e){
-            GeneralDialog.get().popup("data_invalid");
+            GeneralDialog.getDialog().popup("data_invalid");
         }
     }
 }

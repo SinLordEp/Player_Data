@@ -14,6 +14,7 @@ import java.util.TreeMap;
 
 public class PlayerControl implements GeneralControl {
     private PlayerDataAccess playerDA;
+
     @Override
     public void run() {
         PlayerUI playerUI = new PlayerUI(this);
@@ -30,7 +31,7 @@ public class PlayerControl implements GeneralControl {
         try {
             playerDA.setFilePath(GeneralDataAccess.newPathBuilder());
         } catch (Exception e) {
-            GeneralDialog.get().message("Failed to create new file\n" + e.getMessage());
+            GeneralDialog.getDialog().message("Failed to create new file\n" + e.getMessage());
         }
     }
 
@@ -86,28 +87,28 @@ public class PlayerControl implements GeneralControl {
     public void export() {
         try {
             if(playerDA.isEmpty()){
-                PlayerDialog.get().popup("player_map_null");
+                PlayerDialog.getDialog().popup("player_map_null");
             }else{
-                switch (PlayerDialog.get().selectionDialog("export_player")){
+                switch (PlayerDialog.getDialog().selectionDialog("export_player")){
                     case 0: playerDA.export(); break;
                     case 1: playerDA.exportDB(); break;
                 }
             }
         } catch (Exception e) {
-            GeneralDialog.get().message("Failed to export data\n" + e.getMessage());
+            GeneralDialog.getDialog().message("Failed to export data\n" + e.getMessage());
         }
     }
 
     public void changeLanguage(){
-        String language = switch(GeneralDialog.get().selectionDialog("language")){
+        String language = switch(GeneralDialog.getDialog().selectionDialog("language")){
             case 0 -> "en";
             case 1 -> "es";
             case 2 -> "cn";
             default ->
-                    throw new IllegalStateException("Unexpected value: " + GeneralDialog.get().selectionDialog("language"));
+                    throw new IllegalStateException("Unexpected value: " + GeneralDialog.getDialog().selectionDialog("language"));
         };
-        GeneralDialog.get().setLanguage(language);
-        PlayerDialog.get().setLanguage(language);
+        GeneralDialog.getDialog().setLanguage(language);
+        PlayerDialog.getDialog().setLanguage(language);
     }
 
     public DataSource getDataSource() {

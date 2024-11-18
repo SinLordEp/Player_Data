@@ -53,7 +53,7 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void initialize(){
-        main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.get().getText("default_data_source")));
+        main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.getDialog().getText("default_data_source")));
         tableModel = new PlayerTableModel(new TreeMap<>());
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -64,7 +64,7 @@ public class PlayerUI implements GeneralUI {
     @Override
     public void run() {
         initialize();
-        frame = new JFrame(PlayerDialog.get().getText("frame_title"));
+        frame = new JFrame(PlayerDialog.getDialog().getText("frame_title"));
         frame.setContentPane(main_panel);
         frame.pack();
         frame.setResizable(false);
@@ -87,24 +87,24 @@ public class PlayerUI implements GeneralUI {
     }
 
     public void setUIText(){
-        button_add.setText(PlayerDialog.get().getText("button_add"));
-        button_modify.setText(PlayerDialog.get().getText("button_modify"));
-        button_delete.setText(PlayerDialog.get().getText("button_delete"));
-        button_export.setText(PlayerDialog.get().getText("button_export"));
+        button_add.setText(PlayerDialog.getDialog().getText("button_add"));
+        button_modify.setText(PlayerDialog.getDialog().getText("button_modify"));
+        button_delete.setText(PlayerDialog.getDialog().getText("button_delete"));
+        button_export.setText(PlayerDialog.getDialog().getText("button_export"));
         if(!db_connected){
-            button_connectDB.setText(PlayerDialog.get().getText("button_connectDB"));
+            button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
         }else{
-            button_connectDB.setText(PlayerDialog.get().getText("button_disconnectDB"));
+            button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
         }
-        button_importFile.setText(PlayerDialog.get().getText("button_importFile"));
-        button_importDB.setText(PlayerDialog.get().getText("button_importDB"));
-        button_createFile.setText(PlayerDialog.get().getText("button_createFile"));
-        button_language.setText(PlayerDialog.get().getText("button_language"));
-        label_port.setText(PlayerDialog.get().getText("label_port"));
-        label_search.setText(PlayerDialog.get().getText("label_search"));
-        label_pwd.setText(PlayerDialog.get().getText("label_pwd"));
-        label_user.setText(PlayerDialog.get().getText("label_user"));
-        label_database.setText(PlayerDialog.get().getText("label_database"));
+        button_importFile.setText(PlayerDialog.getDialog().getText("button_importFile"));
+        button_importDB.setText(PlayerDialog.getDialog().getText("button_importDB"));
+        button_createFile.setText(PlayerDialog.getDialog().getText("button_createFile"));
+        button_language.setText(PlayerDialog.getDialog().getText("button_language"));
+        label_port.setText(PlayerDialog.getDialog().getText("label_port"));
+        label_search.setText(PlayerDialog.getDialog().getText("label_search"));
+        label_pwd.setText(PlayerDialog.getDialog().getText("label_pwd"));
+        label_user.setText(PlayerDialog.getDialog().getText("label_user"));
+        label_database.setText(PlayerDialog.getDialog().getText("label_database"));
     }
 
     private void searchListener(){
@@ -236,22 +236,22 @@ public class PlayerUI implements GeneralUI {
     private void dbConnect() {
         if (!db_connected) {
             if(isDbBlank()){
-                GeneralDialog.get().popup("db_field_empty");
+                GeneralDialog.getDialog().popup("db_field_empty");
                 return;
             }
-            button_connectDB.setText(PlayerDialog.get().getText("button_connectingDB"));
+            button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectingDB"));
             button_connectDB.setEnabled(false);
             dbConfigure();
             if(playerControl.connectDB()){
                 lockInput();
                 db_connected = true;
             }else{
-                GeneralDialog.get().popup("db_login_failed");
-                button_connectDB.setText(PlayerDialog.get().getText("button_connectDB"));
+                GeneralDialog.getDialog().popup("db_login_failed");
+                button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
                 button_connectDB.setEnabled(true);
             }
         }else{
-            button_connectDB.setText(PlayerDialog.get().getText("button_disconnectingDB"));
+            button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectingDB"));
             button_connectDB.setEnabled(false);
             if(playerControl.getDataSource().equals(DataSource.MYSQL) || playerControl.getDataSource().equals(DataSource.SQLITE)){
                 tableModel.update_data(new TreeMap<>());
@@ -261,8 +261,8 @@ public class PlayerUI implements GeneralUI {
                 db_connected = false;
                 unlockInput();
             }else{
-                GeneralDialog.get().popup("db_disconnect_failed");
-                button_connectDB.setText(PlayerDialog.get().getText("button_disconnectDB"));
+                GeneralDialog.getDialog().popup("db_disconnect_failed");
+                button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
                 button_connectDB.setEnabled(true);
             }
         }
@@ -290,7 +290,7 @@ public class PlayerUI implements GeneralUI {
 
     private void lockInput(){
         //when database connected
-        button_connectDB.setText(PlayerDialog.get().getText("button_disconnectDB"));
+        button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
         button_connectDB.setEnabled(true);
         button_importDB.setEnabled(true);
         text_URL.setEnabled(false);
@@ -302,7 +302,7 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void unlockInput(){
-        button_connectDB.setText(PlayerDialog.get().getText("button_connectDB"));
+        button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
         button_connectDB.setEnabled(true);
         text_URL.setEnabled(true);
         text_database.setEnabled(true);
@@ -315,7 +315,7 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void configureTitle(){
-        main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.get().getText("data_source") + playerControl.getDataSource()));
+        main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.getDialog().getText("data_source") + playerControl.getDataSource()));
     }
 }
 

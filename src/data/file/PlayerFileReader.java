@@ -49,7 +49,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
             }
         }
         if (player_data.isEmpty()) {
-            PlayerDialog.get().popup("player_map_null");
+            PlayerDialog.getDialog().popup("player_map_null");
         }
         return player_data;
     }
@@ -61,7 +61,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
             throw new RuntimeException("Invalid XML: Root element is not Player");
         }
         if (!root.hasChildNodes()) {
-            PlayerDialog.get().popup("player_map_null");
+            PlayerDialog.getDialog().popup("player_map_null");
             return player_data;
         }
         // parsing
@@ -85,7 +85,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         try(Scanner scanner = new Scanner(file)){
             if(!scanner.hasNext()){
-                PlayerDialog.get().popup("player_map_null");
+                PlayerDialog.getDialog().popup("player_map_null");
             }else{
                 while(scanner.hasNext()){
                     String[] player_txt = scanner.nextLine().split(",");

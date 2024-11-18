@@ -87,7 +87,7 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
             if (transaction != null) {
                 transaction.rollback();
             }
-            GeneralDialog.get().message("Updating database failed\n" + e.getMessage());
+            GeneralDialog.getDialog().message("Updating database failed\n" + e.getMessage());
         }
     }
 

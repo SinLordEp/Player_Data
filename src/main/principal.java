@@ -14,10 +14,10 @@ public class principal {
 
     public static GeneralControl initialize(){
         try{
-            String chosen_control = GeneralDialog.get().selectionDialog("controller", classRegister.getControlClasses());
+            String chosen_control = GeneralDialog.getDialog().selectionDialog("controller", classRegister.getControlClasses());
             return classRegister.getControl(chosen_control);
         }catch (Exception e) {
-            GeneralDialog.get().message(e.getMessage());
+            GeneralDialog.getDialog().message(e.getMessage());
         }
         return null;
     }

@@ -20,7 +20,7 @@ public abstract class GeneralDataAccess {
 
     public static String chooseExtension(){
         String[] options = {"DAT", "XML", "TXT"};
-        return switch (GeneralDialog.get().selectionDialog("extension_general", options)) {
+        return switch (GeneralDialog.getDialog().selectionDialog("extension_general", options)) {
             case "DAT" -> ".dat";
             case "XML" -> ".xml";
             case "TXT" -> ".txt";
@@ -46,7 +46,7 @@ public abstract class GeneralDataAccess {
     public static String newPathBuilder(){
         String target_path = GeneralDataAccess.getPath("path");
         String target_extension = chooseExtension();
-        String target_file_name = GeneralDialog.get().input("file_name");
+        String target_file_name = GeneralDialog.getDialog().input("file_name");
         target_path += "/" +target_file_name + target_extension;
         return target_path;
     }

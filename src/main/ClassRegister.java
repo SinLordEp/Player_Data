@@ -48,13 +48,13 @@ public class ClassRegister {
             control.setDA(getDA(class_name));
             return control;
         }
-        throw new OperationException("Failed to get Control class");
+        throw new OperationException("Failed to getDialog Control class");
     }
     public GeneralDataAccess getDA(String class_name) throws Exception {
         Class<? extends GeneralDataAccess> dataAccessClass = dataAccessMap.get(class_name);
         if (dataAccessClass != null) {
             return dataAccessClass.getDeclaredConstructor().newInstance();
         }
-        throw new OperationException("Failed to get DataAccess class");
+        throw new OperationException("Failed to getDialog DataAccess class");
     }
 }

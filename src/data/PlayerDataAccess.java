@@ -40,7 +40,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 throw new OpenDataException("Data is corrupted");
             }
         } catch (Exception e) {
-            GeneralDialog.get().message("Failed to read data\n" + e.getMessage());
+            GeneralDialog.getDialog().message("Failed to read data\n" + e.getMessage());
             player_map = new TreeMap<>();
             dataSource = DataSource.NONE;
         }
@@ -53,68 +53,67 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 case MYSQL, SQLITE -> playerDBA.update(changed_player_map);
             }
         } catch (Exception e) {
-            GeneralDialog.get().message("Failed to save data\n" + e.getMessage());
+            GeneralDialog.getDialog().message("Failed to save data\n" + e.getMessage());
         }
     }
 
     public void add() {
             Player player = new Player();
             player.setRegion(PlayerDialog
-                    .get()
+                    .getDialog()
                     .selectionDialog("region_menu", region_list));
             player.setServer(PlayerDialog
-                    .get()
+                    .getDialog()
                     .selectionDialog("server_menu", region_server_map.get(player.getRegion())));
             player.setID(createID());
             player.setName(PlayerDialog
-                    .get()
+                    .getDialog()
                     .input("player_name"));
             switch(dataSource){
                 //case FILE ->
                 case MYSQL, SQLITE -> changed_player_map.put(player, DataOperation.ADD);
             }
             player_map.put(player.getID(), player);
-            PlayerDialog.get().popup( "added_player");
+            PlayerDialog.getDialog().popup( "added_player");
     }
 
     private int createID() {
         while (true) {
             try {
-                int ID = Integer.parseInt(PlayerDialog.get().input("id"));
+                int ID = Integer.parseInt(PlayerDialog.getDialog().input("id"));
                 if (player_map.containsKey(ID)) {
                     throw new OperationException("ID already existed\n");
                 } else return ID;
             } catch (NumberFormatException e) {
-                PlayerDialog.get().popup("number_format_invalid");
+                PlayerDialog.getDialog().popup("number_format_invalid");
             }
         }
     }
 
     public void modify(int selected_player_id) {
-
         Player player = player_map.get(selected_player_id);
-        switch(PlayerDialog.get().selectionDialog("modify_player")){
+        switch(PlayerDialog.getDialog().selectionDialog("modify_player")){
             // After changing region the server has to be changed too.
             case 0: player.setRegion(PlayerDialog
-                    .get()
+                    .getDialog()
                     .selectionDialog("region_menu", region_list));
             case 1: player.setServer(PlayerDialog
-                    .get()
+                    .getDialog()
                     .selectionDialog("server_menu", region_server_map.get(player.getRegion())));
                 break;
             case 2: player.setName(PlayerDialog
-                    .get()
+                    .getDialog()
                     .input("player_name"));
                 break;
             case 3:
                 player.setRegion(PlayerDialog
-                        .get()
+                        .getDialog()
                         .selectionDialog("region_menu", region_list));
                 player.setServer(PlayerDialog
-                        .get()
+                        .getDialog()
                         .selectionDialog("server_menu",region_server_map.get(player.getRegion())));
                 player.setName(PlayerDialog
-                        .get()
+                        .getDialog()
                         .input("player_name"));
                 break;
         }
@@ -131,14 +130,14 @@ public class PlayerDataAccess extends GeneralDataAccess {
             case MYSQL, SQLITE -> changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
         }
         player_map.remove(selected_player_id);
-        PlayerDialog.get().popup( "deleted_player");
+        PlayerDialog.getDialog().popup( "deleted_player");
     }
 
     public void export() throws Exception {
         if(fileWriter != null){
             String target_extension = chooseExtension();
             String target_path = getPath("path");
-            String target_name = PlayerDialog.get().input("new_file_name");
+            String target_name = PlayerDialog.getDialog().input("new_file_name");
             target_path += "/" + target_name + target_extension;
             fileWriter.write(target_path, player_map);
         }else {
@@ -148,11 +147,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public void exportDB(){
         if(!playerDBA.connected()){
-            PlayerDialog.get().popup("db_not_connected");
+            PlayerDialog.getDialog().popup("db_not_connected");
             return;
         }
         playerDBA.update(DataOperation.EXPORT, player_map);
-        PlayerDialog.get().popup("exported_db");
+        PlayerDialog.getDialog().popup("exported_db");
     }
 
 
@@ -166,11 +165,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public boolean isPlayerInvalid(Player player){
         if(region_server_map == null){
-            PlayerDialog.get().popup("region_server_null");
+            PlayerDialog.getDialog().popup("region_server_null");
             return true;
         }
         if(!region_server_map.containsKey(player.getRegion())){
-            PlayerDialog.get().popup("region_invalid");
+            PlayerDialog.getDialog().popup("region_invalid");
             return true;
         }
         boolean server_valid = false;
@@ -181,18 +180,18 @@ public class PlayerDataAccess extends GeneralDataAccess {
             }
         }
         if(!server_valid){
-            PlayerDialog.get().popup("server_invalid");
+            PlayerDialog.getDialog().popup("server_invalid");
             return true;
         }
 
         if(player.getID() <= 0){
-            PlayerDialog.get().popup("id_invalid");
+            PlayerDialog.getDialog().popup("id_invalid");
             return true;
         }
 
         if(player_map == null) return false;
         if(player.getName().isBlank()){
-            PlayerDialog.get().popup("name_invalid");
+            PlayerDialog.getDialog().popup("name_invalid");
             return true;
         }
         return false;
@@ -200,7 +199,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public boolean isDataValid(){
         if(player_map == null){
-            PlayerDialog.get().popup("player_map_null");
+            PlayerDialog.getDialog().popup("player_map_null");
             return true;
         }
         for(Player player : player_map.values()){

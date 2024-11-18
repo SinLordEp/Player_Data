@@ -9,7 +9,7 @@ public class PlayerDialog extends GeneralDialog {
         super.initialize("src/GUI/Player/player_dialog.yaml");
     }
 
-    public static PlayerDialog get() {
+    public static PlayerDialog getDialog() {
         if (instance == null) {
             instance = new PlayerDialog();
         }
