@@ -12,7 +12,6 @@ import java.util.TreeMap;
 
 public class PlayerUI implements GeneralUI {
     private final PlayerControl playerControl;
-    private JFrame frame;
     private JTable table_data;
 
     private JButton button_add;
@@ -71,7 +70,7 @@ public class PlayerUI implements GeneralUI {
     @Override
     public void run() {
         initialize();
-        frame = new JFrame(PlayerDialog.getDialog().getText("frame_title"));
+        JFrame frame = new JFrame(PlayerDialog.getDialog().getText("frame_title"));
         frame.setContentPane(main_panel);
         frame.pack();
         frame.setResizable(false);
