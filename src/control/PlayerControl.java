@@ -9,17 +9,22 @@ import data.GeneralDataAccess;
 import data.PlayerDataAccess;
 import main.OperationException;
 import model.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.TreeMap;
 
 public class PlayerControl implements GeneralControl {
+    private static final Logger logger = LoggerFactory.getLogger(PlayerControl.class);
     private PlayerDataAccess playerDA;
     private PlayerUI playerUI;
 
     @Override
     public void run() {
         playerUI = new PlayerUI(this);
+        logger.debug("Try to build frame");
         playerUI.run();
+        logger.debug("Finished building frame");
     }
 
     @Override
