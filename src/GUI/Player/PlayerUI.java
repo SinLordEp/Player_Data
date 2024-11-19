@@ -38,7 +38,7 @@ public class PlayerUI implements GeneralUI {
     private JTextField text_port;
 
     private JPanel main_panel;
-    private JScrollPane Scroll_data;
+    private JScrollPane scroll_data;
     private JPasswordField passwordField_pwd;
     private JComboBox<String> comboBox_SQL;
     private PlayerTableModel tableModel;
@@ -53,6 +53,7 @@ public class PlayerUI implements GeneralUI {
         tableModel = new PlayerTableModel(new TreeMap<>());
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        scroll_data.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setUIText(false);
         searchListener();
         buttonListener();
