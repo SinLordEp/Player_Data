@@ -44,7 +44,6 @@ public class PlayerUI implements GeneralUI {
     private JComboBox<String> comboBox_SQL;
     private PlayerTableModel tableModel;
     private int selected_player_id;
-    private boolean db_connected;
 
     public PlayerUI(PlayerControl control) {
         playerControl = control;
@@ -55,7 +54,7 @@ public class PlayerUI implements GeneralUI {
         tableModel = new PlayerTableModel(new TreeMap<>());
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        setUIText();
+        setUIText(false);
         searchListener();
         buttonListener();
         tableListener();
@@ -67,7 +66,6 @@ public class PlayerUI implements GeneralUI {
         comboBox_SQL.addItem("MySQL");
         comboBox_SQL.addItem("SQLite");
         comboBox_SQL.setSelectedIndex(0);
-        db_connected = false;
     }
 
     @Override
@@ -94,12 +92,12 @@ public class PlayerUI implements GeneralUI {
         configureTitle();
     }
 
-    public void setUIText(){
+    public void setUIText(boolean isDBConnected){
         button_add.setText(PlayerDialog.getDialog().getText("button_add"));
         button_modify.setText(PlayerDialog.getDialog().getText("button_modify"));
         button_delete.setText(PlayerDialog.getDialog().getText("button_delete"));
         button_export.setText(PlayerDialog.getDialog().getText("button_export"));
-        if(!db_connected){
+        if(!isDBConnected){
             button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
         }else{
             button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
@@ -224,13 +222,12 @@ public class PlayerUI implements GeneralUI {
         tableModel.update_data(new TreeMap<>());
         table_data.setModel(tableModel);
         button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
-        button_connectDB.setEnabled(true);
         configureTitle();
         inputSwitch(true);
     }
 
     private void inputSwitch(boolean state){
-        button_connectDB.setEnabled(!state);
+        button_connectDB.setEnabled(true);
         button_importDB.setEnabled(!state);
         text_URL.setEnabled(state);
         text_database.setEnabled(state);
@@ -261,8 +258,8 @@ public class PlayerUI implements GeneralUI {
         main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.getDialog().getText("data_source") + playerControl.getDataSource()));
     }
 
-    public void changeLanguage(){
-        setUIText();
+    public void changeLanguage(boolean isDBConnected){
+        setUIText(isDBConnected);
         tableModel.language_changed();
     }
 }

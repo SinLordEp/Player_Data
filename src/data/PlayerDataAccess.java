@@ -236,8 +236,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
             save();
             player_map = new TreeMap<>();
         }
-        playerDBA.disconnect();
-        return playerDBA.isConnected();
+        return playerDBA.disconnect();
     }
 
     public boolean isDBConnected(){

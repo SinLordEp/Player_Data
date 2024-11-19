@@ -16,7 +16,7 @@ import java.util.TreeMap;
 
 public class PlayerDBA implements GeneralDBA<TreeMap<Integer,Player>> {
     Configuration configuration = new Configuration();
-    SessionFactory sessionFactory;
+    SessionFactory sessionFactory = null;
 
     public PlayerDBA()  {
         configuration.configure("config/hibernate.cfg.xml");

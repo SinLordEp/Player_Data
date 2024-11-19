@@ -147,7 +147,7 @@ public class PlayerControl implements GeneralControl {
         };
         GeneralDialog.getDialog().setLanguage(language);
         PlayerDialog.getDialog().setLanguage(language);
-        playerUI.changeLanguage();
+        playerUI.changeLanguage(playerDA.isDBConnected());
     }
 
     public DataSource getDataSource() {
