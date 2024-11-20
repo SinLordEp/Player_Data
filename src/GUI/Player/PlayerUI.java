@@ -237,7 +237,7 @@ public class PlayerUI implements GeneralUI {
         comboBox_SQL.setEnabled(state);
     }
 
-    public void getDBLoginInfo(){
+    public void setDBLoginInfo(){
         switch ((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
             case "MySQL":
                 playerControl.configureDB(

@@ -45,7 +45,9 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         // Add root to data.file
         document.appendChild(root);
         // read data and transform to xml element then add to root
-        if(player_data != null) add_PlayerElements(document, root, player_data);
+        if(player_data != null){
+            add_PlayerElements(document, root, player_data);
+        }
         // save to data.file
         xml_utils.writeXml(document, player_file);
     }
