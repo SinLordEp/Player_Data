@@ -1,17 +1,19 @@
-package data;
+package Interface;
 
 import GUI.GeneralDialog;
+import data.DataSource;
 import main.OperationException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.util.HashMap;
 
 
 public abstract class GeneralDataAccess {
     protected String file_path = null;
     protected DataSource dataSource = DataSource.NONE;
-
+    public abstract HashMap<String, String> getDefaultDatabaseInfo();
 
     public void setFilePath(String file_path) {
         this.file_path = file_path;
@@ -58,4 +60,6 @@ public abstract class GeneralDataAccess {
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
+
+
 }

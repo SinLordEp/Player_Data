@@ -1,3 +1,8 @@
 2024-11-19 17:15:05 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
 2024-11-19 17:15:05 INFO  control.PlayerControl - Try to build frame
 2024-11-19 17:15:05 INFO  control.PlayerControl - Finished building frame
+2024-11-22 16:42:47 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-11-22 16:42:48 INFO  control.PlayerControl - Database type is set to: MySQL
+2024-11-22 16:42:48 INFO  control.PlayerControl - Database type is set to: MySQL
+2024-11-22 16:42:48 INFO  control.PlayerControl - Finished building player frame
+2024-11-22 16:44:15 INFO  control.PlayerControl - Database type is set to: MySQL

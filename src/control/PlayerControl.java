@@ -5,13 +5,15 @@ import GUI.Player.PlayerUI;
 import GUI.Player.PlayerDialog;
 import Interface.GeneralControl;
 import data.DataSource;
-import data.GeneralDataAccess;
+import Interface.GeneralDataAccess;
 import data.PlayerDataAccess;
+import data.database.SqlDialect;
 import main.OperationException;
 import model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.TreeMap;
 
 public class PlayerControl implements GeneralControl {
@@ -40,6 +42,23 @@ public class PlayerControl implements GeneralControl {
         System.exit(0);
     }
 
+    @Override
+    public HashMap<String, String> getDefaultDatabase() {
+        return playerDA.getDefaultDatabaseInfo();
+    }
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        save();
+        playerDA.setDataSource(dataSource);
+    }
+
+    @Override
+    public void setSQLDialect(SqlDialect dialect) {
+        save();
+        playerDA.setSqlDialect(dialect);
+    }
+
     public void createFile() throws OperationException {
         logger.debug("Creating file by building path");
         try {
@@ -53,14 +72,14 @@ public class PlayerControl implements GeneralControl {
         logger.info("File created successfully");
     }
 
-    public void importFile() {
+    public void importData() {
         logger.debug("Importing to file: initiating save procedure...");
-        save();
-
         logger.info("Changing data source to FILE.");
-        playerDA.setDataSource(DataSource.FILE);
+    }
 
-        String file_path =GeneralDataAccess.getPath("file");
+    public void importFile() {
+
+        String file_path = GeneralDataAccess.getPath("file");
         logger.debug("File path set to: {}",file_path);
         playerDA.setFilePath(file_path);
 
@@ -72,17 +91,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Finished importing from file");
     }
 
-    public void configureDB(String URL, String port, String database, String user, char[] password) {
-        logger.info("Configuring Database by multi params");
-        playerDA.configureDB(URL, port, database, user, password);
-    }
-
-    public void configureDB(String URL) {
-        logger.info("Configuring Database by URL for SQLite");
-        playerDA.configureDB(URL);
-    }
-
-    public void importDB(String database_type)  {
+    /*public void importDB(String database_type)  {
         logger.info("Importing to database, trigger save procedure");
         save();
         logger.info("Changing data source to corresponding database type then read data");
@@ -93,7 +102,7 @@ public class PlayerControl implements GeneralControl {
         playerDA.read();
         playerUI.refresh();
         logger.info("Finished importing from database");
-    }
+    }*/
 
     public void DBConnection(){
         if(playerDA.isDBConnected()){
@@ -106,14 +115,9 @@ public class PlayerControl implements GeneralControl {
     public void connectDB(){
         logger.debug("Trying to connect to database...");
         playerUI.connecting();
-        if(playerUI.hasBlank()){
-            logger.info("Database input fields have blank, failed to connect");
-            GeneralDialog.getDialog().popup("db_field_empty");
-            playerUI.disconnected();
-            return;
-        }
         logger.info("Configuring database info by user input");
-        playerUI.setDBLoginInfo();
+
+        //playerUI.setDBLoginInfo();
 
         logger.debug("Connecting database...");
         if(playerDA.connectDB()){
@@ -208,13 +212,5 @@ public class PlayerControl implements GeneralControl {
             playerDA.save();
         }
         logger.debug("Finished to save data");
-    }
-
-    public void comboBoxSQL(String sql_type){
-        logger.info("Database type is set to: {}", sql_type);
-        switch (sql_type){
-            case "MySQL" -> playerUI.configureMySQL();
-            case "SQLite" -> playerUI.configureSQLite();
-        }
     }
 }

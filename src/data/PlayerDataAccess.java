@@ -3,6 +3,8 @@ package data;
 import GUI.GeneralDialog;
 import GUI.Player.PlayerDialog;
 import data.database.PlayerDBA;
+import Interface.GeneralDataAccess;
+import data.database.SqlDialect;
 import main.OperationException;
 import model.Player;
 import data.file.PlayerFileReader;
@@ -29,12 +31,42 @@ public class PlayerDataAccess extends GeneralDataAccess {
         region_list = region_server_map.keySet().toArray(new String[0]);
     }
 
+    @Override
+    public HashMap<String, String> getDefaultDatabaseInfo() {
+        return playerDBA.getDefaultDatabaseInfo();
+    }
+
+    public boolean connectDB() {
+        if(playerDBA.connect(dataSource)){
+            file_path = null;
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void setSqlDialect(SqlDialect dialect){
+        playerDBA.setDialect(dialect);
+    }
+
+    public boolean disconnectDB(){
+        if(dataSource.equals(DataSource.DATABASE) || dataSource.equals(DataSource.HIBERNATE)){
+            save();
+            player_map = new TreeMap<>();
+        }
+        return playerDBA.disconnect(dataSource);
+    }
+
+    public boolean isDBConnected(){
+        return playerDBA.isConnected();
+    }
+
     @SuppressWarnings("unchecked")
     public void read() {
         try {
             switch (dataSource){
                 case FILE -> player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
-                case MYSQL, SQLITE -> player_map = playerDBA.read();
+                case DATABASE, HIBERNATE -> player_map = playerDBA.read(dataSource);
             }
             if(player_map != null && !isDataValid()){
                 throw new OpenDataException("Data is corrupted");
@@ -50,7 +82,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         try{
             switch (dataSource){
                 case FILE -> fileWriter.write(file_path, player_map);
-                case MYSQL, SQLITE -> playerDBA.update(changed_player_map);
+                case DATABASE, HIBERNATE -> playerDBA.update(dataSource, changed_player_map);
             }
         } catch (Exception e) {
             GeneralDialog.getDialog().message("Failed to save data\n" + e.getMessage());
@@ -71,7 +103,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     .input("player_name"));
             switch(dataSource){
                 //case FILE ->
-                case MYSQL, SQLITE -> changed_player_map.put(player, DataOperation.ADD);
+                case DATABASE, HIBERNATE -> changed_player_map.put(player, DataOperation.ADD);
             }
             player_map.put(player.getID(), player);
             PlayerDialog.getDialog().popup( "added_player");
@@ -119,7 +151,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
         switch(dataSource){
             //case FILE ->
-            case MYSQL, SQLITE  -> changed_player_map.put(player, DataOperation.MODIFY);
+            case DATABASE, HIBERNATE  -> changed_player_map.put(player, DataOperation.MODIFY);
         }
         player_map.put(player.getID(), player);
     }
@@ -127,7 +159,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void delete(int selected_player_id) {
         switch(dataSource){
             //case FILE ->
-            case MYSQL, SQLITE -> changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
+            case DATABASE, HIBERNATE -> changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
         }
         player_map.remove(selected_player_id);
         PlayerDialog.getDialog().popup( "deleted_player");
@@ -150,7 +182,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
             PlayerDialog.getDialog().popup("db_not_connected");
             return;
         }
-        playerDBA.update(DataOperation.EXPORT, player_map);
+        playerDBA.export(dataSource, player_map);
         PlayerDialog.getDialog().popup("exported_db");
     }
 
@@ -210,36 +242,5 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return true;
     }
 
-    public void configureDB(String URL, String port, String database, String user, char[] password) {
-        String pwd = new String(password);
-        playerDBA.setURL(URL + ":" + port + "/" + database);
-        playerDBA.setUser(user);
-        playerDBA.setPassword(pwd);
-    }
 
-    public void configureDB(String URL) {
-        playerDBA.setURL(URL);
-    }
-
-    public boolean connectDB() {
-        playerDBA.connect();
-        if(isDBConnected()){
-            file_path = null;
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public boolean disconnectDB(){
-        if(dataSource.equals(DataSource.MYSQL) || dataSource.equals(DataSource.SQLITE)){
-            save();
-            player_map = new TreeMap<>();
-        }
-        return playerDBA.disconnect();
-    }
-
-    public boolean isDBConnected(){
-        return playerDBA.isConnected();
-    }
 }

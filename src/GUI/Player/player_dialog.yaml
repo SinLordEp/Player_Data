@@ -43,14 +43,10 @@ text:
     en: "Disconnecting..."
     es: "Desconectando..."
     cn: "断连中..."
-  button_importFile:
-    en: "Import from file"
-    es: "Importar desde fichero"
-    cn: "从文件读取"
-  button_importDB:
-    en: "Import from DB"
-    es: "Importar desde BD"
-    cn: "从数据库读取"
+  button_import:
+    en: "Import data"
+    es: "Importar datos"
+    cn: "导入数据"
   button_createFile:
     en: "Create new file"
     es: "Crear nuevo fichero"

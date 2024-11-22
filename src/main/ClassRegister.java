@@ -1,7 +1,7 @@
 package main;
 
 import Interface.GeneralControl;
-import data.GeneralDataAccess;
+import Interface.GeneralDataAccess;
 import org.reflections.Reflections;
 
 import java.util.HashMap;

@@ -1,4 +1,8 @@
 text:
+  db_login_title:
+    en: "Database Menu"
+    es: "Menú Base de datos"
+    cn: "数据库菜单"
 
 input:
   new_file_name:

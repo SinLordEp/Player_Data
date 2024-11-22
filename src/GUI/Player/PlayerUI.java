@@ -2,11 +2,12 @@ package GUI.Player;
 
 import Interface.GeneralUI;
 import control.PlayerControl;
+import data.DataSource;
+import data.database.SqlDialect;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -19,28 +20,18 @@ public class PlayerUI implements GeneralUI {
     private JButton button_delete;
     private JButton button_export;
     private JButton button_connectDB;
-    private JButton button_importFile;
-    private JButton button_importDB;
+    private JButton button_import;
     private JButton button_createFile;
     private JButton button_language;
 
-    private JLabel label_port;
-    private JLabel label_search;
-    private JLabel label_pwd;
-    private JLabel label_user;
-    private JLabel label_URL;
-    private JLabel label_database;
 
+    private JLabel label_search;
     private JTextField field_search;
-    private JTextField text_URL;
-    private JTextField text_database;
-    private JTextField text_user;
-    private JTextField text_port;
 
     private JPanel main_panel;
     private JScrollPane scroll_data;
-    private JPasswordField passwordField_pwd;
-    private JComboBox<String> comboBox_SQL;
+    private JComboBox<SqlDialect> comboBox_SQL;
+    private JComboBox<DataSource> comboBox_dataSource;
     private PlayerTableModel tableModel;
     private int selected_player_id;
 
@@ -59,13 +50,18 @@ public class PlayerUI implements GeneralUI {
         buttonListener();
         tableListener();
         comboBoxListener();
-        initializeDB();
+        initializeComboBox();
     }
 
-    private void initializeDB(){
-        comboBox_SQL.addItem("MySQL");
-        comboBox_SQL.addItem("SQLite");
-        comboBox_SQL.setSelectedIndex(0);
+    private void initializeComboBox(){
+        for(DataSource dataSource : DataSource.values()){
+            comboBox_dataSource.addItem(dataSource);
+        }
+        for(SqlDialect dialect : SqlDialect.values()){
+            comboBox_SQL.addItem(dialect);
+        }
+        comboBox_dataSource.setSelectedItem(DataSource.NONE);
+        disableSQL();
     }
 
     @Override
@@ -102,15 +98,10 @@ public class PlayerUI implements GeneralUI {
         }else{
             button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
         }
-        button_importFile.setText(PlayerDialog.getDialog().getText("button_importFile"));
-        button_importDB.setText(PlayerDialog.getDialog().getText("button_importDB"));
+        button_import.setText(PlayerDialog.getDialog().getText("button_import"));
         button_createFile.setText(PlayerDialog.getDialog().getText("button_createFile"));
         button_language.setText(PlayerDialog.getDialog().getText("button_language"));
-        label_port.setText(PlayerDialog.getDialog().getText("label_port"));
         label_search.setText(PlayerDialog.getDialog().getText("label_search"));
-        label_pwd.setText(PlayerDialog.getDialog().getText("label_pwd"));
-        label_user.setText(PlayerDialog.getDialog().getText("label_user"));
-        label_database.setText(PlayerDialog.getDialog().getText("label_database"));
     }
 
     private void searchListener(){
@@ -148,9 +139,7 @@ public class PlayerUI implements GeneralUI {
 
         button_createFile.addActionListener(_ -> playerControl.createFile());
 
-        button_importFile.addActionListener(_ -> playerControl.importFile());
-
-        button_importDB.addActionListener(_ -> playerControl.importDB(Objects.requireNonNull(comboBox_SQL.getSelectedItem()).toString()));
+        button_import.addActionListener(_ -> playerControl.importData());
 
         button_language.addActionListener(_ -> playerControl.changeLanguage());
     }
@@ -170,10 +159,42 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void comboBoxListener(){
-        comboBox_SQL.addActionListener(_ -> playerControl.comboBoxSQL((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())));
+        comboBox_dataSource.addActionListener(_ -> {
+            switch ((DataSource) Objects.requireNonNull(comboBox_dataSource.getSelectedItem())){
+                case NONE:
+                    disableSQL();
+                    button_import.setEnabled(false);
+                    break;
+                case FILE:
+                    disableSQL();
+                    button_import.setEnabled(true);
+                    break;
+                case DATABASE, HIBERNATE:
+                    comboBox_SQL.setEnabled(true);
+                    break;
+            }
+            playerControl.setDataSource((DataSource) comboBox_dataSource.getSelectedItem());
+        });
+        comboBox_SQL.addActionListener(_ -> {
+            if(comboBox_SQL.isEnabled()){
+                switch ((SqlDialect) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
+                    case NONE:
+                        button_import.setEnabled(false);
+                        break;
+                    case MYSQL, SQLITE:
+                        button_import.setEnabled(true);
+                        playerControl.setSQLDialect((SqlDialect)comboBox_SQL.getSelectedItem());
+                }
+            }
+        });
     }
 
-    public void configureMySQL(){
+    private void disableSQL(){
+        comboBox_SQL.setEnabled(false);
+        comboBox_SQL.setSelectedItem(SqlDialect.NONE);
+    }
+
+   /* public void configureMySQL(){
         label_URL.setText("jdbc:mysql://");
         text_URL.setText("localhost");
         text_database.setText("person");
@@ -185,23 +206,7 @@ public class PlayerUI implements GeneralUI {
         passwordField_pwd.setText("root");
         passwordField_pwd.setEnabled(true);
     }
-
-    public void configureSQLite(){
-        label_URL.setText("jdbc:sqlite:");
-        text_URL.setText("person.db");
-        text_database.setText("");
-        text_database.setEditable(false);
-        text_port.setText("");
-        text_port.setEditable(false);
-        text_user.setText("");
-        text_user.setEditable(false);
-        passwordField_pwd.setText("");
-        passwordField_pwd.setEditable(false);
-    }
-
-    public boolean hasBlank(){
-        return (text_URL.getText().isBlank()) && (text_database.getText().isBlank()) && (text_port.getText().isBlank()) && (text_user.getText().isBlank()) && (Arrays.toString(passwordField_pwd.getPassword()).isBlank());
-    }
+*/
 
     public void connecting(){
         button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectingDB"));
@@ -228,16 +233,11 @@ public class PlayerUI implements GeneralUI {
 
     private void inputSwitch(boolean state){
         button_connectDB.setEnabled(true);
-        button_importDB.setEnabled(!state);
-        text_URL.setEnabled(state);
-        text_database.setEnabled(state);
-        text_port.setEnabled(state);
-        text_user.setEnabled(state);
-        passwordField_pwd.setEnabled(state);
+        button_import.setEnabled(!state);
         comboBox_SQL.setEnabled(state);
     }
 
-    public void setDBLoginInfo(){
+    /*public void setDBLoginInfo(){
         switch ((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
             case "MySQL":
                 playerControl.configureDB(
@@ -252,7 +252,7 @@ public class PlayerUI implements GeneralUI {
                 break;
         }
 
-    }
+    }*/
 
     private void configureTitle(){
         main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.getDialog().getText("data_source") + playerControl.getDataSource()));
