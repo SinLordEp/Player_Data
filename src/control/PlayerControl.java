@@ -72,8 +72,13 @@ public class PlayerControl implements GeneralControl {
         logger.info("File created successfully");
     }
 
+    //todo
     public void importData() {
-        logger.debug("Importing to file: initiating save procedure...");
+        logger.debug("Importing from file...");
+        playerDA.setDataSource(playerUI.getDataSource());
+        if(playerDA.getDataSource().equals(DataSource.DATABASE) || playerDA.getDataSource().equals(DataSource.HIBERNATE)) {
+            playerDA.setSqlDialect(playerUI.getSQLDialect());
+        }
         logger.info("Changing data source to FILE.");
     }
 

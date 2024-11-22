@@ -173,7 +173,6 @@ public class PlayerUI implements GeneralUI {
                     comboBox_SQL.setEnabled(true);
                     break;
             }
-            playerControl.setDataSource((DataSource) comboBox_dataSource.getSelectedItem());
         });
         comboBox_SQL.addActionListener(_ -> {
             if(comboBox_SQL.isEnabled()){
@@ -183,10 +182,17 @@ public class PlayerUI implements GeneralUI {
                         break;
                     case MYSQL, SQLITE:
                         button_import.setEnabled(true);
-                        playerControl.setSQLDialect((SqlDialect)comboBox_SQL.getSelectedItem());
                 }
             }
         });
+    }
+
+    public DataSource getDataSource(){
+        return (DataSource) comboBox_dataSource.getSelectedItem();
+    }
+
+    public SqlDialect getSQLDialect(){
+        return (SqlDialect) comboBox_SQL.getSelectedItem();
     }
 
     private void disableSQL(){
