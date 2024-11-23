@@ -10,6 +10,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.util.HashMap;
 
+import static main.principal.getProperty;
+
 
 public abstract class GeneralDataAccess {
     protected String file_path = null;
@@ -37,18 +39,18 @@ public abstract class GeneralDataAccess {
     }
 
     public static String getPath(FileType fileType){
-        JFileChooser fileChooser = new JFileChooser(new File("./src/config").getAbsolutePath());
+        JFileChooser fileChooser = new JFileChooser(new File(getProperty("defaultFilePath")).getAbsolutePath());
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setDialogTitle("Choosing " + fileType);
         switch(fileType){
             case TXT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter("File source", "txt"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralDialog.getDialog().getText("extension_txt"), "txt"));
                 break;
             case DAT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter("File source", "dat"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralDialog.getDialog().getText("extension_dat"), "dat"));
                 break;
             case XML:
-                fileChooser.setFileFilter(new FileNameExtensionFilter("File source", "xml"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralDialog.getDialog().getText("extension_xml"), "xml"));
                 break;
         }
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) return fileChooser.getSelectedFile().getPath();

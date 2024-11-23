@@ -4,10 +4,12 @@ import main.OperationException;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.swing.*;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Map;
+import static main.principal.getProperty;
+
 
 public class GeneralDialog {
     private static GeneralDialog instance;
@@ -18,7 +20,8 @@ public class GeneralDialog {
     protected String language;
 
     public GeneralDialog() {
-        initialize("src/GUI/dialog.yaml");
+        URL resource = getClass().getResource(getProperty("generalDialog"));
+        initialize(resource);
     }
 
     public static GeneralDialog getDialog() {
@@ -29,9 +32,12 @@ public class GeneralDialog {
     }
 
     @SuppressWarnings("unchecked")
-    protected void initialize(String yaml_path) {
-        Yaml yaml = new Yaml();
-        try(InputStream inputStream = new FileInputStream(yaml_path)){
+    protected void initialize(URL resource) {
+        if(resource == null) {
+            throw new IllegalArgumentException("GeneralDialog yaml config is null");
+        }
+        try(InputStream inputStream = resource.openStream()) {
+            Yaml yaml = new Yaml();
             Map<String,Object> dialogs = yaml.load(inputStream);
             texts = (Map<String, Object>) dialogs.get("text");
             inputs = (Map<String, Object>) dialogs.get("input");
@@ -50,6 +56,11 @@ public class GeneralDialog {
     @SuppressWarnings("unchecked")
     public String getText(String sub_type) {
         return (String) ((Map<String, Object>)(texts.get(sub_type))).get(language);
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getPopup(String sub_type) {
+        return (String) ((Map<String, Object>)(popups.get(sub_type))).get(language);
     }
 
     @SuppressWarnings("unchecked")

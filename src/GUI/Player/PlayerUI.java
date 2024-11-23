@@ -54,32 +54,6 @@ public class PlayerUI implements GeneralUI {
         initializeDataSourceComboBox();
     }
 
-    private void initializeDataSourceComboBox(){
-        for(DataSource dataSource : DataSource.values()){
-            comboBox_dataSource.addItem(dataSource);
-        }
-        comboBox_dataSource.setSelectedItem(DataSource.NONE);
-        disableDataType();
-    }
-
-    private void configureDataType(DataSource dataSource) {
-        switch(dataSource){
-            case FILE:
-                for(FileType fileType : FileType.values()){
-                    comboBox_dataType.addItem(fileType);
-                }
-                label_dataType.setText(PlayerDialog.getDialog().getText("label_file_type"));
-                break;
-            case DATABASE, HIBERNATE:
-                for(SqlDialect sqlDialect : SqlDialect.values()){
-                    comboBox_dataType.addItem(sqlDialect);
-                }
-                label_dataType.setText(PlayerDialog.getDialog().getText("label_sql_dialect"));
-                break;
-        }
-        comboBox_dataType.setEnabled(true);
-    }
-
     @Override
     public void run() {
         initialize();
@@ -101,6 +75,38 @@ public class PlayerUI implements GeneralUI {
     public void refresh() {
         tableModel.update_data(playerControl.getMap());
         table_data.setModel(tableModel);
+    }
+
+    private void initializeDataSourceComboBox(){
+        for(DataSource dataSource : DataSource.values()){
+            comboBox_dataSource.addItem(dataSource);
+        }
+        comboBox_dataSource.setSelectedItem(DataSource.NONE);
+        disableDataType();
+    }
+
+    private void configureDataType(DataSource dataSource) {
+        button_createFile.setEnabled(false);
+        button_import.setEnabled(false);
+        switch(dataSource){
+            case NONE:
+                comboBox_dataType.setEnabled(false);
+                label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
+                return;
+            case FILE:
+                for(FileType fileType : FileType.values()){
+                    comboBox_dataType.addItem(fileType);
+                }
+                label_dataType.setText(PlayerDialog.getDialog().getText("label_file_type"));
+                break;
+            case DATABASE, HIBERNATE:
+                for(SqlDialect sqlDialect : SqlDialect.values()){
+                    comboBox_dataType.addItem(sqlDialect);
+                }
+                label_dataType.setText(PlayerDialog.getDialog().getText("label_sql_dialect"));
+                break;
+        }
+        comboBox_dataType.setEnabled(true);
     }
 
     public void setUIText(){
@@ -175,13 +181,23 @@ public class PlayerUI implements GeneralUI {
     private void comboBoxListener(){
         comboBox_dataSource.addItemListener(_ -> {
             comboBox_dataType.removeAllItems();
-            switch ((DataSource) Objects.requireNonNull(comboBox_dataSource.getSelectedItem())){
-                case NONE -> disableDataType();
-                case FILE -> configureDataType(DataSource.FILE);
-                case DATABASE, HIBERNATE -> configureDataType(DataSource.DATABASE);
+            configureDataType((DataSource) Objects.requireNonNull(comboBox_dataSource.getSelectedItem()));
+        });
+        comboBox_dataType.addItemListener(_ -> {
+            switch(comboBox_dataType.getSelectedItem()){
+                case SqlDialect.NONE, FileType.NONE:
+                case null:
+                    return;
+                case FileType ignore:
+                    button_createFile.setEnabled(true);
+                    button_import.setEnabled(true);
+                    break;
+                case SqlDialect ignore:
+                    button_import.setEnabled(true);
+                    break;
+                default:
             }
         });
-        comboBox_dataType.addItemListener(_ -> button_import.setEnabled(comboBox_dataType.isEnabled() && !Objects.equals(comboBox_dataType.getSelectedItem(), DataSource.NONE)));
     }
 
     public DataSource getDataSource(){
@@ -197,10 +213,7 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void disableDataType(){
-        button_import.setEnabled(false);
-        comboBox_dataType.removeAllItems();
-        comboBox_dataType.setEnabled(false);
-        label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
+
     }
 
     public void changeLanguage(){

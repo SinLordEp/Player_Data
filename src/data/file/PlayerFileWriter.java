@@ -16,15 +16,12 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
     public void write(String file_path, Map<?,?> input_data) throws Exception {
         File file = new File(file_path);
         TreeMap<Integer,Player> player_data = (TreeMap<Integer, Player>) input_data;
-
-
         String file_extension = file_path.substring(file_path.lastIndexOf("."));
         switch (file_extension){
             case ".dat": write_dat(file, player_data); break;
             case ".xml": write_xml(file, player_data); break;
             case ".txt": write_txt(file, player_data); break;
         }
-        GeneralDialog.getDialog().popup("file_saved");
     }
 
     private void write_dat(File player_file, TreeMap<Integer, Player> player_data) throws Exception {

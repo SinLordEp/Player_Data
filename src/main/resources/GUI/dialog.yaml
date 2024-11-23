@@ -10,19 +10,31 @@ text:
   label_port:
     en: "Port:"
     es: "Puerto:"
-    cn: "端口"
+    cn: "端口:"
   label_pwd:
     en: "Password:"
     es: "Contraseña:"
-    cn: "密码："
+    cn: "密码:"
   label_user:
     en: "User:"
     es: "Usuario:"
-    cn: "用户："
+    cn: "用户:"
   label_database:
     en: "Database:"
     es: "Base de datos:"
     cn: "数据库："
+  extension_txt:
+    en: "Text File"
+    es: "Fichero Texto"
+    cn: "文本文件"
+  extension_dat:
+    en: "Binary File"
+    es: "Fichero Binario"
+    cn: "数据文件"
+  extension_xml:
+    en: "XML File"
+    es: "Fichero XML"
+    cn: "XML文件"
 
 input:
   new_file_name:
@@ -37,6 +49,7 @@ input:
     en: "Input file name"
     es: "Introducir nombre del fichero"
     cn: "输入文件名"
+
 popup:
   db_not_connected:
     en: "Database is not isDBConnected"
@@ -66,10 +79,10 @@ popup:
     en: "New file created"
     es: "Nuevo fichero creado"
     cn: "已创建新文件"
-  file_saved:
-    en: "File saved correctly"
-    es: "Fichero guardado correctamente"
-    cn: "已保存文件"
+  data_saved:
+    en: "Data is saved correctly to: "
+    es: "Dato guardado correctamente en:"
+    cn: "已保存数据至:"
   data_invalid:
     en: "Data invalid"
     es: "Datos inválidos"
@@ -118,5 +131,5 @@ options:
         - "Chino"
       cn:
         - "英语"
-        - "西班牙语"
-        - "简体中文"
+        - "西语"
+        - "中文"

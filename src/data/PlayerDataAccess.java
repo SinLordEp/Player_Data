@@ -52,12 +52,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return playerDBA.getDialect();
     }
 
-    public boolean disconnectDB(){
-        if(dataSource.equals(DataSource.DATABASE) || dataSource.equals(DataSource.HIBERNATE)){
-            save();
+    public void disconnectDB(){
+        if(playerDBA.disconnect(dataSource)){
             player_map = new TreeMap<>();
+        }else {
+            throw new OperationException("Failed to disconnect from database");
         }
-        return playerDBA.disconnect(dataSource);
     }
 
     public boolean isDBConnected(){
@@ -91,6 +91,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         } catch (Exception e) {
             GeneralDialog.getDialog().message("Failed to save data\n" + e.getMessage());
         }
+        GeneralDialog.getDialog().message(GeneralDialog.getDialog().getPopup("data_saved") + dataSource);
     }
 
     public void add() {

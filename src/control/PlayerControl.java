@@ -76,7 +76,7 @@ public class PlayerControl implements GeneralControl {
     public void importData() {
         logger.debug("Importing data: Saving possible data before changing datasource...");
         save();
-        logger.debug("Fetching data source...");
+        logger.debug("Fetching new data source...");
         setDataSource(playerUI.getDataSource());
         switch (playerDA.getDataSource()){
             case FILE -> importFile();
@@ -171,14 +171,17 @@ public class PlayerControl implements GeneralControl {
     public void save(){
         logger.info("Saving data: Fetching current data source...");
         DataSource dataSource = playerDA.getDataSource();
-        logger.info("Current data source is: {}", dataSource.toString());
-        if(!dataSource.equals(DataSource.NONE)){
-            logger.debug("Trigger saving procedure: calling DA to save");
-            playerDA.save();
-            logger.debug("Finished to save data");
-            return;
+        logger.info("Saving data to current data source: {}", dataSource.toString());
+        switch (dataSource){
+            case NONE:
+                logger.info("Current data source is NONE, returning...");
+                return;
+            case DATABASE, HIBERNATE:
+                playerDA.disconnectDB();
+                break;
         }
-        logger.info("Current data source is NONE, returning...");
+        playerDA.save();
+        logger.debug("Data saved successfully");
     }
 
     public void changeLanguage(){

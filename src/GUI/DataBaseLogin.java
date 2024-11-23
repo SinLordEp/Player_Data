@@ -66,7 +66,7 @@ public class DataBaseLogin extends JDialog {
         }
         if(passwordField_pwd.isVisible()){
             String pwd = new String(this.passwordField_pwd.getPassword());
-            login_info.put("passwordField_pwd", pwd);
+            login_info.put("text_pwd", pwd);
         }
         valid = true;
         dispose();
@@ -104,8 +104,8 @@ public class DataBaseLogin extends JDialog {
             text_user.setVisible(true);
             label_user.setVisible(true);
         }
-        if(login_info.containsKey("passwordField_pwd")){
-            passwordField_pwd.setText(login_info.get("passwordField_pwd"));
+        if(login_info.containsKey("text_pwd")){
+            passwordField_pwd.setText(login_info.get("text_pwd"));
             passwordField_pwd.setVisible(true);
             label_pwd.setVisible(true);
         }

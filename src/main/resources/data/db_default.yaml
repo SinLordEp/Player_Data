@@ -1,0 +1,8 @@
+MYSQL:
+  text_url: "jdbc:mysql://localhost"
+  text_port: "3306"
+  text_database: "person"
+  text_user: "root"
+  text_pwd: "root"
+SQLITE:
+  text_url: "jdbc:sqlite:person.db"

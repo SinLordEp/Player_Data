@@ -4,35 +4,58 @@ import GUI.GeneralDialog;
 import Interface.GeneralDBA;
 import data.DataOperation;
 import data.DataSource;
+import main.OperationException;
 import model.Player;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
+import static main.principal.getProperty;
+
 public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
     public PlayerDBA()  {
-        configuration.configure("config/hibernate.cfg.xml");
+        URL resource = getClass().getResource(getProperty("hibernateConfig"));
+        configuration.configure(resource);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public HashMap<String, String> getDefaultDatabaseInfo() {
         login_info = new HashMap<>();
+        HashMap<String,Object> default_info = null;
+        URL resource = getClass().getResource(getProperty("defaultPlayerSQL"));
+        if (resource != null) {
+            try(InputStream inputStream = resource.openStream()){
+                Yaml yaml = new Yaml();
+                default_info = yaml.load(inputStream);
+            }catch (Exception e){
+                throw new OperationException("Error loading default database info");
+            }
+        }
+        if(default_info == null){
+            throw new OperationException("Default database info is null");
+        }
         switch (dialect) {
             case MYSQL:
-                login_info.put("text_url","jdbc:mysql://localhost");
-                login_info.put("text_port","3306");
-                login_info.put("text_database","person");
-                login_info.put("text_user","root");
-                login_info.put("text_pass","root");
+                HashMap<String,Object> mysql_info = (HashMap<String, Object>) default_info.get("MYSQL");
+                login_info.put("text_url", (String) mysql_info.get("text_url"));
+                login_info.put("text_port",(String) mysql_info.get("text_port"));
+                login_info.put("text_database",(String) mysql_info.get("text_database"));
+                login_info.put("text_user",(String) mysql_info.get("text_user"));
+                login_info.put("text_pwd",(String) mysql_info.get("text_pwd"));
                 break;
             case SQLITE:
-                login_info.put("text_url","jdbc:sqlite:person.db");
+                HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
+                login_info.put("text_url",(String) sqlite_info.get("text_url"));
                 break;
         }
         return login_info;
@@ -95,18 +118,11 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
     public boolean disconnect(DataSource dataSource){
         switch (dataSource){
             case DATABASE:
-                try{
-                    connection.close();
-                    return connection.isClosed();
-                } catch (SQLException e) {
-                    GeneralDialog.getDialog().message("Failed to disconnect from database\n"+e.getMessage());
-                }
+                connection = null;
             case HIBERNATE:
-                sessionFactory.close();
                 sessionFactory = null;
-                return true;
         }
-        return false;
+        return true;
     }
 
     @Override

@@ -13,8 +13,11 @@ import javax.management.openmbean.OpenDataException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.net.URL;
 import java.util.*;
 import java.util.TreeMap;
+
+import static main.principal.getProperty;
 
 public class PlayerFileReader implements FileDataReader<Map<?,?>> {
 
@@ -114,9 +117,15 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
     }
 
     public static HashMap<String, String[]> read_region_server() {
-        Element root;
+        Element root = null;
+        URL resource = PlayerFileReader.class.getResource(getProperty("regionServerConfig"));
         try {
-            root = xml_utils.readXml(new File("./src/config/region_server.xml"));
+            if (resource != null) {
+                root = xml_utils.readXml(new File(resource.getFile()));
+            }
+            if(root == null){
+                throw new RuntimeException("Failed to read region server file");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Cannot read region_server settings");
         }
