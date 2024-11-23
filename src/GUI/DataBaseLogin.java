@@ -24,6 +24,7 @@ public class DataBaseLogin extends JDialog {
 
     public DataBaseLogin(HashMap<String,String> login_info) {
         this.login_info = login_info;
+        setTitle(GeneralDialog.getDialog().getText("db_login_title"));
         configureLabelText();
         configureTextFieldText();
         setContentPane(panel_main);
@@ -38,6 +39,8 @@ public class DataBaseLogin extends JDialog {
             }
         });
         pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -87,28 +90,24 @@ public class DataBaseLogin extends JDialog {
             return;
         }
         if(login_info.containsKey("text_port")){
-            this.text_port.setText(login_info.get("text_port"));
-        }else{
-            this.text_port.setVisible(false);
-            this.label_port.setVisible(false);
+            text_port.setText(login_info.get("text_port"));
+            text_port.setVisible(true);
+            label_port.setVisible(true);
         }
         if(login_info.containsKey("text_database")){
-            this.text_database.setText(login_info.get("text_database"));
-        }else {
-            this.text_database.setVisible(false);
-            this.label_database.setVisible(false);
+            text_database.setText(login_info.get("text_database"));
+            text_database.setVisible(true);
+            label_database.setVisible(true);
         }
         if(login_info.containsKey("text_user")){
-            this.text_user.setText(login_info.get("text_user"));
-        }else {
-            this.text_user.setVisible(false);
-            this.label_user.setVisible(false);
+            text_user.setText(login_info.get("text_user"));
+            text_user.setVisible(true);
+            label_user.setVisible(true);
         }
         if(login_info.containsKey("passwordField_pwd")){
-            this.passwordField_pwd.setText(login_info.get("passwordField_pwd"));
-        }else{
-            this.passwordField_pwd.setVisible(false);
-            this.label_pwd.setVisible(false);
+            passwordField_pwd.setText(login_info.get("passwordField_pwd"));
+            passwordField_pwd.setVisible(true);
+            label_pwd.setVisible(true);
         }
     }
 

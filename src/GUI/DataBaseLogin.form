@@ -75,6 +75,7 @@
             <properties>
               <labelFor value="8594d"/>
               <text value="label_port"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="8594d" class="javax.swing.JTextField" binding="text_port">
@@ -85,6 +86,7 @@
             </constraints>
             <properties>
               <text value="text_port"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="cac38" class="javax.swing.JLabel" binding="label_database">
@@ -94,6 +96,7 @@
             <properties>
               <labelFor value="45875"/>
               <text value="label_database"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="45875" class="javax.swing.JTextField" binding="text_database">
@@ -104,6 +107,7 @@
             </constraints>
             <properties>
               <text value="text_database"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="c5d5e" class="javax.swing.JTextField" binding="text_url">
@@ -123,6 +127,7 @@
             <properties>
               <labelFor value="f945c"/>
               <text value="label_user"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="f945c" class="javax.swing.JTextField" binding="text_user">
@@ -133,6 +138,7 @@
             </constraints>
             <properties>
               <text value="text_user"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="41920" class="javax.swing.JLabel" binding="label_pwd">
@@ -142,6 +148,7 @@
             <properties>
               <labelFor value="99682"/>
               <text value="label_pwd"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="99682" class="javax.swing.JPasswordField" binding="passwordField_pwd">
@@ -152,6 +159,7 @@
             </constraints>
             <properties>
               <text value="pwdField_pwd"/>
+              <visible value="false"/>
             </properties>
           </component>
         </children>

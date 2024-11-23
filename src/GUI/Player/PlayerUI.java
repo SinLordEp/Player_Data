@@ -46,7 +46,7 @@ public class PlayerUI implements GeneralUI {
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scroll_data.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        setUIText(false);
+        setUIText();
         searchListener();
         buttonListener();
         tableListener();
@@ -103,7 +103,7 @@ public class PlayerUI implements GeneralUI {
         table_data.setModel(tableModel);
     }
 
-    public void setUIText(boolean isDBConnected){
+    public void setUIText(){
         button_add.setText(PlayerDialog.getDialog().getText("button_add"));
         button_modify.setText(PlayerDialog.getDialog().getText("button_modify"));
         button_delete.setText(PlayerDialog.getDialog().getText("button_delete"));
@@ -197,8 +197,8 @@ public class PlayerUI implements GeneralUI {
         comboBox_dataType.setEnabled(false);
     }
 
-    public void changeLanguage(boolean isDBConnected){
-        setUIText(isDBConnected);
+    public void changeLanguage(){
+        setUIText();
         tableModel.language_changed();
     }
 }

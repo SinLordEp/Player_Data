@@ -101,26 +101,30 @@ public class PlayerControl implements GeneralControl {
     public void importDB()  {
         logger.info("Importing data from database: Fetching SQL dialect...");
         setSQLDialect(playerUI.getSQLDialect());
-        connectDB();
-        logger.info("Reading data from database...");
-        playerDA.read();
-        logger.info("Data read successfully from database, refreshing UI");
-        playerUI.refresh();
-        logger.info("Finished importing from database");
+        if(connectDB()){
+            logger.info("Reading data from database...");
+            playerDA.read();
+            logger.info("Data read successfully from database, refreshing UI");
+            playerUI.refresh();
+            logger.info("Finished importing from database");
+        }
+
     }
 
-    public void connectDB(){
+    public boolean connectDB(){
         logger.debug("Connecting to database...");
         DataBaseLogin dbLogin = new DataBaseLogin(playerDA.getDefaultDatabaseInfo());
         if(!dbLogin.isValid()){
             GeneralDialog.getDialog().popup("db_login_canceled");
-            return;
+            return false;
         }
         if(playerDA.connectDB()){
             logger.info("Database connected successfully");
+            return true;
         }else{
             logger.info("Database could not connect");
             GeneralDialog.getDialog().popup("db_login_failed");
+            return false;
         }
     }
 
@@ -189,7 +193,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Language set to: {}", language);
         GeneralDialog.getDialog().setLanguage(language);
         PlayerDialog.getDialog().setLanguage(language);
-        playerUI.changeLanguage(playerDA.isDBConnected());
+        playerUI.changeLanguage();
         logger.info("Finished changing language to: {}", language);
     }
 
