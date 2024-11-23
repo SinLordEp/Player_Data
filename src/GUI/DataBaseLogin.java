@@ -5,7 +5,7 @@ import java.awt.event.*;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DBLogin extends JDialog {
+public class DataBaseLogin extends JDialog {
     private JPanel panel_main;
     private JButton button_submit;
     private JButton button_cancel;
@@ -22,7 +22,7 @@ public class DBLogin extends JDialog {
     private final HashMap<String,String> login_info;
     private boolean valid = false;
 
-    public DBLogin(HashMap<String,String> login_info) {
+    public DataBaseLogin(HashMap<String,String> login_info) {
         this.login_info = login_info;
         configureLabelText();
         configureTextFieldText();

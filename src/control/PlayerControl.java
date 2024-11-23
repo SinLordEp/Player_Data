@@ -1,6 +1,6 @@
 package control;
 
-import GUI.DBLogin;
+import GUI.DataBaseLogin;
 import GUI.GeneralDialog;
 import GUI.Player.PlayerUI;
 import GUI.Player.PlayerDialog;
@@ -113,7 +113,7 @@ public class PlayerControl implements GeneralControl {
 
     public void connectDB(){
         logger.debug("Connecting to database...");
-        DBLogin dbLogin = new DBLogin(playerDA.getDefaultDatabaseInfo());
+        DataBaseLogin dbLogin = new DataBaseLogin(playerDA.getDefaultDatabaseInfo());
         if(!dbLogin.isValid()){
             GeneralDialog.getDialog().popup("db_login_canceled");
             return;
