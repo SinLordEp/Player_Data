@@ -14,8 +14,6 @@ import main.OperationException;
 import model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class PlayerControl implements GeneralControl {
