@@ -10,7 +10,6 @@ import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
 
-import javax.management.openmbean.OpenDataException;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -23,7 +22,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private final PlayerFileReader fileReader;
     private final PlayerFileWriter fileWriter;
 
-    public PlayerDataAccess() throws Exception {
+    public PlayerDataAccess() {
         fileReader = new PlayerFileReader();
         fileWriter = new PlayerFileWriter();
         playerDBA = new PlayerDBA();
@@ -45,8 +44,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
     }
 
-    public void setSqlDialect(SqlDialect dialect){
+    public void setSQLDialect(SqlDialect dialect){
         playerDBA.setDialect(dialect);
+    }
+
+    public SqlDialect getSQLDialect(){
+        return playerDBA.getDialect();
     }
 
     public boolean disconnectDB(){
@@ -64,12 +67,13 @@ public class PlayerDataAccess extends GeneralDataAccess {
     @SuppressWarnings("unchecked")
     public void read() {
         try {
-            switch (dataSource){
-                case FILE -> player_map = (TreeMap<Integer, Player>) fileReader.read(file_path);
-                case DATABASE, HIBERNATE -> player_map = playerDBA.read(dataSource);
-            }
+            player_map = switch (dataSource){
+                case NONE -> null;
+                case FILE -> (TreeMap<Integer, Player>) fileReader.read(fileType, file_path);
+                case DATABASE, HIBERNATE -> playerDBA.read(dataSource);
+            };
             if(player_map != null && !isDataValid()){
-                throw new OpenDataException("Data is corrupted");
+                throw new OperationException("Data is corrupted");
             }
         } catch (Exception e) {
             GeneralDialog.getDialog().message("Failed to read data\n" + e.getMessage());
@@ -168,7 +172,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void export() throws Exception {
         if(fileWriter != null){
             String target_extension = chooseExtension();
-            String target_path = getPath("path");
+            String target_path = getPath();
             String target_name = PlayerDialog.getDialog().input("new_file_name");
             target_path += "/" + target_name + target_extension;
             fileWriter.write(target_path, player_map);

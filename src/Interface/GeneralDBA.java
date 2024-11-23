@@ -17,7 +17,9 @@ public abstract class GeneralDBA<T> {
 
     protected abstract boolean connect(DataSource dataSource);
     protected abstract T read(DataSource dataSource) throws Exception;
+
     public abstract HashMap<String, String> getDefaultDatabaseInfo();
+    public SqlDialect getDialect() {return this.dialect;}
     public void setDialect(SqlDialect dialect) {
         this.dialect = dialect;
     }

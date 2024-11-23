@@ -78,24 +78,25 @@
           <grid row="2" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="search box"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="172ae" class="javax.swing.JButton" binding="button_createFile">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="create"/>
         </properties>
       </component>
-      <component id="40ba" class="javax.swing.JButton" binding="button_import">
+      <component id="686a2" class="javax.swing.JLabel" binding="label_dataSource">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <enabled value="false"/>
-          <text value="import"/>
+          <horizontalTextPosition value="11"/>
+          <labelFor value="91654"/>
+          <text value="dataSource"/>
         </properties>
       </component>
       <component id="91654" class="javax.swing.JComboBox" binding="comboBox_dataSource">
@@ -104,20 +105,31 @@
         </constraints>
         <properties/>
       </component>
-      <component id="5367e" class="javax.swing.JComboBox" binding="comboBox_SQL">
+      <component id="5367e" class="javax.swing.JComboBox" binding="comboBox_dataType">
         <constraints>
-          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <toolTipText value=""/>
         </properties>
       </component>
-      <component id="ac795" class="javax.swing.JButton" binding="button_connectDB">
+      <component id="aba18" class="javax.swing.JLabel" binding="label_dataType">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <horizontalTextPosition value="11"/>
+          <labelFor value="5367e"/>
+          <text value="data type"/>
+        </properties>
+      </component>
+      <component id="40ba" class="javax.swing.JButton" binding="button_import">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="connect DB"/>
+          <enabled value="false"/>
+          <text value="import"/>
         </properties>
       </component>
       <component id="d3d4f" class="javax.swing.JButton" binding="button_language">
@@ -130,4 +142,7 @@
       </component>
     </children>
   </grid>
+  <inspectionSuppressions>
+    <suppress inspection="NoLabelFor" id="49590"/>
+  </inspectionSuppressions>
 </form>

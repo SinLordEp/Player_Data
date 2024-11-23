@@ -3,6 +3,26 @@ text:
     en: "Database Menu"
     es: "Menú Base de datos"
     cn: "数据库菜单"
+  label_url:
+    en: "URL:"
+    es: "URL:"
+    cn: "地址:"
+  label_port:
+    en: "Port:"
+    es: "Puerto:"
+    cn: "端口"
+  label_pwd:
+    en: "Password:"
+    es: "Contraseña:"
+    cn: "密码："
+  label_user:
+    en: "User:"
+    es: "Usuario:"
+    cn: "用户："
+  label_database:
+    en: "Database:"
+    es: "Base de datos:"
+    cn: "数据库："
 
 input:
   new_file_name:
@@ -54,6 +74,10 @@ popup:
     en: "Data invalid"
     es: "Datos inválidos"
     cn: "无效数据"
+  db_login_canceled:
+    en: "You have canceled the database login"
+    es: "Has cancelado de conectar a base de datos"
+    cn: "您已取消连接数据库"
 
 options:
   controller:

@@ -1,5 +1,6 @@
 package control;
 
+import GUI.DBLogin;
 import GUI.GeneralDialog;
 import GUI.Player.PlayerUI;
 import GUI.Player.PlayerDialog;
@@ -8,6 +9,7 @@ import data.DataSource;
 import Interface.GeneralDataAccess;
 import data.PlayerDataAccess;
 import data.database.SqlDialect;
+import data.file.FileType;
 import main.OperationException;
 import model.Player;
 import org.slf4j.Logger;
@@ -43,20 +45,21 @@ public class PlayerControl implements GeneralControl {
     }
 
     @Override
-    public HashMap<String, String> getDefaultDatabase() {
-        return playerDA.getDefaultDatabaseInfo();
-    }
-
-    @Override
     public void setDataSource(DataSource dataSource) {
-        save();
         playerDA.setDataSource(dataSource);
+        logger.debug("Data source is set to {}", dataSource);
     }
 
     @Override
     public void setSQLDialect(SqlDialect dialect) {
-        save();
-        playerDA.setSqlDialect(dialect);
+        playerDA.setSQLDialect(dialect);
+        logger.debug("SQL dialect is set to {}", dialect);
+    }
+
+    @Override
+    public void setFileType(FileType fileType) {
+        playerDA.setFileType(fileType);
+        logger.debug("FileType is set to {}", fileType);
     }
 
     public void createFile() throws OperationException {
@@ -72,79 +75,54 @@ public class PlayerControl implements GeneralControl {
         logger.info("File created successfully");
     }
 
-    //todo
     public void importData() {
-        logger.debug("Importing from file...");
-        playerDA.setDataSource(playerUI.getDataSource());
-        if(playerDA.getDataSource().equals(DataSource.DATABASE) || playerDA.getDataSource().equals(DataSource.HIBERNATE)) {
-            playerDA.setSqlDialect(playerUI.getSQLDialect());
+        logger.debug("Importing data: Saving possible data before changing datasource...");
+        save();
+        logger.debug("Fetching data source...");
+        setDataSource(playerUI.getDataSource());
+        switch (playerDA.getDataSource()){
+            case FILE -> importFile();
+            case DATABASE, HIBERNATE -> importDB();
         }
-        logger.info("Changing data source to FILE.");
     }
 
     public void importFile() {
-
-        String file_path = GeneralDataAccess.getPath("file");
-        logger.debug("File path set to: {}",file_path);
+        logger.debug("Importing data from file: Fetching file type...");
+        setFileType(playerUI.getFileType());
+        logger.info("Fetching file path...");
+        String file_path = GeneralDataAccess.getPath(playerDA.getFileType());
         playerDA.setFilePath(file_path);
-
+        logger.debug("File path set to: {}",file_path);
         logger.info("Reading data from file...");
         playerDA.read();
-        logger.info("Data read successfully from file.");
-
+        logger.info("Data read successfully from file, refreshing UI");
         playerUI.refresh();
         logger.info("Finished importing from file");
     }
 
-    /*public void importDB(String database_type)  {
-        logger.info("Importing to database, trigger save procedure");
-        save();
-        logger.info("Changing data source to corresponding database type then read data");
-        switch(database_type){
-            case "MySQL" -> playerDA.setDataSource(DataSource.MYSQL);
-            case "SQLite" -> playerDA.setDataSource(DataSource.SQLITE);
-        }
+    public void importDB()  {
+        logger.info("Importing data from database: Fetching SQL dialect...");
+        setSQLDialect(playerUI.getSQLDialect());
+        connectDB();
+        logger.info("Reading data from database...");
         playerDA.read();
+        logger.info("Data read successfully from database, refreshing UI");
         playerUI.refresh();
         logger.info("Finished importing from database");
-    }*/
-
-    public void DBConnection(){
-        if(playerDA.isDBConnected()){
-            disconnectDB();
-        }else{
-            connectDB();
-        }
     }
 
     public void connectDB(){
-        logger.debug("Trying to connect to database...");
-        playerUI.connecting();
-        logger.info("Configuring database info by user input");
-
-        //playerUI.setDBLoginInfo();
-
-        logger.debug("Connecting database...");
+        logger.debug("Connecting to database...");
+        DBLogin dbLogin = new DBLogin(playerDA.getDefaultDatabaseInfo());
+        if(!dbLogin.isValid()){
+            GeneralDialog.getDialog().popup("db_login_canceled");
+            return;
+        }
         if(playerDA.connectDB()){
-            playerUI.connected();
             logger.info("Database connected successfully");
         }else{
             logger.info("Database could not connect");
             GeneralDialog.getDialog().popup("db_login_failed");
-            playerUI.disconnected();
-        }
-    }
-
-    public void disconnectDB() {
-        logger.debug("Trying to disconnect from database...");
-        playerUI.disconnecting();
-        if(playerDA.disconnectDB()){
-            playerUI.disconnected();
-            logger.info("Database disconnected successfully");
-        }else{
-            logger.info("Database could not disconnect");
-            GeneralDialog.getDialog().popup("db_disconnect_failed");
-            playerUI.connected();
         }
     }
 
@@ -188,6 +166,19 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
+    public void save(){
+        logger.info("Saving data: Fetching current data source...");
+        DataSource dataSource = playerDA.getDataSource();
+        logger.info("Current data source is: {}", dataSource.toString());
+        if(!dataSource.equals(DataSource.NONE)){
+            logger.debug("Trigger saving procedure: calling DA to save");
+            playerDA.save();
+            logger.debug("Finished to save data");
+            return;
+        }
+        logger.info("Current data source is NONE, returning...");
+    }
+
     public void changeLanguage(){
         logger.info("Changing language...");
         String language = switch(GeneralDialog.getDialog().selectionDialog("language")){
@@ -204,18 +195,4 @@ public class PlayerControl implements GeneralControl {
         logger.info("Finished changing language to: {}", language);
     }
 
-    public DataSource getDataSource() {
-        return playerDA.getDataSource();
-    }
-
-    public void save(){
-        logger.info("Trying to save data, Fetching data source...");
-        DataSource dataSource = playerDA.getDataSource();
-        logger.info("Data source is set to: {}", dataSource.toString());
-        if(!dataSource.equals(DataSource.NONE)){
-            logger.debug("Trigger DataAccess saving procedure...");
-            playerDA.save();
-        }
-        logger.debug("Finished to save data");
-    }
 }

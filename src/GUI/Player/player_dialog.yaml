@@ -27,22 +27,6 @@ text:
     en: "Export data"
     es: "Exportar dato"
     cn: "导出数据"
-  button_connectDB:
-    en: "Connect to DB"
-    es: "Conectar a BD"
-    cn: "连接数据库"
-  button_connectingDB:
-    en: "Connecting..."
-    es: "Conectando..."
-    cn: "连接中..."
-  button_disconnectDB:
-    en: "Disconnect DB"
-    es: "Desconectar DB"
-    cn: "断连数据库"
-  button_disconnectingDB:
-    en: "Disconnecting..."
-    es: "Desconectando..."
-    cn: "断连中..."
   button_import:
     en: "Import data"
     es: "Importar datos"
@@ -55,26 +39,26 @@ text:
     en: "Language"
     es: "Idioma"
     cn: "语言"
-  label_port:
-    en: "Port:"
-    es: "Puerto:"
-    cn: "端口"
   label_search:
     en: "Search by ID:"
-    es: "Buscar por ID: "
-    cn: "按ID搜索："
-  label_pwd:
-    en: "Password:"
-    es: "Contraseña:"
-    cn: "密码："
-  label_user:
-    en: "User:"
-    es: "Usuario:"
-    cn: "用户："
-  label_database:
-    en: "Database:"
-    es: "Base de datos:"
-    cn: "数据库："
+    es: "Buscar por ID:"
+    cn: "按ID搜索:"
+  label_dataSource:
+    en: "Data source:"
+    es: "Fuente de dato:"
+    cn: "数据来源:"
+  label_dataType:
+    en: "Data type:"
+    es: "Tipo de dato:"
+    cn: "数据类型:"
+  label_sql_dialect:
+    en: "SQL dialect:"
+    es: "Dialecto de SQL:"
+    cn: "SQL方言:"
+  label_file_type:
+    en: "File type:"
+    es: "Tipo de fichero:"
+    cn: "文件类型:"
 
 input:
   player_name:

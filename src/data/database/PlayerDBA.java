@@ -35,7 +35,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
                 login_info.put("text_url","jdbc:sqlite:person.db");
                 break;
         }
-        return null;
+        return login_info;
     }
 
     @Override

@@ -1,54 +1,76 @@
 package GUI;
 
-import Interface.GeneralControl;
-import data.DataSource;
-import main.OperationException;
-
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DatabaseLogin {
-    private JFrame frame;
+public class DBLogin extends JDialog {
     private JPanel panel_main;
-    private JTextField text_url;
-    private JLabel label_url;
-    private JTextField text_port;
-    private JTextField text_database;
-    private JTextField text_user;
-    private JPasswordField passwordField_pwd;
     private JButton button_submit;
+    private JButton button_cancel;
+    private JLabel label_url;
+    private JTextField text_url;
     private JLabel label_port;
+    private JTextField text_port;
     private JLabel label_database;
+    private JTextField text_database;
     private JLabel label_user;
+    private JTextField text_user;
     private JLabel label_pwd;
-    private final GeneralControl control;
+    private JPasswordField passwordField_pwd;
     private final HashMap<String,String> login_info;
+    private boolean valid = false;
 
-    public DatabaseLogin(GeneralControl control, DataSource dataSource) {
-        this.control = control;
-        this.login_info = control.getDefaultDatabase();
-        this.panel_main.setBorder(BorderFactory.createTitledBorder(dataSource.toString()));
-    }
-
-    public void run() {
+    public DBLogin(HashMap<String,String> login_info) {
+        this.login_info = login_info;
         configureLabelText();
         configureTextFieldText();
-        configureListener();
-        frame = new JFrame(GeneralDialog.getDialog().getText("db_login_title"));
-        frame.setContentPane(panel_main);
-        frame.pack();
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
+        setContentPane(panel_main);
+        setModal(true);
+        getRootPane().setDefaultButton(button_submit);
+        button_submit.addActionListener(_ -> onOK());
+        button_cancel.addActionListener(_ -> onCancel());
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                throw new OperationException("Operation cancelled by user");
+                onCancel();
             }
         });
+        pack();
+        setVisible(true);
+    }
+
+    @Override
+    public boolean isValid() {
+        return valid;
+    }
+
+    private void onOK() {
+        if(hasBlank()){
+            GeneralDialog.getDialog().popup("db_field_empty");
+            return;
+        }
+        login_info.put("text_url", this.text_url.getText());
+        if(text_port.isVisible()){
+            login_info.put("text_port", this.text_port.getText());
+        }
+        if(text_database.isVisible()){
+            login_info.put("text_database", this.text_database.getText());
+        }
+        if(text_user.isVisible()){
+            login_info.put("text_user", this.text_user.getText());
+        }
+        if(passwordField_pwd.isVisible()){
+            String pwd = new String(this.passwordField_pwd.getPassword());
+            login_info.put("passwordField_pwd", pwd);
+        }
+        valid = true;
+        dispose();
+    }
+
+    private void onCancel() {
+        dispose();
     }
 
     private void configureLabelText(){
@@ -60,7 +82,10 @@ public class DatabaseLogin {
     }
 
     private void configureTextFieldText(){
-        this.text_url.setText(login_info.get("text_url"));
+        text_url.setText(login_info.get("text_url"));
+        if(login_info.size()== 1){
+            return;
+        }
         if(login_info.containsKey("text_port")){
             this.text_port.setText(login_info.get("text_port"));
         }else{
@@ -86,6 +111,7 @@ public class DatabaseLogin {
             this.label_pwd.setVisible(false);
         }
     }
+
     public boolean hasBlank(){
         boolean blank = text_url.getText().isBlank();
         if(text_port.isEnabled() && text_port.getText().isBlank()) blank = true;
@@ -95,32 +121,4 @@ public class DatabaseLogin {
         return blank;
     }
 
-    private void configureListener(){
-        button_submit.addActionListener(_ ->{
-            submit();
-            control.connectDB();
-        });
-    }
-
-    private void submit() {
-        if(hasBlank()){
-            GeneralDialog.getDialog().popup("db_field_empty");
-            return;
-        }
-        login_info.put("text_url", this.text_url.getText());
-        if(text_port.isVisible()){
-            login_info.put("text_port", this.text_port.getText());
-        }
-        if(text_database.isVisible()){
-            login_info.put("text_database", this.text_database.getText());
-        }
-        if(text_user.isVisible()){
-            login_info.put("text_user", this.text_user.getText());
-        }
-        if(passwordField_pwd.isVisible()){
-            String pwd = new String(this.passwordField_pwd.getPassword());
-            login_info.put("passwordField_pwd", pwd);
-        }
-        frame.dispose();
-    }
 }

@@ -4,6 +4,7 @@ import Interface.GeneralUI;
 import control.PlayerControl;
 import data.DataSource;
 import data.database.SqlDialect;
+import data.file.FileType;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -19,7 +20,6 @@ public class PlayerUI implements GeneralUI {
     private JButton button_modify;
     private JButton button_delete;
     private JButton button_export;
-    private JButton button_connectDB;
     private JButton button_import;
     private JButton button_createFile;
     private JButton button_language;
@@ -30,8 +30,10 @@ public class PlayerUI implements GeneralUI {
 
     private JPanel main_panel;
     private JScrollPane scroll_data;
-    private JComboBox<SqlDialect> comboBox_SQL;
+    private JComboBox<Object> comboBox_dataType;
     private JComboBox<DataSource> comboBox_dataSource;
+    private JLabel label_dataSource;
+    private JLabel label_dataType;
     private PlayerTableModel tableModel;
     private int selected_player_id;
 
@@ -40,7 +42,6 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void initialize(){
-        main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.getDialog().getText("default_data_source")));
         tableModel = new PlayerTableModel(new TreeMap<>());
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -50,18 +51,33 @@ public class PlayerUI implements GeneralUI {
         buttonListener();
         tableListener();
         comboBoxListener();
-        initializeComboBox();
+        initializeDataSourceComboBox();
     }
 
-    private void initializeComboBox(){
+    private void initializeDataSourceComboBox(){
         for(DataSource dataSource : DataSource.values()){
             comboBox_dataSource.addItem(dataSource);
         }
-        for(SqlDialect dialect : SqlDialect.values()){
-            comboBox_SQL.addItem(dialect);
-        }
         comboBox_dataSource.setSelectedItem(DataSource.NONE);
-        disableSQL();
+        disableDataType();
+    }
+
+    private void configureDataType(DataSource dataSource) {
+        switch(dataSource){
+            case FILE:
+                for(FileType fileType : FileType.values()){
+                    comboBox_dataType.addItem(fileType);
+                }
+                label_dataType.setText(PlayerDialog.getDialog().getText("label_file_type"));
+                break;
+            case DATABASE, HIBERNATE:
+                for(SqlDialect sqlDialect : SqlDialect.values()){
+                    comboBox_dataType.addItem(sqlDialect);
+                }
+                label_dataType.setText(PlayerDialog.getDialog().getText("label_sql_dialect"));
+                break;
+        }
+        comboBox_dataType.setEnabled(true);
     }
 
     @Override
@@ -85,7 +101,6 @@ public class PlayerUI implements GeneralUI {
     public void refresh() {
         tableModel.update_data(playerControl.getMap());
         table_data.setModel(tableModel);
-        configureTitle();
     }
 
     public void setUIText(boolean isDBConnected){
@@ -93,15 +108,12 @@ public class PlayerUI implements GeneralUI {
         button_modify.setText(PlayerDialog.getDialog().getText("button_modify"));
         button_delete.setText(PlayerDialog.getDialog().getText("button_delete"));
         button_export.setText(PlayerDialog.getDialog().getText("button_export"));
-        if(!isDBConnected){
-            button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
-        }else{
-            button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
-        }
         button_import.setText(PlayerDialog.getDialog().getText("button_import"));
         button_createFile.setText(PlayerDialog.getDialog().getText("button_createFile"));
         button_language.setText(PlayerDialog.getDialog().getText("button_language"));
         label_search.setText(PlayerDialog.getDialog().getText("label_search"));
+        label_dataSource.setText(PlayerDialog.getDialog().getText("label_dataSource"));
+        label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
     }
 
     private void searchListener(){
@@ -135,8 +147,6 @@ public class PlayerUI implements GeneralUI {
 
         button_export.addActionListener(_ -> playerControl.export());
 
-        button_connectDB.addActionListener(_ -> playerControl.DBConnection());
-
         button_createFile.addActionListener(_ -> playerControl.createFile());
 
         button_import.addActionListener(_ -> playerControl.importData());
@@ -159,32 +169,15 @@ public class PlayerUI implements GeneralUI {
     }
 
     private void comboBoxListener(){
-        comboBox_dataSource.addActionListener(_ -> {
+        comboBox_dataSource.addItemListener(_ -> {
+            comboBox_dataType.removeAllItems();
             switch ((DataSource) Objects.requireNonNull(comboBox_dataSource.getSelectedItem())){
-                case NONE:
-                    disableSQL();
-                    button_import.setEnabled(false);
-                    break;
-                case FILE:
-                    disableSQL();
-                    button_import.setEnabled(true);
-                    break;
-                case DATABASE, HIBERNATE:
-                    comboBox_SQL.setEnabled(true);
-                    break;
+                case NONE -> disableDataType();
+                case FILE -> configureDataType(DataSource.FILE);
+                case DATABASE, HIBERNATE -> configureDataType(DataSource.DATABASE);
             }
         });
-        comboBox_SQL.addActionListener(_ -> {
-            if(comboBox_SQL.isEnabled()){
-                switch ((SqlDialect) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
-                    case NONE:
-                        button_import.setEnabled(false);
-                        break;
-                    case MYSQL, SQLITE:
-                        button_import.setEnabled(true);
-                }
-            }
-        });
+        comboBox_dataType.addItemListener(_ -> button_import.setEnabled(comboBox_dataType.isEnabled() && !Objects.equals(comboBox_dataType.getSelectedItem(), DataSource.NONE)));
     }
 
     public DataSource getDataSource(){
@@ -192,76 +185,16 @@ public class PlayerUI implements GeneralUI {
     }
 
     public SqlDialect getSQLDialect(){
-        return (SqlDialect) comboBox_SQL.getSelectedItem();
+        return (SqlDialect) comboBox_dataType.getSelectedItem();
     }
 
-    private void disableSQL(){
-        comboBox_SQL.setEnabled(false);
-        comboBox_SQL.setSelectedItem(SqlDialect.NONE);
+    public FileType getFileType(){
+        return (FileType) comboBox_dataType.getSelectedItem();
     }
 
-   /* public void configureMySQL(){
-        label_URL.setText("jdbc:mysql://");
-        text_URL.setText("localhost");
-        text_database.setText("person");
-        text_database.setEnabled(true);
-        text_port.setText("3306");
-        text_port.setEnabled(true);
-        text_user.setText("root");
-        text_user.setEnabled(true);
-        passwordField_pwd.setText("root");
-        passwordField_pwd.setEnabled(true);
-    }
-*/
-
-    public void connecting(){
-        button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectingDB"));
-        button_connectDB.setEnabled(false);
-    }
-
-    public void disconnecting(){
-        button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectingDB"));
-        button_connectDB.setEnabled(false);
-    }
-
-    public void connected(){
-        button_connectDB.setText(PlayerDialog.getDialog().getText("button_disconnectDB"));
-        inputSwitch(false);
-    }
-
-    public void disconnected(){
-        tableModel.update_data(new TreeMap<>());
-        table_data.setModel(tableModel);
-        button_connectDB.setText(PlayerDialog.getDialog().getText("button_connectDB"));
-        configureTitle();
-        inputSwitch(true);
-    }
-
-    private void inputSwitch(boolean state){
-        button_connectDB.setEnabled(true);
-        button_import.setEnabled(!state);
-        comboBox_SQL.setEnabled(state);
-    }
-
-    /*public void setDBLoginInfo(){
-        switch ((String) Objects.requireNonNull(comboBox_SQL.getSelectedItem())){
-            case "MySQL":
-                playerControl.configureDB(
-                        label_URL.getText() + text_URL.getText(),
-                        text_port.getText(),
-                        text_database.getText(),
-                        text_user.getText(),
-                        passwordField_pwd.getPassword());
-                break;
-            case "SQLite":
-                playerControl.configureDB(label_URL.getText() + text_URL.getText());
-                break;
-        }
-
-    }*/
-
-    private void configureTitle(){
-        main_panel.setBorder(BorderFactory.createTitledBorder(PlayerDialog.getDialog().getText("data_source") + playerControl.getDataSource()));
+    private void disableDataType(){
+        button_import.setEnabled(false);
+        comboBox_dataType.setEnabled(false);
     }
 
     public void changeLanguage(boolean isDBConnected){

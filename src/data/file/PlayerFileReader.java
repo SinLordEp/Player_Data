@@ -1,6 +1,7 @@
 package data.file;
 
 
+import GUI.GeneralDialog;
 import GUI.Player.PlayerDialog;
 import Interface.FileDataReader;
 import model.Player;
@@ -22,18 +23,17 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
     }
 
     @Override
-    public TreeMap<?,?> read(String file_path) throws Exception {
+    public TreeMap<?,?> read(FileType fileType, String file_path) {
         File file = new File(file_path);
-        String file_extension = file_path.substring(file_path.lastIndexOf("."));
-        return switch (file_extension){
-            case ".dat" -> read_dat(file);
-            case ".xml" -> read_xml(file);
-            case ".txt" -> read_txt(file);
-            default -> throw new IllegalStateException("Unexpected value: " + file_extension);
+        return switch (fileType){
+            case NONE -> null;
+            case TXT -> read_txt(file);
+            case DAT -> read_dat(file);
+            case XML -> read_xml(file);
         };
     }
 
-    private TreeMap<Integer, Player> read_dat(File file) throws Exception {
+    private TreeMap<Integer, Player> read_dat(File file){
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             while (true) {
@@ -42,11 +42,14 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                     break;
                 }
                 if(!(temp instanceof Player player)){
-                    throw new OpenDataException("Error reading DAT file, data is corrupted");
+                    throw new OpenDataException("Data is corrupted");
                 }else{
                     player_data.put(player.getID(), player);
                 }
             }
+        }catch (Exception e){
+            GeneralDialog.getDialog().message("Error reading DAT file: " + e.getMessage());
+            return null;
         }
         if (player_data.isEmpty()) {
             PlayerDialog.getDialog().popup("player_map_null");
@@ -54,9 +57,15 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         return player_data;
     }
 
-    private TreeMap<Integer, Player> read_xml(File file) throws Exception {
+    private TreeMap<Integer, Player> read_xml(File file){
         TreeMap<Integer, Player> player_data = new TreeMap<>();
-        Element root = xml_utils.readXml(file);
+        Element root;
+        try {
+            root = xml_utils.readXml(file);
+        } catch (Exception e) {
+            GeneralDialog.getDialog().message("Failed to read xml file");
+            return null;
+        }
         if (!"Player".equals(root.getNodeName())) {
             throw new RuntimeException("Invalid XML: Root element is not Player");
         }
@@ -104,8 +113,13 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         return player_data;
     }
 
-    public static HashMap<String, String[]> read_region_server() throws Exception {
-        Element root = xml_utils.readXml(new File("./src/config/region_server.xml"));
+    public static HashMap<String, String[]> read_region_server() {
+        Element root;
+        try {
+            root = xml_utils.readXml(new File("./src/config/region_server.xml"));
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot read region_server settings");
+        }
         if (!"region_server".equals(root.getNodeName())) {
             throw new RuntimeException("Invalid XML: Root element is not region_server");
         }
