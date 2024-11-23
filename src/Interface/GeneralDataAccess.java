@@ -58,7 +58,7 @@ public abstract class GeneralDataAccess {
     }
 
     public static String getPath(){
-        JFileChooser fileChooser = new JFileChooser(new File("./src/config").getAbsolutePath());
+        JFileChooser fileChooser = new JFileChooser(new File(getProperty("defaultFilePath")).getAbsolutePath());
         fileChooser.setDialogTitle("Choosing path");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) return fileChooser.getSelectedFile().getPath();

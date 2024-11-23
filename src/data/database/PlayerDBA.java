@@ -14,6 +14,8 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -133,9 +135,24 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             default -> null;
         };
     }
-    //todo
+
     public TreeMap<Integer, Player> readDatabase(){
-        return null;
+        TreeMap<Integer, Player> player_map = new TreeMap<>();
+        String query = "SELECT * FROM player";
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                Player player = new Player();
+                player.setID(resultSet.getInt("id"));
+                player.setName(resultSet.getString("name"));
+                player.setRegion(resultSet.getString("region"));
+                player.setServer(resultSet.getString("server"));
+                player_map.put(player.getID(), player);
+            }
+        } catch (SQLException e) {
+            throw new OperationException("Error reading data from database");
+        }
+        return player_map;
     }
 
     public TreeMap<Integer, Player> readHibernate(){
@@ -158,9 +175,50 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         }
     }
 
-    //todo
     private void updateDatabase(HashMap<Player,DataOperation> changed_player_map){
+        for(Player player : changed_player_map.keySet()) {
+            switch (changed_player_map.get(player)) {
+                case ADD -> addPlayer(player);
+                case MODIFY -> modifyPlayer(player);
+                case DELETE -> deletePlayer(player);
+            }
+        }
+    }
 
+    private void addPlayer(Player player){
+        String query = "INSERT INTO player (id, region, server, name) VALUES (?,?,?,?)";
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setInt(1, player.getID());
+            statement.setString(2, player.getRegion());
+            statement.setString(3, player.getServer());
+            statement.setString(4, player.getName());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new OperationException("Error adding player to database");
+        }
+    }
+
+    private void modifyPlayer(Player player){
+        String query = "UPDATE player SET region = ?, server = ?, name = ? WHERE id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setString(1, player.getRegion());
+            statement.setString(2, player.getServer());
+            statement.setString(3, player.getName());
+            statement.setInt(4, player.getID());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new OperationException("Error modifying player in database");
+        }
+    }
+
+    private void deletePlayer(Player player){
+        String query = "DELETE FROM player WHERE id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setInt(1, player.getID());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new OperationException("Error deleting player from database");
+        }
     }
 
     private void updateHibernate(HashMap<Player,DataOperation> changed_player_map){
@@ -186,21 +244,22 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
 
     public void export(DataSource dataSource, TreeMap<Integer,Player> player_map){
         switch (dataSource){
-            case DATABASE -> exportDatabase(dataSource, player_map);
-            case HIBERNATE -> exportHibernate(dataSource, player_map);
+            case DATABASE -> exportDatabase(player_map);
+            case HIBERNATE -> exportHibernate(player_map);
         }
     }
     //todo
-    private void exportDatabase(DataSource dataSource, TreeMap<Integer,Player> player_map){
+    private void exportDatabase(TreeMap<Integer,Player> player_map){
+        TreeMap<Integer, Player> player_map_copy = read(DataSource.DATABASE);
 
     }
-
-    private void exportHibernate(DataSource dataSource, TreeMap<Integer,Player> player_map){
+    //todo
+    private void exportHibernate(TreeMap<Integer,Player> player_map){
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
             // read database first to remove non-exist data
-            TreeMap<Integer, Player> temp = read(dataSource);
+            TreeMap<Integer, Player> temp = read(DataSource.HIBERNATE);
             for(Player player : temp.values()){
                 if(!player_map.containsKey(player.getID())){
                     session.remove(player);

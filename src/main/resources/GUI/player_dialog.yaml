@@ -71,6 +71,10 @@ input:
     cn: "输入ID"
 
 popup:
+  exported_file:
+    en: "Players data were exported to file"
+    es: "Datos de jugadores exportados correctamente a fichero"
+    cn: "玩家数据已导出至文件"
   exported_db:
     en: "Players data were exported to database"
     es: "Datos de jugadores exportados correctamente a base de datos"

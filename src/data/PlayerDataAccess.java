@@ -174,14 +174,16 @@ public class PlayerDataAccess extends GeneralDataAccess {
         if(fileWriter != null){
             String target_extension = chooseExtension();
             String target_path = getPath();
-            String target_name = PlayerDialog.getDialog().input("new_file_name");
+            String target_name = GeneralDialog.getDialog().input("new_file_name");
             target_path += "/" + target_name + target_extension;
             fileWriter.write(target_path, player_map);
         }else {
             throw new IllegalStateException("Writer is not initialized");
         }
+        PlayerDialog.getDialog().popup("exported_file");
     }
 
+    //todo
     public void exportDB(){
         if(!playerDBA.isConnected()){
             PlayerDialog.getDialog().popup("db_not_connected");
