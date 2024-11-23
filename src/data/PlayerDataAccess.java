@@ -183,7 +183,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         PlayerDialog.getDialog().popup("exported_file");
     }
 
-    //todo
+    //todo:需要先连接数据库再进行导出到数据库操作
     public void exportDB(){
         if(!playerDBA.isConnected()){
             PlayerDialog.getDialog().popup("db_not_connected");

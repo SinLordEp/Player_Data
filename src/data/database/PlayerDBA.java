@@ -248,17 +248,30 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             case HIBERNATE -> exportHibernate(player_map);
         }
     }
-    //todo
-    private void exportDatabase(TreeMap<Integer,Player> player_map){
-        TreeMap<Integer, Player> player_map_copy = read(DataSource.DATABASE);
 
+    private void exportDatabase(TreeMap<Integer,Player> player_map){
+        TreeMap<Integer, Player> target_player_map = read(DataSource.DATABASE);
+        //delete non-exist ID from database
+        for(Integer player_id: target_player_map.keySet()){
+            if(!player_map.containsKey(player_id)){
+                deletePlayer(target_player_map.get(player_id));
+            }
+        }
+        for(Integer player_id : player_map.keySet()){
+            if(target_player_map.containsKey(player_id)){
+                modifyPlayer(player_map.get(player_id));
+            }else{
+                addPlayer(player_map.get(player_id));
+            }
+        }
+        disconnect(DataSource.DATABASE);
     }
-    //todo
+
     private void exportHibernate(TreeMap<Integer,Player> player_map){
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            // read database first to remove non-exist data
+            // delete non-exist ID from database
             TreeMap<Integer, Player> temp = read(DataSource.HIBERNATE);
             for(Player player : temp.values()){
                 if(!player_map.containsKey(player.getID())){
@@ -268,7 +281,6 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             for(Player player : player_map.values()){
                 session.merge(player);
             }
-
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -276,6 +288,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             }
             GeneralDialog.getDialog().message("Updating database failed\n" + e.getMessage());
         }
+        disconnect(DataSource.HIBERNATE);
     }
 
 

@@ -153,7 +153,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Finished deleting player with ID: {}", selected_player_id);
     }
 
-    //todo
+    //todo:导出至数据库需要弹窗显示数据库来源以及方言
     public void export() {
         try {
             if(playerDA.isEmpty()){
