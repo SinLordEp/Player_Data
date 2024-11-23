@@ -48,7 +48,7 @@ public class principal {
 
     public static GeneralControl initializeControl(){
         try{
-            String chosen_control = GeneralDialog.getDialog().selectionDialog("controller", classRegister.getControlClasses());
+            String chosen_control = (String) GeneralDialog.getDialog().selectionDialog("controller", classRegister.getControlClasses());
             return classRegister.getControl(chosen_control);
         }catch (Exception e) {
             GeneralDialog.getDialog().message(e.getMessage());

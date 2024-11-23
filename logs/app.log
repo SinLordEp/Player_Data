@@ -594,3 +594,12 @@
 2024-11-23 18:49:32 INFO  control.PlayerControl - Reading data from file...
 2024-11-23 18:49:32 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
 2024-11-23 18:49:32 INFO  control.PlayerControl - Finished importing from file
+2024-11-23 21:54:53 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-11-23 21:54:53 INFO  control.PlayerControl - Finished building player frame
+2024-11-23 21:55:05 ERROR control.PlayerControl - Failed to create new file, Cause: Operation canceled
+
+2024-11-23 21:55:06 INFO  control.PlayerControl - File created successfully
+2024-11-23 21:57:23 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-11-23 21:57:23 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-11-23 21:57:23 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-11-23 21:57:23 INFO  control.PlayerControl - Shutting down

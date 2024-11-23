@@ -26,14 +26,12 @@ public abstract class GeneralDataAccess {
 
     public static String chooseExtension(){
         FileType[] fileTypes = FileType.values();
-        String[] options = new String[fileTypes.length-1];
-        for(int i = 1; i < fileTypes.length; i++){
-            options[i-1] = fileTypes[i].toString();
-        }
+        FileType[] options = new FileType[fileTypes.length-1];
+        System.arraycopy(fileTypes, 1, options, 0, fileTypes.length - 1);
         return switch (GeneralDialog.getDialog().selectionDialog("extension_general", options)) {
-            case "DAT" -> ".dat";
-            case "XML" -> ".xml";
-            case "TXT" -> ".txt";
+            case FileType.DAT -> ".dat";
+            case FileType.XML -> ".xml";
+            case FileType.TXT -> ".txt";
             default -> throw new IllegalArgumentException("Unknown extension!!!");
         };
     }

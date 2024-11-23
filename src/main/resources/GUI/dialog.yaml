@@ -133,3 +133,21 @@ options:
         - "英语"
         - "西语"
         - "中文"
+  target_source:
+    title:
+      en: "Data source menu"
+      es: "Menú fuente de datos"
+      cn: "数据来源菜单"
+    message:
+      en: "Choose a data source"
+      es: "Elige un fuente de dato"
+      cn: "选择一个数据来源"
+  target_dialect:
+    title:
+      en: "SQL dialect menu"
+      es: "Menú dialecto de SQL"
+      cn: "SQL方言菜单"
+    message:
+      en: "Choose a SQL dialect"
+      es: "Elige un dialecto de SQL"
+      cn: "选择一个SQL方言"

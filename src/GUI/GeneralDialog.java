@@ -122,7 +122,7 @@ public class GeneralDialog {
         return choice;
     }
 
-    public String selectionDialog(String sub_type, String[] options) {
+    public Object selectionDialog(String sub_type, Object[] options) {
         Map<String, Object> dialog = option(sub_type);
         int choice = JOptionPane.showOptionDialog(
                 null,
