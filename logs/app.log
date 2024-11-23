@@ -144,3 +144,24 @@
 2024-11-23 13:03:42 INFO  control.PlayerControl - Reading data from database...
 2024-11-23 13:03:42 INFO  control.PlayerControl - Data read successfully from database, refreshing UI
 2024-11-23 13:03:42 INFO  control.PlayerControl - Finished importing from database
+2024-11-23 13:34:09 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-11-23 13:34:09 INFO  control.PlayerControl - Finished building player frame
+2024-11-23 13:34:12 INFO  control.PlayerControl - Changing language...
+2024-11-23 13:34:12 INFO  control.PlayerControl - Language set to: es
+2024-11-23 13:34:12 INFO  control.PlayerControl - Finished changing language to: es
+2024-11-23 13:35:00 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-11-23 13:35:06 INFO  control.PlayerControl - Finished building player frame
+2024-11-23 13:35:09 INFO  control.PlayerControl - Changing language...
+2024-11-23 13:35:10 INFO  control.PlayerControl - Language set to: es
+2024-11-23 13:35:29 INFO  control.PlayerControl - Finished changing language to: es
+2024-11-23 13:35:38 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-11-23 13:35:38 INFO  control.PlayerControl - Finished building player frame
+2024-11-23 13:35:40 INFO  control.PlayerControl - Changing language...
+2024-11-23 13:35:41 INFO  control.PlayerControl - Language set to: es
+2024-11-23 13:35:41 INFO  control.PlayerControl - Finished changing language to: es
+2024-11-23 13:35:42 INFO  control.PlayerControl - Changing language...
+2024-11-23 13:35:43 INFO  control.PlayerControl - Language set to: cn
+2024-11-23 13:35:43 INFO  control.PlayerControl - Finished changing language to: cn
+2024-11-23 13:35:44 INFO  control.PlayerControl - Changing language...
+2024-11-23 13:35:45 INFO  control.PlayerControl - Language set to: en
+2024-11-23 13:35:45 INFO  control.PlayerControl - Finished changing language to: en

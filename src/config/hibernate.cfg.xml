@@ -4,7 +4,7 @@
 "http://www.hibernate.org/dtd/hibernate-configuration/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
-		<property name="show_sql">true</property>
+		<property name="show_sql">false</property>
 		<!-- auto update/change db when starting-->
 		<property name="hibernate.hbm2ddl.auto">update</property>
 <!-- 		<property name="hibernate.hbm2ddl.auto">create-drop</property> -->

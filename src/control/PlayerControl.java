@@ -190,7 +190,6 @@ public class PlayerControl implements GeneralControl {
             default ->
                     throw new IllegalStateException("Unexpected value: " + GeneralDialog.getDialog().selectionDialog("language"));
         };
-        logger.info("Language set to: {}", language);
         GeneralDialog.getDialog().setLanguage(language);
         PlayerDialog.getDialog().setLanguage(language);
         playerUI.changeLanguage();

@@ -113,7 +113,11 @@ public class PlayerUI implements GeneralUI {
         button_language.setText(PlayerDialog.getDialog().getText("button_language"));
         label_search.setText(PlayerDialog.getDialog().getText("label_search"));
         label_dataSource.setText(PlayerDialog.getDialog().getText("label_dataSource"));
-        label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
+        switch (comboBox_dataSource.getSelectedItem()){
+            case DataSource.FILE -> label_dataType.setText(PlayerDialog.getDialog().getText("label_file_type"));
+            case DataSource.DATABASE, DataSource.HIBERNATE -> label_dataType.setText(PlayerDialog.getDialog().getText("label_sql_dialect"));
+            case null, default -> label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
+        }
     }
 
     private void searchListener(){
@@ -194,7 +198,9 @@ public class PlayerUI implements GeneralUI {
 
     private void disableDataType(){
         button_import.setEnabled(false);
+        comboBox_dataType.removeAllItems();
         comboBox_dataType.setEnabled(false);
+        label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
     }
 
     public void changeLanguage(){

@@ -8,6 +8,7 @@ out/
 .idea/misc.xml
 .idea/workspace.xml
 .idea/shelf
+logs/app.log
 
 ### Eclipse ###
 .apt_generated
