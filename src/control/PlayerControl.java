@@ -183,7 +183,7 @@ public class PlayerControl implements GeneralControl {
             GeneralDialog.getDialog().message("Failed to export data\n" + e.getMessage());
         }
     }
-    //todo
+
     private void exportDB() {
         //Building data sources dialog options
         DataSource[] dataSources = DataSource.values();
@@ -206,7 +206,7 @@ public class PlayerControl implements GeneralControl {
         playerDA.exportDB(target_source, target_dialect, login_info);
         PlayerDialog.getDialog().popup("exported_db");
     }
-    //todo:分离断连数据库的逻辑
+
     public void save(){
         logger.info("Saving data: Checking if data exists...");
         if(playerDA.isEmpty()){
@@ -238,8 +238,7 @@ public class PlayerControl implements GeneralControl {
             case 0 -> "en";
             case 1 -> "es";
             case 2 -> "cn";
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + GeneralDialog.getDialog().selectionDialog("language"));
+            default -> throw new IllegalStateException("Unexpected value: " + GeneralDialog.getDialog().selectionDialog("language"));
         };
         GeneralDialog.getDialog().setLanguage(language);
         PlayerDialog.getDialog().setLanguage(language);
