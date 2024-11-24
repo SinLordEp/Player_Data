@@ -155,20 +155,36 @@ public class PlayerControl implements GeneralControl {
 
     //todo:导出至数据库需要弹窗显示数据库来源以及方言
     public void export() {
+        logger.info("Exporting data: Saving possible data before exporting...");
+        save();
         try {
             if(playerDA.isEmpty()){
                 PlayerDialog.getDialog().popup("player_map_null");
             }else{
                 switch (PlayerDialog.getDialog().selectionDialog("export_player")){
                     case 0: playerDA.export(); break;
-                    case 1: playerDA.exportDB(); break;
+                    case 1: exportDB(); break;
                 }
             }
         } catch (Exception e) {
             GeneralDialog.getDialog().message("Failed to export data\n" + e.getMessage());
         }
     }
+    //todo
+    private void exportDB() {
+        DataSource[] dataSources = DataSource.values();
+        DataSource[] usable_dataSources = new DataSource[dataSources.length-2];
+        System.arraycopy(dataSources, 2, usable_dataSources, 0, usable_dataSources.length);
+        DataSource target_source = (DataSource) GeneralDialog.getDialog().selectionDialog("target_source",usable_dataSources);
 
+        SqlDialect[] dialects = SqlDialect.values();
+        SqlDialect[] usable_dialects = new SqlDialect[usable_dataSources.length-1];
+        System.arraycopy(dialects, 1, usable_dialects, 0, usable_dialects.length);
+        SqlDialect target_dialect = (SqlDialect) GeneralDialog.getDialog().selectionDialog("target_dialect",usable_dialects);
+
+
+    }
+    //todo:分离断连数据库的逻辑
     public void save(){
         logger.info("Saving data: Fetching current data source...");
         DataSource dataSource = playerDA.getDataSource();
@@ -177,11 +193,13 @@ public class PlayerControl implements GeneralControl {
             case NONE:
                 logger.info("Current data source is NONE, returning...");
                 return;
+            case FILE:
+                playerDA.save();
             case DATABASE, HIBERNATE:
+                playerDA.save();
                 playerDA.disconnectDB();
                 break;
         }
-        playerDA.save();
         logger.debug("Data saved successfully");
     }
 

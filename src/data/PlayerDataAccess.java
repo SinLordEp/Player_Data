@@ -181,15 +181,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     //todo:需要先连接数据库再进行导出到数据库操作
     public void exportDB(){
-        DataSource[] dataSources = DataSource.values();
-        DataSource[] usable_dataSources = new DataSource[dataSources.length-2];
-        System.arraycopy(dataSources, 2, usable_dataSources, 0, usable_dataSources.length);
-        DataSource target_source = (DataSource) GeneralDialog.getDialog().selectionDialog("target_source",usable_dataSources);
 
-        SqlDialect[] dialects = SqlDialect.values();
-        SqlDialect[] usable_dialects = new SqlDialect[usable_dataSources.length-1];
-        System.arraycopy(dialects, 1, usable_dialects, 0, usable_dialects.length);
-        SqlDialect target_dialect = (SqlDialect) GeneralDialog.getDialog().selectionDialog("target_dialect",usable_dialects);
 
         if(!playerDBA.isConnected()){
             PlayerDialog.getDialog().popup("db_not_connected");

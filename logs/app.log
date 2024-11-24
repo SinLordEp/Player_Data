@@ -603,3 +603,7 @@
 2024-11-23 21:57:23 INFO  control.PlayerControl - Saving data to current data source: NONE
 2024-11-23 21:57:23 INFO  control.PlayerControl - Current data source is NONE, returning...
 2024-11-23 21:57:23 INFO  control.PlayerControl - Shutting down
+2024-11-23 22:26:38 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-11-23 22:26:38 INFO  control.PlayerControl - Finished building player frame
+2024-11-23 22:26:48 INFO  control.PlayerControl - Changing language...
+2024-11-23 22:26:49 INFO  control.PlayerControl - Finished changing language to: es
