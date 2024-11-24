@@ -14,6 +14,8 @@ import main.OperationException;
 import model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
 import java.util.TreeMap;
 
 public class PlayerControl implements GeneralControl {
@@ -60,6 +62,7 @@ public class PlayerControl implements GeneralControl {
         logger.debug("FileType is set to {}", fileType);
     }
 
+    //todo:连接新增的两个combo,不再使用弹窗选择
     public void createFile() throws OperationException {
         logger.debug("Creating file by building path");
         try {
@@ -107,22 +110,26 @@ public class PlayerControl implements GeneralControl {
             logger.info("Data read successfully from database, refreshing UI");
             playerUI.refresh();
             logger.info("Finished importing from database");
+            playerDA.disconnectDB();
+            logger.info("Disconnected from database to release resources");
         }
-
     }
 
     public boolean connectDB(){
         logger.debug("Connecting to database...");
-        DataBaseLogin dbLogin = new DataBaseLogin(playerDA.getDefaultDatabaseInfo());
+        HashMap<String, String> login_info = playerDA.getDefaultDatabaseInfo(playerDA.getSQLDialect());
+        DataBaseLogin dbLogin = new DataBaseLogin(login_info);
         if(!dbLogin.isValid()){
+            logger.info("Connecting to database cancelled: User cancelled operation");
             GeneralDialog.getDialog().popup("db_login_canceled");
             return false;
         }
+        playerDA.setLogin_info(login_info);
         if(playerDA.connectDB()){
             logger.info("Database connected successfully");
             return true;
         }else{
-            logger.info("Database could not connect");
+            logger.error("Database could not connect");
             GeneralDialog.getDialog().popup("db_login_failed");
             return false;
         }
@@ -153,39 +160,59 @@ public class PlayerControl implements GeneralControl {
         logger.info("Finished deleting player with ID: {}", selected_player_id);
     }
 
-    //todo:导出至数据库需要弹窗显示数据库来源以及方言
     public void export() {
-        logger.info("Exporting data: Saving possible data before exporting...");
-        save();
         try {
+            logger.info("Exporting data: Checking if data exists...");
             if(playerDA.isEmpty()){
+                logger.info("Exporting data cancelled: No player data found");
                 PlayerDialog.getDialog().popup("player_map_null");
-            }else{
-                switch (PlayerDialog.getDialog().selectionDialog("export_player")){
-                    case 0: playerDA.export(); break;
-                    case 1: exportDB(); break;
-                }
+                return;
             }
+            switch (PlayerDialog.getDialog().selectionDialog("export_player")){
+                case 0:
+                    logger.info("Exporting data to file...");
+                    playerDA.export();
+                    break;
+                case 1:
+                    logger.info("Exporting data to database...");
+                    exportDB();
+                    break;
+            }
+            logger.info("Finished exporting data.");
         } catch (Exception e) {
             GeneralDialog.getDialog().message("Failed to export data\n" + e.getMessage());
         }
     }
     //todo
     private void exportDB() {
+        //Building data sources dialog options
         DataSource[] dataSources = DataSource.values();
         DataSource[] usable_dataSources = new DataSource[dataSources.length-2];
         System.arraycopy(dataSources, 2, usable_dataSources, 0, usable_dataSources.length);
         DataSource target_source = (DataSource) GeneralDialog.getDialog().selectionDialog("target_source",usable_dataSources);
-
+        //Building SQL dialect dialog options
         SqlDialect[] dialects = SqlDialect.values();
-        SqlDialect[] usable_dialects = new SqlDialect[usable_dataSources.length-1];
+        SqlDialect[] usable_dialects = new SqlDialect[dialects.length-1];
         System.arraycopy(dialects, 1, usable_dialects, 0, usable_dialects.length);
         SqlDialect target_dialect = (SqlDialect) GeneralDialog.getDialog().selectionDialog("target_dialect",usable_dialects);
-
-
+        //Fetching default login info
+        HashMap<String, String> login_info = playerDA.getDefaultDatabaseInfo(target_dialect);
+        DataBaseLogin dbLogin = new DataBaseLogin(login_info);
+        if(!dbLogin.isValid()){
+            logger.info("Exporting to database cancelled: User cancelled operation");
+            GeneralDialog.getDialog().popup("db_login_canceled");
+            return;
+        }
+        playerDA.exportDB(target_source, target_dialect, login_info);
+        PlayerDialog.getDialog().popup("exported_db");
     }
     //todo:分离断连数据库的逻辑
     public void save(){
+        logger.info("Saving data: Checking if data exists...");
+        if(playerDA.isEmpty()){
+            logger.info("Saving data cancelled: No player data found");
+            return;
+        }
         logger.info("Saving data: Fetching current data source...");
         DataSource dataSource = playerDA.getDataSource();
         logger.info("Saving data to current data source: {}", dataSource.toString());
@@ -195,7 +222,9 @@ public class PlayerControl implements GeneralControl {
                 return;
             case FILE:
                 playerDA.save();
+                break;
             case DATABASE, HIBERNATE:
+                playerDA.connectDB();
                 playerDA.save();
                 playerDA.disconnectDB();
                 break;

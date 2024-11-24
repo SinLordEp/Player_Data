@@ -9,9 +9,7 @@ import model.Player;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -27,40 +25,6 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
     public PlayerDBA()  {
         URL resource = getClass().getResource(getProperty("hibernateConfig"));
         configuration.configure(resource);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public HashMap<String, String> getDefaultDatabaseInfo() {
-        login_info = new HashMap<>();
-        HashMap<String,Object> default_info = null;
-        URL resource = getClass().getResource(getProperty("defaultPlayerSQL"));
-        if (resource != null) {
-            try(InputStream inputStream = resource.openStream()){
-                Yaml yaml = new Yaml();
-                default_info = yaml.load(inputStream);
-            }catch (Exception e){
-                throw new OperationException("Error loading default database info");
-            }
-        }
-        if(default_info == null){
-            throw new OperationException("Default database info is null");
-        }
-        switch (dialect) {
-            case MYSQL:
-                HashMap<String,Object> mysql_info = (HashMap<String, Object>) default_info.get("MYSQL");
-                login_info.put("text_url", (String) mysql_info.get("text_url"));
-                login_info.put("text_port",(String) mysql_info.get("text_port"));
-                login_info.put("text_database",(String) mysql_info.get("text_database"));
-                login_info.put("text_user",(String) mysql_info.get("text_user"));
-                login_info.put("text_pwd",(String) mysql_info.get("text_pwd"));
-                break;
-            case SQLITE:
-                HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
-                login_info.put("text_url",(String) sqlite_info.get("text_url"));
-                break;
-        }
-        return login_info;
     }
 
     @Override
@@ -109,22 +73,13 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return sessionFactory.isOpen();
     }
 
-    public boolean isConnected(){
-        return switch (dialect){
-            case MYSQL -> connection != null;
-            case SQLITE -> sessionFactory != null;
-            default -> false;
-        };
-    }
-
-    public boolean disconnect(DataSource dataSource){
+    public void disconnect(DataSource dataSource){
         switch (dataSource){
             case DATABASE:
                 connection = null;
             case HIBERNATE:
                 sessionFactory = null;
         }
-        return true;
     }
 
     @Override
@@ -240,7 +195,6 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             }
         }
     }
-
 
     public void export(DataSource dataSource, TreeMap<Integer,Player> player_map){
         switch (dataSource){

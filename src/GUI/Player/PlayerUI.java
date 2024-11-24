@@ -82,7 +82,6 @@ public class PlayerUI implements GeneralUI {
             comboBox_dataSource.addItem(dataSource);
         }
         comboBox_dataSource.setSelectedItem(DataSource.NONE);
-        disableDataType();
     }
 
     private void configureDataType(DataSource dataSource) {
@@ -210,10 +209,6 @@ public class PlayerUI implements GeneralUI {
 
     public FileType getFileType(){
         return (FileType) comboBox_dataType.getSelectedItem();
-    }
-
-    private void disableDataType(){
-
     }
 
     public void changeLanguage(){

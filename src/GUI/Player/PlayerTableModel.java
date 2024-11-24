@@ -63,5 +63,4 @@ public class PlayerTableModel extends AbstractTableModel {
         fireTableStructureChanged();
     }
 
-
 }

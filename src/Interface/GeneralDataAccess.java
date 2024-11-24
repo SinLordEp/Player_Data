@@ -2,6 +2,7 @@ package Interface;
 
 import GUI.GeneralDialog;
 import data.DataSource;
+import data.database.SqlDialect;
 import data.file.FileType;
 import main.OperationException;
 
@@ -17,7 +18,7 @@ public abstract class GeneralDataAccess {
     protected String file_path = null;
     protected DataSource dataSource = DataSource.NONE;
     protected FileType fileType = FileType.NONE;
-    public abstract HashMap<String, String> getDefaultDatabaseInfo();
+    public abstract HashMap<String, String> getDefaultDatabaseInfo(SqlDialect sqlDialect);
 
     public void setFilePath(String file_path) {
         this.file_path = file_path;
@@ -62,7 +63,6 @@ public abstract class GeneralDataAccess {
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) return fileChooser.getSelectedFile().getPath();
         throw new OperationException("Operation canceled\n");
     }
-
 
     public static String newPathBuilder(){
         String target_path = GeneralDataAccess.getPath();

@@ -35,4 +35,9 @@
         <server>Liyue Harbor</server>
         <name>sa</name>
     </player>
+    <player id="11">
+        <region>North America</region>
+        <server>Brightcrown Canyon</server>
+        <name>Tewea</name>
+    </player>
 </Player>

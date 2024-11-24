@@ -9,9 +9,14 @@ import main.OperationException;
 import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.TreeMap;
+
+import static main.principal.getProperty;
 
 public class PlayerDataAccess extends GeneralDataAccess {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
@@ -31,17 +36,45 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     @Override
-    public HashMap<String, String> getDefaultDatabaseInfo() {
-        return playerDBA.getDefaultDatabaseInfo();
+    @SuppressWarnings("unchecked")
+    public HashMap<String, String> getDefaultDatabaseInfo(SqlDialect dialect) {
+        HashMap<String, String> login_info = new HashMap<>();
+        HashMap<String,Object> default_info = null;
+        URL resource = getClass().getResource(getProperty("defaultPlayerSQL"));
+        if (resource != null) {
+            try(InputStream inputStream = resource.openStream()){
+                Yaml yaml = new Yaml();
+                default_info = yaml.load(inputStream);
+            }catch (Exception e){
+                throw new OperationException("Error loading default database info");
+            }
+        }
+        if(default_info == null){
+            throw new OperationException("Default database info is null");
+        }
+        switch (dialect) {
+            case MYSQL:
+                HashMap<String,Object> mysql_info = (HashMap<String, Object>) default_info.get("MYSQL");
+                login_info.put("text_url", (String) mysql_info.get("text_url"));
+                login_info.put("text_port",(String) mysql_info.get("text_port"));
+                login_info.put("text_database",(String) mysql_info.get("text_database"));
+                login_info.put("text_user",(String) mysql_info.get("text_user"));
+                login_info.put("text_pwd",(String) mysql_info.get("text_pwd"));
+                break;
+            case SQLITE:
+                HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
+                login_info.put("text_url",(String) sqlite_info.get("text_url"));
+                break;
+        }
+        return login_info;
     }
 
     public boolean connectDB() {
-        if(playerDBA.connect(dataSource)){
-            file_path = null;
-            return true;
-        }else{
-            return false;
-        }
+        return playerDBA.connect(dataSource);
+    }
+
+    public void setLogin_info(HashMap<String, String> login_info) {
+        playerDBA.setLogin_info(login_info);
     }
 
     public void setSQLDialect(SqlDialect dialect){
@@ -53,15 +86,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void disconnectDB(){
-        if(playerDBA.disconnect(dataSource)){
-            player_map = new TreeMap<>();
-        }else {
-            throw new OperationException("Failed to disconnect from database");
-        }
-    }
-
-    public boolean isDBConnected(){
-        return playerDBA.isConnected();
+        playerDBA.disconnect(dataSource);
     }
 
     @SuppressWarnings("unchecked")
@@ -180,17 +205,16 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     //todo:需要先连接数据库再进行导出到数据库操作
-    public void exportDB(){
-
-
-        if(!playerDBA.isConnected()){
+    public void exportDB(DataSource dataSource, SqlDialect dialect, HashMap<String,String> login_info) {
+        PlayerDBA export_playerDBA = new PlayerDBA();
+        export_playerDBA.setDialect(dialect);
+        export_playerDBA.setLogin_info(login_info);
+        if(!export_playerDBA.connect(dataSource)){
             PlayerDialog.getDialog().popup("db_not_connected");
             return;
         }
-        playerDBA.export(dataSource, player_map);
-        PlayerDialog.getDialog().popup("exported_db");
+        export_playerDBA.export(dataSource, player_map);
     }
-
 
     public boolean isEmpty(){
         return player_map == null;
@@ -246,6 +270,5 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
         return true;
     }
-
 
 }
