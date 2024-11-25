@@ -4,7 +4,7 @@ import GUI.GeneralDialog;
 import Interface.GeneralDBA;
 import data.DataOperation;
 import data.DataSource;
-import exceptions.OperationCancelledException;
+import exceptions.DatabaseException;
 import model.Player;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -83,7 +83,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
     }
 
     @Override
-    public TreeMap<Integer, Player> read(DataSource dataSource) {
+    public TreeMap<Integer, Player> read(DataSource dataSource) throws DatabaseException {
         return switch (dataSource){
             case DATABASE -> readDatabase();
             case HIBERNATE -> readHibernate();
@@ -91,7 +91,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         };
     }
 
-    public TreeMap<Integer, Player> readDatabase(){
+    public TreeMap<Integer, Player> readDatabase() throws DatabaseException {
         TreeMap<Integer, Player> player_map = new TreeMap<>();
         String query = "SELECT * FROM player";
         try(PreparedStatement statement = connection.prepareStatement(query)){
@@ -105,7 +105,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
                 player_map.put(player.getID(), player);
             }
         } catch (SQLException e) {
-            throw new OperationCancelledException("Error reading data from database");
+            throw new DatabaseException("Error reading data from database");
         }
         return player_map;
     }
@@ -123,14 +123,14 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return player_map;
     }
 
-    public void update(DataSource dataSource, HashMap<Player,DataOperation> changed_player_map){
+    public void update(DataSource dataSource, HashMap<Player,DataOperation> changed_player_map) throws DatabaseException {
         switch (dataSource){
             case DATABASE -> updateDatabase(changed_player_map);
             case HIBERNATE -> updateHibernate(changed_player_map);
         }
     }
 
-    private void updateDatabase(HashMap<Player,DataOperation> changed_player_map){
+    private void updateDatabase(HashMap<Player,DataOperation> changed_player_map) throws DatabaseException {
         for(Player player : changed_player_map.keySet()) {
             switch (changed_player_map.get(player)) {
                 case ADD -> addPlayer(player);
@@ -140,7 +140,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         }
     }
 
-    private void addPlayer(Player player){
+    private void addPlayer(Player player) throws DatabaseException {
         String query = "INSERT INTO player (id, region, server, name) VALUES (?,?,?,?)";
         try(PreparedStatement statement = connection.prepareStatement(query)){
             statement.setInt(1, player.getID());
@@ -149,11 +149,11 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             statement.setString(4, player.getName());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new OperationCancelledException("Error adding player to database");
+            throw new DatabaseException("Error adding player to database");
         }
     }
 
-    private void modifyPlayer(Player player){
+    private void modifyPlayer(Player player) throws DatabaseException {
         String query = "UPDATE player SET region = ?, server = ?, name = ? WHERE id = ?";
         try(PreparedStatement statement = connection.prepareStatement(query)){
             statement.setString(1, player.getRegion());
@@ -162,17 +162,17 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             statement.setInt(4, player.getID());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new OperationCancelledException("Error modifying player in database");
+            throw new DatabaseException("Error modifying player in database");
         }
     }
 
-    private void deletePlayer(Player player){
+    private void deletePlayer(Player player) throws DatabaseException {
         String query = "DELETE FROM player WHERE id = ?";
         try(PreparedStatement statement = connection.prepareStatement(query)){
             statement.setInt(1, player.getID());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new OperationCancelledException("Error deleting player from database");
+            throw new DatabaseException("Error deleting player from database");
         }
     }
 
@@ -196,14 +196,14 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         }
     }
 
-    public void export(DataSource dataSource, TreeMap<Integer,Player> player_map){
+    public void export(DataSource dataSource, TreeMap<Integer,Player> player_map) throws DatabaseException {
         switch (dataSource){
             case DATABASE -> exportDatabase(player_map);
             case HIBERNATE -> exportHibernate(player_map);
         }
     }
 
-    private void exportDatabase(TreeMap<Integer,Player> player_map){
+    private void exportDatabase(TreeMap<Integer,Player> player_map) throws DatabaseException {
         TreeMap<Integer, Player> target_player_map = read(DataSource.DATABASE);
         //delete non-exist ID from database
         for(Integer player_id: target_player_map.keySet()){

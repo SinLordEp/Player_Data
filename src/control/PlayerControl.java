@@ -11,9 +11,7 @@ import Interface.GeneralDataAccess;
 import data.PlayerDataAccess;
 import data.database.SqlDialect;
 import data.file.FileType;
-import exceptions.ConfigErrorException;
-import exceptions.DataTypeException;
-import exceptions.OperationCancelledException;
+import exceptions.*;
 import model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,10 +86,11 @@ public class PlayerControl implements GeneralControl {
             logger.debug("Importing data: Saving possible data before changing datasource...");
             save();
             logger.info("Fetching data source and data type");
-            DataSourceChooser dataSourceChooser = new DataSourceChooser(playerDA.getDataSource());
+            DataSourceChooser dataSourceChooser = new DataSourceChooser();
             if(!dataSourceChooser.isOk()){
                 throw new OperationCancelledException();
             }
+            playerDA.setDataSource(dataSourceChooser.getDataSource());
             Object dataType = dataSourceChooser.getDataType();
             switch (dataType){
                 case FileType ignore -> playerDA.setFileType((FileType) dataType);
@@ -104,7 +103,7 @@ public class PlayerControl implements GeneralControl {
             }
         } catch (OperationCancelledException e) {
             GeneralDialog.getDialog().popup("operation_cancelled");
-        }catch (DataTypeException e){
+        } catch (DataTypeException e){
             System.out.println(e.getMessage());
             logger.error(e.getMessage());
         }
@@ -170,17 +169,27 @@ public class PlayerControl implements GeneralControl {
     }
 
     public void modify(int selected_player_id){
-        logger.info("Modifying player with ID: {}", selected_player_id);
-        playerDA.modify(selected_player_id);
-        playerUI.refresh();
-        logger.info("Finished updating player with ID: {}", selected_player_id);
+        try {
+            logger.info("Modifying player with ID: {}", selected_player_id);
+            playerDA.modify(selected_player_id);
+            playerUI.refresh();
+            logger.info("Finished updating player with ID: {}", selected_player_id);
+        } catch (OperationCancelledException e) {
+            logger.info("Modify operation cancelled");
+            GeneralDialog.getDialog().popup("operation_cancelled");
+        }
     }
 
     public void add() {
-        logger.info("Adding player...");
-        playerDA.add();
-        playerUI.refresh();
-        logger.info("Finished adding player.");
+        try {
+            logger.info("Adding player...");
+            playerDA.add();
+            playerUI.refresh();
+            logger.info("Finished adding player.");
+        } catch (OperationCancelledException e) {
+            logger.info("Adding player operation cancelled");
+            GeneralDialog.getDialog().popup("operation_cancelled");
+        }
     }
 
     public void delete(int selected_player_id) {
@@ -190,6 +199,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Finished deleting player with ID: {}", selected_player_id);
     }
 
+    //TODO:
     public void export() {
         try {
             logger.info("Exporting data: Checking if data exists...");
@@ -198,35 +208,37 @@ public class PlayerControl implements GeneralControl {
                 PlayerDialog.getDialog().popup("player_map_null");
                 return;
             }
-            switch (PlayerDialog.getDialog().selectionDialog("export_player")){
-                case 0:
-                    logger.info("Exporting data to file...");
-                    playerDA.export();
-                    break;
-                case 1:
-                    logger.info("Exporting data to database...");
-                    exportDB();
-                    break;
+            DataSourceChooser dataSourceChooser = new DataSourceChooser();
+            DataSource dataSource = dataSourceChooser.getDataSource();
+            switch (dataSource){
+                case FILE -> exportFile((FileType) dataSourceChooser.getDataType());
+                case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataSourceChooser.getDataType());
             }
             logger.info("Finished exporting data.");
+        } catch (OperationException e){
+            logger.error(e.getMessage());
+            GeneralDialog.getDialog().popup("export_failed");
         } catch (Exception e) {
-            GeneralDialog.getDialog().message("Failed to export data\n" + e.getMessage());
+            logger.error(e.getMessage());
+            GeneralDialog.getDialog().popup("unknown_error");
         }
     }
 
-    private void exportDB() {
-        //Building data sources dialog options
-        DataSource[] dataSources = DataSource.values();
-        DataSource[] usable_dataSources = new DataSource[dataSources.length-2];
-        System.arraycopy(dataSources, 2, usable_dataSources, 0, usable_dataSources.length);
-        DataSource target_source = (DataSource) GeneralDialog.getDialog().selectionDialog("target_source",usable_dataSources);
-        //Building SQL dialect dialog options
-        SqlDialect[] dialects = SqlDialect.values();
-        SqlDialect[] usable_dialects = new SqlDialect[dialects.length-1];
-        System.arraycopy(dialects, 1, usable_dialects, 0, usable_dialects.length);
-        SqlDialect target_dialect = (SqlDialect) GeneralDialog.getDialog().selectionDialog("target_dialect",usable_dialects);
-        //Fetching default login info
+    private void exportFile(FileType fileType) throws Exception {
+        logger.info("Exporting data to file...");
+        playerDA.setFileType(fileType);
         try {
+            playerDA.export();
+        } catch (Exception e) {
+            throw new OperationException("export_file");
+        }
+    }
+
+    //TODO:
+    private void exportDB(DataSource target_source, SqlDialect target_dialect) throws OperationException {
+        logger.info("Exporting data to database...");
+        try {
+            //Fetching default login info
             HashMap<String, String> login_info = playerDA.getDefaultDatabaseInfo(target_dialect);
             DataBaseLogin dbLogin = new DataBaseLogin(login_info);
             if(!dbLogin.isValid()){
@@ -237,6 +249,9 @@ public class PlayerControl implements GeneralControl {
             playerDA.exportDB(target_source, target_dialect, login_info);
         } catch (ConfigErrorException e) {
             logger.error(e.getMessage());
+        } catch (DatabaseException e) {
+            logger.error(e.getMessage());
+            throw new OperationException("export_db");
         }
         PlayerDialog.getDialog().popup("exported_db");
     }
@@ -268,12 +283,19 @@ public class PlayerControl implements GeneralControl {
 
     public void changeLanguage(){
         logger.info("Changing language...");
-        String language = switch(GeneralDialog.getDialog().selectionDialog("language")){
-            case 0 -> "en";
-            case 1 -> "es";
-            case 2 -> "cn";
-            default -> throw new IllegalStateException("Unexpected value: " + GeneralDialog.getDialog().selectionDialog("language"));
-        };
+        String language;
+        try {
+            language = switch(GeneralDialog.getDialog().selectionDialog("language")){
+                case 0 -> "en";
+                case 1 -> "es";
+                case 2 -> "cn";
+                default -> throw new IllegalStateException("Unexpected value: " + GeneralDialog.getDialog().selectionDialog("language"));
+            };
+        } catch (OperationCancelledException e) {
+            logger.info("Language changing operation cancelled");
+            GeneralDialog.getDialog().popup("operation_cancelled");
+            return;
+        }
         GeneralDialog.getDialog().setLanguage(language);
         PlayerDialog.getDialog().setLanguage(language);
         playerUI.changeLanguage();

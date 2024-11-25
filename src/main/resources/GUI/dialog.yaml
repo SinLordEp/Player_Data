@@ -111,6 +111,14 @@ popup:
     en: "Operation cancelled!"
     es: "Operación cancelada!"
     cn: "操作已取消!"
+  export_failed:
+    en: "Failed to export data"
+    es: "No se han podido exportar datos"
+    cn: "导出数据失败"
+  unknown_error:
+    en: "Unknown error has occurred"
+    es: ""
+    cn: "未知错误"
 
 options:
   controller:

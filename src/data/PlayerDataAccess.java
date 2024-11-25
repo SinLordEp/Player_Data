@@ -7,6 +7,8 @@ import Interface.GeneralDataAccess;
 import data.database.SqlDialect;
 import exceptions.ConfigErrorException;
 import exceptions.DataCorruptedException;
+import exceptions.DatabaseException;
+import exceptions.OperationCancelledException;
 import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
@@ -120,7 +122,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         GeneralDialog.getDialog().message(GeneralDialog.getDialog().getPopup("data_saved") + dataSource);
     }
 
-    public void add() {
+    public void add() throws OperationCancelledException {
         Player player = new Player();
         player.setRegion((String) PlayerDialog
                 .getDialog()
@@ -153,7 +155,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
     }
 
-    public void modify(int selected_player_id) {
+    public void modify(int selected_player_id) throws OperationCancelledException {
         Player player = player_map.get(selected_player_id);
         switch(PlayerDialog.getDialog().selectionDialog("modify_player")){
             // After changing region the server has to be changed too.
@@ -200,12 +202,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
             target_path += "/" + target_name + target_extension;
             fileWriter.write(target_path, player_map);
         }else {
-            throw new IllegalStateException("Writer is not initialized");
+            throw new ConfigErrorException("Writer is not initialized");
         }
         PlayerDialog.getDialog().popup("exported_file");
     }
 
-    public void exportDB(DataSource dataSource, SqlDialect dialect, HashMap<String,String> login_info) {
+    public void exportDB(DataSource dataSource, SqlDialect dialect, HashMap<String,String> login_info) throws DatabaseException {
         PlayerDBA export_playerDBA = new PlayerDBA();
         export_playerDBA.setDialect(dialect);
         export_playerDBA.setLogin_info(login_info);

@@ -26,7 +26,7 @@ public abstract class GeneralDataAccess {
         this.dataSource = DataSource.FILE;
     }
 
-    public static String chooseExtension(){
+    public static String chooseExtension() throws OperationCancelledException {
         FileType[] fileTypes = FileType.values();
         FileType[] options = new FileType[fileTypes.length-1];
         System.arraycopy(fileTypes, 1, options, 0, fileTypes.length - 1);

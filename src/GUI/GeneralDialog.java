@@ -105,7 +105,7 @@ public class GeneralDialog {
         return ((java.util.List<String>)(((Map<String, Object>) option(sub_type).get("option")).get(language))).toArray(new String[0]);
     }
 
-    public int selectionDialog(String sub_type) {
+    public int selectionDialog(String sub_type) throws OperationCancelledException {
         Map<String, Object> dialog = option(sub_type);
         String[] options = getOptions(dialog);
         int choice = JOptionPane.showOptionDialog(
@@ -118,11 +118,11 @@ public class GeneralDialog {
                 options,
                 options[0]
         );
-        if (choice == -1) throw new OperationCancelledException("Operation canceled\n");
+        if (choice == -1) throw new OperationCancelledException();
         return choice;
     }
 
-    public Object selectionDialog(String sub_type, Object[] options) {
+    public Object selectionDialog(String sub_type, Object[] options) throws OperationCancelledException {
         Map<String, Object> dialog = option(sub_type);
         int choice = JOptionPane.showOptionDialog(
                 null,
@@ -134,7 +134,7 @@ public class GeneralDialog {
                 options,
                 options[0]
         );
-        if (choice == -1) throw new OperationCancelledException("Operation canceled\n");
+        if (choice == -1) throw new OperationCancelledException();
         return options[choice];
     }
 

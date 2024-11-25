@@ -1,6 +1,5 @@
 package GUI;
 
-import GUI.Player.PlayerDialog;
 import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
@@ -22,8 +21,7 @@ public class DataSourceChooser extends JDialog {
     private Object dataType;
     private boolean ok;
 
-    public DataSourceChooser(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public DataSourceChooser() {
         setContentPane(panel_main);
         setModal(true);
         getRootPane().setDefaultButton(button_submit);
@@ -61,11 +59,11 @@ public class DataSourceChooser extends JDialog {
     }
 
     private void setUIText(){
-        label_dataSource.setText(PlayerDialog.getDialog().getText("label_dataSource"));
+        label_dataSource.setText(GeneralDialog.getDialog().getText("label_dataSource"));
         switch (comboBox_dataSource.getSelectedItem()){
-            case DataSource.FILE -> label_dataType.setText(PlayerDialog.getDialog().getText("label_file_type"));
-            case DataSource.DATABASE, DataSource.HIBERNATE -> label_dataType.setText(PlayerDialog.getDialog().getText("label_sql_dialect"));
-            case null, default -> label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
+            case DataSource.FILE -> label_dataType.setText(GeneralDialog.getDialog().getText("label_file_type"));
+            case DataSource.DATABASE, DataSource.HIBERNATE -> label_dataType.setText(GeneralDialog.getDialog().getText("label_sql_dialect"));
+            case null, default -> label_dataType.setText(GeneralDialog.getDialog().getText("label_dataType"));
         }
     }
 
@@ -127,6 +125,10 @@ public class DataSourceChooser extends JDialog {
 
     public boolean isOk() {
         return ok;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
     }
 
     public Object getDataType() {
