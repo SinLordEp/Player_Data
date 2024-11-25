@@ -4,7 +4,7 @@ import GUI.GeneralDialog;
 import Interface.GeneralDBA;
 import data.DataOperation;
 import data.DataSource;
-import main.OperationException;
+import exceptions.OperationCancelledException;
 import model.Player;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -105,7 +105,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
                 player_map.put(player.getID(), player);
             }
         } catch (SQLException e) {
-            throw new OperationException("Error reading data from database");
+            throw new OperationCancelledException("Error reading data from database");
         }
         return player_map;
     }
@@ -149,7 +149,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             statement.setString(4, player.getName());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new OperationException("Error adding player to database");
+            throw new OperationCancelledException("Error adding player to database");
         }
     }
 
@@ -162,7 +162,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             statement.setInt(4, player.getID());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new OperationException("Error modifying player in database");
+            throw new OperationCancelledException("Error modifying player in database");
         }
     }
 
@@ -172,7 +172,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             statement.setInt(1, player.getID());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new OperationException("Error deleting player from database");
+            throw new OperationCancelledException("Error deleting player from database");
         }
     }
 

@@ -10,7 +10,7 @@ import Interface.GeneralDataAccess;
 import data.PlayerDataAccess;
 import data.database.SqlDialect;
 import data.file.FileType;
-import main.OperationException;
+import exceptions.OperationCancelledException;
 import model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +46,7 @@ public class PlayerControl implements GeneralControl {
 
     @Override
     public void setDataSource(DataSource dataSource) {
+        logger.debug("Setting new data source...");
         playerDA.setDataSource(dataSource);
         logger.debug("Data source is set to {}", dataSource);
     }
@@ -63,14 +64,17 @@ public class PlayerControl implements GeneralControl {
     }
 
     //todo:连接新增的两个combo,不再使用弹窗选择
-    public void createFile() throws OperationException {
-        logger.debug("Creating file by building path");
+    public void createFile() {
+        logger.debug("Creating file: Fetching data source...");
+        setDataSource(playerUI.getDataSource());
+
         try {
             playerDA.setFilePath(GeneralDataAccess.newPathBuilder());
             logger.info("Path built successfully");
-        } catch (Exception e) {
-            logger.error("Failed to create new file, Cause: {}", e.getMessage());
-            GeneralDialog.getDialog().message("Failed to create new file\n" + e.getMessage());
+        } catch (OperationCancelledException e) {
+            logger.error("Failed to create new file, Cause: Operation cancelled");
+            GeneralDialog.getDialog().popup("operation_cancelled");
+            return;
         }
         playerUI.refresh();
         logger.info("File created successfully");
@@ -79,7 +83,6 @@ public class PlayerControl implements GeneralControl {
     public void importData() {
         logger.debug("Importing data: Saving possible data before changing datasource...");
         save();
-        logger.debug("Fetching new data source...");
         setDataSource(playerUI.getDataSource());
         switch (playerDA.getDataSource()){
             case FILE -> importFile();
@@ -91,7 +94,12 @@ public class PlayerControl implements GeneralControl {
         logger.debug("Importing data from file: Fetching file type...");
         setFileType(playerUI.getFileType());
         logger.info("Fetching file path...");
-        String file_path = GeneralDataAccess.getPath(playerDA.getFileType());
+        String file_path = null;
+        try {
+            file_path = GeneralDataAccess.getPath(playerDA.getFileType());
+        } catch (OperationCancelledException e) {
+            GeneralDialog.getDialog().popup("operation_cancelled");
+        }
         playerDA.setFilePath(file_path);
         logger.debug("File path set to: {}",file_path);
         logger.info("Reading data from file...");
@@ -121,7 +129,7 @@ public class PlayerControl implements GeneralControl {
         DataBaseLogin dbLogin = new DataBaseLogin(login_info);
         if(!dbLogin.isValid()){
             logger.info("Connecting to database cancelled: User cancelled operation");
-            GeneralDialog.getDialog().popup("db_login_canceled");
+            GeneralDialog.getDialog().popup("db_login_cancelled");
             return false;
         }
         playerDA.setLogin_info(login_info);
@@ -200,7 +208,7 @@ public class PlayerControl implements GeneralControl {
         DataBaseLogin dbLogin = new DataBaseLogin(login_info);
         if(!dbLogin.isValid()){
             logger.info("Exporting to database cancelled: User cancelled operation");
-            GeneralDialog.getDialog().popup("db_login_canceled");
+            GeneralDialog.getDialog().popup("db_login_cancelled");
             return;
         }
         playerDA.exportDB(target_source, target_dialect, login_info);

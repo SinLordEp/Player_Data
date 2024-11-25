@@ -1,6 +1,6 @@
 package GUI;
 
-import main.OperationException;
+import exceptions.OperationCancelledException;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.swing.*;
@@ -118,7 +118,7 @@ public class GeneralDialog {
                 options,
                 options[0]
         );
-        if (choice == -1) throw new OperationException("Operation canceled\n");
+        if (choice == -1) throw new OperationCancelledException("Operation canceled\n");
         return choice;
     }
 
@@ -134,7 +134,7 @@ public class GeneralDialog {
                 options,
                 options[0]
         );
-        if (choice == -1) throw new OperationException("Operation canceled\n");
+        if (choice == -1) throw new OperationCancelledException("Operation canceled\n");
         return options[choice];
     }
 

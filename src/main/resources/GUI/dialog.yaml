@@ -87,10 +87,14 @@ popup:
     en: "Data invalid"
     es: "Datos inválidos"
     cn: "无效数据"
-  db_login_canceled:
+  db_login_cancelled:
     en: "You have canceled the database login"
     es: "Has cancelado de conectar a base de datos"
     cn: "您已取消连接数据库"
+  operation_cancelled:
+    en: "Operation cancelled!"
+    es: "Operación cancelada!"
+    cn: "操作已取消!"
 
 options:
   controller:

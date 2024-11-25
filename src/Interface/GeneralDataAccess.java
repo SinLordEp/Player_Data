@@ -4,7 +4,7 @@ import GUI.GeneralDialog;
 import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
-import main.OperationException;
+import exceptions.OperationCancelledException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -37,7 +37,7 @@ public abstract class GeneralDataAccess {
         };
     }
 
-    public static String getPath(FileType fileType){
+    public static String getPath(FileType fileType) throws OperationCancelledException {
         JFileChooser fileChooser = new JFileChooser(new File(getProperty("defaultFilePath")).getAbsolutePath());
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setDialogTitle("Choosing " + fileType);
@@ -52,19 +52,26 @@ public abstract class GeneralDataAccess {
                 fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralDialog.getDialog().getText("extension_xml"), "xml"));
                 break;
         }
-        if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) return fileChooser.getSelectedFile().getPath();
-        throw new OperationException("Operation canceled\n");
+        if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile().getPath();
+        }else {
+            throw new OperationCancelledException();
+        }
+
     }
 
-    public static String getPath(){
+    public static String getPath() throws OperationCancelledException {
         JFileChooser fileChooser = new JFileChooser(new File(getProperty("defaultFilePath")).getAbsolutePath());
         fileChooser.setDialogTitle("Choosing path");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) return fileChooser.getSelectedFile().getPath();
-        throw new OperationException("Operation canceled\n");
+        if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile().getPath();
+        }else{
+            throw new OperationCancelledException();
+        }
     }
 
-    public static String newPathBuilder(){
+    public static String newPathBuilder() throws OperationCancelledException {
         String target_path = GeneralDataAccess.getPath();
         String target_extension = chooseExtension();
         String target_file_name = GeneralDialog.getDialog().input("file_name");

@@ -2,6 +2,7 @@ package main;
 
 import Interface.GeneralControl;
 import Interface.GeneralDataAccess;
+import exceptions.OperationCancelledException;
 import org.reflections.Reflections;
 
 import java.util.HashMap;
@@ -48,13 +49,13 @@ public class ClassRegister {
             control.setDA(getDA(class_name));
             return control;
         }
-        throw new OperationException("Failed to getDialog Control class");
+        throw new OperationCancelledException("Failed to getDialog Control class");
     }
     public GeneralDataAccess getDA(String class_name) throws Exception {
         Class<? extends GeneralDataAccess> dataAccessClass = dataAccessMap.get(class_name);
         if (dataAccessClass != null) {
             return dataAccessClass.getDeclaredConstructor().newInstance();
         }
-        throw new OperationException("Failed to getDialog DataAccess class");
+        throw new OperationCancelledException("Failed to getDialog DataAccess class");
     }
 }
