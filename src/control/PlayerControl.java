@@ -66,20 +66,21 @@ public class PlayerControl implements GeneralControl {
         logger.debug("FileType is set to {}", fileType);
     }
 
-    //todo:连接新增的两个combo,不再使用弹窗选择
     public void createFile() {
         logger.debug("Creating file: Fetching data source...");
-        //setDataSource(playerUI.getDataSource());
-
+        DataSourceChooser dataSourceChooser = new DataSourceChooser(DataSource.FILE);
+        setDataSource(DataSource.FILE);
         try {
-            playerDA.setFilePath(GeneralDataAccess.newPathBuilder());
+            playerDA.setFilePath(GeneralDataAccess.newPathBuilder((FileType) dataSourceChooser.getDataType()));
             logger.info("Path built successfully");
+            playerDA.createNewFile();
         } catch (OperationCancelledException e) {
             logger.error("Failed to create new file, Cause: Operation cancelled");
             GeneralDialog.getDialog().popup("operation_cancelled");
             return;
+        } catch (FileManageException e) {
+            logger.error("Failed to create new file, Cause: ", e);
         }
-        notifyListeners("data_changed", playerDA.getPlayerMap());
         logger.info("File created successfully");
     }
 
@@ -197,7 +198,6 @@ public class PlayerControl implements GeneralControl {
         logger.info("Finished deleting player with ID: {}", selected_player_id);
     }
 
-    //TODO:
     public void export() {
         try {
             logger.info("Exporting data: Checking if data exists...");
@@ -232,7 +232,6 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    //TODO:
     private void exportDB(DataSource target_source, SqlDialect target_dialect) throws OperationException {
         logger.info("Exporting data to database...");
         try {
@@ -302,10 +301,6 @@ public class PlayerControl implements GeneralControl {
 
     public void addListener(EventListener listener){
         listeners.add(listener);
-    }
-
-    public void removeListener(EventListener listener){
-        listeners.remove(listener);
     }
 
     private void notifyListeners(String event, Object... data){

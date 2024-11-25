@@ -22,12 +22,24 @@ public class DataSourceChooser extends JDialog {
     private boolean ok;
 
     public DataSourceChooser() {
-        setContentPane(panel_main);
-        setModal(true);
-        getRootPane().setDefaultButton(button_submit);
+        initialize();
+    }
+
+    public DataSourceChooser(DataSource dataSource) {
+        this.dataSource = dataSource;
+        if(dataSource == DataSource.FILE){
+            comboBox_dataSource.setSelectedItem(DataSource.FILE);
+            comboBox_dataSource.setEnabled(false);
+        }
+    }
+
+    private void initialize(){
         setUIText();
         initializeDataSourceComboBox();
         comboBoxListener();
+        setContentPane(panel_main);
+        setModal(true);
+        getRootPane().setDefaultButton(button_submit);
         button_submit.addActionListener(_ -> onOK());
         button_cancel.addActionListener(_ -> onCancel());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

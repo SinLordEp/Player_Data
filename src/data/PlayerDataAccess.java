@@ -196,7 +196,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public void export() throws Exception {
         if(fileWriter != null){
-            String target_extension = chooseExtension();
+            String target_extension = getExtension(fileType);
             String target_path = getPath();
             String target_name = GeneralDialog.getDialog().input("new_file_name");
             target_path += "/" + target_name + target_extension;

@@ -117,7 +117,7 @@ popup:
     cn: "导出数据失败"
   unknown_error:
     en: "Unknown error has occurred"
-    es: ""
+    es: "Se ha producido un error desconocido"
     cn: "未知错误"
 
 options:

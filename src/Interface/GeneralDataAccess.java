@@ -5,11 +5,13 @@ import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
 import exceptions.ConfigErrorException;
+import exceptions.FileManageException;
 import exceptions.OperationCancelledException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 import static main.principal.getProperty;
@@ -26,11 +28,8 @@ public abstract class GeneralDataAccess {
         this.dataSource = DataSource.FILE;
     }
 
-    public static String chooseExtension() throws OperationCancelledException {
-        FileType[] fileTypes = FileType.values();
-        FileType[] options = new FileType[fileTypes.length-1];
-        System.arraycopy(fileTypes, 1, options, 0, fileTypes.length - 1);
-        return switch (GeneralDialog.getDialog().selectionDialog("extension_general", options)) {
+    public static String getExtension(FileType fileType) {
+        return switch (fileType) {
             case FileType.DAT -> ".dat";
             case FileType.XML -> ".xml";
             case FileType.TXT -> ".txt";
@@ -72,9 +71,9 @@ public abstract class GeneralDataAccess {
         }
     }
 
-    public static String newPathBuilder() throws OperationCancelledException {
+    public static String newPathBuilder(FileType fileType) throws OperationCancelledException {
         String target_path = GeneralDataAccess.getPath();
-        String target_extension = chooseExtension();
+        String target_extension = getExtension(fileType);
         String target_file_name = GeneralDialog.getDialog().input("file_name");
         target_path += "/" +target_file_name + target_extension;
         return target_path;
@@ -95,4 +94,15 @@ public abstract class GeneralDataAccess {
     public void setFileType(FileType fileType) {
         this.fileType = fileType;
     }
+
+    public void createNewFile() throws FileManageException {
+        try {
+            if(new File(file_path).createNewFile()){
+                GeneralDialog.getDialog().popup("file_created");
+            }
+        } catch (IOException e) {
+            throw new FileManageException(e.getMessage());
+        }
+    }
+
 }
