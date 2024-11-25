@@ -5,6 +5,7 @@ import GUI.DataSourceChooser;
 import GUI.GeneralDialog;
 import GUI.Player.PlayerUI;
 import GUI.Player.PlayerDialog;
+import Interface.EventListener;
 import Interface.GeneralControl;
 import data.DataSource;
 import Interface.GeneralDataAccess;
@@ -12,21 +13,22 @@ import data.PlayerDataAccess;
 import data.database.SqlDialect;
 import data.file.FileType;
 import exceptions.*;
-import model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.List;
+
 
 public class PlayerControl implements GeneralControl {
     private static final Logger logger = LoggerFactory.getLogger(PlayerControl.class);
     private PlayerDataAccess playerDA;
-    private PlayerUI playerUI;
+    private final List<EventListener> listeners = new ArrayList<>();
 
     @Override
     public void run() {
-        playerUI = new PlayerUI(this);
+        PlayerUI playerUI = new PlayerUI(this);
         logger.debug("Trying to build player frame");
         playerUI.run();
         logger.info("Finished building player frame");
@@ -77,7 +79,7 @@ public class PlayerControl implements GeneralControl {
             GeneralDialog.getDialog().popup("operation_cancelled");
             return;
         }
-        playerUI.refresh();
+        notifyListeners("data_changed", playerDA.getPlayerMap());
         logger.info("File created successfully");
     }
 
@@ -119,7 +121,7 @@ public class PlayerControl implements GeneralControl {
             logger.info("Reading data from file...");
             playerDA.read();
             logger.info("Data read successfully from file, refreshing UI");
-            playerUI.refresh();
+            notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished importing from file");
         } catch (OperationCancelledException e) {
             GeneralDialog.getDialog().popup("operation_cancelled");
@@ -132,7 +134,7 @@ public class PlayerControl implements GeneralControl {
             logger.info("Reading data from database...");
             playerDA.read();
             logger.info("Data read successfully from database, refreshing UI");
-            playerUI.refresh();
+            notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished importing from database");
             playerDA.disconnectDB();
             logger.info("Disconnected from database to release resources");
@@ -164,15 +166,11 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    public TreeMap<Integer,Player> getMap(){
-        return playerDA.getPlayerMap();
-    }
-
     public void modify(int selected_player_id){
         try {
             logger.info("Modifying player with ID: {}", selected_player_id);
             playerDA.modify(selected_player_id);
-            playerUI.refresh();
+            notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished updating player with ID: {}", selected_player_id);
         } catch (OperationCancelledException e) {
             logger.info("Modify operation cancelled");
@@ -184,7 +182,7 @@ public class PlayerControl implements GeneralControl {
         try {
             logger.info("Adding player...");
             playerDA.add();
-            playerUI.refresh();
+            notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished adding player.");
         } catch (OperationCancelledException e) {
             logger.info("Adding player operation cancelled");
@@ -195,7 +193,7 @@ public class PlayerControl implements GeneralControl {
     public void delete(int selected_player_id) {
         logger.info("Deleting player with ID: {}", selected_player_id);
         playerDA.delete(selected_player_id);
-        playerUI.refresh();
+        notifyListeners("data_changed", playerDA.getPlayerMap());
         logger.info("Finished deleting player with ID: {}", selected_player_id);
     }
 
@@ -298,8 +296,22 @@ public class PlayerControl implements GeneralControl {
         }
         GeneralDialog.getDialog().setLanguage(language);
         PlayerDialog.getDialog().setLanguage(language);
-        playerUI.changeLanguage();
+        notifyListeners("language_changed", (Object) null);
         logger.info("Finished changing language to: {}", language);
+    }
+
+    public void addListener(EventListener listener){
+        listeners.add(listener);
+    }
+
+    public void removeListener(EventListener listener){
+        listeners.remove(listener);
+    }
+
+    private void notifyListeners(String event, Object... data){
+        for(EventListener listener : listeners){
+            listener.onEvent(event, data);
+        }
     }
 
 }

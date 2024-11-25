@@ -1,7 +1,9 @@
 package GUI.Player;
 
+import Interface.EventListener;
 import Interface.GeneralUI;
 import control.PlayerControl;
+import model.Player;
 
 
 import javax.swing.*;
@@ -9,7 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.TreeMap;
 
-public class PlayerUI implements GeneralUI {
+public class PlayerUI implements GeneralUI, EventListener {
     private final PlayerControl playerControl;
     private JTable table_data;
 
@@ -32,6 +34,7 @@ public class PlayerUI implements GeneralUI {
 
     public PlayerUI(PlayerControl control) {
         playerControl = control;
+        this.playerControl.addListener(this);
     }
 
     private void initialize(){
@@ -63,8 +66,10 @@ public class PlayerUI implements GeneralUI {
     }
 
     @Override
-    public void refresh() {
-        tableModel.update_data(playerControl.getMap());
+    @SuppressWarnings("unchecked")
+    public void refresh(Object data) {
+        TreeMap<Integer, Player> player_map = (TreeMap<Integer, Player>) data;
+        tableModel.update_data(player_map);
         table_data.setModel(tableModel);
     }
 
@@ -134,6 +139,14 @@ public class PlayerUI implements GeneralUI {
     public void changeLanguage(){
         setUIText();
         tableModel.language_changed();
+    }
+
+    @Override
+    public void onEvent(String event, Object data) {
+        switch(event){
+            case "data_changed"-> refresh(data);
+            case "language_changed"-> changeLanguage();
+        }
     }
 }
 
