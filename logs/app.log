@@ -926,3 +926,5 @@
 2024-11-25 20:45:22 INFO  control.PlayerControl - Data read successfully from database, refreshing UI
 2024-11-25 20:45:22 INFO  control.PlayerControl - Finished importing from database
 2024-11-25 20:45:22 INFO  control.PlayerControl - Disconnected from database to release resources
+2024-11-25 21:21:01 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-11-25 21:21:01 INFO  control.PlayerControl - Finished building player frame
