@@ -4,6 +4,7 @@ import GUI.GeneralDialog;
 import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
+import exceptions.ConfigErrorException;
 import exceptions.OperationCancelledException;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public abstract class GeneralDataAccess {
     protected String file_path = null;
     protected DataSource dataSource = DataSource.NONE;
     protected FileType fileType = FileType.NONE;
-    public abstract HashMap<String, String> getDefaultDatabaseInfo(SqlDialect sqlDialect);
+    public abstract HashMap<String, String> getDefaultDatabaseInfo(SqlDialect sqlDialect) throws ConfigErrorException;
 
     public void setFilePath(String file_path) {
         this.file_path = file_path;

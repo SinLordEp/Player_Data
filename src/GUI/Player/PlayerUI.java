@@ -2,14 +2,11 @@ package GUI.Player;
 
 import Interface.GeneralUI;
 import control.PlayerControl;
-import data.DataSource;
-import data.database.SqlDialect;
-import data.file.FileType;
+
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Objects;
 import java.util.TreeMap;
 
 public class PlayerUI implements GeneralUI {
@@ -30,10 +27,6 @@ public class PlayerUI implements GeneralUI {
 
     private JPanel main_panel;
     private JScrollPane scroll_data;
-    private JComboBox<Object> comboBox_dataType;
-    private JComboBox<DataSource> comboBox_dataSource;
-    private JLabel label_dataSource;
-    private JLabel label_dataType;
     private PlayerTableModel tableModel;
     private int selected_player_id;
 
@@ -50,8 +43,6 @@ public class PlayerUI implements GeneralUI {
         searchListener();
         buttonListener();
         tableListener();
-        comboBoxListener();
-        initializeDataSourceComboBox();
     }
 
     @Override
@@ -77,37 +68,6 @@ public class PlayerUI implements GeneralUI {
         table_data.setModel(tableModel);
     }
 
-    private void initializeDataSourceComboBox(){
-        for(DataSource dataSource : DataSource.values()){
-            comboBox_dataSource.addItem(dataSource);
-        }
-        comboBox_dataSource.setSelectedItem(DataSource.NONE);
-    }
-
-    private void configureDataType(DataSource dataSource) {
-        button_createFile.setEnabled(false);
-        button_import.setEnabled(false);
-        switch(dataSource){
-            case NONE:
-                comboBox_dataType.setEnabled(false);
-                label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
-                return;
-            case FILE:
-                for(FileType fileType : FileType.values()){
-                    comboBox_dataType.addItem(fileType);
-                }
-                label_dataType.setText(PlayerDialog.getDialog().getText("label_file_type"));
-                break;
-            case DATABASE, HIBERNATE:
-                for(SqlDialect sqlDialect : SqlDialect.values()){
-                    comboBox_dataType.addItem(sqlDialect);
-                }
-                label_dataType.setText(PlayerDialog.getDialog().getText("label_sql_dialect"));
-                break;
-        }
-        comboBox_dataType.setEnabled(true);
-    }
-
     public void setUIText(){
         button_add.setText(PlayerDialog.getDialog().getText("button_add"));
         button_modify.setText(PlayerDialog.getDialog().getText("button_modify"));
@@ -117,12 +77,6 @@ public class PlayerUI implements GeneralUI {
         button_createFile.setText(PlayerDialog.getDialog().getText("button_createFile"));
         button_language.setText(PlayerDialog.getDialog().getText("button_language"));
         label_search.setText(PlayerDialog.getDialog().getText("label_search"));
-        label_dataSource.setText(PlayerDialog.getDialog().getText("label_dataSource"));
-        switch (comboBox_dataSource.getSelectedItem()){
-            case DataSource.FILE -> label_dataType.setText(PlayerDialog.getDialog().getText("label_file_type"));
-            case DataSource.DATABASE, DataSource.HIBERNATE -> label_dataType.setText(PlayerDialog.getDialog().getText("label_sql_dialect"));
-            case null, default -> label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
-        }
     }
 
     private void searchListener(){
@@ -175,40 +129,6 @@ public class PlayerUI implements GeneralUI {
                 selected_player_id = -1;
             }
         });
-    }
-
-    private void comboBoxListener(){
-        comboBox_dataSource.addItemListener(_ -> {
-            comboBox_dataType.removeAllItems();
-            configureDataType((DataSource) Objects.requireNonNull(comboBox_dataSource.getSelectedItem()));
-        });
-        comboBox_dataType.addItemListener(_ -> {
-            switch(comboBox_dataType.getSelectedItem()){
-                case SqlDialect.NONE, FileType.NONE:
-                case null:
-                    return;
-                case FileType ignore:
-                    button_createFile.setEnabled(true);
-                    button_import.setEnabled(true);
-                    break;
-                case SqlDialect ignore:
-                    button_import.setEnabled(true);
-                    break;
-                default:
-            }
-        });
-    }
-
-    public DataSource getDataSource(){
-        return (DataSource) comboBox_dataSource.getSelectedItem();
-    }
-
-    public SqlDialect getSQLDialect(){
-        return (SqlDialect) comboBox_dataType.getSelectedItem();
-    }
-
-    public FileType getFileType(){
-        return (FileType) comboBox_dataType.getSelectedItem();
     }
 
     public void changeLanguage(){

@@ -4,7 +4,7 @@ import GUI.Player.PlayerDialog;
 import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
-import exceptions.OperationCancelledException;
+
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -20,16 +20,18 @@ public class DataSourceChooser extends JDialog {
     private JComboBox<Object> comboBox_dataType;
     private DataSource dataSource;
     private Object dataType;
+    private boolean ok;
 
-    public DataSourceChooser(DataSource dataSource, Object dataType) {
+    public DataSourceChooser(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.dataType = dataType;
         setContentPane(panel_main);
         setModal(true);
         getRootPane().setDefaultButton(button_submit);
+        setUIText();
+        initializeDataSourceComboBox();
         comboBoxListener();
-        button_submit.addActionListener(e -> onOK());
-        button_cancel.addActionListener(e -> onCancel());
+        button_submit.addActionListener(_ -> onOK());
+        button_cancel.addActionListener(_ -> onCancel());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -42,13 +44,13 @@ public class DataSourceChooser extends JDialog {
         setVisible(true);
     }
 
-    //todo:
     private void onOK() {
-        // add your code here
+        ok = true;
         dispose();
     }
 
     private void onCancel() {
+        ok = false;
         dataSource = DataSource.NONE;
         dataType = switch (dataType){
             case FileType ignore -> FileType.NONE;
@@ -58,15 +60,28 @@ public class DataSourceChooser extends JDialog {
         dispose();
     }
 
+    private void setUIText(){
+        label_dataSource.setText(PlayerDialog.getDialog().getText("label_dataSource"));
+        switch (comboBox_dataSource.getSelectedItem()){
+            case DataSource.FILE -> label_dataType.setText(PlayerDialog.getDialog().getText("label_file_type"));
+            case DataSource.DATABASE, DataSource.HIBERNATE -> label_dataType.setText(PlayerDialog.getDialog().getText("label_sql_dialect"));
+            case null, default -> label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
+        }
+    }
+
+    private void initializeDataSourceComboBox(){
+        for(DataSource dataSource : DataSource.values()){
+            comboBox_dataSource.addItem(dataSource);
+        }
+        comboBox_dataSource.setSelectedItem(DataSource.NONE);
+    }
+
     private void comboBoxListener(){
-        comboBox_dataSource.addItemListener(_ -> {
-            configureDataType((DataSource) Objects.requireNonNull(comboBox_dataSource.getSelectedItem()));
-        });
+        comboBox_dataSource.addItemListener(_ -> configureDataType((DataSource) Objects.requireNonNull(comboBox_dataSource.getSelectedItem())));
 
         comboBox_dataType.addItemListener(_ -> setDataType(comboBox_dataType.getSelectedItem()));
     }
 
-    //TODO:
     private void configureDataType(DataSource dataSource) {
         this.dataSource = dataSource;
         comboBox_dataType.removeAllItems();
@@ -74,19 +89,19 @@ public class DataSourceChooser extends JDialog {
         switch(dataSource){
             case NONE:
                 comboBox_dataType.setEnabled(false);
-                label_dataType.setText(PlayerDialog.getDialog().getText("label_dataType"));
+                label_dataType.setText(GeneralDialog.getDialog().getText("label_dataType"));
                 return;
             case FILE:
                 for(FileType fileType : FileType.values()){
                     comboBox_dataType.addItem(fileType);
                 }
-                label_dataType.setText(PlayerDialog.getDialog().getText("label_file_type"));
+                label_dataType.setText(GeneralDialog.getDialog().getText("label_file_type"));
                 break;
             case DATABASE, HIBERNATE:
                 for(SqlDialect sqlDialect : SqlDialect.values()){
                     comboBox_dataType.addItem(sqlDialect);
                 }
-                label_dataType.setText(PlayerDialog.getDialog().getText("label_sql_dialect"));
+                label_dataType.setText(GeneralDialog.getDialog().getText("label_sql_dialect"));
                 break;
         }
         comboBox_dataType.setEnabled(true);
@@ -96,15 +111,25 @@ public class DataSourceChooser extends JDialog {
         switch(dataType){
             case SqlDialect.NONE, FileType.NONE:
             case null:
+                button_submit.setEnabled(false);
                 return;
             case FileType ignore:
+                this.dataType = dataType;
                 button_submit.setEnabled(true);
                 break;
             case SqlDialect ignore:
+                this.dataType = dataType;
                 button_submit.setEnabled(true);
                 break;
             default:
         }
     }
 
+    public boolean isOk() {
+        return ok;
+    }
+
+    public Object getDataType() {
+        return dataType;
+    }
 }

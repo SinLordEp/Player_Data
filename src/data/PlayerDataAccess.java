@@ -5,7 +5,8 @@ import GUI.Player.PlayerDialog;
 import data.database.PlayerDBA;
 import Interface.GeneralDataAccess;
 import data.database.SqlDialect;
-import exceptions.OperationCancelledException;
+import exceptions.ConfigErrorException;
+import exceptions.DataCorruptedException;
 import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
@@ -37,7 +38,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     @Override
     @SuppressWarnings("unchecked")
-    public HashMap<String, String> getDefaultDatabaseInfo(SqlDialect dialect) {
+    public HashMap<String, String> getDefaultDatabaseInfo(SqlDialect dialect) throws ConfigErrorException {
         HashMap<String, String> login_info = new HashMap<>();
         HashMap<String,Object> default_info = null;
         URL resource = getClass().getResource(getProperty("defaultPlayerSQL"));
@@ -46,11 +47,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 Yaml yaml = new Yaml();
                 default_info = yaml.load(inputStream);
             }catch (Exception e){
-                throw new OperationCancelledException("Error loading default database info");
+                throw new ConfigErrorException("Error loading default database info");
             }
         }
         if(default_info == null){
-            throw new OperationCancelledException("Default database info is null");
+            throw new ConfigErrorException("Default database info is null");
         }
         switch (dialect) {
             case MYSQL:
@@ -98,7 +99,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 case DATABASE, HIBERNATE -> playerDBA.read(dataSource);
             };
             if(player_map != null && !isDataValid()){
-                throw new OperationCancelledException("Data is corrupted");
+                throw new DataCorruptedException("Data is corrupted");
             }
         } catch (Exception e) {
             GeneralDialog.getDialog().message("Failed to read data\n" + e.getMessage());
@@ -144,7 +145,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
             try {
                 int ID = Integer.parseInt(PlayerDialog.getDialog().input("id"));
                 if (player_map.containsKey(ID)) {
-                    throw new OperationCancelledException("ID already existed\n");
+                    PlayerDialog.getDialog().popup("duplicate_player");
                 } else return ID;
             } catch (NumberFormatException e) {
                 PlayerDialog.getDialog().popup("number_format_invalid");
@@ -204,7 +205,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
         PlayerDialog.getDialog().popup("exported_file");
     }
 
-    //todo:需要先连接数据库再进行导出到数据库操作
     public void exportDB(DataSource dataSource, SqlDialect dialect, HashMap<String,String> login_info) {
         PlayerDBA export_playerDBA = new PlayerDBA();
         export_playerDBA.setDialect(dialect);

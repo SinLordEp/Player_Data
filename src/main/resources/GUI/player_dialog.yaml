@@ -43,22 +43,7 @@ text:
     en: "Search by ID:"
     es: "Buscar por ID:"
     cn: "按ID搜索:"
-  label_dataSource:
-    en: "Data source:"
-    es: "Fuente de dato:"
-    cn: "数据来源:"
-  label_dataType:
-    en: "Data type:"
-    es: "Tipo de dato:"
-    cn: "数据类型:"
-  label_sql_dialect:
-    en: "SQL dialect:"
-    es: "Dialecto de SQL:"
-    cn: "SQL方言:"
-  label_file_type:
-    en: "File type:"
-    es: "Tipo de fichero:"
-    cn: "文件类型:"
+
 
 input:
   player_name:
@@ -111,6 +96,10 @@ popup:
     en: "No player data registered"
     es: "No hay jugador registrada"
     cn: "无玩家数据"
+  duplicate_player:
+    en: "Player already existed"
+    es: "Jugador ya existe"
+    cn: "玩家已存在"
 
 options:
   modify_player:

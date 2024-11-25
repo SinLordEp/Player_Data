@@ -1,6 +1,7 @@
 package control;
 
 import GUI.DataBaseLogin;
+import GUI.DataSourceChooser;
 import GUI.GeneralDialog;
 import GUI.Player.PlayerUI;
 import GUI.Player.PlayerDialog;
@@ -10,6 +11,8 @@ import Interface.GeneralDataAccess;
 import data.PlayerDataAccess;
 import data.database.SqlDialect;
 import data.file.FileType;
+import exceptions.ConfigErrorException;
+import exceptions.DataTypeException;
 import exceptions.OperationCancelledException;
 import model.Player;
 import org.slf4j.Logger;
@@ -66,7 +69,7 @@ public class PlayerControl implements GeneralControl {
     //todo:连接新增的两个combo,不再使用弹窗选择
     public void createFile() {
         logger.debug("Creating file: Fetching data source...");
-        setDataSource(playerUI.getDataSource());
+        //setDataSource(playerUI.getDataSource());
 
         try {
             playerDA.setFilePath(GeneralDataAccess.newPathBuilder());
@@ -81,37 +84,51 @@ public class PlayerControl implements GeneralControl {
     }
 
     public void importData() {
-        logger.debug("Importing data: Saving possible data before changing datasource...");
-        save();
-        setDataSource(playerUI.getDataSource());
-        switch (playerDA.getDataSource()){
-            case FILE -> importFile();
-            case DATABASE, HIBERNATE -> importDB();
+        try {
+            logger.debug("Importing data: Saving possible data before changing datasource...");
+            save();
+            logger.info("Fetching data source and data type");
+            DataSourceChooser dataSourceChooser = new DataSourceChooser(playerDA.getDataSource());
+            if(!dataSourceChooser.isOk()){
+                throw new OperationCancelledException();
+            }
+            Object dataType = dataSourceChooser.getDataType();
+            switch (dataType){
+                case FileType ignore -> playerDA.setFileType((FileType) dataType);
+                case SqlDialect ignore -> playerDA.setSQLDialect((SqlDialect) dataType);
+                default -> throw new DataTypeException("Unexpected value: " + dataType);
+            }
+            switch (playerDA.getDataSource()){
+                case FILE -> importFile();
+                case DATABASE, HIBERNATE -> importDB();
+            }
+        } catch (OperationCancelledException e) {
+            GeneralDialog.getDialog().popup("operation_cancelled");
+        }catch (DataTypeException e){
+            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 
     public void importFile() {
-        logger.debug("Importing data from file: Fetching file type...");
-        setFileType(playerUI.getFileType());
-        logger.info("Fetching file path...");
-        String file_path = null;
+        logger.debug("Importing data from file: Fetching file path...");
+        String file_path;
         try {
             file_path = GeneralDataAccess.getPath(playerDA.getFileType());
+            playerDA.setFilePath(file_path);
+            logger.debug("File path set to: {}",file_path);
+            logger.info("Reading data from file...");
+            playerDA.read();
+            logger.info("Data read successfully from file, refreshing UI");
+            playerUI.refresh();
+            logger.info("Finished importing from file");
         } catch (OperationCancelledException e) {
             GeneralDialog.getDialog().popup("operation_cancelled");
         }
-        playerDA.setFilePath(file_path);
-        logger.debug("File path set to: {}",file_path);
-        logger.info("Reading data from file...");
-        playerDA.read();
-        logger.info("Data read successfully from file, refreshing UI");
-        playerUI.refresh();
-        logger.info("Finished importing from file");
     }
 
     public void importDB()  {
-        logger.info("Importing data from database: Fetching SQL dialect...");
-        setSQLDialect(playerUI.getSQLDialect());
+        logger.info("Importing data from database: ");
         if(connectDB()){
             logger.info("Reading data from database...");
             playerDA.read();
@@ -125,20 +142,25 @@ public class PlayerControl implements GeneralControl {
 
     public boolean connectDB(){
         logger.debug("Connecting to database...");
-        HashMap<String, String> login_info = playerDA.getDefaultDatabaseInfo(playerDA.getSQLDialect());
-        DataBaseLogin dbLogin = new DataBaseLogin(login_info);
-        if(!dbLogin.isValid()){
-            logger.info("Connecting to database cancelled: User cancelled operation");
-            GeneralDialog.getDialog().popup("db_login_cancelled");
-            return false;
-        }
-        playerDA.setLogin_info(login_info);
-        if(playerDA.connectDB()){
-            logger.info("Database connected successfully");
-            return true;
-        }else{
-            logger.error("Database could not connect");
-            GeneralDialog.getDialog().popup("db_login_failed");
+        try {
+            HashMap<String, String> login_info = playerDA.getDefaultDatabaseInfo(playerDA.getSQLDialect());
+            DataBaseLogin dbLogin = new DataBaseLogin(login_info);
+            if(!dbLogin.isValid()){
+                logger.info("Connecting to database cancelled: User cancelled operation");
+                GeneralDialog.getDialog().popup("db_login_cancelled");
+                return false;
+            }
+            playerDA.setLogin_info(login_info);
+            if(playerDA.connectDB()){
+                logger.info("Database connected successfully");
+                return true;
+            }else{
+                logger.error("Database could not connect");
+                GeneralDialog.getDialog().popup("db_login_failed");
+                return false;
+            }
+        } catch (ConfigErrorException e) {
+            logger.error(e.getMessage());
             return false;
         }
     }
@@ -204,14 +226,18 @@ public class PlayerControl implements GeneralControl {
         System.arraycopy(dialects, 1, usable_dialects, 0, usable_dialects.length);
         SqlDialect target_dialect = (SqlDialect) GeneralDialog.getDialog().selectionDialog("target_dialect",usable_dialects);
         //Fetching default login info
-        HashMap<String, String> login_info = playerDA.getDefaultDatabaseInfo(target_dialect);
-        DataBaseLogin dbLogin = new DataBaseLogin(login_info);
-        if(!dbLogin.isValid()){
-            logger.info("Exporting to database cancelled: User cancelled operation");
-            GeneralDialog.getDialog().popup("db_login_cancelled");
-            return;
+        try {
+            HashMap<String, String> login_info = playerDA.getDefaultDatabaseInfo(target_dialect);
+            DataBaseLogin dbLogin = new DataBaseLogin(login_info);
+            if(!dbLogin.isValid()){
+                logger.info("Exporting to database cancelled: User cancelled operation");
+                GeneralDialog.getDialog().popup("db_login_cancelled");
+                return;
+            }
+            playerDA.exportDB(target_source, target_dialect, login_info);
+        } catch (ConfigErrorException e) {
+            logger.error(e.getMessage());
         }
-        playerDA.exportDB(target_source, target_dialect, login_info);
         PlayerDialog.getDialog().popup("exported_db");
     }
 
