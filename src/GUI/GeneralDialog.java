@@ -8,9 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
+
 import static main.principal.getProperty;
 
 
+/**
+ * @author SIN
+ */
 public class GeneralDialog {
     private static GeneralDialog instance;
     protected Map<String,Object> texts;
@@ -46,7 +50,7 @@ public class GeneralDialog {
         }catch (IOException e){
             message("Initializing dialogs failed\n"+e.getMessage());
         }
-        this.language = "en";
+        this.language = getProperty("defaultLanguage");
     }
 
     public void setLanguage(String language) {
@@ -105,7 +109,7 @@ public class GeneralDialog {
         return ((java.util.List<String>)(((Map<String, Object>) option(sub_type).get("option")).get(language))).toArray(new String[0]);
     }
 
-    public int selectionDialog(String sub_type) throws OperationCancelledException {
+    public int selectionDialog(String sub_type) {
         Map<String, Object> dialog = option(sub_type);
         String[] options = getOptions(dialog);
         int choice = JOptionPane.showOptionDialog(
@@ -118,11 +122,13 @@ public class GeneralDialog {
                 options,
                 options[0]
         );
-        if (choice == -1) throw new OperationCancelledException();
+        if (choice == -1) {
+            throw new OperationCancelledException();
+        }
         return choice;
     }
 
-    public Object selectionDialog(String sub_type, Object[] options) throws OperationCancelledException {
+    public Object selectionDialog(String sub_type, Object[] options) {
         Map<String, Object> dialog = option(sub_type);
         int choice = JOptionPane.showOptionDialog(
                 null,
@@ -134,7 +140,9 @@ public class GeneralDialog {
                 options,
                 options[0]
         );
-        if (choice == -1) throw new OperationCancelledException();
+        if (choice == -1) {
+            throw new OperationCancelledException();
+        }
         return options[choice];
     }
 

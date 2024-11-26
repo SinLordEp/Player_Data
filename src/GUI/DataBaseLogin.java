@@ -1,5 +1,7 @@
 package GUI;
 
+import exceptions.OperationCancelledException;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.Arrays;
@@ -34,6 +36,7 @@ public class DataBaseLogin extends JDialog {
         button_cancel.addActionListener(_ -> onCancel());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 onCancel();
             }
@@ -74,6 +77,7 @@ public class DataBaseLogin extends JDialog {
 
     private void onCancel() {
         dispose();
+        throw new OperationCancelledException();
     }
 
     private void configureLabelText(){
@@ -113,10 +117,18 @@ public class DataBaseLogin extends JDialog {
 
     public boolean hasBlank(){
         boolean blank = text_url.getText().isBlank();
-        if(text_port.isEnabled() && text_port.getText().isBlank()) blank = true;
-        if(text_database.isEnabled() && text_database.getText().isBlank()) blank = true;
-        if(text_user.isEnabled() && text_user.getText().isBlank()) blank = true;
-        if(passwordField_pwd.isEnabled() && (Arrays.toString(passwordField_pwd.getPassword()).isBlank())) blank = true;
+        if(text_port.isEnabled() && text_port.getText().isBlank()) {
+            blank = true;
+        }
+        if(text_database.isEnabled() && text_database.getText().isBlank()) {
+            blank = true;
+        }
+        if(text_user.isEnabled() && text_user.getText().isBlank()) {
+            blank = true;
+        }
+        if(passwordField_pwd.isEnabled() && (Arrays.toString(passwordField_pwd.getPassword()).isBlank())) {
+            blank = true;
+        }
         return blank;
     }
 

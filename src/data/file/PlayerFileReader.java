@@ -1,9 +1,8 @@
 package data.file;
 
-
-import GUI.GeneralDialog;
 import GUI.Player.PlayerDialog;
 import Interface.FileDataReader;
+import exceptions.FileManageException;
 import model.Player;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -19,10 +18,12 @@ import java.util.TreeMap;
 
 import static main.principal.getProperty;
 
+/**
+ * @author SIN
+ */
 public class PlayerFileReader implements FileDataReader<Map<?,?>> {
 
     public PlayerFileReader() {
-
     }
 
     @Override
@@ -36,7 +37,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         };
     }
 
-    private TreeMap<Integer, Player> read_dat(File file){
+    private TreeMap<Integer, Player> read_dat(File file) {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             while (true) {
@@ -51,8 +52,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                 }
             }
         }catch (Exception e){
-            GeneralDialog.getDialog().message("Error reading DAT file: " + e.getMessage());
-            return null;
+            throw new FileManageException("Failed to read DAT file. Cause: " + e.getMessage());
         }
         if (player_data.isEmpty()) {
             PlayerDialog.getDialog().popup("player_map_null");
@@ -60,23 +60,21 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         return player_data;
     }
 
-    private TreeMap<Integer, Player> read_xml(File file){
+    private TreeMap<Integer, Player> read_xml(File file) {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         Element root;
         try {
             root = xml_utils.readXml(file);
         } catch (Exception e) {
-            GeneralDialog.getDialog().message("Failed to read xml file");
-            return null;
+            throw new FileManageException("Failed to read xml file. Cause: " + e.getMessage());
         }
         if (!"Player".equals(root.getNodeName())) {
-            throw new RuntimeException("Invalid XML: Root element is not Player");
+            throw new FileManageException("Invalid XML: Root element is not Player");
         }
         if (!root.hasChildNodes()) {
             PlayerDialog.getDialog().popup("player_map_null");
             return player_data;
         }
-        // parsing
         NodeList playerNodes = root.getElementsByTagName("player");
         for (int i = 0; i < playerNodes.getLength(); i++) {
             Node playerNode = playerNodes.item(i);
@@ -111,7 +109,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                 System.out.println("Txt file reached the end");
             }
         }catch (Exception e) {
-            throw new RuntimeException("Error reading this txt data.file");
+            throw new FileManageException("Error reading this txt data.file");
         }
         return player_data;
     }
@@ -124,10 +122,10 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                 root = xml_utils.readXml(new File(resource.getFile()));
             }
             if(root == null){
-                throw new RuntimeException("Failed to read region server file");
+                throw new FileManageException("Failed to read region server file");
             }
         } catch (Exception e) {
-            throw new RuntimeException("Cannot read region_server settings");
+            throw new FileManageException("Failed to read region_server settings. Cause: " + e.getMessage());
         }
         if (!"region_server".equals(root.getNodeName())) {
             throw new RuntimeException("Invalid XML: Root element is not region_server");
@@ -135,7 +133,6 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         if (!root.hasChildNodes()) {
             throw new RuntimeException("Empty XML: No region_server data found");
         }
-        // parsing
         HashMap<String, String[]> regionServerMap = new HashMap<>();
         NodeList regionList = root.getElementsByTagName("region");
         for (int i = 0; i < regionList.getLength(); i++) {

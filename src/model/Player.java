@@ -4,6 +4,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+/**
+ * @author SIN
+ */
 @Entity
 @Table(name = "player")
 public class Player extends Person {
@@ -40,6 +43,5 @@ public class Player extends Person {
                 ID: %s
                 Name: %s""".formatted(region, server, super.getID(), super.getName());
     }
-
 
 }

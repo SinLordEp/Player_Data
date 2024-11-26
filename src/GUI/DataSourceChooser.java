@@ -26,6 +26,7 @@ public class DataSourceChooser extends JDialog {
     }
 
     public DataSourceChooser(DataSource dataSource) {
+        initialize();
         this.dataSource = dataSource;
         if(dataSource == DataSource.FILE){
             comboBox_dataSource.setSelectedItem(DataSource.FILE);
@@ -44,6 +45,7 @@ public class DataSourceChooser extends JDialog {
         button_cancel.addActionListener(_ -> onCancel());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 onCancel();
             }

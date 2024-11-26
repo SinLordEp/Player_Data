@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+/**
+ * @author SIN
+ */
 public class PlayerTableModel extends AbstractTableModel {
     private String[] columns_name;
     private Object[][] data;

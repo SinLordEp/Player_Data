@@ -1,7 +1,7 @@
 package data.file;
 
-import GUI.GeneralDialog;
 import Interface.FileDataWriter;
+import exceptions.FileManageException;
 import model.Player;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,7 +13,7 @@ import java.util.TreeMap;
 public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
     @Override
     @SuppressWarnings("unchecked")
-    public void write(String file_path, Map<?,?> input_data) throws Exception {
+    public void write(String file_path, Map<?,?> input_data)  {
         File file = new File(file_path);
         TreeMap<Integer,Player> player_data = (TreeMap<Integer, Player>) input_data;
         String file_extension = file_path.substring(file_path.lastIndexOf("."));
@@ -24,7 +24,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         }
     }
 
-    private void write_dat(File player_file, TreeMap<Integer, Player> player_data) throws Exception {
+    private void write_dat(File player_file, TreeMap<Integer, Player> player_data)  {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(player_file,false))){
             if(player_data != null) {
                 for (Player player : player_data.values()) {
@@ -32,21 +32,23 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
                 }
             }
             oos.writeObject("EOF");
+        }catch (IOException e){
+            throw new FileManageException("Failed to write player data via DAT. Cause: " + e.getMessage());
         }
     }
 
-    public void write_xml(File player_file, TreeMap<Integer, Player> player_data) throws Exception {
-        Document document = xml_utils.createDocument();
-        // create Player root
-        Element root = document.createElement("Player");
-        // Add root to data.file
-        document.appendChild(root);
-        // read data and transform to xml element then add to root
-        if(player_data != null){
-            add_PlayerElements(document, root, player_data);
+    public void write_xml(File player_file, TreeMap<Integer, Player> player_data)  {
+        try {
+            Document document = xml_utils.createDocument();
+            Element root = document.createElement("Player");
+            document.appendChild(root);
+            if(player_data != null){
+                add_PlayerElements(document, root, player_data);
+            }
+            xml_utils.writeXml(document, player_file);
+        } catch (Exception e) {
+            throw new FileManageException("Failed to write player data via XML. Cause: " + e.getMessage());
         }
-        // save to data.file
-        xml_utils.writeXml(document, player_file);
     }
 
     private void add_PlayerElements(Document document, Element root, TreeMap<Integer, Player> player_data) {
@@ -60,7 +62,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         }
     }
 
-    private void write_txt(File player_file, TreeMap<Integer, Player> player_data){
+    private void write_txt(File player_file, TreeMap<Integer, Player> player_data)  {
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(player_file,false))){
             for(Player player : player_data.values()){
                 bw.write(player.getID() + ",");
@@ -70,7 +72,7 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
                 bw.newLine();
             }
         }catch (Exception e){
-            GeneralDialog.getDialog().popup("data_invalid");
+            throw new FileManageException("Failed to write player data via TXT. Cause: " + e.getMessage());
         }
     }
 }

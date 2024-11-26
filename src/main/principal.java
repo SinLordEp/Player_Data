@@ -10,9 +10,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
+/**
+ * @author SIN
+ */
 public class principal {
-    static final ClassRegister classRegister = ClassRegister.getInstance();
-    private static final Properties properties = new Properties();
+    static final ClassRegister CLASS_REGISTER = ClassRegister.getInstance();
+    private static final Properties PROPERTIES = new Properties();
 
     public static void main(String[] args) throws Exception {
         initializeProperties();
@@ -25,7 +28,7 @@ public class principal {
 
     private static void initializeProperties() {
         try{
-            properties.load(principal.class.getResourceAsStream("/config.properties"));
+            PROPERTIES.load(principal.class.getResourceAsStream("/config.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,8 +51,8 @@ public class principal {
 
     public static GeneralControl initializeControl(){
         try{
-            String chosen_control = (String) GeneralDialog.getDialog().selectionDialog("controller", classRegister.getControlClasses());
-            return classRegister.getControl(chosen_control);
+            String chosen_control = (String) GeneralDialog.getDialog().selectionDialog("controller", CLASS_REGISTER.getControlClasses());
+            return CLASS_REGISTER.getControl(chosen_control);
         }catch (Exception e) {
             GeneralDialog.getDialog().message(e.getMessage());
         }
@@ -57,6 +60,6 @@ public class principal {
     }
 
     public static String getProperty(String property){
-        return properties.getProperty(property);
+        return PROPERTIES.getProperty(property);
     }
 }

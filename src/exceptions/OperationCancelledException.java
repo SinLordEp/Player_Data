@@ -1,6 +1,9 @@
 package exceptions;
 
-public class OperationCancelledException extends Exception{
+/**
+ * @author SIN
+ */
+public class OperationCancelledException extends RuntimeException{
 
     public OperationCancelledException() {
         super();

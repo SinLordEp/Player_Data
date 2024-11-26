@@ -109,7 +109,7 @@ popup:
     cn: "您已取消连接数据库"
   operation_cancelled:
     en: "Operation cancelled!"
-    es: "Operación cancelada!"
+    es: "¡Operación cancelada!"
     cn: "操作已取消!"
   export_failed:
     en: "Failed to export data"
@@ -119,6 +119,11 @@ popup:
     en: "Unknown error has occurred"
     es: "Se ha producido un error desconocido"
     cn: "未知错误"
+  config_error:
+    en: "Failed to read config"
+    es: "No se ha podido leer configuración"
+    cn: "无法读取配置文件"
+
 
 options:
   controller:

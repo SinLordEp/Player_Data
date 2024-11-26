@@ -28,6 +28,12 @@ public class PlayerControl implements GeneralControl {
 
     @Override
     public void run() {
+        try {
+            playerDA.initializeRegionServer();
+        } catch (FileManageException e) {
+            PlayerDialog.getDialog().popup("region_server_null");
+            return;
+        }
         PlayerUI playerUI = new PlayerUI(this);
         logger.debug("Trying to build player frame");
         playerUI.run();
@@ -52,18 +58,6 @@ public class PlayerControl implements GeneralControl {
         logger.debug("Setting new data source...");
         playerDA.setDataSource(dataSource);
         logger.debug("Data source is set to {}", dataSource);
-    }
-
-    @Override
-    public void setSQLDialect(SqlDialect dialect) {
-        playerDA.setSQLDialect(dialect);
-        logger.debug("SQL dialect is set to {}", dialect);
-    }
-
-    @Override
-    public void setFileType(FileType fileType) {
-        playerDA.setFileType(fileType);
-        logger.debug("FileType is set to {}", fileType);
     }
 
     public void createFile() {
@@ -142,6 +136,7 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
+    @Override
     public boolean connectDB(){
         logger.debug("Connecting to database...");
         try {
@@ -163,6 +158,15 @@ public class PlayerControl implements GeneralControl {
             }
         } catch (ConfigErrorException e) {
             logger.error(e.getMessage());
+            GeneralDialog.getDialog().popup("config_error");
+            return false;
+        } catch (DatabaseException e) {
+            logger.error(e.getMessage());
+            GeneralDialog.getDialog().popup("db_login_failed");
+            return false;
+        } catch (OperationCancelledException e) {
+            logger.info("Operation cancelled");
+            GeneralDialog.getDialog().popup("operation_cancelled");
             return false;
         }
     }
@@ -222,7 +226,7 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    private void exportFile(FileType fileType) throws Exception {
+    private void exportFile(FileType fileType) {
         logger.info("Exporting data to file...");
         playerDA.setFileType(fileType);
         try {
@@ -232,7 +236,7 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    private void exportDB(DataSource target_source, SqlDialect target_dialect) throws OperationException {
+    private void exportDB(DataSource target_source, SqlDialect target_dialect) {
         logger.info("Exporting data to database...");
         try {
             //Fetching default login info
@@ -262,20 +266,25 @@ public class PlayerControl implements GeneralControl {
         logger.info("Saving data: Fetching current data source...");
         DataSource dataSource = playerDA.getDataSource();
         logger.info("Saving data to current data source: {}", dataSource.toString());
-        switch (dataSource){
-            case NONE:
-                logger.info("Current data source is NONE, returning...");
-                return;
-            case FILE:
-                playerDA.save();
-                break;
-            case DATABASE, HIBERNATE:
-                playerDA.connectDB();
-                playerDA.save();
-                playerDA.disconnectDB();
-                break;
+        try {
+            switch (dataSource){
+                case NONE:
+                    logger.info("Current data source is NONE, returning...");
+                    return;
+                case FILE:
+                    playerDA.save();
+                    break;
+                case DATABASE, HIBERNATE:
+                    playerDA.connectDB();
+                    playerDA.save();
+                    playerDA.disconnectDB();
+                    break;
+            }
+            logger.debug("Data saved successfully");
+        } catch (DatabaseException e) {
+            logger.error(e.getMessage());
+            GeneralDialog.getDialog().popup("config_error");
         }
-        logger.debug("Data saved successfully");
     }
 
     public void changeLanguage(){

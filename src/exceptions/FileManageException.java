@@ -1,6 +1,9 @@
 package exceptions;
 
-public class FileManageException extends Exception {
+/**
+ * @author SIN
+ */
+public class FileManageException extends RuntimeException {
     public FileManageException(String message) {
         super(message);
     }

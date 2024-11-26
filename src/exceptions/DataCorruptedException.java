@@ -1,6 +1,9 @@
 package exceptions;
 
-public class DataCorruptedException extends Exception {
+/**
+ * @author SIN
+ */
+public class DataCorruptedException extends RuntimeException {
     public DataCorruptedException(String message) {
         super(message);
     }

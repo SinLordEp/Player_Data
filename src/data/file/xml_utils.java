@@ -1,5 +1,6 @@
 package data.file;
 
+import exceptions.FileManageException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -14,6 +15,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 
+/**
+ * @author SIN
+ */
 public class xml_utils {
 
     public static Element readXml(File file) throws Exception {
@@ -24,8 +28,7 @@ public class xml_utils {
         return document.getDocumentElement();
     }
 
-    // update to data.file, receive root and path
-    public static void writeXml(Document document, File file) throws Exception {
+    public static void writeXml(Document document, File file) {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -34,28 +37,25 @@ public class xml_utils {
             StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
         } catch (Exception e) {
-            throw new Exception("Error saving XML");
+            throw new FileManageException("Failed to write xml file. Cause: " + e.getMessage());
         }
     }
-
     // create a raw xml
-    public static Document createDocument() throws Exception {
+    public static Document createDocument() {
         try {
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
             return documentBuilder.newDocument();
         } catch (Exception e) {
-            throw new Exception("Error creating document");
+            throw new FileManageException("Failed to create document. Cause: " + e.getMessage());
         }
     }
-
     // add element with text to parent element
     public static void createElementWithText(Document document, Element parent, String tagName, String textContent) {
         Element element = document.createElement(tagName);
         element.setTextContent(textContent);
         parent.appendChild(element);
     }
-
     // get_main element text
     public static String getElementTextContent(Element element, String tagName) {
         NodeList nodeList = element.getElementsByTagName(tagName);

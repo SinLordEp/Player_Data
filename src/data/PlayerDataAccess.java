@@ -5,10 +5,7 @@ import GUI.Player.PlayerDialog;
 import data.database.PlayerDBA;
 import Interface.GeneralDataAccess;
 import data.database.SqlDialect;
-import exceptions.ConfigErrorException;
-import exceptions.DataCorruptedException;
-import exceptions.DatabaseException;
-import exceptions.OperationCancelledException;
+import exceptions.*;
 import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
@@ -21,11 +18,14 @@ import java.util.TreeMap;
 
 import static main.principal.getProperty;
 
+/**
+ * @author SIN
+ */
 public class PlayerDataAccess extends GeneralDataAccess {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
-    private final HashMap<String, String[]> region_server_map;
-    private final String[] region_list;
+    private HashMap<String, String[]> region_server_map;
+    private String[] region_list;
     private final PlayerDBA playerDBA;
     private final PlayerFileReader fileReader;
     private final PlayerFileWriter fileWriter;
@@ -34,10 +34,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
         fileReader = new PlayerFileReader();
         fileWriter = new PlayerFileWriter();
         playerDBA = new PlayerDBA();
+    }
+
+    public void initializeRegionServer(){
         region_server_map = PlayerFileReader.read_region_server();
         region_list = region_server_map.keySet().toArray(new String[0]);
     }
-
     @Override
     @SuppressWarnings("unchecked")
     public HashMap<String, String> getDefaultDatabaseInfo(SqlDialect dialect) throws ConfigErrorException {
@@ -122,7 +124,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         GeneralDialog.getDialog().message(GeneralDialog.getDialog().getPopup("data_saved") + dataSource);
     }
 
-    public void add() throws OperationCancelledException {
+    public void add() {
         Player player = new Player();
         player.setRegion((String) PlayerDialog
                 .getDialog()
@@ -145,19 +147,21 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private int createID() {
         while (true) {
             try {
-                int ID = Integer.parseInt(PlayerDialog.getDialog().input("id"));
-                if (player_map.containsKey(ID)) {
+                int id = Integer.parseInt(PlayerDialog.getDialog().input("id"));
+                if (player_map.containsKey(id)) {
                     PlayerDialog.getDialog().popup("duplicate_player");
-                } else return ID;
+                } else {
+                    return id;
+                }
             } catch (NumberFormatException e) {
                 PlayerDialog.getDialog().popup("number_format_invalid");
             }
         }
     }
 
-    public void modify(int selected_player_id) throws OperationCancelledException {
+    public void modify(int selected_player_id) {
         Player player = player_map.get(selected_player_id);
-        switch(PlayerDialog.getDialog().selectionDialog("modify_player")){
+        switch((int)PlayerDialog.getDialog().selectionDialog("modify_player")){
             // After changing region the server has to be changed too.
             case 0: player.setRegion((String) PlayerDialog.getDialog()
                     .selectionDialog("region_menu", region_list));
@@ -194,20 +198,16 @@ public class PlayerDataAccess extends GeneralDataAccess {
         PlayerDialog.getDialog().popup( "deleted_player");
     }
 
-    public void export() throws Exception {
-        if(fileWriter != null){
-            String target_extension = getExtension(fileType);
-            String target_path = getPath();
-            String target_name = GeneralDialog.getDialog().input("new_file_name");
-            target_path += "/" + target_name + target_extension;
-            fileWriter.write(target_path, player_map);
-        }else {
-            throw new ConfigErrorException("Writer is not initialized");
-        }
+    public void export() {
+        String target_extension = getExtension(fileType);
+        String target_path = getPath();
+        String target_name = GeneralDialog.getDialog().input("new_file_name");
+        target_path += "/" + target_name + target_extension;
+        fileWriter.write(target_path, player_map);
         PlayerDialog.getDialog().popup("exported_file");
     }
 
-    public void exportDB(DataSource dataSource, SqlDialect dialect, HashMap<String,String> login_info) throws DatabaseException {
+    public void exportDB(DataSource dataSource, SqlDialect dialect, HashMap<String,String> login_info) {
         PlayerDBA export_playerDBA = new PlayerDBA();
         export_playerDBA.setDialect(dialect);
         export_playerDBA.setLogin_info(login_info);
@@ -252,7 +252,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
             return true;
         }
 
-        if(player_map == null) return false;
+        if(player_map == null) {
+            return false;
+        }
+
         if(player.getName().isBlank()){
             PlayerDialog.getDialog().popup("name_invalid");
             return true;

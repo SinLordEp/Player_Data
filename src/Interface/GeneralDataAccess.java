@@ -17,6 +17,9 @@ import java.util.HashMap;
 import static main.principal.getProperty;
 
 
+/**
+ * @author SIN
+ */
 public abstract class GeneralDataAccess {
     protected String file_path = null;
     protected DataSource dataSource = DataSource.NONE;

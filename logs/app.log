@@ -928,3 +928,10 @@
 2024-11-25 20:45:22 INFO  control.PlayerControl - Disconnected from database to release resources
 2024-11-25 21:21:01 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
 2024-11-25 21:21:01 INFO  control.PlayerControl - Finished building player frame
+2024-11-26 17:28:19 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-11-26 17:28:20 INFO  control.PlayerControl - Finished building player frame
+2024-11-26 17:28:24 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-11-26 17:28:24 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-11-26 17:28:24 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-11-26 17:28:24 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-11-26 17:28:24 INFO  control.PlayerControl - Shutting down

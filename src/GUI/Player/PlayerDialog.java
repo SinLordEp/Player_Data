@@ -6,6 +6,9 @@ import java.net.URL;
 
 import static main.principal.getProperty;
 
+/**
+ * @author SIN
+ */
 public class PlayerDialog extends GeneralDialog {
     private static PlayerDialog instance;
 
