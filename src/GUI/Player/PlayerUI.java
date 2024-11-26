@@ -5,13 +5,12 @@ import Interface.GeneralUI;
 import control.PlayerControl;
 import model.Player;
 
-
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.TreeMap;
 
-public class PlayerUI implements GeneralUI, EventListener {
+public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Player>> {
     private final PlayerControl playerControl;
     private JTable table_data;
 
@@ -67,9 +66,9 @@ public class PlayerUI implements GeneralUI, EventListener {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void refresh(Object data) {
-        TreeMap<Integer, Player> player_map = (TreeMap<Integer, Player>) data;
-        tableModel.update_data(player_map);
+    public void refresh(Object object) {
+        TreeMap<Integer, Player> playerMap = (TreeMap<Integer, Player>) object;
+        tableModel.update_data(playerMap);
         table_data.setModel(tableModel);
     }
 
@@ -142,7 +141,7 @@ public class PlayerUI implements GeneralUI, EventListener {
     }
 
     @Override
-    public void onEvent(String event, Object data) {
+    public void onEvent(String event, TreeMap<Integer,Player> data) {
         switch(event){
             case "data_changed"-> refresh(data);
             case "language_changed"-> changeLanguage();

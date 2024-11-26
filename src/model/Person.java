@@ -2,8 +2,6 @@ package model;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
-
 /**
  * @author SIN
  */
@@ -35,17 +33,4 @@ public abstract class Person implements java.io.Serializable{
         return this.name;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-        Person person = (Person) object;
-        return ID == person.ID;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(ID);
-    }
 }

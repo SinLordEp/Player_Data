@@ -3,6 +3,6 @@ package Interface;
 /**
  * @author SIN
  */
-public interface EventListener {
-    void onEvent(String event, Object data);
+public interface EventListener<T> {
+    void onEvent(String event, T data);
 }

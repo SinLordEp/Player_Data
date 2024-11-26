@@ -17,7 +17,7 @@ public class principal {
     static final ClassRegister CLASS_REGISTER = ClassRegister.getInstance();
     private static final Properties PROPERTIES = new Properties();
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         initializeProperties();
         initializeLogger();
         GeneralControl current_control = initializeControl();

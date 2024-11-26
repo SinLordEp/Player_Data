@@ -161,7 +161,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public void modify(int selected_player_id) {
         Player player = player_map.get(selected_player_id);
-        switch((int)PlayerDialog.getDialog().selectionDialog("modify_player")){
+        switch(PlayerDialog.getDialog().selectionDialog("modify_player")){
             // After changing region the server has to be changed too.
             case 0: player.setRegion((String) PlayerDialog.getDialog()
                     .selectionDialog("region_menu", region_list));
@@ -276,4 +276,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return true;
     }
 
+    public HashMap<String, String[]> getRegion_server_map() {
+        return region_server_map;
+    }
 }

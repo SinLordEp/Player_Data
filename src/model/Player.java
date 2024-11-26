@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import java.util.Objects;
+
 /**
  * @author SIN
  */
@@ -44,4 +46,17 @@ public class Player extends Person {
                 Name: %s""".formatted(region, server, super.getID(), super.getName());
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        Player player = (Player) object;
+        return Objects.equals(ID, player.ID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(ID);
+    }
 }

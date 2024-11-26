@@ -3,28 +3,31 @@ package control;
 import GUI.DataBaseLogin;
 import GUI.DataSourceChooser;
 import GUI.GeneralDialog;
-import GUI.Player.PlayerUI;
 import GUI.Player.PlayerDialog;
+import GUI.Player.PlayerModify;
+import GUI.Player.PlayerUI;
 import Interface.EventListener;
 import Interface.GeneralControl;
-import data.DataSource;
 import Interface.GeneralDataAccess;
+import data.DataSource;
 import data.PlayerDataAccess;
 import data.database.SqlDialect;
 import data.file.FileType;
 import exceptions.*;
+import model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 
 public class PlayerControl implements GeneralControl {
     private static final Logger logger = LoggerFactory.getLogger(PlayerControl.class);
     private PlayerDataAccess playerDA;
-    private final List<EventListener> listeners = new ArrayList<>();
+    private final List<EventListener<TreeMap<Integer, Player>>> listeners = new ArrayList<>();
 
     @Override
     public void run() {
@@ -174,7 +177,10 @@ public class PlayerControl implements GeneralControl {
     public void modify(int selected_player_id){
         try {
             logger.info("Modifying player with ID: {}", selected_player_id);
-            playerDA.modify(selected_player_id);
+            PlayerModify playerModify = new PlayerModify(playerDA.getRegion_server_map(), playerDA.getPlayerMap().get(selected_player_id));
+            if(!playerModify.isOK()){
+                throw new OperationCancelledException();
+            }
             notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished updating player with ID: {}", selected_player_id);
         } catch (OperationCancelledException e) {
@@ -304,18 +310,21 @@ public class PlayerControl implements GeneralControl {
         }
         GeneralDialog.getDialog().setLanguage(language);
         PlayerDialog.getDialog().setLanguage(language);
-        notifyListeners("language_changed", (Object) null);
+        for(EventListener<TreeMap<Integer, Player>> listener : listeners){
+            listener.onEvent("language_changed", null);
+        }
         logger.info("Finished changing language to: {}", language);
     }
 
-    public void addListener(EventListener listener){
+    public void addListener(EventListener<TreeMap<Integer, Player>> listener){
         listeners.add(listener);
     }
 
-    private void notifyListeners(String event, Object... data){
-        for(EventListener listener : listeners){
+    private void notifyListeners(String event, TreeMap<Integer, Player> data){
+        for(EventListener<TreeMap<Integer, Player>> listener : listeners){
             listener.onEvent(event, data);
         }
     }
+
 
 }
