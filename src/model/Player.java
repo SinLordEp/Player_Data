@@ -59,4 +59,5 @@ public class Player extends Person {
     public int hashCode() {
         return Objects.hashCode(ID);
     }
+
 }

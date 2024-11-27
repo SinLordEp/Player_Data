@@ -124,64 +124,15 @@ public class PlayerDataAccess extends GeneralDataAccess {
         GeneralDialog.getDialog().message(GeneralDialog.getDialog().getPopup("data_saved") + dataSource);
     }
 
-    public void add() {
-        Player player = new Player();
-        player.setRegion((String) PlayerDialog
-                .getDialog()
-                .selectionDialog("region_menu", region_list));
-        player.setServer((String) PlayerDialog
-                .getDialog()
-                .selectionDialog("server_menu", region_server_map.get(player.getRegion())));
-        player.setID(createID());
-        player.setName(PlayerDialog
-                .getDialog()
-                .input("player_name"));
+    public void add(Player player) {
         switch(dataSource){
             //case FILE ->
             case DATABASE, HIBERNATE -> changed_player_map.put(player, DataOperation.ADD);
         }
         player_map.put(player.getID(), player);
-        PlayerDialog.getDialog().popup( "added_player");
     }
 
-    private int createID() {
-        while (true) {
-            try {
-                int id = Integer.parseInt(PlayerDialog.getDialog().input("id"));
-                if (player_map.containsKey(id)) {
-                    PlayerDialog.getDialog().popup("duplicate_player");
-                } else {
-                    return id;
-                }
-            } catch (NumberFormatException e) {
-                PlayerDialog.getDialog().popup("number_format_invalid");
-            }
-        }
-    }
-
-    public void modify(int selected_player_id) {
-        Player player = player_map.get(selected_player_id);
-        switch(PlayerDialog.getDialog().selectionDialog("modify_player")){
-            // After changing region the server has to be changed too.
-            case 0: player.setRegion((String) PlayerDialog.getDialog()
-                    .selectionDialog("region_menu", region_list));
-            case 1: player.setServer((String) PlayerDialog.getDialog()
-                    .selectionDialog("server_menu", region_server_map.get(player.getRegion())));
-                break;
-            case 2: player.setName(PlayerDialog
-                    .getDialog()
-                    .input("player_name"));
-                break;
-            case 3:
-                player.setRegion((String) PlayerDialog.getDialog()
-                        .selectionDialog("region_menu", region_list));
-                player.setServer((String) PlayerDialog.getDialog()
-                        .selectionDialog("server_menu",region_server_map.get(player.getRegion())));
-                player.setName(PlayerDialog
-                        .getDialog()
-                        .input("player_name"));
-                break;
-        }
+    public void modify(Player player) {
         switch(dataSource){
             //case FILE ->
             case DATABASE, HIBERNATE  -> changed_player_map.put(player, DataOperation.MODIFY);
@@ -278,5 +229,15 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public HashMap<String, String[]> getRegion_server_map() {
         return region_server_map;
+    }
+
+    public Player getPlayer(int id){
+        Player player = player_map.get(id);
+        Player playerCopy = new Player();
+        playerCopy.setID(id);
+        playerCopy.setName(player.getName());
+        playerCopy.setRegion(player.getRegion());
+        playerCopy.setServer(player.getServer());
+        return playerCopy;
     }
 }

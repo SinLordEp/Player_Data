@@ -39,10 +39,34 @@ text:
     en: "Language"
     es: "Idioma"
     cn: "语言"
+  button_submit:
+    en: "Submit"
+    es: "Enviar"
+    cn: "提交"
+  button_cancel:
+    en: "Cancel"
+    es: "Cancelar"
+    cn: "取消"
   label_search:
     en: "Search by ID:"
     es: "Buscar por ID:"
     cn: "按ID搜索:"
+  label_region:
+    en: "Region: "
+    es: "Región: "
+    cn: "地区: "
+  label_server:
+    en: "Server: "
+    es: "Servidor: "
+    cn: "服务器: "
+  label_name:
+    en: "Name: "
+    es: "Nombre: "
+    cn: "名字: "
+  label_id_error:
+    en: "ID already exists"
+    es: "El ID ya existe"
+    cn: "ID已存在"
 
 
 input:

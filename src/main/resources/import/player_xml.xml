@@ -35,9 +35,14 @@
         <server>Liyue Harbor</server>
         <name>sa</name>
     </player>
+    <player id="8">
+        <region>Asia</region>
+        <server>Inazuma City</server>
+        <name>Asasa</name>
+    </player>
     <player id="11">
         <region>North America</region>
         <server>Brightcrown Canyon</server>
-        <name>Teweas</name>
+        <name>Tesa</name>
     </player>
 </Player>

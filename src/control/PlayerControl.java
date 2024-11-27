@@ -21,13 +21,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 
 public class PlayerControl implements GeneralControl {
     private static final Logger logger = LoggerFactory.getLogger(PlayerControl.class);
     private PlayerDataAccess playerDA;
-    private final List<EventListener<TreeMap<Integer, Player>>> listeners = new ArrayList<>();
+    private final List<EventListener<SortedMap<?,?>>> listeners = new ArrayList<>();
 
     @Override
     public void run() {
@@ -65,9 +65,11 @@ public class PlayerControl implements GeneralControl {
 
     public void createFile() {
         logger.debug("Creating file: Fetching data source...");
-        DataSourceChooser dataSourceChooser = new DataSourceChooser(DataSource.FILE);
-        setDataSource(DataSource.FILE);
         try {
+            DataSourceChooser dataSourceChooser = new DataSourceChooser(DataSource.FILE);
+            if(dataSourceChooser.isCancelled()){
+                throw new OperationCancelledException();
+            }
             playerDA.setFilePath(GeneralDataAccess.newPathBuilder((FileType) dataSourceChooser.getDataType()));
             logger.info("Path built successfully");
             playerDA.createNewFile();
@@ -87,7 +89,7 @@ public class PlayerControl implements GeneralControl {
             save();
             logger.info("Fetching data source and data type");
             DataSourceChooser dataSourceChooser = new DataSourceChooser();
-            if(!dataSourceChooser.isOk()){
+            if(dataSourceChooser.isCancelled()){
                 throw new OperationCancelledException();
             }
             playerDA.setDataSource(dataSourceChooser.getDataSource());
@@ -101,6 +103,7 @@ public class PlayerControl implements GeneralControl {
                 case FILE -> importFile();
                 case DATABASE, HIBERNATE -> importDB();
             }
+            notifyListeners("dataSource_set",null);
         } catch (OperationCancelledException e) {
             GeneralDialog.getDialog().popup("operation_cancelled");
         } catch (DataTypeException e){
@@ -177,12 +180,14 @@ public class PlayerControl implements GeneralControl {
     public void modify(int selected_player_id){
         try {
             logger.info("Modifying player with ID: {}", selected_player_id);
-            PlayerModify playerModify = new PlayerModify(playerDA.getRegion_server_map(), playerDA.getPlayerMap().get(selected_player_id));
-            if(!playerModify.isOK()){
+            PlayerModify playerModify = new PlayerModify(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id));
+            if(playerModify.isCancelled()){
                 throw new OperationCancelledException();
             }
+            playerDA.modify(playerModify.getPlayer());
             notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished updating player with ID: {}", selected_player_id);
+            PlayerDialog.getDialog().popup("modified_player");
         } catch (OperationCancelledException e) {
             logger.info("Modify operation cancelled");
             GeneralDialog.getDialog().popup("operation_cancelled");
@@ -192,9 +197,14 @@ public class PlayerControl implements GeneralControl {
     public void add() {
         try {
             logger.info("Adding player...");
-            playerDA.add();
+            PlayerModify playerModify = new PlayerModify(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player());
+            if(playerModify.isCancelled()){
+                throw new OperationCancelledException();
+            }
+            playerDA.add(playerModify.getPlayer());
             notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished adding player.");
+            PlayerDialog.getDialog().popup( "added_player");
         } catch (OperationCancelledException e) {
             logger.info("Adding player operation cancelled");
             GeneralDialog.getDialog().popup("operation_cancelled");
@@ -310,18 +320,16 @@ public class PlayerControl implements GeneralControl {
         }
         GeneralDialog.getDialog().setLanguage(language);
         PlayerDialog.getDialog().setLanguage(language);
-        for(EventListener<TreeMap<Integer, Player>> listener : listeners){
-            listener.onEvent("language_changed", null);
-        }
+        notifyListeners("language_changed",null);
         logger.info("Finished changing language to: {}", language);
     }
 
-    public void addListener(EventListener<TreeMap<Integer, Player>> listener){
+    public void addListener(EventListener<SortedMap<?,?>> listener){
         listeners.add(listener);
     }
 
-    private void notifyListeners(String event, TreeMap<Integer, Player> data){
-        for(EventListener<TreeMap<Integer, Player>> listener : listeners){
+    private void notifyListeners(String event, SortedMap<?,?> data){
+        for(EventListener<SortedMap<?,?>> listener : listeners){
             listener.onEvent(event, data);
         }
     }

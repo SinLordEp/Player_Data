@@ -8,9 +8,10 @@ import model.Player;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Player>> {
+public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
     private final PlayerControl playerControl;
     private JTable table_data;
 
@@ -135,16 +136,21 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
         });
     }
 
-    public void changeLanguage(){
+    private void changeLanguage(){
         setUIText();
         tableModel.language_changed();
     }
 
+    private void dataSourceIsSet(){
+        button_add.setEnabled(true);
+    }
+
     @Override
-    public void onEvent(String event, TreeMap<Integer,Player> data) {
+    public void onEvent(String event, SortedMap<?,?> data) {
         switch(event){
             case "data_changed"-> refresh(data);
             case "language_changed"-> changeLanguage();
+            case "dataSource_set" -> dataSourceIsSet();
         }
     }
 }

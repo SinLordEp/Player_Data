@@ -23,6 +23,7 @@ public class DataSourceChooser extends JDialog {
 
     public DataSourceChooser() {
         initialize();
+        setVisible(true);
     }
 
     public DataSourceChooser(DataSource dataSource) {
@@ -32,6 +33,7 @@ public class DataSourceChooser extends JDialog {
             comboBox_dataSource.setSelectedItem(DataSource.FILE);
             comboBox_dataSource.setEnabled(false);
         }
+        setVisible(true);
     }
 
     private void initialize(){
@@ -53,7 +55,6 @@ public class DataSourceChooser extends JDialog {
         pack();
         setResizable(false);
         setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     private void onOK() {
@@ -64,11 +65,6 @@ public class DataSourceChooser extends JDialog {
     private void onCancel() {
         ok = false;
         dataSource = DataSource.NONE;
-        dataType = switch (dataType){
-            case FileType ignore -> FileType.NONE;
-            case SqlDialect ignore -> SqlDialect.NONE;
-            default -> null;
-        };
         dispose();
     }
 
@@ -137,8 +133,8 @@ public class DataSourceChooser extends JDialog {
         }
     }
 
-    public boolean isOk() {
-        return ok;
+    public boolean isCancelled() {
+        return !ok;
     }
 
     public DataSource getDataSource() {
