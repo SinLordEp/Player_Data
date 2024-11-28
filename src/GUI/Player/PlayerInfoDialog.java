@@ -58,7 +58,7 @@ public class PlayerInfoDialog extends JDialog {
         setUIText();
         configureRegion();
         comboBoxListener();
-        textListener();
+        textValidateListener(text_name);
         parsePlayer();
         pack();
         button_submit.addActionListener(_ -> onOK());
@@ -117,41 +117,22 @@ public class PlayerInfoDialog extends JDialog {
         comboBox_server.addItemListener(_ -> server = (String) comboBox_server.getSelectedItem());
     }
 
-    private void textListener(){
-        text_name.getDocument().addDocumentListener(new DocumentListener() {
+    private void textValidateListener(JTextField textName) {
+        textName.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                nameCheck();
+                enableSubmitButton(idCheck() && nameCheck());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                nameCheck();
+                enableSubmitButton(idCheck() && nameCheck());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                nameCheck();
-            }
-        });
-    }
-
-    private void idListener(){
-        text_id.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                idCheck();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                idCheck();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                idCheck();
+                enableSubmitButton(idCheck() && nameCheck());
             }
         });
     }
@@ -160,7 +141,8 @@ public class PlayerInfoDialog extends JDialog {
         if(player.getID() == 0){
             label_id.setVisible(true);
             text_id.setVisible(true);
-            idListener();
+            configureServer(comboBox_region.getItemAt(0));
+            textValidateListener(text_id);
         }else{
             text_id.setVisible(false);
             label_id.setVisible(false);
@@ -175,27 +157,30 @@ public class PlayerInfoDialog extends JDialog {
         return !ok;
     }
 
-    private void idCheck(){
+    private boolean idCheck(){
         if(text_id.getText().isEmpty() || text_id.getText().isBlank()){
-            button_submit.setEnabled(false);
             label_error.setText("");
-            return;
+            return false;
         }
         int id = Integer.parseInt(text_id.getText());
         if(playerIDs.contains(id)){
             label_error.setText(PlayerText.getDialog().getText("label_id_error"));
             label_error.setVisible(true);
-            button_submit.setEnabled(false);
+            return false;
         }else{
             label_error.setText("");
             label_error.setVisible(false);
-            button_submit.setEnabled(true);
+            return true;
         }
     }
 
-    private void nameCheck(){
+    private boolean nameCheck(){
         String name = text_name.getText();
-        button_submit.setEnabled(!name.isEmpty());
+        return !name.isEmpty();
+    }
+
+    private void enableSubmitButton(boolean enabled){
+        button_submit.setEnabled(enabled);
     }
 
     public Player getPlayer() {

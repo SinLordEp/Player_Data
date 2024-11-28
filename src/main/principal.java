@@ -4,6 +4,7 @@ import GUI.GeneralText;
 import Interface.GeneralControl;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -14,14 +15,18 @@ import java.util.Properties;
  * @author SIN
  */
 public class principal {
+    private static final Logger logger = LoggerFactory.getLogger(principal.class);
     static final ClassRegister CLASS_REGISTER = ClassRegister.getInstance();
     private static final Properties PROPERTIES = new Properties();
 
     public static void main(String[] args){
         initializeProperties();
         initializeLogger();
+        logger.info("Properties and logger loaded");
+        logger.info("Getting controller...");
         GeneralControl current_control = initializeControl();
         if (current_control != null) {
+            logger.info("Controller loaded");
             current_control.run();
         }
     }
