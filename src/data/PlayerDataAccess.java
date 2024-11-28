@@ -1,7 +1,6 @@
 package data;
 
 import GUI.GeneralText;
-import GUI.Player.PlayerText;
 import data.database.PlayerDBA;
 import Interface.GeneralDataAccess;
 import data.database.SqlDialect;
@@ -100,13 +99,13 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 case FILE -> (TreeMap<Integer, Player>) fileReader.read(fileType, file_path);
                 case DATABASE, HIBERNATE -> playerDBA.read(dataSource);
             };
-            if(player_map != null && !isDataValid()){
-                throw new DataCorruptedException("Data is corrupted");
+            if(player_map != null && !player_map.isEmpty()){
+                isDataValid();
             }
         } catch (Exception e) {
-            GeneralText.getDialog().message("Failed to read data\n" + e.getMessage());
             player_map = new TreeMap<>();
             dataSource = DataSource.NONE;
+            throw new OperationException("Failed to read data. Cause: " + e.getMessage());
         }
     }
 
@@ -117,9 +116,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 case DATABASE, HIBERNATE -> playerDBA.update(dataSource, changed_player_map);
             }
         } catch (Exception e) {
-            GeneralText.getDialog().message("Failed to save data\n" + e.getMessage());
+            throw new OperationException("Failed to save data. Cause: " + e.getMessage());
         }
-        GeneralText.getDialog().message(GeneralText.getDialog().getPopup("data_saved") + dataSource);
     }
 
     public void add(Player player) {
@@ -144,16 +142,14 @@ public class PlayerDataAccess extends GeneralDataAccess {
             case DATABASE, HIBERNATE -> changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
         }
         player_map.remove(selected_player_id);
-        PlayerText.getDialog().popup( "deleted_player");
     }
-
+    //TODO:
     public void export() {
         String target_extension = getExtension(fileType);
         String target_path = getPath();
         String target_name = GeneralText.getDialog().input("new_file_name");
         target_path += "/" + target_name + target_extension;
         fileWriter.write(target_path, player_map);
-        PlayerText.getDialog().popup("exported_file");
     }
 
     public void exportDB(DataSource dataSource, SqlDialect dialect, HashMap<String,String> login_info) {
@@ -161,8 +157,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         export_playerDBA.setDialect(dialect);
         export_playerDBA.setLogin_info(login_info);
         if(!export_playerDBA.connect(dataSource)){
-            PlayerText.getDialog().popup("db_not_connected");
-            return;
+            throw new DatabaseException("Failed to export data to DB.");
         }
         export_playerDBA.export(dataSource, player_map);
     }
@@ -175,14 +170,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return player_map;
     }
 
-    public boolean isPlayerInvalid(Player player){
+    public void isPlayerInvalid(Player player){
         if(region_server_map == null){
-            PlayerText.getDialog().popup("region_server_null");
-            return true;
+            throw new DataCorruptedException("region_server_map is null");
         }
         if(!region_server_map.containsKey(player.getRegion())){
-            PlayerText.getDialog().popup("region_invalid");
-            return true;
+            throw new DataCorruptedException("Player's region is not found");
         }
         boolean server_valid = false;
         for(String server : region_server_map.get(player.getRegion())){
@@ -192,37 +185,20 @@ public class PlayerDataAccess extends GeneralDataAccess {
             }
         }
         if(!server_valid){
-            PlayerText.getDialog().popup("server_invalid");
-            return true;
+            throw new DataCorruptedException("Player's server is not found");
         }
-
         if(player.getID() <= 0){
-            PlayerText.getDialog().popup("id_invalid");
-            return true;
+            throw new DataCorruptedException("Player's ID is invalid");
         }
-
-        if(player_map == null) {
-            return false;
-        }
-
         if(player.getName().isBlank()){
-            PlayerText.getDialog().popup("name_invalid");
-            return true;
+            throw new DataCorruptedException("Player's name is invalid");
         }
-        return false;
     }
 
-    public boolean isDataValid(){
-        if(player_map == null){
-            PlayerText.getDialog().popup("player_map_null");
-            return true;
-        }
+    public void isDataValid(){
         for(Player player : player_map.values()){
-            if(isPlayerInvalid(player)){
-                return false;
-            }
+            isPlayerInvalid(player);
         }
-        return true;
     }
 
     public HashMap<String, String[]> getRegion_server_map() {
