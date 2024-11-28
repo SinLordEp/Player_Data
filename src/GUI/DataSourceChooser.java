@@ -69,11 +69,11 @@ public class DataSourceChooser extends JDialog {
     }
 
     private void setUIText(){
-        label_dataSource.setText(GeneralDialog.getDialog().getText("label_dataSource"));
+        label_dataSource.setText(GeneralText.getDialog().getText("label_dataSource"));
         switch (comboBox_dataSource.getSelectedItem()){
-            case DataSource.FILE -> label_dataType.setText(GeneralDialog.getDialog().getText("label_file_type"));
-            case DataSource.DATABASE, DataSource.HIBERNATE -> label_dataType.setText(GeneralDialog.getDialog().getText("label_sql_dialect"));
-            case null, default -> label_dataType.setText(GeneralDialog.getDialog().getText("label_dataType"));
+            case DataSource.FILE -> label_dataType.setText(GeneralText.getDialog().getText("label_file_type"));
+            case DataSource.DATABASE, DataSource.HIBERNATE -> label_dataType.setText(GeneralText.getDialog().getText("label_sql_dialect"));
+            case null, default -> label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
         }
     }
 
@@ -97,19 +97,19 @@ public class DataSourceChooser extends JDialog {
         switch(dataSource){
             case NONE:
                 comboBox_dataType.setEnabled(false);
-                label_dataType.setText(GeneralDialog.getDialog().getText("label_dataType"));
+                label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
                 return;
             case FILE:
                 for(FileType fileType : FileType.values()){
                     comboBox_dataType.addItem(fileType);
                 }
-                label_dataType.setText(GeneralDialog.getDialog().getText("label_file_type"));
+                label_dataType.setText(GeneralText.getDialog().getText("label_file_type"));
                 break;
             case DATABASE, HIBERNATE:
                 for(SqlDialect sqlDialect : SqlDialect.values()){
                     comboBox_dataType.addItem(sqlDialect);
                 }
-                label_dataType.setText(GeneralDialog.getDialog().getText("label_sql_dialect"));
+                label_dataType.setText(GeneralText.getDialog().getText("label_sql_dialect"));
                 break;
         }
         comboBox_dataType.setEnabled(true);

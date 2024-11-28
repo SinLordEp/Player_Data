@@ -26,7 +26,7 @@ public class DataBaseLogin extends JDialog {
 
     public DataBaseLogin(HashMap<String,String> login_info) {
         this.login_info = login_info;
-        setTitle(GeneralDialog.getDialog().getText("db_login_title"));
+        setTitle(GeneralText.getDialog().getText("db_login_title"));
         configureLabelText();
         configureTextFieldText();
         setContentPane(panel_main);
@@ -54,7 +54,7 @@ public class DataBaseLogin extends JDialog {
 
     private void onOK() {
         if(hasBlank()){
-            GeneralDialog.getDialog().popup("db_field_empty");
+            GeneralText.getDialog().popup("db_field_empty");
             return;
         }
         login_info.put("text_url", this.text_url.getText());
@@ -81,11 +81,11 @@ public class DataBaseLogin extends JDialog {
     }
 
     private void configureLabelText(){
-        this.label_url.setText(GeneralDialog.getDialog().getText("label_url"));
-        this.label_port.setText(GeneralDialog.getDialog().getText("label_port"));
-        this.label_database.setText(GeneralDialog.getDialog().getText("label_database"));
-        this.label_user.setText(GeneralDialog.getDialog().getText("label_user"));
-        this.label_pwd.setText(GeneralDialog.getDialog().getText("label_pwd"));
+        this.label_url.setText(GeneralText.getDialog().getText("label_url"));
+        this.label_port.setText(GeneralText.getDialog().getText("label_port"));
+        this.label_database.setText(GeneralText.getDialog().getText("label_database"));
+        this.label_user.setText(GeneralText.getDialog().getText("label_user"));
+        this.label_pwd.setText(GeneralText.getDialog().getText("label_pwd"));
     }
 
     private void configureTextFieldText(){

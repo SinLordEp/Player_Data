@@ -15,22 +15,22 @@ import static main.principal.getProperty;
 /**
  * @author SIN
  */
-public class GeneralDialog {
-    private static GeneralDialog instance;
+public class GeneralText {
+    private static GeneralText instance;
     protected Map<String,Object> texts;
     protected Map<String,Object> inputs;
     protected Map<String,Object> popups;
     protected Map<String,Object> options;
     protected String language;
 
-    public GeneralDialog() {
+    public GeneralText() {
         URL resource = getClass().getResource(getProperty("generalDialog"));
         initialize(resource);
     }
 
-    public static GeneralDialog getDialog() {
+    public static GeneralText getDialog() {
         if (instance == null) {
-            instance = new GeneralDialog();
+            instance = new GeneralText();
         }
         return instance;
     }

@@ -51,7 +51,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
     @Override
     public void run() {
         initialize();
-        JFrame frame = new JFrame(PlayerDialog.getDialog().getText("frame_title"));
+        JFrame frame = new JFrame(PlayerText.getDialog().getText("frame_title"));
         frame.setContentPane(main_panel);
         frame.pack();
         frame.setResizable(false);
@@ -74,14 +74,14 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
     }
 
     public void setUIText(){
-        button_add.setText(PlayerDialog.getDialog().getText("button_add"));
-        button_modify.setText(PlayerDialog.getDialog().getText("button_modify"));
-        button_delete.setText(PlayerDialog.getDialog().getText("button_delete"));
-        button_export.setText(PlayerDialog.getDialog().getText("button_export"));
-        button_import.setText(PlayerDialog.getDialog().getText("button_import"));
-        button_createFile.setText(PlayerDialog.getDialog().getText("button_createFile"));
-        button_language.setText(PlayerDialog.getDialog().getText("button_language"));
-        label_search.setText(PlayerDialog.getDialog().getText("label_search"));
+        button_add.setText(PlayerText.getDialog().getText("button_add"));
+        button_modify.setText(PlayerText.getDialog().getText("button_modify"));
+        button_delete.setText(PlayerText.getDialog().getText("button_delete"));
+        button_export.setText(PlayerText.getDialog().getText("button_export"));
+        button_import.setText(PlayerText.getDialog().getText("button_import"));
+        button_createFile.setText(PlayerText.getDialog().getText("button_createFile"));
+        button_language.setText(PlayerText.getDialog().getText("button_language"));
+        label_search.setText(PlayerText.getDialog().getText("label_search"));
     }
 
     private void searchListener(){

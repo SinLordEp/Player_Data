@@ -1,6 +1,6 @@
 package main;
 
-import GUI.GeneralDialog;
+import GUI.GeneralText;
 import Interface.GeneralControl;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
@@ -51,10 +51,10 @@ public class principal {
 
     public static GeneralControl initializeControl(){
         try{
-            String chosen_control = (String) GeneralDialog.getDialog().selectionDialog("controller", CLASS_REGISTER.getControlClasses());
+            String chosen_control = (String) GeneralText.getDialog().selectionDialog("controller", CLASS_REGISTER.getControlClasses());
             return CLASS_REGISTER.getControl(chosen_control);
         }catch (Exception e) {
-            GeneralDialog.getDialog().message(e.getMessage());
+            GeneralText.getDialog().message(e.getMessage());
         }
         return null;
     }

@@ -1,6 +1,6 @@
 package GUI.Player;
 
-import GUI.GeneralDialog;
+import GUI.GeneralText;
 
 import java.net.URL;
 
@@ -9,17 +9,17 @@ import static main.principal.getProperty;
 /**
  * @author SIN
  */
-public class PlayerDialog extends GeneralDialog {
-    private static PlayerDialog instance;
+public class PlayerText extends GeneralText {
+    private static PlayerText instance;
 
-    public PlayerDialog() {
+    public PlayerText() {
         URL resource = getClass().getResource(getProperty("playerDialog"));
         super.initialize(resource);
     }
 
-    public static PlayerDialog getDialog() {
+    public static PlayerText getDialog() {
         if (instance == null) {
-            instance = new PlayerDialog();
+            instance = new PlayerText();
         }
         return instance;
     }

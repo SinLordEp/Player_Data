@@ -1,6 +1,6 @@
 package data.file;
 
-import GUI.Player.PlayerDialog;
+import GUI.Player.PlayerText;
 import Interface.FileDataReader;
 import exceptions.FileManageException;
 import model.Player;
@@ -55,7 +55,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
             throw new FileManageException("Failed to read DAT file. Cause: " + e.getMessage());
         }
         if (player_data.isEmpty()) {
-            PlayerDialog.getDialog().popup("player_map_null");
+            PlayerText.getDialog().popup("player_map_null");
         }
         return player_data;
     }
@@ -72,7 +72,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
             throw new FileManageException("Invalid XML: Root element is not Player");
         }
         if (!root.hasChildNodes()) {
-            PlayerDialog.getDialog().popup("player_map_null");
+            PlayerText.getDialog().popup("player_map_null");
             return player_data;
         }
         NodeList playerNodes = root.getElementsByTagName("player");
@@ -95,7 +95,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         try(Scanner scanner = new Scanner(file)){
             if(!scanner.hasNext()){
-                PlayerDialog.getDialog().popup("player_map_null");
+                PlayerText.getDialog().popup("player_map_null");
             }else{
                 while(scanner.hasNext()){
                     String[] player_txt = scanner.nextLine().split(",");

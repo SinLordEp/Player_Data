@@ -1,7 +1,7 @@
 package data;
 
-import GUI.GeneralDialog;
-import GUI.Player.PlayerDialog;
+import GUI.GeneralText;
+import GUI.Player.PlayerText;
 import data.database.PlayerDBA;
 import Interface.GeneralDataAccess;
 import data.database.SqlDialect;
@@ -25,7 +25,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
     private HashMap<String, String[]> region_server_map;
-    private String[] region_list;
     private final PlayerDBA playerDBA;
     private final PlayerFileReader fileReader;
     private final PlayerFileWriter fileWriter;
@@ -38,7 +37,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public void initializeRegionServer(){
         region_server_map = PlayerFileReader.read_region_server();
-        region_list = region_server_map.keySet().toArray(new String[0]);
     }
     @Override
     @SuppressWarnings("unchecked")
@@ -106,7 +104,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 throw new DataCorruptedException("Data is corrupted");
             }
         } catch (Exception e) {
-            GeneralDialog.getDialog().message("Failed to read data\n" + e.getMessage());
+            GeneralText.getDialog().message("Failed to read data\n" + e.getMessage());
             player_map = new TreeMap<>();
             dataSource = DataSource.NONE;
         }
@@ -119,9 +117,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 case DATABASE, HIBERNATE -> playerDBA.update(dataSource, changed_player_map);
             }
         } catch (Exception e) {
-            GeneralDialog.getDialog().message("Failed to save data\n" + e.getMessage());
+            GeneralText.getDialog().message("Failed to save data\n" + e.getMessage());
         }
-        GeneralDialog.getDialog().message(GeneralDialog.getDialog().getPopup("data_saved") + dataSource);
+        GeneralText.getDialog().message(GeneralText.getDialog().getPopup("data_saved") + dataSource);
     }
 
     public void add(Player player) {
@@ -146,16 +144,16 @@ public class PlayerDataAccess extends GeneralDataAccess {
             case DATABASE, HIBERNATE -> changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
         }
         player_map.remove(selected_player_id);
-        PlayerDialog.getDialog().popup( "deleted_player");
+        PlayerText.getDialog().popup( "deleted_player");
     }
 
     public void export() {
         String target_extension = getExtension(fileType);
         String target_path = getPath();
-        String target_name = GeneralDialog.getDialog().input("new_file_name");
+        String target_name = GeneralText.getDialog().input("new_file_name");
         target_path += "/" + target_name + target_extension;
         fileWriter.write(target_path, player_map);
-        PlayerDialog.getDialog().popup("exported_file");
+        PlayerText.getDialog().popup("exported_file");
     }
 
     public void exportDB(DataSource dataSource, SqlDialect dialect, HashMap<String,String> login_info) {
@@ -163,7 +161,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         export_playerDBA.setDialect(dialect);
         export_playerDBA.setLogin_info(login_info);
         if(!export_playerDBA.connect(dataSource)){
-            PlayerDialog.getDialog().popup("db_not_connected");
+            PlayerText.getDialog().popup("db_not_connected");
             return;
         }
         export_playerDBA.export(dataSource, player_map);
@@ -179,11 +177,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public boolean isPlayerInvalid(Player player){
         if(region_server_map == null){
-            PlayerDialog.getDialog().popup("region_server_null");
+            PlayerText.getDialog().popup("region_server_null");
             return true;
         }
         if(!region_server_map.containsKey(player.getRegion())){
-            PlayerDialog.getDialog().popup("region_invalid");
+            PlayerText.getDialog().popup("region_invalid");
             return true;
         }
         boolean server_valid = false;
@@ -194,12 +192,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
             }
         }
         if(!server_valid){
-            PlayerDialog.getDialog().popup("server_invalid");
+            PlayerText.getDialog().popup("server_invalid");
             return true;
         }
 
         if(player.getID() <= 0){
-            PlayerDialog.getDialog().popup("id_invalid");
+            PlayerText.getDialog().popup("id_invalid");
             return true;
         }
 
@@ -208,7 +206,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
 
         if(player.getName().isBlank()){
-            PlayerDialog.getDialog().popup("name_invalid");
+            PlayerText.getDialog().popup("name_invalid");
             return true;
         }
         return false;
@@ -216,7 +214,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public boolean isDataValid(){
         if(player_map == null){
-            PlayerDialog.getDialog().popup("player_map_null");
+            PlayerText.getDialog().popup("player_map_null");
             return true;
         }
         for(Player player : player_map.values()){

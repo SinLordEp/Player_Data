@@ -15,7 +15,7 @@ public class PlayerTableModel extends AbstractTableModel {
     private Object[][] data;
 
     public PlayerTableModel(TreeMap<Integer, Player> player_data) {
-        columns_name = PlayerDialog.getDialog().getOptions("table_column");
+        columns_name = PlayerText.getDialog().getOptions("table_column");
         parse_data(player_data);
     }
 
@@ -62,7 +62,7 @@ public class PlayerTableModel extends AbstractTableModel {
     }
 
     public void language_changed() {
-        columns_name = PlayerDialog.getDialog().getOptions("table_column");
+        columns_name = PlayerText.getDialog().getOptions("table_column");
         fireTableStructureChanged();
     }
 

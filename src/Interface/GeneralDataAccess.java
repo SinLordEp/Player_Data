@@ -1,6 +1,6 @@
 package Interface;
 
-import GUI.GeneralDialog;
+import GUI.GeneralText;
 import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
@@ -46,13 +46,13 @@ public abstract class GeneralDataAccess {
         fileChooser.setDialogTitle("Choosing " + fileType);
         switch(fileType){
             case TXT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralDialog.getDialog().getText("extension_txt"), "txt"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.getDialog().getText("extension_txt"), "txt"));
                 break;
             case DAT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralDialog.getDialog().getText("extension_dat"), "dat"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.getDialog().getText("extension_dat"), "dat"));
                 break;
             case XML:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralDialog.getDialog().getText("extension_xml"), "xml"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.getDialog().getText("extension_xml"), "xml"));
                 break;
         }
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -77,7 +77,7 @@ public abstract class GeneralDataAccess {
     public static String newPathBuilder(FileType fileType) throws OperationCancelledException {
         String target_path = GeneralDataAccess.getPath();
         String target_extension = getExtension(fileType);
-        String target_file_name = GeneralDialog.getDialog().input("file_name");
+        String target_file_name = GeneralText.getDialog().input("file_name");
         target_path += "/" +target_file_name + target_extension;
         return target_path;
     }
@@ -101,7 +101,7 @@ public abstract class GeneralDataAccess {
     public void createNewFile() throws FileManageException {
         try {
             if(new File(file_path).createNewFile()){
-                GeneralDialog.getDialog().popup("file_created");
+                GeneralText.getDialog().popup("file_created");
             }
         } catch (IOException e) {
             throw new FileManageException(e.getMessage());

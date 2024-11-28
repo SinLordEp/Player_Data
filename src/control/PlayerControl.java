@@ -2,9 +2,9 @@ package control;
 
 import GUI.DataBaseLogin;
 import GUI.DataSourceChooser;
-import GUI.GeneralDialog;
-import GUI.Player.PlayerDialog;
-import GUI.Player.PlayerModify;
+import GUI.GeneralText;
+import GUI.Player.PlayerText;
+import GUI.Player.PlayerInfoDialog;
 import GUI.Player.PlayerUI;
 import Interface.EventListener;
 import Interface.GeneralControl;
@@ -34,7 +34,7 @@ public class PlayerControl implements GeneralControl {
         try {
             playerDA.initializeRegionServer();
         } catch (FileManageException e) {
-            PlayerDialog.getDialog().popup("region_server_null");
+            PlayerText.getDialog().popup("region_server_null");
             return;
         }
         PlayerUI playerUI = new PlayerUI(this);
@@ -75,12 +75,13 @@ public class PlayerControl implements GeneralControl {
             playerDA.createNewFile();
         } catch (OperationCancelledException e) {
             logger.error("Failed to create new file, Cause: Operation cancelled");
-            GeneralDialog.getDialog().popup("operation_cancelled");
+            GeneralText.getDialog().popup("operation_cancelled");
             return;
         } catch (FileManageException e) {
             logger.error("Failed to create new file, Cause: ", e);
         }
         logger.info("File created successfully");
+        notifyListeners("dataSource_set",null);
     }
 
     public void importData() {
@@ -105,7 +106,7 @@ public class PlayerControl implements GeneralControl {
             }
             notifyListeners("dataSource_set",null);
         } catch (OperationCancelledException e) {
-            GeneralDialog.getDialog().popup("operation_cancelled");
+            GeneralText.getDialog().popup("operation_cancelled");
         } catch (DataTypeException e){
             System.out.println(e.getMessage());
             logger.error(e.getMessage());
@@ -125,7 +126,7 @@ public class PlayerControl implements GeneralControl {
             notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished importing from file");
         } catch (OperationCancelledException e) {
-            GeneralDialog.getDialog().popup("operation_cancelled");
+            GeneralText.getDialog().popup("operation_cancelled");
         }
     }
 
@@ -150,7 +151,7 @@ public class PlayerControl implements GeneralControl {
             DataBaseLogin dbLogin = new DataBaseLogin(login_info);
             if(!dbLogin.isValid()){
                 logger.info("Connecting to database cancelled: User cancelled operation");
-                GeneralDialog.getDialog().popup("db_login_cancelled");
+                GeneralText.getDialog().popup("db_login_cancelled");
                 return false;
             }
             playerDA.setLogin_info(login_info);
@@ -159,20 +160,20 @@ public class PlayerControl implements GeneralControl {
                 return true;
             }else{
                 logger.error("Database could not connect");
-                GeneralDialog.getDialog().popup("db_login_failed");
+                GeneralText.getDialog().popup("db_login_failed");
                 return false;
             }
         } catch (ConfigErrorException e) {
             logger.error(e.getMessage());
-            GeneralDialog.getDialog().popup("config_error");
+            GeneralText.getDialog().popup("config_error");
             return false;
         } catch (DatabaseException e) {
             logger.error(e.getMessage());
-            GeneralDialog.getDialog().popup("db_login_failed");
+            GeneralText.getDialog().popup("db_login_failed");
             return false;
         } catch (OperationCancelledException e) {
             logger.info("Operation cancelled");
-            GeneralDialog.getDialog().popup("operation_cancelled");
+            GeneralText.getDialog().popup("operation_cancelled");
             return false;
         }
     }
@@ -180,34 +181,34 @@ public class PlayerControl implements GeneralControl {
     public void modify(int selected_player_id){
         try {
             logger.info("Modifying player with ID: {}", selected_player_id);
-            PlayerModify playerModify = new PlayerModify(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id));
-            if(playerModify.isCancelled()){
+            PlayerInfoDialog playerInfoDialog = new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id));
+            if(playerInfoDialog.isCancelled()){
                 throw new OperationCancelledException();
             }
-            playerDA.modify(playerModify.getPlayer());
+            playerDA.modify(playerInfoDialog.getPlayer());
             notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished updating player with ID: {}", selected_player_id);
-            PlayerDialog.getDialog().popup("modified_player");
+            PlayerText.getDialog().popup("modified_player");
         } catch (OperationCancelledException e) {
             logger.info("Modify operation cancelled");
-            GeneralDialog.getDialog().popup("operation_cancelled");
+            GeneralText.getDialog().popup("operation_cancelled");
         }
     }
 
     public void add() {
         try {
             logger.info("Adding player...");
-            PlayerModify playerModify = new PlayerModify(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player());
-            if(playerModify.isCancelled()){
+            PlayerInfoDialog playerInfoDialog = new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player());
+            if(playerInfoDialog.isCancelled()){
                 throw new OperationCancelledException();
             }
-            playerDA.add(playerModify.getPlayer());
+            playerDA.add(playerInfoDialog.getPlayer());
             notifyListeners("data_changed", playerDA.getPlayerMap());
             logger.info("Finished adding player.");
-            PlayerDialog.getDialog().popup( "added_player");
+            PlayerText.getDialog().popup( "added_player");
         } catch (OperationCancelledException e) {
             logger.info("Adding player operation cancelled");
-            GeneralDialog.getDialog().popup("operation_cancelled");
+            GeneralText.getDialog().popup("operation_cancelled");
         }
     }
 
@@ -223,7 +224,7 @@ public class PlayerControl implements GeneralControl {
             logger.info("Exporting data: Checking if data exists...");
             if(playerDA.isEmpty()){
                 logger.info("Exporting data cancelled: No player data found");
-                PlayerDialog.getDialog().popup("player_map_null");
+                PlayerText.getDialog().popup("player_map_null");
                 return;
             }
             DataSourceChooser dataSourceChooser = new DataSourceChooser();
@@ -235,10 +236,10 @@ public class PlayerControl implements GeneralControl {
             logger.info("Finished exporting data.");
         } catch (OperationException e){
             logger.error(e.getMessage());
-            GeneralDialog.getDialog().popup("export_failed");
+            GeneralText.getDialog().popup("export_failed");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            GeneralDialog.getDialog().popup("unknown_error");
+            GeneralText.getDialog().popup("unknown_error");
         }
     }
 
@@ -260,7 +261,7 @@ public class PlayerControl implements GeneralControl {
             DataBaseLogin dbLogin = new DataBaseLogin(login_info);
             if(!dbLogin.isValid()){
                 logger.info("Exporting to database cancelled: User cancelled operation");
-                GeneralDialog.getDialog().popup("db_login_cancelled");
+                GeneralText.getDialog().popup("db_login_cancelled");
                 return;
             }
             playerDA.exportDB(target_source, target_dialect, login_info);
@@ -270,7 +271,7 @@ public class PlayerControl implements GeneralControl {
             logger.error(e.getMessage());
             throw new OperationException("export_db");
         }
-        PlayerDialog.getDialog().popup("exported_db");
+        PlayerText.getDialog().popup("exported_db");
     }
 
     public void save(){
@@ -299,7 +300,7 @@ public class PlayerControl implements GeneralControl {
             logger.debug("Data saved successfully");
         } catch (DatabaseException e) {
             logger.error(e.getMessage());
-            GeneralDialog.getDialog().popup("config_error");
+            GeneralText.getDialog().popup("config_error");
         }
     }
 
@@ -307,19 +308,19 @@ public class PlayerControl implements GeneralControl {
         logger.info("Changing language...");
         String language;
         try {
-            language = switch(GeneralDialog.getDialog().selectionDialog("language")){
+            language = switch(GeneralText.getDialog().selectionDialog("language")){
                 case 0 -> "en";
                 case 1 -> "es";
                 case 2 -> "cn";
-                default -> throw new IllegalStateException("Unexpected value: " + GeneralDialog.getDialog().selectionDialog("language"));
+                default -> throw new IllegalStateException("Unexpected value: " + GeneralText.getDialog().selectionDialog("language"));
             };
         } catch (OperationCancelledException e) {
             logger.info("Language changing operation cancelled");
-            GeneralDialog.getDialog().popup("operation_cancelled");
+            GeneralText.getDialog().popup("operation_cancelled");
             return;
         }
-        GeneralDialog.getDialog().setLanguage(language);
-        PlayerDialog.getDialog().setLanguage(language);
+        GeneralText.getDialog().setLanguage(language);
+        PlayerText.getDialog().setLanguage(language);
         notifyListeners("language_changed",null);
         logger.info("Finished changing language to: {}", language);
     }

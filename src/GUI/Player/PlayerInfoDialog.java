@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * @author SIN
  */
-public class PlayerModify extends JDialog {
+public class PlayerInfoDialog extends JDialog {
     private JPanel panel_main;
     private JButton button_submit;
     private JButton button_cancel;
@@ -34,14 +34,14 @@ public class PlayerModify extends JDialog {
     Set<Integer> playerIDs;
 
     //For modifying
-    public PlayerModify(HashMap<String, String[]> regionServerMap, Player player) {
+    public PlayerInfoDialog(HashMap<String, String[]> regionServerMap, Player player) {
         this.player = player;
         this.regionServerMap = regionServerMap;
         initialize();
         setVisible(true);
     }
     //For adding
-    public PlayerModify(HashMap<String, String[]> regionServerMap, Set<Integer> playerIDs, Player player) {
+    public PlayerInfoDialog(HashMap<String, String[]> regionServerMap, Set<Integer> playerIDs, Player player) {
         this.player = player;
         this.regionServerMap = regionServerMap;
         this.playerIDs = playerIDs;
@@ -89,11 +89,11 @@ public class PlayerModify extends JDialog {
 
     private void setUIText(){
         label_id.setText("ID: ");
-        label_region.setText(PlayerDialog.getDialog().getText("label_region"));
-        label_server.setText(PlayerDialog.getDialog().getText("label_server"));
-        label_name.setText(PlayerDialog.getDialog().getText("label_name"));
-        button_submit.setText(PlayerDialog.getDialog().getText("button_submit"));
-        button_cancel.setText(PlayerDialog.getDialog().getText("button_cancel"));
+        label_region.setText(PlayerText.getDialog().getText("label_region"));
+        label_server.setText(PlayerText.getDialog().getText("label_server"));
+        label_name.setText(PlayerText.getDialog().getText("label_name"));
+        button_submit.setText(PlayerText.getDialog().getText("button_submit"));
+        button_cancel.setText(PlayerText.getDialog().getText("button_cancel"));
     }
 
     private void configureRegion(){
@@ -177,12 +177,13 @@ public class PlayerModify extends JDialog {
 
     private void idCheck(){
         if(text_id.getText().isEmpty() || text_id.getText().isBlank()){
+            button_submit.setEnabled(false);
             label_error.setText("");
             return;
         }
         int id = Integer.parseInt(text_id.getText());
         if(playerIDs.contains(id)){
-            label_error.setText(PlayerDialog.getDialog().getText("label_id_error"));
+            label_error.setText(PlayerText.getDialog().getText("label_id_error"));
             label_error.setVisible(true);
             button_submit.setEnabled(false);
         }else{
