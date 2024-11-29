@@ -22,7 +22,7 @@ public class DataBaseLogin extends JDialog {
     private JLabel label_pwd;
     private JPasswordField passwordField_pwd;
     private final HashMap<String,String> login_info;
-    private boolean valid = false;
+    private boolean cancelled = false;
 
     public DataBaseLogin(HashMap<String,String> login_info) {
         this.login_info = login_info;
@@ -49,7 +49,7 @@ public class DataBaseLogin extends JDialog {
 
     @Override
     public boolean isValid() {
-        return valid;
+        return cancelled;
     }
 
     private void onOK() {
@@ -71,7 +71,7 @@ public class DataBaseLogin extends JDialog {
             String pwd = new String(this.passwordField_pwd.getPassword());
             login_info.put("text_pwd", pwd);
         }
-        valid = true;
+        cancelled = true;
         dispose();
     }
 
