@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Player>
     <player id="1">
-        <region>North America</region>
-        <server>Stormterror's Lair</server>
+        <region>Asia</region>
+        <server>Liyue Harbor</server>
         <name>John Doe</name>
     </player>
     <player id="2">
@@ -42,7 +42,7 @@
     </player>
     <player id="11">
         <region>North America</region>
-        <server>Brightcrown Canyon</server>
+        <server>Wolvendom</server>
         <name>Tesa</name>
     </player>
 </Player>
