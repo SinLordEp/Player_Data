@@ -257,10 +257,10 @@ public class PlayerControl implements GeneralControl {
 
     public void save(){
         logger.info("Saving data: Checking if data exists...");
-        if(playerDA.isEmpty()){
+        /*if(playerDA.isEmpty()){
             logger.info("Saving data cancelled: No player data found");
             return;
-        }
+        }*/
         logger.info("Saving data: Fetching current data source...");
         DataSource dataSource = playerDA.getDataSource();
         logger.info("Saving data to current data source: {}", dataSource.toString());
