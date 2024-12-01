@@ -39,6 +39,10 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
 
     private TreeMap<Integer, Player> read_dat(File file) {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
+        if (file.length() == 0) {
+            PlayerText.getDialog().popup("player_map_null");
+            return player_data;
+        }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             while (true) {
                 Object temp = ois.readObject();
