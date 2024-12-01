@@ -56,8 +56,8 @@ public class PlayerInfoDialog extends JDialog {
         setResizable(false);
         setLocationRelativeTo(null);
         setUIText();
-        configureRegion();
         comboBoxListener();
+        configureRegion();
         textValidateListener(text_name);
         parsePlayer();
         pack();
@@ -103,6 +103,7 @@ public class PlayerInfoDialog extends JDialog {
         for (String region : regionServerMap.keySet()){
             comboBox_region.addItem(region);
         }
+        comboBox_region.setSelectedItem(regionServerMap.keySet().iterator().next());
     }
 
     private void configureServer(String region){
@@ -125,17 +126,17 @@ public class PlayerInfoDialog extends JDialog {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                enableSubmitButton(idCheck() && nameCheck() && serverCheck());
+                enableSubmitButton(idCheck() && nameCheck() && regionServerCheck());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                enableSubmitButton(idCheck() && serverCheck());
+                enableSubmitButton(idCheck() && regionServerCheck());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                enableSubmitButton(idCheck() && serverCheck());
+                enableSubmitButton(idCheck() && regionServerCheck());
             }
         });
     }
@@ -168,11 +169,9 @@ public class PlayerInfoDialog extends JDialog {
         int id = Integer.parseInt(text_id.getText());
         if(playerIDs.contains(id)){
             label_error.setText(PlayerText.getDialog().getText("label_id_error"));
-            label_error.setVisible(true);
             return false;
         }else{
             label_error.setText("");
-            label_error.setVisible(false);
             return true;
         }
     }
@@ -182,8 +181,8 @@ public class PlayerInfoDialog extends JDialog {
         return !name.isEmpty();
     }
 
-    private boolean serverCheck(){
-        return comboBox_server.getSelectedItem() != null;
+    private boolean regionServerCheck(){
+        return comboBox_region.getSelectedItem() != null && comboBox_server.getSelectedItem() != null;
     }
 
     private void enableSubmitButton(boolean enabled){

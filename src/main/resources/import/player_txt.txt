@@ -1,4 +1,6 @@
 1,North America,Stormterror's Lair,John Doe
 2,Asia,Narukami Shrine,SB
 3,Asia,Jueyun Karst,Jaime
+4,Asia,Inazuma City,as
 5,North America,Wolvendom,Uno
+6,South America,Port Ormos,ASD
