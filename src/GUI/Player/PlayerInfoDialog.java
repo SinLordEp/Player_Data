@@ -125,17 +125,17 @@ public class PlayerInfoDialog extends JDialog {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                enableSubmitButton(idCheck() && nameCheck());
+                enableSubmitButton(idCheck() && nameCheck() && serverCheck());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                enableSubmitButton(idCheck() && nameCheck());
+                enableSubmitButton(idCheck() && serverCheck());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                enableSubmitButton(idCheck() && nameCheck());
+                enableSubmitButton(idCheck() && serverCheck());
             }
         });
     }
@@ -176,6 +176,10 @@ public class PlayerInfoDialog extends JDialog {
     private boolean nameCheck(){
         String name = text_name.getText();
         return !name.isEmpty();
+    }
+
+    private boolean serverCheck(){
+        return comboBox_server.getSelectedItem() != null;
     }
 
     private void enableSubmitButton(boolean enabled){
