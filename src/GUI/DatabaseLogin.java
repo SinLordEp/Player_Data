@@ -1,13 +1,13 @@
 package GUI;
 
-import exceptions.OperationCancelledException;
+import Interface.CallBack;
+import model.DatabaseInfo;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.Arrays;
-import java.util.HashMap;
 
-public class DataBaseLogin extends JDialog {
+public class DatabaseLogin extends JDialog {
     private JPanel panel_main;
     private JButton button_submit;
     private JButton button_cancel;
@@ -21,24 +21,23 @@ public class DataBaseLogin extends JDialog {
     private JTextField text_user;
     private JLabel label_pwd;
     private JPasswordField passwordField_pwd;
-    private final HashMap<String,String> login_info;
-    private boolean cancelled = false;
+    private final DatabaseInfo databaseInfo;
 
-    public DataBaseLogin(HashMap<String,String> login_info) {
-        this.login_info = login_info;
+    public DatabaseLogin(DatabaseInfo databaseInfo, CallBack<DatabaseInfo> callBack) {
+        this.databaseInfo = databaseInfo;
         setTitle(GeneralText.getDialog().getText("db_login_title"));
         configureLabelText();
         configureTextFieldText();
         setContentPane(panel_main);
         setModal(true);
         getRootPane().setDefaultButton(button_submit);
-        button_submit.addActionListener(_ -> onOK());
-        button_cancel.addActionListener(_ -> onCancel());
+        button_submit.addActionListener(_ -> onOK(callBack));
+        button_cancel.addActionListener(_ -> onCancel(callBack));
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                onCancel();
+                onCancel(callBack);
             }
         });
         pack();
@@ -47,37 +46,34 @@ public class DataBaseLogin extends JDialog {
         setVisible(true);
     }
 
-    @Override
-    public boolean isValid() {
-        return cancelled;
-    }
-
-    private void onOK() {
+    private void onOK(CallBack<DatabaseInfo> callBack) {
         if(hasBlank()){
             GeneralText.getDialog().popup("db_field_empty");
             return;
         }
-        login_info.put("text_url", this.text_url.getText());
+        databaseInfo.setUrl(text_url.getText());
         if(text_port.isVisible()){
-            login_info.put("text_port", this.text_port.getText());
+            databaseInfo.setPort(text_port.getText());
         }
         if(text_database.isVisible()){
-            login_info.put("text_database", this.text_database.getText());
+            databaseInfo.setDatabase(text_database.getText());
         }
         if(text_user.isVisible()){
-            login_info.put("text_user", this.text_user.getText());
+            databaseInfo.setUser(text_user.getText());
         }
         if(passwordField_pwd.isVisible()){
             String pwd = new String(this.passwordField_pwd.getPassword());
-            login_info.put("text_pwd", pwd);
+            databaseInfo.setPassword(pwd);
         }
-        cancelled = true;
+        if(callBack != null){
+            callBack.onSubmit(databaseInfo);
+        }
         dispose();
     }
 
-    private void onCancel() {
+    private void onCancel(CallBack<DatabaseInfo> callBack) {
+        callBack.onCancel();
         dispose();
-        throw new OperationCancelledException();
     }
 
     private void configureLabelText(){
@@ -89,30 +85,31 @@ public class DataBaseLogin extends JDialog {
     }
 
     private void configureTextFieldText(){
-        text_url.setText(login_info.get("text_url"));
-        if(login_info.size()== 1){
-            return;
+        switch (databaseInfo.getDialect()){
+            case MYSQL -> configureMySQL();
+            case SQLITE -> configureSQLite();
         }
-        if(login_info.containsKey("text_port")){
-            text_port.setText(login_info.get("text_port"));
-            text_port.setVisible(true);
-            label_port.setVisible(true);
-        }
-        if(login_info.containsKey("text_database")){
-            text_database.setText(login_info.get("text_database"));
-            text_database.setVisible(true);
-            label_database.setVisible(true);
-        }
-        if(login_info.containsKey("text_user")){
-            text_user.setText(login_info.get("text_user"));
-            text_user.setVisible(true);
-            label_user.setVisible(true);
-        }
-        if(login_info.containsKey("text_pwd")){
-            passwordField_pwd.setText(login_info.get("text_pwd"));
-            passwordField_pwd.setVisible(true);
-            label_pwd.setVisible(true);
-        }
+
+    }
+
+    private void configureMySQL(){
+        text_url.setText(databaseInfo.getUrl());
+        text_port.setText(databaseInfo.getPort());
+        text_port.setVisible(true);
+        label_port.setVisible(true);
+        text_database.setText(databaseInfo.getDatabase());
+        text_database.setVisible(true);
+        label_database.setVisible(true);
+        text_user.setText(databaseInfo.getUser());
+        text_user.setVisible(true);
+        label_user.setVisible(true);
+        passwordField_pwd.setText(databaseInfo.getPassword());
+        passwordField_pwd.setVisible(true);
+        label_pwd.setVisible(true);
+    }
+
+    private void configureSQLite(){
+        text_url.setText(databaseInfo.getUrl());
     }
 
     public boolean hasBlank(){

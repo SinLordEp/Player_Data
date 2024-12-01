@@ -1,0 +1,72 @@
+package model;
+
+import data.DataSource;
+import data.database.SqlDialect;
+
+/**
+ * @author SIN
+ */
+public class DatabaseInfo {
+    private DataSource dataSource;
+    private SqlDialect dialect;
+    private String url, port, database, user, password;
+
+    public DatabaseInfo() {
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public SqlDialect getDialect() {
+        return dialect;
+    }
+
+    public void setDialect(SqlDialect dialect) {
+        this.dialect = dialect;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}

@@ -4,11 +4,14 @@ import Interface.GeneralDBA;
 import data.DataOperation;
 import data.DataSource;
 import exceptions.DatabaseException;
+import model.DatabaseInfo;
 import model.Player;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.sql.DriverManager;
@@ -22,31 +25,33 @@ import java.util.TreeMap;
 import static main.principal.getProperty;
 
 public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
+    private static Logger logger = LoggerFactory.getLogger(PlayerDBA.class);
+
     public PlayerDBA()  {
         URL resource = getClass().getResource(getProperty("hibernateConfig"));
         configuration.configure(resource);
     }
 
     @Override
-    public boolean connect(DataSource dataSource) {
-        return switch (dataSource){
-            case DATABASE -> connectDatabase();
-            case HIBERNATE -> connectHibernate();
-            default -> throw new IllegalStateException("Unexpected value: " + dataSource);
+    public boolean connect(DatabaseInfo databaseInfo) {
+        return switch (databaseInfo.getDataSource()){
+            case DATABASE -> connectDatabase(databaseInfo);
+            case HIBERNATE -> connectHibernate(databaseInfo);
+            default -> throw new IllegalStateException("Unexpected value: " + databaseInfo.getDataSource());
         };
     }
 
-    private boolean connectDatabase() {
+    private boolean connectDatabase(DatabaseInfo databaseInfo) {
         try {
-            switch (dialect){
+            switch (databaseInfo.getDialect()){
                 case MYSQL:
                     connection = DriverManager.getConnection("%s:%s/%s".formatted(
-                            login_info.get("text_url"),
-                            login_info.get("text_port"),
-                            login_info.get("text_database")));
+                            databaseInfo.getUrl(),
+                            databaseInfo.getPort(),
+                            databaseInfo.getDatabase()));
                     break;
                 case SQLITE:
-                    connection = DriverManager.getConnection(login_info.get("text_url"));
+                    connection = DriverManager.getConnection(databaseInfo.getUrl());
                     break;
             }
         } catch (SQLException e) {
@@ -55,18 +60,18 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return connection != null;
     }
 
-    private boolean connectHibernate() {
-        switch (dialect){
+    private boolean connectHibernate(DatabaseInfo databaseInfo) {
+        switch (databaseInfo.getDialect()){
             case MYSQL:
                 setURL("%s:%s/%s".formatted(
-                        login_info.get("text_url"),
-                        login_info.get("text_port"),
-                        login_info.get("text_database")));
-                setUser(login_info.get("text_user"));
-                setPassword(login_info.get("text_pass"));
+                        databaseInfo.getUrl(),
+                        databaseInfo.getPort(),
+                        databaseInfo.getDatabase()));
+                setUser(databaseInfo.getUser());
+                setPassword(databaseInfo.getPassword());
                 break;
             case SQLITE:
-                setURL(login_info.get("text_url"));
+                setURL(databaseInfo.getUrl());
                 break;
         }
         try {
@@ -88,11 +93,13 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
 
     @Override
     public TreeMap<Integer, Player> read(DataSource dataSource) {
-        return switch (dataSource){
+        TreeMap<Integer, Player> player_map = switch (dataSource){
             case DATABASE -> readDatabase();
             case HIBERNATE -> readHibernate();
             default -> null;
         };
+        disconnect(dataSource);
+        return player_map;
     }
 
     public TreeMap<Integer, Player> readDatabase() {
@@ -208,6 +215,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             case DATABASE -> exportDatabase(player_map);
             case HIBERNATE -> exportHibernate(player_map);
         }
+        disconnect(dataSource);
     }
 
     private void exportDatabase(TreeMap<Integer,Player> player_map) {
@@ -229,7 +237,6 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         } catch (DatabaseException e) {
             throw new DatabaseException("Failed to export via database. Cause: " + e.getMessage());
         }
-        disconnect(DataSource.DATABASE);
     }
 
     private void exportHibernate(TreeMap<Integer,Player> player_map) {
@@ -253,7 +260,6 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             }
             throw new DatabaseException("Failed to export via hibernate. Cause: " + e.getMessage());
         }
-        disconnect(DataSource.HIBERNATE);
     }
 
     public void setURL(String url) {

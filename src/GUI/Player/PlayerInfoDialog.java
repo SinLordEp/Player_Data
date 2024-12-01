@@ -1,5 +1,6 @@
 package GUI.Player;
 
+import Interface.CallBack;
 import model.Player;
 
 import javax.swing.*;
@@ -30,26 +31,25 @@ public class PlayerInfoDialog extends JDialog {
     private final Player player;
     private final HashMap<String, String[]> regionServerMap;
     private String region, server;
-    private boolean ok = false;
     Set<Integer> playerIDs;
 
     //For modifying
-    public PlayerInfoDialog(HashMap<String, String[]> regionServerMap, Player player) {
+    public PlayerInfoDialog(HashMap<String, String[]> regionServerMap, Player player, CallBack<Player> callBack) {
         this.player = player;
         this.regionServerMap = regionServerMap;
-        initialize();
+        initialize(callBack);
         setVisible(true);
     }
     //For adding
-    public PlayerInfoDialog(HashMap<String, String[]> regionServerMap, Set<Integer> playerIDs, Player player) {
+    public PlayerInfoDialog(HashMap<String, String[]> regionServerMap, Set<Integer> playerIDs, Player player, CallBack<Player> callBack) {
         this.player = player;
         this.regionServerMap = regionServerMap;
         this.playerIDs = playerIDs;
-        initialize();
+        initialize(callBack);
         setVisible(true);
     }
 
-    private void initialize(){
+    private void initialize(CallBack<Player> callBack){
         setContentPane(panel_main);
         setModal(true);
         getRootPane().setDefaultButton(button_submit);
@@ -61,29 +61,32 @@ public class PlayerInfoDialog extends JDialog {
         textValidateListener(text_name);
         parsePlayer();
         pack();
-        button_submit.addActionListener(_ -> onOK());
-        button_cancel.addActionListener(_ -> onCancel());
+        button_submit.addActionListener(_ -> onOK(callBack));
+        button_cancel.addActionListener(_ -> onCancel(callBack));
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                onCancel();
+                onCancel(callBack);
             }
         });
     }
 
-    private void onOK() {
+    private void onOK(CallBack<Player> callBack) {
         player.setRegion(region);
         player.setServer(server);
         player.setName(text_name.getText());
         if(text_id.isVisible()){
             player.setID(Integer.parseInt(text_id.getText()));
         }
-        ok = true;
+        if(callBack != null){
+            callBack.onSubmit(player);
+        }
         dispose();
     }
 
-    private void onCancel() {
+    private void onCancel(CallBack<Player> callBack) {
+        callBack.onCancel();
         dispose();
     }
 
@@ -151,10 +154,6 @@ public class PlayerInfoDialog extends JDialog {
             comboBox_server.setSelectedItem(player.getServer());
             text_name.setText(player.getName());
         }
-    }
-
-    public boolean isCancelled() {
-        return !ok;
     }
 
     private boolean idCheck(){

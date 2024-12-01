@@ -1,5 +1,6 @@
 package GUI;
 
+import Interface.DataSourceCallBack;
 import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
@@ -19,15 +20,9 @@ public class DataSourceChooser extends JDialog {
     private JComboBox<Object> comboBox_dataType;
     private DataSource dataSource;
     private Object dataType;
-    private boolean ok;
 
-    public DataSourceChooser() {
-        initialize();
-        setVisible(true);
-    }
-
-    public DataSourceChooser(DataSource dataSource) {
-        initialize();
+    public DataSourceChooser(DataSource dataSource, DataSourceCallBack<DataSource, Object> callback) {
+        initialize(callback);
         this.dataSource = dataSource;
         if(dataSource == DataSource.FILE){
             comboBox_dataSource.setSelectedItem(DataSource.FILE);
@@ -36,20 +31,20 @@ public class DataSourceChooser extends JDialog {
         setVisible(true);
     }
 
-    private void initialize(){
+    private void initialize(DataSourceCallBack<DataSource, Object> callback){
         setUIText();
         initializeDataSourceComboBox();
         comboBoxListener();
         setContentPane(panel_main);
         setModal(true);
         getRootPane().setDefaultButton(button_submit);
-        button_submit.addActionListener(_ -> onOK());
-        button_cancel.addActionListener(_ -> onCancel());
+        button_submit.addActionListener(_ -> onOK(callback));
+        button_cancel.addActionListener(_ -> onCancel(callback));
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                onCancel();
+                onCancel(callback);
             }
         });
         pack();
@@ -57,14 +52,16 @@ public class DataSourceChooser extends JDialog {
         setLocationRelativeTo(null);
     }
 
-    private void onOK() {
-        ok = true;
+    private void onOK(DataSourceCallBack<DataSource, Object> callback) {
+        if(callback != null){
+            callback.onSubmit(dataSource, dataType);
+        }
         dispose();
     }
 
-    private void onCancel() {
-        ok = false;
+    private void onCancel(DataSourceCallBack<DataSource, Object> callback) {
         dataSource = DataSource.NONE;
+        callback.onCancel();
         dispose();
     }
 
@@ -131,17 +128,5 @@ public class DataSourceChooser extends JDialog {
                 break;
             default:
         }
-    }
-
-    public boolean isCancelled() {
-        return !ok;
-    }
-
-    public DataSource getDataSource() {
-        return dataSource;
-    }
-
-    public Object getDataType() {
-        return dataType;
     }
 }

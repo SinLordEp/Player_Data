@@ -7,12 +7,13 @@ import data.file.FileType;
 import exceptions.ConfigErrorException;
 import exceptions.FileManageException;
 import exceptions.OperationCancelledException;
+import model.DatabaseInfo;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+
 
 import static main.principal.getProperty;
 
@@ -24,7 +25,8 @@ public abstract class GeneralDataAccess {
     protected String file_path = null;
     protected DataSource dataSource = DataSource.NONE;
     protected FileType fileType = FileType.NONE;
-    public abstract HashMap<String, String> getDefaultDatabaseInfo(SqlDialect sqlDialect) throws ConfigErrorException;
+    protected DatabaseInfo databaseInfo = new DatabaseInfo();
+    public abstract DatabaseInfo getDefaultDatabaseInfo(SqlDialect sqlDialect) throws ConfigErrorException;
 
     public void setFilePath(String file_path) {
         this.file_path = file_path;
@@ -40,7 +42,7 @@ public abstract class GeneralDataAccess {
         };
     }
 
-    public static String getPath(FileType fileType) throws OperationCancelledException {
+    public static String getPath(FileType fileType) {
         JFileChooser fileChooser = new JFileChooser(new File(getProperty("defaultFilePath")).getAbsolutePath());
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setDialogTitle("Choosing " + fileType);
@@ -63,7 +65,7 @@ public abstract class GeneralDataAccess {
 
     }
 
-    public static String getPath() throws OperationCancelledException {
+    public static String getPath(){
         JFileChooser fileChooser = new JFileChooser(new File(getProperty("defaultFilePath")).getAbsolutePath());
         fileChooser.setDialogTitle("Choosing path");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -74,12 +76,16 @@ public abstract class GeneralDataAccess {
         }
     }
 
-    public static String newPathBuilder(FileType fileType) throws OperationCancelledException {
+    public static String newPathBuilder(FileType fileType) {
         String target_path = GeneralDataAccess.getPath();
         String target_extension = getExtension(fileType);
         String target_file_name = GeneralText.getDialog().input("file_name");
         target_path += "/" +target_file_name + target_extension;
         return target_path;
+    }
+
+    public void setDatabaseInfo(DatabaseInfo databaseInfo) {
+        this.databaseInfo = databaseInfo;
     }
 
     public DataSource getDataSource() {

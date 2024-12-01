@@ -1434,3 +1434,462 @@
 2024-11-28 17:24:29 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
 2024-11-28 17:24:29 INFO  control.PlayerControl - Finished importing from file
 2024-11-28 17:24:30 INFO  control.PlayerControl - Adding player...
+2024-12-01 11:10:30 INFO  main.principal - Properties and logger loaded
+2024-12-01 11:10:30 INFO  main.principal - Getting controller...
+2024-12-01 11:10:31 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 11:10:31 INFO  main.principal - Controller loaded
+2024-12-01 11:10:31 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 11:10:34 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 11:10:34 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 11:10:34 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-12-01 11:10:34 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-12-01 11:10:34 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 11:10:37 INFO  control.PlayerControl - Data source is set to FILE
+2024-12-01 11:10:37 INFO  control.PlayerControl - File Type is set to XML
+2024-12-01 11:10:38 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 11:10:38 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 11:10:38 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 11:10:42 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 11:10:48 INFO  control.PlayerControl - Exporting data to database...
+2024-12-01 11:10:51 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 11:10:51 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 11:10:51 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 11:10:51 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 11:10:52 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 11:10:52 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@5afeb469] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 11:10:52 INFO  control.PlayerControl - Database connected successfully
+2024-12-01 11:10:54 INFO  control.PlayerControl - Finished exporting data.
+2024-12-01 11:11:09 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 11:11:09 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 11:11:09 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 11:13:11 INFO  main.principal - Properties and logger loaded
+2024-12-01 11:13:11 INFO  main.principal - Getting controller...
+2024-12-01 11:13:12 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 11:13:12 INFO  main.principal - Controller loaded
+2024-12-01 11:13:12 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 11:13:13 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 11:13:13 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 11:13:13 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-12-01 11:13:13 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-12-01 11:13:13 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 11:13:17 INFO  control.PlayerControl - Data source is set to HIBERNATE
+2024-12-01 11:13:17 INFO  control.PlayerControl - Importing data from database: 
+2024-12-01 11:13:17 INFO  control.PlayerControl - Connecting to database...
+2024-12-01 11:16:23 INFO  main.principal - Properties and logger loaded
+2024-12-01 11:16:23 INFO  main.principal - Getting controller...
+2024-12-01 11:16:24 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 11:16:24 INFO  main.principal - Controller loaded
+2024-12-01 11:16:24 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 11:16:25 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 11:16:25 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 11:16:25 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-12-01 11:16:25 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-12-01 11:16:25 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 11:16:27 INFO  control.PlayerControl - Data source is set to HIBERNATE
+2024-12-01 11:16:27 INFO  control.PlayerControl - Importing data from database: 
+2024-12-01 11:16:27 INFO  control.PlayerControl - Connecting to database...
+2024-12-01 11:16:28 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 11:16:28 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 11:16:28 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 11:16:28 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 11:16:28 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 11:16:28 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@cc06d68] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 11:16:28 INFO  control.PlayerControl - Database connected successfully
+2024-12-01 11:16:28 INFO  control.PlayerControl - Reading data from database...
+2024-12-01 11:16:28 INFO  control.PlayerControl - Data read successfully from database, refreshing UI
+2024-12-01 11:16:28 INFO  control.PlayerControl - Finished importing from database
+2024-12-01 11:16:28 INFO  control.PlayerControl - Disconnected from database to release resources
+2024-12-01 11:16:52 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 11:16:52 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 11:16:52 INFO  control.PlayerControl - Saving data to current data source: HIBERNATE
+2024-12-01 11:16:52 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 11:16:52 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 11:16:52 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 11:16:52 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 11:16:52 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 11:16:52 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@47a75826] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 11:17:00 INFO  control.PlayerControl - Shutting down
+2024-12-01 12:01:08 INFO  main.principal - Properties and logger loaded
+2024-12-01 12:01:08 INFO  main.principal - Getting controller...
+2024-12-01 12:01:13 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 12:01:13 INFO  main.principal - Controller loaded
+2024-12-01 12:01:13 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 12:01:18 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 12:01:18 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 12:01:18 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-12-01 12:01:18 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-12-01 12:01:18 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 12:01:22 INFO  control.PlayerControl - Data source is set to HIBERNATE
+2024-12-01 12:01:22 INFO  control.PlayerControl - Importing data from database: Connecting to database...
+2024-12-01 12:01:23 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 12:01:23 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 12:01:23 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 12:01:23 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 12:01:23 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 12:01:23 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@4c548bd] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 12:01:24 INFO  control.PlayerControl - Database connected successfully
+2024-12-01 12:01:24 INFO  control.PlayerControl - Reading data from database...
+2024-12-01 12:01:24 INFO  control.PlayerControl - Data read successfully from database, refreshing UI
+2024-12-01 12:01:24 INFO  control.PlayerControl - Finished importing from database
+2024-12-01 12:01:24 INFO  control.PlayerControl - Disconnected from database to release resources
+2024-12-01 12:01:27 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 12:01:27 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 12:01:27 INFO  control.PlayerControl - Saving data to current data source: HIBERNATE
+2024-12-01 12:01:27 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 12:01:27 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 12:01:27 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 12:01:27 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 12:01:27 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 12:01:27 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@5d1c5ecc] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 12:01:29 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 12:01:33 INFO  control.PlayerControl - Data source is set to FILE
+2024-12-01 12:01:33 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 12:01:34 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 12:01:34 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 12:01:34 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 12:01:35 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 12:01:38 INFO  control.PlayerControl - Exporting data to database...
+2024-12-01 12:01:39 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 12:01:39 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 12:01:39 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 12:01:39 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 12:01:39 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 12:01:39 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@1f6533a4] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 12:01:39 INFO  control.PlayerControl - Database connected successfully
+2024-12-01 12:01:39 INFO  control.PlayerControl - Exporting data to target database...
+2024-12-01 12:01:39 INFO  control.PlayerControl - Data exported successfully to target database
+2024-12-01 12:01:45 INFO  control.PlayerControl - Finished exporting to database
+2024-12-01 12:01:48 INFO  control.PlayerControl - Finished exporting data.
+2024-12-01 12:01:50 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 12:01:53 INFO  control.PlayerControl - Exporting data to database...
+2024-12-01 12:01:53 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 12:01:53 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 12:01:53 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 12:01:53 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 12:01:53 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 12:01:53 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@3c1413b2] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 12:01:53 INFO  control.PlayerControl - Database connected successfully
+2024-12-01 12:01:53 INFO  control.PlayerControl - Exporting data to target database...
+2024-12-01 12:01:53 INFO  control.PlayerControl - Data exported successfully to target database
+2024-12-01 12:01:55 INFO  control.PlayerControl - Finished exporting to database
+2024-12-01 12:01:56 INFO  control.PlayerControl - Finished exporting data.
+2024-12-01 12:05:21 INFO  main.principal - Properties and logger loaded
+2024-12-01 12:05:21 INFO  main.principal - Getting controller...
+2024-12-01 12:05:22 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 12:05:22 INFO  main.principal - Controller loaded
+2024-12-01 12:05:22 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 12:05:23 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 12:05:23 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 12:05:23 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-12-01 12:05:23 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-12-01 12:05:23 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 12:05:26 INFO  control.PlayerControl - Data source is set to HIBERNATE
+2024-12-01 12:05:26 INFO  control.PlayerControl - Importing data from database: Connecting to database...
+2024-12-01 12:05:26 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 12:05:27 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 12:05:27 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 12:05:27 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 12:05:27 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 12:05:27 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@71503af2] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 12:05:27 INFO  control.PlayerControl - Database connected successfully
+2024-12-01 12:05:27 INFO  control.PlayerControl - Reading data from database...
+2024-12-01 12:05:27 INFO  control.PlayerControl - Data read successfully from database, refreshing UI
+2024-12-01 12:05:27 INFO  control.PlayerControl - Finished importing from database
+2024-12-01 12:05:27 INFO  control.PlayerControl - Disconnected from database to release resources
+2024-12-01 13:45:10 INFO  main.principal - Properties and logger loaded
+2024-12-01 13:45:10 INFO  main.principal - Getting controller...
+2024-12-01 13:45:11 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 13:45:11 INFO  main.principal - Controller loaded
+2024-12-01 13:45:11 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 13:45:12 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:45:12 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:45:12 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-12-01 13:45:12 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-12-01 13:45:12 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:45:16 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 13:45:16 INFO  control.PlayerControl - File Type is set to XML
+2024-12-01 13:45:17 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 13:45:17 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 13:45:17 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 13:45:20 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:45:20 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:45:20 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 13:45:21 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:45:24 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 13:45:24 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 13:45:25 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 13:45:25 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 13:45:25 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 13:45:26 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:45:26 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:45:26 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 13:45:27 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:45:29 INFO  control.PlayerControl - Import data source is set to HIBERNATE
+2024-12-01 13:45:29 INFO  control.PlayerControl - Importing data from database: Connecting to database...
+2024-12-01 13:45:30 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 13:45:30 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 13:45:30 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 13:45:30 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 13:45:31 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 13:45:31 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@40410667] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 13:45:31 INFO  control.PlayerControl - Database connected successfully
+2024-12-01 13:45:31 INFO  control.PlayerControl - Reading data from database...
+2024-12-01 13:45:31 INFO  control.PlayerControl - Data read successfully from database, refreshing UI
+2024-12-01 13:45:31 INFO  control.PlayerControl - Finished importing from database
+2024-12-01 13:45:31 INFO  control.PlayerControl - Disconnected from database to release resources
+2024-12-01 13:45:38 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 13:45:43 INFO  control.PlayerControl - Exporting data to database...
+2024-12-01 13:45:44 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 13:45:44 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 13:45:44 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 13:45:44 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 13:45:44 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 13:45:44 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@442e8f71] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 13:45:44 INFO  control.PlayerControl - Exporting data to target database...
+2024-12-01 13:45:44 INFO  control.PlayerControl - Data exported successfully to target database
+2024-12-01 13:45:46 INFO  control.PlayerControl - Finished exporting to database
+2024-12-01 13:45:46 INFO  control.PlayerControl - Finished exporting data.
+2024-12-01 13:45:55 INFO  control.PlayerControl - Path built successfully
+2024-12-01 13:45:56 INFO  control.PlayerControl - File created successfully
+2024-12-01 13:45:56 INFO  control.PlayerControl - New file Data source is set to FILE
+2024-12-01 13:46:09 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 13:46:14 INFO  control.PlayerControl - Exporting data to file...
+2024-12-01 13:46:59 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:46:59 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:46:59 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 13:47:00 INFO  control.PlayerControl - Shutting down
+2024-12-01 13:47:03 INFO  main.principal - Properties and logger loaded
+2024-12-01 13:47:03 INFO  main.principal - Getting controller...
+2024-12-01 13:47:04 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 13:47:04 INFO  main.principal - Controller loaded
+2024-12-01 13:47:04 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 13:47:05 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:47:05 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:47:05 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-12-01 13:47:05 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-12-01 13:47:05 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:47:08 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 13:47:08 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 13:47:10 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 13:47:10 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 13:47:10 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 13:47:10 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:47:10 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:47:10 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 13:47:11 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:47:13 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 13:47:13 INFO  control.PlayerControl - File Type is set to XML
+2024-12-01 13:47:14 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 13:47:14 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 13:47:14 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 13:47:17 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:47:17 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:47:17 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 13:47:17 INFO  control.PlayerControl - Shutting down
+2024-12-01 13:51:05 INFO  main.principal - Properties and logger loaded
+2024-12-01 13:51:05 INFO  main.principal - Getting controller...
+2024-12-01 13:51:06 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 13:51:06 INFO  main.principal - Controller loaded
+2024-12-01 13:51:06 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 13:51:09 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 13:51:13 INFO  control.PlayerControl - Exporting data to file...
+2024-12-01 13:51:17 INFO  control.PlayerControl - Finished exporting data.
+2024-12-01 13:51:20 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 13:51:23 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 13:51:25 INFO  control.PlayerControl - Exporting data to file...
+2024-12-01 13:51:26 INFO  control.PlayerControl - Failed to export data to file. Cause: Operation cancelled
+2024-12-01 13:51:27 INFO  control.PlayerControl - Finished exporting data.
+2024-12-01 13:51:43 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:51:43 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:51:43 INFO  control.PlayerControl - Saving data to current data source: NONE
+2024-12-01 13:51:43 INFO  control.PlayerControl - Current data source is NONE, returning...
+2024-12-01 13:51:43 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:51:45 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 13:51:45 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 13:51:46 INFO  control.PlayerControl - Failed to import data from FILE. Cause: Operation cancelled
+2024-12-01 13:51:55 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:51:55 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:51:55 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 13:52:59 INFO  main.principal - Properties and logger loaded
+2024-12-01 13:52:59 INFO  main.principal - Getting controller...
+2024-12-01 13:53:00 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 13:53:00 INFO  main.principal - Controller loaded
+2024-12-01 13:53:00 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 13:53:01 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:53:01 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 13:53:01 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:53:05 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:53:05 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 13:53:05 INFO  control.PlayerControl - Shutting down
+2024-12-01 13:53:08 INFO  main.principal - Properties and logger loaded
+2024-12-01 13:53:08 INFO  main.principal - Getting controller...
+2024-12-01 13:53:09 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 13:53:09 INFO  main.principal - Controller loaded
+2024-12-01 13:53:09 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 13:53:10 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:53:10 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 13:53:10 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:53:13 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 13:53:13 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 13:53:14 INFO  control.PlayerControl - Failed to import data from FILE. Cause: Operation cancelled
+2024-12-01 13:53:16 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:53:16 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 13:53:16 INFO  control.PlayerControl - Shutting down
+2024-12-01 13:53:19 INFO  main.principal - Properties and logger loaded
+2024-12-01 13:53:19 INFO  main.principal - Getting controller...
+2024-12-01 13:53:20 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 13:53:20 INFO  main.principal - Controller loaded
+2024-12-01 13:53:20 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 13:53:22 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 13:53:22 INFO  control.PlayerControl - Exporting data cancelled: No player data found
+2024-12-01 13:53:31 INFO  control.PlayerControl - Failed to create new file. Cause: Operation cancelled
+2024-12-01 13:53:46 INFO  control.PlayerControl - Path built successfully
+2024-12-01 13:53:46 INFO  control.PlayerControl - File created successfully
+2024-12-01 13:53:46 INFO  control.PlayerControl - New file Data source is set to FILE
+2024-12-01 13:53:48 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 13:53:48 INFO  control.PlayerControl - Exporting data cancelled: No player data found
+2024-12-01 13:53:51 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:53:51 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 13:53:51 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:53:54 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:53:54 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 13:53:54 INFO  control.PlayerControl - Shutting down
+2024-12-01 13:55:23 INFO  main.principal - Properties and logger loaded
+2024-12-01 13:55:23 INFO  main.principal - Getting controller...
+2024-12-01 13:55:26 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 13:55:26 INFO  main.principal - Controller loaded
+2024-12-01 13:55:26 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 13:55:31 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:55:31 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 13:55:31 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:55:34 INFO  control.PlayerControl - Import data source is set to HIBERNATE
+2024-12-01 13:55:34 INFO  control.PlayerControl - Importing data from database: Connecting to database...
+2024-12-01 13:55:37 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 13:55:37 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 13:55:37 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 13:55:37 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 13:55:38 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 13:55:38 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@3c9e6eae] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 13:55:38 INFO  control.PlayerControl - Database connected successfully
+2024-12-01 13:55:38 INFO  control.PlayerControl - Reading data from database...
+2024-12-01 13:55:38 INFO  control.PlayerControl - Data read successfully from database, refreshing UI
+2024-12-01 13:55:38 INFO  control.PlayerControl - Finished importing from database
+2024-12-01 13:55:38 INFO  control.PlayerControl - Disconnected from database to release resources
+2024-12-01 13:55:43 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 13:55:43 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 13:55:43 INFO  control.PlayerControl - Saving data to current data source: HIBERNATE
+2024-12-01 13:55:43 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 13:55:43 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 13:55:43 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 13:55:43 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 13:55:43 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 13:55:43 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@17754507] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 13:55:45 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 13:55:48 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 13:55:48 INFO  control.PlayerControl - File Type is set to XML
+2024-12-01 13:55:50 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 13:55:50 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 13:55:50 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 13:55:50 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 13:55:54 INFO  control.PlayerControl - Exporting data to database...
+2024-12-01 13:55:57 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-01 13:55:57 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-01 13:55:57 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-01 13:55:57 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-01 13:55:57 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-01 13:55:57 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@76fb1823] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-01 13:55:57 INFO  control.PlayerControl - Exporting data to target database...
+2024-12-01 13:55:57 INFO  control.PlayerControl - Data exported successfully to target database
+2024-12-01 13:55:59 INFO  control.PlayerControl - Finished exporting to database
+2024-12-01 13:55:59 INFO  control.PlayerControl - Finished exporting data.

@@ -5,11 +5,15 @@ import data.database.PlayerDBA;
 import Interface.GeneralDataAccess;
 import data.database.SqlDialect;
 import exceptions.*;
+import model.DatabaseInfo;
 import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
@@ -27,6 +31,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private final PlayerDBA playerDBA;
     private final PlayerFileReader fileReader;
     private final PlayerFileWriter fileWriter;
+    private static Logger logger = LoggerFactory.getLogger(PlayerDataAccess.class);
 
     public PlayerDataAccess() {
         fileReader = new PlayerFileReader();
@@ -37,17 +42,19 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void initializeRegionServer(){
         region_server_map = PlayerFileReader.read_region_server();
     }
+
     @Override
     @SuppressWarnings("unchecked")
-    public HashMap<String, String> getDefaultDatabaseInfo(SqlDialect dialect) throws ConfigErrorException {
-        HashMap<String, String> login_info = new HashMap<>();
-        HashMap<String,Object> default_info = null;
+    public DatabaseInfo getDefaultDatabaseInfo(SqlDialect dialect) throws ConfigErrorException {
+        DatabaseInfo databaseInfo = new DatabaseInfo();
+        databaseInfo.setDialect(dialect);
+        HashMap<String, Object> default_info = null;
         URL resource = getClass().getResource(getProperty("defaultPlayerSQL"));
         if (resource != null) {
             try(InputStream inputStream = resource.openStream()){
                 Yaml yaml = new Yaml();
                 default_info = yaml.load(inputStream);
-            }catch (Exception e){
+            }catch (IOException e){
                 throw new ConfigErrorException("Error loading default database info");
             }
         }
@@ -57,34 +64,22 @@ public class PlayerDataAccess extends GeneralDataAccess {
         switch (dialect) {
             case MYSQL:
                 HashMap<String,Object> mysql_info = (HashMap<String, Object>) default_info.get("MYSQL");
-                login_info.put("text_url", (String) mysql_info.get("text_url"));
-                login_info.put("text_port",(String) mysql_info.get("text_port"));
-                login_info.put("text_database",(String) mysql_info.get("text_database"));
-                login_info.put("text_user",(String) mysql_info.get("text_user"));
-                login_info.put("text_pwd",(String) mysql_info.get("text_pwd"));
+                databaseInfo.setUrl((String) mysql_info.get("text_url"));
+                databaseInfo.setPort((String) mysql_info.get("text_port"));
+                databaseInfo.setDatabase((String) mysql_info.get("text_database"));
+                databaseInfo.setUser((String) mysql_info.get("text_user"));
+                databaseInfo.setPassword((String) mysql_info.get("text_pwd"));
                 break;
             case SQLITE:
                 HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
-                login_info.put("text_url",(String) sqlite_info.get("text_url"));
+                databaseInfo.setUrl((String) sqlite_info.get("text_url"));
                 break;
         }
-        return login_info;
+        return databaseInfo;
     }
 
-    public boolean connectDB() {
-        return playerDBA.connect(dataSource);
-    }
-
-    public void setLogin_info(HashMap<String, String> login_info) {
-        playerDBA.setLogin_info(login_info);
-    }
-
-    public void setSQLDialect(SqlDialect dialect){
-        playerDBA.setDialect(dialect);
-    }
-
-    public SqlDialect getSQLDialect(){
-        return playerDBA.getDialect();
+    public boolean connectDB(DatabaseInfo databaseInfo) {
+        return playerDBA.connect(databaseInfo);
     }
 
     public void disconnectDB(){
@@ -112,8 +107,13 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void save(){
         try{
             switch (dataSource){
-                case FILE -> fileWriter.write(file_path, player_map);
-                case DATABASE, HIBERNATE -> playerDBA.update(dataSource, changed_player_map);
+                case FILE:
+                    fileWriter.write(file_path, player_map);
+                    break;
+                case DATABASE, HIBERNATE:
+                    playerDBA.connect(databaseInfo);
+                    playerDBA.update(dataSource, changed_player_map);
+                    break;
             }
         } catch (Exception e) {
             throw new OperationException("Failed to save data. Cause: " + e.getMessage());
@@ -143,7 +143,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
         player_map.remove(selected_player_id);
     }
-    //TODO:
+
     public void export() {
         String target_extension = getExtension(fileType);
         String target_path = getPath();
@@ -152,18 +152,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
         fileWriter.write(target_path, player_map);
     }
 
-    public void exportDB(DataSource dataSource, SqlDialect dialect, HashMap<String,String> login_info) {
-        PlayerDBA export_playerDBA = new PlayerDBA();
-        export_playerDBA.setDialect(dialect);
-        export_playerDBA.setLogin_info(login_info);
-        if(!export_playerDBA.connect(dataSource)){
-            throw new DatabaseException("Failed to export data to DB.");
-        }
-        export_playerDBA.export(dataSource, player_map);
+    public void exportDB(DataSource dataSource) {
+        playerDBA.export(dataSource, player_map);
     }
 
     public boolean isEmpty(){
-        return player_map == null;
+        return player_map.isEmpty();
     }
 
     public TreeMap<Integer, Player> getPlayerMap() {

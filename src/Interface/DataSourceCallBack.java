@@ -5,9 +5,8 @@ import GUI.GeneralText;
 /**
  * @author SIN
  */
-@FunctionalInterface
-public interface CallBack<T> {
-    void onSubmit(T object);
+public interface DataSourceCallBack<T, R> {
+    void onSubmit(T datasource, R datatype);
     default void onCancel(){
         GeneralText.getDialog().popup("operation_cancelled");
     }

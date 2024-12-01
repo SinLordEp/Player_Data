@@ -96,9 +96,9 @@ popup:
     es: "Nuevo fichero creado"
     cn: "已创建新文件"
   data_saved:
-    en: "Data is saved correctly to: "
-    es: "Dato guardado correctamente en:"
-    cn: "已保存数据至:"
+    en: "Data is saved correctly"
+    es: "Dato guardado correctamente"
+    cn: "已保存数据"
   data_invalid:
     en: "Data invalid"
     es: "Datos inválidos"
@@ -123,7 +123,10 @@ popup:
     en: "Failed to read config"
     es: "No se ha podido leer configuración"
     cn: "无法读取配置文件"
-
+  file_create_error:
+    en: "Failed to create new file"
+    es: "No se ha podido crear nuevo fichero"
+    cn: "创建新文件失败"
 
 options:
   controller:
