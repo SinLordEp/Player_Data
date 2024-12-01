@@ -157,6 +157,9 @@ public class PlayerInfoDialog extends JDialog {
     }
 
     private boolean idCheck(){
+        if(!text_id.isEnabled()){
+            return true;
+        }
         if(text_id.getText().isEmpty() || text_id.getText().isBlank()){
             label_error.setText("");
             return false;
