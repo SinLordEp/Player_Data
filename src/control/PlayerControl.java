@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 
 public class PlayerControl implements GeneralControl {
@@ -58,6 +59,8 @@ public class PlayerControl implements GeneralControl {
     }
 
     public void createFile() {
+        logger.debug("Creating new file: Saving possible data before changing datasource...");
+        save();
         logger.debug("Creating file: Fetching data source...");
         new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile);
     }
@@ -71,6 +74,7 @@ public class PlayerControl implements GeneralControl {
             playerDA.setDataSource(dataSource);
             notifyListeners("dataSource_set",null);
             logger.info("New file Data source is set to {}", dataSource);
+            notifyListeners("data_changed", new TreeMap<Integer, Player>());
         } catch (OperationCancelledException e) {
             logger.info("Failed to create new file. Cause: Operation cancelled");
         } catch (FileManageException e) {
