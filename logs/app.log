@@ -1993,3 +1993,138 @@
 2024-12-01 17:11:33 INFO  control.PlayerControl - Saving data: Fetching current data source...
 2024-12-01 17:11:33 INFO  control.PlayerControl - Saving data to current data source: FILE
 2024-12-01 17:11:34 INFO  control.PlayerControl - Shutting down
+2024-12-01 17:16:51 INFO  main.principal - Properties and logger loaded
+2024-12-01 17:16:51 INFO  main.principal - Getting controller...
+2024-12-01 17:16:52 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 17:16:52 INFO  main.principal - Controller loaded
+2024-12-01 17:16:52 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 17:16:53 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:16:53 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 17:16:53 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 17:16:55 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 17:16:55 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 17:16:56 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 17:16:56 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 17:16:56 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 17:16:57 INFO  control.PlayerControl - Adding player...
+2024-12-01 17:17:02 INFO  control.PlayerControl - Finished adding player.
+2024-12-01 17:17:11 INFO  control.PlayerControl - Deleting player with ID: 4
+2024-12-01 17:17:11 INFO  control.PlayerControl - Finished deleting player with ID: 4
+2024-12-01 17:17:19 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:17:19 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 17:17:19 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 17:17:20 INFO  control.PlayerControl - Shutting down
+2024-12-01 17:18:17 INFO  main.principal - Properties and logger loaded
+2024-12-01 17:18:17 INFO  main.principal - Getting controller...
+2024-12-01 17:18:18 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 17:18:18 INFO  main.principal - Controller loaded
+2024-12-01 17:18:18 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 17:18:19 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:18:19 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 17:18:19 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 17:18:22 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 17:18:22 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 17:18:23 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 17:18:23 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 17:18:23 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 17:18:24 INFO  control.PlayerControl - Adding player...
+2024-12-01 17:18:31 INFO  control.PlayerControl - Finished adding player.
+2024-12-01 17:18:38 INFO  control.PlayerControl - Deleting player with ID: 4
+2024-12-01 17:18:38 INFO  control.PlayerControl - Finished deleting player with ID: 4
+2024-12-01 17:22:33 INFO  main.principal - Properties and logger loaded
+2024-12-01 17:22:33 INFO  main.principal - Getting controller...
+2024-12-01 17:22:34 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 17:22:34 INFO  main.principal - Controller loaded
+2024-12-01 17:22:34 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 17:22:35 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:22:35 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 17:22:35 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 17:22:37 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 17:22:37 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 17:22:38 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 17:22:38 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 17:22:38 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 17:22:40 INFO  control.PlayerControl - Adding player...
+2024-12-01 17:22:51 INFO  control.PlayerControl - Finished adding player.
+2024-12-01 17:22:54 INFO  control.PlayerControl - Adding player...
+2024-12-01 17:23:37 INFO  control.PlayerControl - Finished adding player.
+2024-12-01 17:23:40 INFO  control.PlayerControl - Deleting player with ID: 6
+2024-12-01 17:23:40 INFO  control.PlayerControl - Finished deleting player with ID: 6
+2024-12-01 17:23:43 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:23:43 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 17:23:43 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 17:23:43 INFO  control.PlayerControl - Shutting down
+2024-12-01 17:25:58 INFO  main.principal - Properties and logger loaded
+2024-12-01 17:25:58 INFO  main.principal - Getting controller...
+2024-12-01 17:25:59 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 17:25:59 INFO  main.principal - Controller loaded
+2024-12-01 17:25:59 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 17:26:00 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:26:00 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 17:26:00 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 17:26:02 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 17:26:02 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 17:26:03 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 17:26:03 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 17:26:03 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 17:26:04 INFO  control.PlayerControl - Adding player...
+2024-12-01 17:27:09 INFO  control.PlayerControl - Finished adding player.
+2024-12-01 17:28:11 INFO  main.principal - Properties and logger loaded
+2024-12-01 17:28:11 INFO  main.principal - Getting controller...
+2024-12-01 17:28:12 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 17:28:12 INFO  main.principal - Controller loaded
+2024-12-01 17:28:12 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 17:28:13 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:28:13 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 17:28:13 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 17:28:15 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 17:28:15 INFO  control.PlayerControl - File Type is set to TXT
+2024-12-01 17:28:16 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 17:28:16 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 17:28:16 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 17:28:17 INFO  control.PlayerControl - Adding player...
+2024-12-01 17:28:28 INFO  control.PlayerControl - Finished adding player.
+2024-12-01 17:28:34 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:28:34 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 17:28:34 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 17:28:35 INFO  control.PlayerControl - Shutting down
+2024-12-01 17:33:38 INFO  main.principal - Properties and logger loaded
+2024-12-01 17:33:38 INFO  main.principal - Getting controller...
+2024-12-01 17:33:40 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 17:33:40 INFO  main.principal - Controller loaded
+2024-12-01 17:33:40 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 17:33:41 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:33:41 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 17:33:41 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 17:33:43 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 17:33:43 INFO  control.PlayerControl - File Type is set to DAT
+2024-12-01 17:33:44 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 17:34:00 INFO  main.principal - Properties and logger loaded
+2024-12-01 17:34:00 INFO  main.principal - Getting controller...
+2024-12-01 17:34:01 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-01 17:34:02 INFO  main.principal - Controller loaded
+2024-12-01 17:34:02 INFO  control.PlayerControl - Finished building player frame
+2024-12-01 17:34:03 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:34:03 INFO  control.PlayerControl - Saving data cancelled: No player data found
+2024-12-01 17:34:03 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 17:34:04 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 17:34:04 INFO  control.PlayerControl - File Type is set to XML
+2024-12-01 17:34:05 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 17:34:05 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 17:34:05 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 17:34:07 INFO  control.PlayerControl - Exporting data: Checking if data exists...
+2024-12-01 17:34:09 INFO  control.PlayerControl - Exporting data to file...
+2024-12-01 17:34:17 INFO  control.PlayerControl - Finished exporting data.
+2024-12-01 17:34:19 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:34:19 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 17:34:19 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 17:34:20 INFO  control.PlayerControl - Fetching data source and data type
+2024-12-01 17:34:22 INFO  control.PlayerControl - Import data source is set to FILE
+2024-12-01 17:34:22 INFO  control.PlayerControl - File Type is set to DAT
+2024-12-01 17:34:23 INFO  control.PlayerControl - Reading data from file...
+2024-12-01 17:34:23 INFO  control.PlayerControl - Data read successfully from file, refreshing UI
+2024-12-01 17:34:23 INFO  control.PlayerControl - Finished importing from file
+2024-12-01 17:34:26 INFO  control.PlayerControl - Saving data: Checking if data exists...
+2024-12-01 17:34:26 INFO  control.PlayerControl - Saving data: Fetching current data source...
+2024-12-01 17:34:26 INFO  control.PlayerControl - Saving data to current data source: FILE
+2024-12-01 17:34:27 INFO  control.PlayerControl - Shutting down

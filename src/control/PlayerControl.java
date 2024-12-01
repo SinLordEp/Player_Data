@@ -1,10 +1,10 @@
 package control;
 
-import GUI.DatabaseLogin;
 import GUI.DataSourceChooser;
+import GUI.DatabaseLogin;
 import GUI.GeneralText;
-import GUI.Player.PlayerText;
 import GUI.Player.PlayerInfoDialog;
+import GUI.Player.PlayerText;
 import GUI.Player.PlayerUI;
 import Interface.EventListener;
 import Interface.GeneralControl;
@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 
 public class PlayerControl implements GeneralControl {
@@ -74,7 +73,9 @@ public class PlayerControl implements GeneralControl {
             playerDA.setDataSource(dataSource);
             notifyListeners("dataSource_set",null);
             logger.info("New file Data source is set to {}", dataSource);
-            notifyListeners("data_changed", new TreeMap<Integer, Player>());
+            playerDA.clearData();
+            logger.info("Player data is cleared successfully");
+            notifyListeners("data_changed", playerDA.getPlayerMap());
         } catch (OperationCancelledException e) {
             logger.info("Failed to create new file. Cause: Operation cancelled");
         } catch (FileManageException e) {

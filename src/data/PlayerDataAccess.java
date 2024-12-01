@@ -208,4 +208,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
         playerCopy.setServer(player.getServer());
         return playerCopy;
     }
+
+    public void clearData(){
+        player_map.clear();
+    }
 }
