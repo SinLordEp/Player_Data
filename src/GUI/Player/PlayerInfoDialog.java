@@ -151,6 +151,7 @@ public class PlayerInfoDialog extends JDialog {
             label_id.setVisible(false);
             panel_info.setBorder(BorderFactory.createTitledBorder("ID: " + player.getID()));
             comboBox_region.setSelectedItem(player.getRegion());
+            configureServer(player.getRegion());
             comboBox_server.setSelectedItem(player.getServer());
             text_name.setText(player.getName());
         }
