@@ -157,7 +157,7 @@ options:
       es: "Exportar Jugador"
       cn: "导出玩家"
     message:
-      en: "Choose the export type"
+      en: "Choose the exportFile type"
       es: "Elige el tipo objetivo para exportar"
       cn: "选择导出目标格式"
     option:

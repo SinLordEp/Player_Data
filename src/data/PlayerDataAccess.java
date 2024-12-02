@@ -31,21 +31,25 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private final PlayerDBA playerDBA;
     private final PlayerFileReader fileReader;
     private final PlayerFileWriter fileWriter;
-    private static Logger logger = LoggerFactory.getLogger(PlayerDataAccess.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlayerDataAccess.class);
 
     public PlayerDataAccess() {
+        logger.info("PlayerDataAccess: Instantiated");
         fileReader = new PlayerFileReader();
         fileWriter = new PlayerFileWriter();
         playerDBA = new PlayerDBA();
     }
 
     public void initializeRegionServer(){
+        logger.info("Initializing region server: Reading config file...");
         region_server_map = PlayerFileReader.read_region_server();
+        logger.info("Initializing region server: Region server map updated!");
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public DatabaseInfo getDefaultDatabaseInfo(SqlDialect dialect) throws ConfigErrorException {
+        logger.info("Get default database info: Reading default database info for dialect: {}", dialect);
         DatabaseInfo databaseInfo = new DatabaseInfo();
         databaseInfo.setDialect(dialect);
         HashMap<String, Object> default_info = null;
@@ -75,36 +79,46 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 databaseInfo.setUrl((String) sqlite_info.get("text_url"));
                 break;
         }
+        logger.info("Get default database info: Finished reading database info!");
         return databaseInfo;
     }
 
     public boolean connectDB(DatabaseInfo databaseInfo) {
+        logger.info("Connect DB: Calling DBA to connect...");
         return playerDBA.connect(databaseInfo);
-    }
-
-    public void disconnectDB(){
-        playerDBA.disconnect(dataSource);
     }
 
     @SuppressWarnings("unchecked")
     public void read() {
+        logger.info("Read: Reading data from {}", dataSource);
         try {
-            player_map = switch (dataSource){
-                case NONE -> null;
-                case FILE -> (TreeMap<Integer, Player>) fileReader.read(fileType, file_path);
-                case DATABASE, HIBERNATE -> playerDBA.read(dataSource);
-            };
+            switch (dataSource){
+                case NONE :
+                    logger.info("Read: Data source is {}, resetting player map...", dataSource);
+                    player_map = new TreeMap<>();
+                    break;
+                case FILE:
+                    logger.info("Read: Data source is {}, calling file reader...", dataSource);
+                    player_map = (TreeMap<Integer, Player>) fileReader.read(fileType, file_path);
+                    break;
+                case DATABASE, HIBERNATE :
+                    logger.info("Read: Data source is {}, calling DBA...", dataSource);
+                    playerDBA.read(dataSource);
+                    break;
+            }
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();
             }
         } catch (Exception e) {
             player_map = new TreeMap<>();
             dataSource = DataSource.NONE;
-            throw new OperationException("Failed to read data. Cause: " + e.getMessage());
+            throw new OperationException("Read: Failed to read data with cause: " + e.getMessage());
         }
+        logger.info("Read: Finished reading data!");
     }
 
     public void save(){
+        logger.info("Save: Saving data to {}", dataSource);
         try{
             switch (dataSource){
                 case FILE:
@@ -113,46 +127,68 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 case DATABASE, HIBERNATE:
                     playerDBA.connect(databaseInfo);
                     playerDBA.update(dataSource, changed_player_map);
+                    playerDBA.disconnect(dataSource);
                     break;
             }
         } catch (Exception e) {
             throw new OperationException("Failed to save data. Cause: " + e.getMessage());
         }
+        logger.info("Save: Finished saving data!");
     }
 
     public void add(Player player) {
+        logger.info("Add: Adding player with ID: {}", player.getID());
         switch(dataSource){
             //case FILE ->
-            case DATABASE, HIBERNATE -> changed_player_map.put(player, DataOperation.ADD);
+            case DATABASE, HIBERNATE:
+                logger.info("Add: Adding player to changed player map");
+                changed_player_map.put(player, DataOperation.ADD);
+                break;
         }
+        logger.info("Add: Adding player to current player map");
         player_map.put(player.getID(), player);
+        logger.info("Add: Finished adding player!");
     }
 
     public void modify(Player player) {
+        logger.info("Modify: Modifying player with ID: {}", player.getID());
         switch(dataSource){
             //case FILE ->
-            case DATABASE, HIBERNATE  -> changed_player_map.put(player, DataOperation.MODIFY);
+            case DATABASE, HIBERNATE :
+                logger.info("Modify: Adding modified player with ID: {} to changed player map", player.getID());
+                changed_player_map.put(player, DataOperation.MODIFY);
         }
+        logger.info("Modify: Adding modified player with ID: {} to current player map", player.getID());
         player_map.put(player.getID(), player);
+        logger.info("Modify: Finished modifying player!");
     }
 
     public void delete(int selected_player_id) {
+        logger.info("Delete: Deleting player with ID: {}", selected_player_id);
         switch(dataSource){
             //case FILE ->
-            case DATABASE, HIBERNATE -> changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
+            case DATABASE, HIBERNATE :
+                logger.info("Delete: Adding deleted player with ID: {} to changed player map", selected_player_id);
+                changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
         }
+        logger.info("Delete: Deleting player with ID: {} from current player map", selected_player_id);
         player_map.remove(selected_player_id);
+        logger.info("Delete: Finished deleting player!");
     }
 
-    public void export() {
+    public void exportFile() {
+        logger.info("Export file: Building extension...");
         String target_extension = getExtension(fileType);
         String target_path = getPath();
         String target_name = GeneralText.getDialog().input("new_file_name");
         target_path += "/" + target_name + target_extension;
+        logger.info("Export file: Target path is set to {}", target_path);
         fileWriter.write(target_path, player_map);
+        logger.info("Export file: Finished exporting file!");
     }
 
     public void exportDB(DataSource dataSource) {
+        logger.info("Export DB: Calling DBA...");
         playerDBA.export(dataSource, player_map);
     }
 
@@ -190,9 +226,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void isDataValid(){
+        logger.info("isDataValid: Validating imported data...");
         for(Player player : player_map.values()){
             isPlayerInvalid(player);
         }
+        logger.info("isDataValid: Data is valid");
     }
 
     public HashMap<String, String[]> getRegion_server_map() {
@@ -210,6 +248,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void clearData(){
+        logger.info("Clearing current data...");
         player_map.clear();
+        logger.info("Player data is cleared successfully");
     }
 }

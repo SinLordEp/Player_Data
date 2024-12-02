@@ -58,235 +58,240 @@ public class PlayerControl implements GeneralControl {
     }
 
     public void createFile() {
-        logger.debug("Creating new file: Saving possible data before changing datasource...");
+        logger.debug("Create file: Processing...");
         save();
-        logger.debug("Creating file: Fetching data source...");
+        logger.info("Create file: Calling DataSourceChooser...");
         new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile);
+        logger.info("Create file: Process finished!");
     }
 
     private void handleDataSourceForCreateFile(DataSource dataSource, Object dataType){
+        logger.info("Handling Data source for Create file: Processing...");
         try {
             playerDA.setFilePath(GeneralDataAccess.newPathBuilder((FileType) dataType));
-            logger.info("Path built successfully");
             playerDA.createNewFile();
-            logger.info("File created successfully");
             playerDA.setDataSource(dataSource);
             notifyListeners("dataSource_set",null);
-            logger.info("New file Data source is set to {}", dataSource);
             playerDA.clearData();
-            logger.info("Player data is cleared successfully");
             notifyListeners("data_changed", playerDA.getPlayerMap());
         } catch (OperationCancelledException e) {
-            logger.info("Failed to create new file. Cause: Operation cancelled");
+            logger.info("Handling Data source for Create file: Failed with cause: Operation cancelled");
         } catch (FileManageException e) {
-            logger.error("Failed to create new file. Cause: {}", e.getMessage());
+            logger.error("Handling Data source for Create file: Failed with cause: {}", e.getMessage());
             notifyListeners("file_create_error", null);
         }
+        logger.info("Handling Data source for Create file: Process finished!");
     }
 
     public void importData() {
+        logger.info("Import data: Processing...");
         try {
-            logger.debug("Importing data: Saving possible data before changing datasource...");
             save();
-            logger.info("Fetching data source and data type");
+            logger.info("Import data: Calling Data source chooser...");
             new DataSourceChooser(null, this::handleDataSourceForImportData);
         } catch (OperationCancelledException e) {
-            logger.info("Failed to import data. Cause: Operation cancelled");
+            logger.info("Import data: Failed with cause: Operation cancelled");
             notifyListeners("operation_cancelled", null);
         } catch (DataTypeException e){
-            System.out.println(e.getMessage());
-            logger.error(e.getMessage());
+            logger.error("Import data: Failed with cause: {}", e.getMessage());
         }
+        logger.info("Import data: Process finished!");
     }
 
     private void handleDataSourceForImportData(DataSource dataSource, Object dataType){
+        logger.info("Handling Data source for Import data: Processing...");
         playerDA.setDataSource(dataSource);
-        logger.info("Import data source is set to {}", dataSource);
         notifyListeners("dataSource_set",null);
         switch(dataType){
             case FileType ignore -> importFile((FileType) dataType);
             case SqlDialect ignore -> importDB(dataSource, (SqlDialect) dataType);
             default -> throw new IllegalStateException("Unexpected value: " + dataType);
         }
+        logger.info("Handling Data source for Import data: Process finished!");
     }
 
     public void importFile(FileType fileType) {
+        logger.info("Import file: Processing...");
         playerDA.setFileType(fileType);
-        logger.info("File Type is set to {}", fileType);
-        logger.debug("Importing data from file: Fetching file path...");
+        logger.info("Import file: Fetching file path...");
         String file_path;
         try {
             file_path = GeneralDataAccess.getPath(playerDA.getFileType());
             playerDA.setFilePath(file_path);
-            logger.debug("File path set to: {}",file_path);
-            logger.info("Reading data from file...");
             playerDA.read();
-            logger.info("Data read successfully from file, refreshing UI");
             notifyListeners("data_changed", playerDA.getPlayerMap());
-            logger.info("Finished importing from file");
         } catch (OperationCancelledException e) {
-            logger.info("Failed to import data from FILE. Cause: Operation cancelled");
+            logger.info("Import file: Failed with cause: Operation cancelled");
             notifyListeners("operation_cancelled", null);
         }
+        logger.info("Import file: Process finished!");
     }
 
     public void importDB(DataSource dataSource, SqlDialect sqlDialect)  {
-        logger.info("Importing data from database: Connecting to database...");
+        logger.info("Import DB: Processing...");
         try {
+            logger.info("Import DB: Fetching default database information...");
             DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(sqlDialect);
             databaseInfo.setDataSource(dataSource);
+            logger.info("Import DB: Calling DatabaseLogin...");
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForImport);
         } catch (ConfigErrorException e) {
-            logger.error(e.getMessage());
+            logger.error("Import DB: Failed to read configuration with cause: {}", e.getMessage());
             notifyListeners("config_error", null);
         }
+        logger.info("Import DB: Process finished!");
     }
 
     private void handleDatabaseLoginForImport(DatabaseInfo databaseInfo){
+        logger.info("Handling DatabaseLogin for Import data: Processing...");
         try {
             if(playerDA.connectDB(databaseInfo)){
-                logger.info("Database connected successfully");
                 playerDA.setDatabaseInfo(databaseInfo);
-                logger.info("Reading data from database...");
                 playerDA.read();
-                logger.info("Data read successfully from database, refreshing UI");
                 notifyListeners("data_changed", playerDA.getPlayerMap());
-                logger.info("Finished importing from database");
-                playerDA.disconnectDB();
-                logger.info("Disconnected from database to release resources");
             }else{
                 throw new DatabaseException("Failed to connect to database");
             }
         }  catch (DatabaseException e) {
-            logger.error("Failed to connect to database. Cause: {}", e.getMessage());
+            logger.error("Handling DatabaseLogin for Import data: Failed to read from database with cause: {}", e.getMessage());
             notifyListeners("db_login_failed",null);
         }
+        logger.info("Handling DatabaseLogin for Import data: Process finished!");
     }
 
     public void add() {
-        logger.info("Adding player...");
-        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player(), this::processPlayerInfoForAdd);
+        logger.info("Add: Processing...");
+        logger.info("Add: Calling Player info dialog...");
+        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player(), this::handlePlayerInfoForAdd);
+        logger.info("Add: Process finished!");
     }
 
-    private void processPlayerInfoForAdd(Player player){
+    private void handlePlayerInfoForAdd(Player player){
+        logger.info("Handle player info for add: Processing...");
         playerDA.add(player);
-        logger.info("Finished adding player.");
         notifyListeners("data_changed", playerDA.getPlayerMap());
         notifyListeners("added_player", null);
+        logger.info("Handle player info for add: Process finished!");
     }
 
     public void modify(int selected_player_id){
-        logger.info("Modifying player with ID: {}", selected_player_id);
-        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id), this::processPlayerInfoForModify);
+        logger.info("Modify: Processing...");
+        logger.info("Modify: Calling Player info dialog with player id: {}", selected_player_id);
+        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id), this::handlePlayerInfoForModify);
+        logger.info("Modify: Process finished!");
     }
 
-    private void processPlayerInfoForModify(Player player){
+    private void handlePlayerInfoForModify(Player player){
+        logger.info("Handle player info for modify: Processing...");
         playerDA.modify(player);
-        logger.info("Finished updating player with ID: {}", player.getID());
         notifyListeners("modified_player", null);
         notifyListeners("data_changed", playerDA.getPlayerMap());
+        logger.info("Handle player info for modify: Process finished!");
     }
 
     public void delete(int selected_player_id) {
-        logger.info("Deleting player with ID: {}", selected_player_id);
+        logger.info("Delete: Processing...");
         playerDA.delete(selected_player_id);
         notifyListeners("data_changed", playerDA.getPlayerMap());
-        logger.info("Finished deleting player with ID: {}", selected_player_id);
         notifyListeners("deleted_player", null);
+        logger.info("Delete: Process finished!");
     }
 
     public void export() {
-        logger.info("Exporting data: Checking if data exists...");
+        logger.info("Export: Processing...");
+        logger.info("Export: Checking current player data...");
         if(playerDA.isEmpty()){
-            logger.info("Exporting data cancelled: No player data found");
+            logger.info("Export: Process cancelled with cause: No player data found");
             notifyListeners("player_map_null", null);
             return;
         }
+        logger.info("Export: Calling DataSourceChooser...");
         new DataSourceChooser(null, this::handleDataSourceForExport);
+        logger.info("Export: Process finished!");
     }
 
     private void handleDataSourceForExport(DataSource dataSource, Object dataType){
+        logger.info("Handle DataSource for Export data: Processing...");
         switch (dataSource){
             case FILE -> exportFile((FileType) dataType);
             case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
         }
-        logger.info("Finished exporting data.");
+        logger.info("Handle DataSource for Export data: Process finished!");
     }
 
     private void exportFile(FileType fileType) {
-        logger.info("Exporting data to file...");
+        logger.info("Export File: Processing...");
         playerDA.setFileType(fileType);
         try {
-            playerDA.export();
+            playerDA.exportFile();
             notifyListeners("exported_file", null);
         } catch (OperationCancelledException e) {
-            logger.info("Failed to export data to file. Cause: Operation cancelled");
+            logger.info("Failed to exportFile data to file. Cause: Operation cancelled");
             notifyListeners("operation_cancelled", null);
         } catch (Exception e) {
-            logger.error("Failed to export data to file. Cause: {}", e.getMessage());
+            logger.error("Failed to exportFile data to file. Cause: {}", e.getMessage());
+            notifyListeners("export_failed", null);
         }
+        logger.info("Export File: Process finished!");
     }
 
     private void exportDB(DataSource target_source, SqlDialect target_dialect) {
-        logger.info("Exporting data to database...");
+        logger.info("Export DB: Processing...");
         try {
             DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(target_dialect);
             databaseInfo.setDataSource(target_source);
+            logger.info("Export DB: Calling DataSourceChooser...");
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForExport);
         } catch (ConfigErrorException e) {
             logger.error("Failed to read default database config. Cause: {}", e.getMessage());
+            notifyListeners("config_error", null);
         }
+        logger.info("Export DB: Process finished!");
     }
 
     private void handleDatabaseLoginForExport(DatabaseInfo databaseInfo) {
+        logger.info("Handle DatabaseLogin for Export data: Processing...");
         try {
             if(playerDA.connectDB(databaseInfo)){
-                logger.info("Exporting data to target database...");
                 playerDA.exportDB(databaseInfo.getDataSource());
-                logger.info("Data exported successfully to target database");
                 notifyListeners("exported_db", null);
-                logger.info("Finished exporting to database");
             }else{
                 throw new DatabaseException("Failed to connect to database");
             }
         }  catch (DatabaseException e) {
-            logger.error("Failed to export data to database. Cause: {}", e.getMessage());
+            logger.error("Failed to exportFile data to database. Cause: {}", e.getMessage());
             notifyListeners("db_login_failed",null);
         }
+        logger.info("Handle DatabaseLogin for Export data: Process finished!");
     }
 
     public void save(){
-        logger.info("Saving data: Checking if data exists...");
-        /*if(playerDA.isEmpty()){
-            logger.info("Saving data cancelled: No player data found");
-            return;
-        }*/
-        logger.info("Saving data: Fetching current data source...");
+        logger.info("Save: Processing...");
         DataSource dataSource = playerDA.getDataSource();
-        logger.info("Saving data to current data source: {}", dataSource.toString());
         try {
             switch (dataSource){
                 case NONE:
-                    logger.info("Current data source is NONE, returning...");
+                    logger.info("Save: Current data source is NONE, returning...");
                     return;
                 case FILE:
+                    logger.info("Save: Current data source is FILE, saving...");
                     playerDA.save();
                     break;
                 case DATABASE, HIBERNATE:
+                    logger.info("Save: Current data source is DATABASE or HIBERNATE, saving...");
                     playerDA.save();
-                    playerDA.disconnectDB();
                     break;
             }
-            logger.debug("Data saved successfully");
         } catch (DatabaseException e) {
-            logger.error(e.getMessage());
+            logger.error("Save: Failed to save data via database with cause: {}", e.getMessage());
             notifyListeners("config_error", null);
         }
         notifyListeners("data_saved", null);
+        logger.info("Save: Process finished!");
     }
 
     public void changeLanguage(){
-        logger.info("Changing language...");
+        logger.info("Change language: Processing...");
         String language;
         try {
             language = switch(GeneralText.getDialog().selectionDialog("language")){
@@ -295,15 +300,16 @@ public class PlayerControl implements GeneralControl {
                 case 2 -> "cn";
                 default -> throw new IllegalStateException("Unexpected language value.");
             };
+            logger.info("Change language: Language is set to {}", language);
         } catch (OperationCancelledException e) {
-            logger.info("Language changing operation cancelled");
+            logger.info("Change language: Failed to change language with cause: Operation cancelled");
             notifyListeners("operation_cancelled", null);
             return;
         }
         GeneralText.getDialog().setLanguage(language);
         PlayerText.getDialog().setLanguage(language);
         notifyListeners("language_changed",null);
-        logger.info("Finished changing language to: {}", language);
+        logger.info("Change language: Process finished!");
     }
 
     public void addListener(EventListener<SortedMap<?,?>> listener){
@@ -311,9 +317,11 @@ public class PlayerControl implements GeneralControl {
     }
 
     private void notifyListeners(String event, SortedMap<?,?> data){
+        logger.info("Notify listener: Processing with code: {}", event);
         for(EventListener<SortedMap<?,?>> listener : listeners){
             listener.onEvent(event, data);
         }
+        logger.info("Notify listener: Process finished!");
     }
 
 }

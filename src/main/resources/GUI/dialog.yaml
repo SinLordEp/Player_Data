@@ -112,7 +112,7 @@ popup:
     es: "¡Operación cancelada!"
     cn: "操作已取消!"
   export_failed:
-    en: "Failed to export data"
+    en: "Failed to exportFile data"
     es: "No se han podido exportar datos"
     cn: "导出数据失败"
   unknown_error:

@@ -22,11 +22,11 @@ public class principal {
     public static void main(String[] args){
         initializeProperties();
         initializeLogger();
-        logger.info("Properties and logger loaded");
-        logger.info("Getting controller...");
+        logger.info("Main: Properties and logger loaded");
+        logger.info("Main: Getting controller...");
         GeneralControl current_control = initializeControl();
         if (current_control != null) {
-            logger.info("Controller loaded");
+            logger.info("Main: Controller loaded");
             current_control.run();
         }
     }
