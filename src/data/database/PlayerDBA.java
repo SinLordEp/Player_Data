@@ -6,6 +6,8 @@ import data.DataSource;
 import exceptions.DatabaseException;
 import model.DatabaseInfo;
 import model.Player;
+import model.Region;
+import model.Server;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -115,6 +117,38 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return player_map;
     }
 
+    //todo:
+    public HashMap<Region, Server[]> readRegionServer(){
+        logger.info("Read Region server: Reading region server config");
+        HashMap<Region, Server[]> region_server_map = new HashMap<>();
+        List<Region> regionList;
+        List<Server> serverList;
+        try(Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+            String HQL = "From Region";
+            Query<Region> query = session.createQuery(HQL, Region.class);
+            regionList = query.list();
+        }
+        try(Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+            String HQL = "From Server";
+            Query<Server> query = session.createQuery(HQL, Server.class);
+            serverList = query.list();
+        }
+        for(Region region : regionList){
+            Server[] servers = new Server[5];
+            int counter = 0;
+            for(Server server : serverList){
+                if(server.getRegion() == region){
+                    servers[counter++] = server;
+                }
+            }
+            region_server_map.put(region, servers);
+        }
+        disconnect(DataSource.HIBERNATE);
+        return region_server_map;
+    }
+
     public TreeMap<Integer, Player> readDatabase() {
         logger.info("Read Database: Reading data from database");
         TreeMap<Integer, Player> player_map = new TreeMap<>();
@@ -125,8 +159,8 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
                 Player player = new Player();
                 player.setID(resultSet.getInt("id"));
                 player.setName(resultSet.getString("name"));
-                player.setRegion(resultSet.getString("region"));
-                player.setServer(resultSet.getString("server"));
+                player.setRegion(new Region(resultSet.getString("region")));
+                player.setServer(new Server(resultSet.getString("server"), player.getRegion()));
                 player_map.put(player.getID(), player);
             }
         } catch (SQLException e) {
@@ -174,48 +208,6 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         logger.info("Update Database: Finished!");
     }
 
-    private void addPlayer(Player player) throws DatabaseException {
-        logger.info("Add Player: Adding player with ID: {}", player.getID());
-        String query = "INSERT INTO player (id, region, server, name) VALUES (?,?,?,?)";
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setInt(1, player.getID());
-            statement.setString(2, player.getRegion());
-            statement.setString(3, player.getServer());
-            statement.setString(4, player.getName());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseException("Failed to add player via database. Cause: " + e.getMessage());
-        }
-        logger.info("Add Player: Finished adding player!");
-    }
-
-    private void modifyPlayer(Player player) throws DatabaseException {
-        logger.info("Modify Player: Modifying player with ID: {}", player.getID());
-        String query = "UPDATE player SET region = ?, server = ?, name = ? WHERE id = ?";
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setString(1, player.getRegion());
-            statement.setString(2, player.getServer());
-            statement.setString(3, player.getName());
-            statement.setInt(4, player.getID());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseException("Failed to modify player via database. Cause: " + e.getMessage());
-        }
-        logger.info("Modify Player: Finished Modifying player!");
-    }
-
-    private void deletePlayer(Player player) throws DatabaseException {
-        logger.info("Delete Player: Deleting player with ID: {}", player.getID());
-        String query = "DELETE FROM player WHERE id = ?";
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setInt(1, player.getID());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseException("Failed to delete player via database. Cause: " + e.getMessage());
-        }
-        logger.info("Delete Player: Finished Deleting player!");
-    }
-
     private void updateHibernate(HashMap<Player,DataOperation> changed_player_map) {
         logger.info("Update Hibernate: Updating database...");
         Transaction transaction = null;
@@ -239,6 +231,48 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             throw new DatabaseException("Failed to modify player via Hibernate. Cause: " + e.getMessage());
         }
         logger.info("Update Hibernate: Finished!");
+    }
+
+    private void addPlayer(Player player) throws DatabaseException {
+        logger.info("Add Player: Adding player with ID: {}", player.getID());
+        String query = "INSERT INTO player (id, region, server, name) VALUES (?,?,?,?)";
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setInt(1, player.getID());
+            statement.setString(2, player.getRegion().toString());
+            statement.setString(3, player.getServer().toString());
+            statement.setString(4, player.getName());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to add player via database. Cause: " + e.getMessage());
+        }
+        logger.info("Add Player: Finished adding player!");
+    }
+
+    private void modifyPlayer(Player player) throws DatabaseException {
+        logger.info("Modify Player: Modifying player with ID: {}", player.getID());
+        String query = "UPDATE player SET region = ?, server = ?, name = ? WHERE id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setString(1, player.getRegion().toString());
+            statement.setString(2, player.getServer().toString());
+            statement.setString(3, player.getName());
+            statement.setInt(4, player.getID());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to modify player via database. Cause: " + e.getMessage());
+        }
+        logger.info("Modify Player: Finished Modifying player!");
+    }
+
+    private void deletePlayer(Player player) throws DatabaseException {
+        logger.info("Delete Player: Deleting player with ID: {}", player.getID());
+        String query = "DELETE FROM player WHERE id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setInt(1, player.getID());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to delete player via database. Cause: " + e.getMessage());
+        }
+        logger.info("Delete Player: Finished Deleting player!");
     }
 
     public void export(DataSource dataSource, TreeMap<Integer,Player> player_map) {
@@ -300,6 +334,24 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         }
         logger.info("Export Hibernate: Finished!");
     }
+
+    /*public void exportRegionServer(HashMap<Region, Server[]> region_server_map) {
+        Transaction transaction = null;
+        try(Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
+            for(Region region : region_server_map.keySet()){
+                session.persist(region);
+                for(Server server : region_server_map.get(region)){
+                    session.persist(server);
+                }
+            }
+            transaction.commit();
+        }catch(Exception e){
+            if(transaction != null){
+                transaction.rollback();
+            }
+        }
+    }*/
 
     public void setURL(String url) {
         configuration.setProperty("hibernate.connection.url", url);

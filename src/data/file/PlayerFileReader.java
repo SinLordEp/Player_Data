@@ -4,6 +4,8 @@ import GUI.Player.PlayerText;
 import Interface.FileDataReader;
 import exceptions.FileManageException;
 import model.Player;
+import model.Region;
+import model.Server;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -13,7 +15,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 import static main.principal.getProperty;
@@ -86,8 +90,8 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                 Element playerElement = (Element) playerNode;
                 Player player = new Player();
                 player.setID(Integer.parseInt(playerElement.getAttribute("id")));
-                player.setRegion(xml_utils.getElementTextContent(playerElement, "region"));
-                player.setServer(xml_utils.getElementTextContent(playerElement, "server"));
+                player.setRegion(new Region(xml_utils.getElementTextContent(playerElement, "region")));
+                player.setServer(new Server(xml_utils.getElementTextContent(playerElement, "server"), player.getRegion()));
                 player.setName(xml_utils.getElementTextContent(playerElement, "name"));
                 player_data.put(player.getID(), player);
             }
@@ -105,8 +109,8 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                     String[] player_txt = scanner.nextLine().split(",");
                     Player player = new Player();
                     player.setID(Integer.parseInt(player_txt[0]));
-                    player.setRegion(player_txt[1]);
-                    player.setServer(player_txt[2]);
+                    player.setRegion(new Region(player_txt[1]));
+                    player.setServer(new Server(player_txt[2], player.getRegion()));
                     player.setName(player_txt[3]);
                     player_data.put(player.getID(),player);
                 }
@@ -117,7 +121,7 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         return player_data;
     }
 
-    public static HashMap<String, String[]> read_region_server() {
+    public static HashMap<Region, Server[]> read_region_server() {
         Element root = null;
         URL resource = PlayerFileReader.class.getResource(getProperty("regionServerConfig"));
         try {
@@ -136,21 +140,21 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
         if (!root.hasChildNodes()) {
             throw new RuntimeException("Empty XML: No region_server data found");
         }
-        HashMap<String, String[]> regionServerMap = new HashMap<>();
+        HashMap<Region, Server[]> regionServerMap = new HashMap<>();
         NodeList regionList = root.getElementsByTagName("region");
         for (int i = 0; i < regionList.getLength(); i++) {
             Node regionNode = regionList.item(i);
             if (regionNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element regionElement = (Element) regionNode;
-                String regionName = regionElement.getAttribute("name");
+                Region region = new Region(regionElement.getAttribute("name"));
                 NodeList serverList = regionElement.getElementsByTagName("server");
-                String[] servers = new String[serverList.getLength()];
+                Server[] servers = new Server[serverList.getLength()];
 
                 for (int j = 0; j < serverList.getLength(); j++) {
                     Element serverElement = (Element) serverList.item(j);
-                    servers[j] = serverElement.getTextContent();
+                    servers[j] = new Server(serverElement.getTextContent(), region);
                 }
-                regionServerMap.put(regionName, servers);
+                regionServerMap.put(region, servers);
             }
         }
         return regionServerMap;

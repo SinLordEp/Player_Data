@@ -58,8 +58,8 @@ public class PlayerFileWriter implements FileDataWriter<Map<?,?>> {
         for (Player player : player_data.values()) {
             Element playerElement = document.createElement("player");
             playerElement.setAttribute("id", String.valueOf(player.getID()));
-            xml_utils.createElementWithText(document, playerElement, "region", player.getRegion());
-            xml_utils.createElementWithText(document, playerElement, "server", player.getServer());
+            xml_utils.createElementWithText(document, playerElement, "region", player.getRegion().toString());
+            xml_utils.createElementWithText(document, playerElement, "server", player.getServer().toString());
             xml_utils.createElementWithText(document, playerElement, "name", player.getName());
             root.appendChild(playerElement);
         }

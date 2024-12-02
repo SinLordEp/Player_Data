@@ -1,8 +1,6 @@
 package model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -12,28 +10,32 @@ import java.util.Objects;
 @Entity
 @Table(name = "player")
 public class Player extends Person {
-    @Column(name = "server")
-    private String server;
-    @Column(name = "region")
-    private String region;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "server", referencedColumnName = "name_server")
+    private Server server;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region", referencedColumnName = "name_region")
+    private Region region;
 
     public Player() {
         super();
     }
 
-    public String getServer() {
+    public Server getServer() {
         return this.server;
     }
 
-    public void setRegion(String region) {
+    public void setRegion(Region region) {
         this.region = region;
     }
 
-    public void setServer(String server) {
+    public void setServer(Server server) {
         this.server = server;
     }
 
-    public String getRegion() {
+    public Region getRegion() {
         return this.region;
     }
 

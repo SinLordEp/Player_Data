@@ -2,6 +2,8 @@ package GUI.Player;
 
 import Interface.CallBack;
 import model.Player;
+import model.Region;
+import model.Server;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -19,8 +21,8 @@ public class PlayerInfoDialog extends JDialog {
     private JButton button_submit;
     private JButton button_cancel;
     private JTextField text_name;
-    private JComboBox<String> comboBox_region;
-    private JComboBox<String> comboBox_server;
+    private JComboBox<Region> comboBox_region;
+    private JComboBox<Server> comboBox_server;
     private JLabel label_region;
     private JLabel label_server;
     private JLabel label_name;
@@ -29,19 +31,20 @@ public class PlayerInfoDialog extends JDialog {
     private JLabel label_id;
     private JLabel label_error;
     private final Player player;
-    private final HashMap<String, String[]> regionServerMap;
-    private String region, server;
+    private final HashMap<Region, Server[]> regionServerMap;
+    private Region region;
+    private Server server;
     Set<Integer> playerIDs;
 
     //For modifying
-    public PlayerInfoDialog(HashMap<String, String[]> regionServerMap, Player player, CallBack<Player> callBack) {
+    public PlayerInfoDialog(HashMap<Region, Server[]> regionServerMap, Player player, CallBack<Player> callBack) {
         this.player = player;
         this.regionServerMap = regionServerMap;
         initialize(callBack);
         setVisible(true);
     }
     //For adding
-    public PlayerInfoDialog(HashMap<String, String[]> regionServerMap, Set<Integer> playerIDs, Player player, CallBack<Player> callBack) {
+    public PlayerInfoDialog(HashMap<Region, Server[]> regionServerMap, Set<Integer> playerIDs, Player player, CallBack<Player> callBack) {
         this.player = player;
         this.regionServerMap = regionServerMap;
         this.playerIDs = playerIDs;
@@ -100,30 +103,29 @@ public class PlayerInfoDialog extends JDialog {
     }
 
     private void configureRegion(){
-        for (String region : regionServerMap.keySet()){
+        for (Region region : regionServerMap.keySet()){
             comboBox_region.addItem(region);
         }
         comboBox_region.setSelectedItem(regionServerMap.keySet().iterator().next());
     }
 
-    private void configureServer(String region){
-        for(String server: regionServerMap.get(region)){
+    private void configureServer(Region region){
+        for(Server server: regionServerMap.get(region)){
             comboBox_server.addItem(server);
         }
     }
 
     private void comboBoxListener(){
         comboBox_region.addItemListener(_ ->{
-            region = (String) comboBox_region.getSelectedItem();
+            region = (Region) comboBox_region.getSelectedItem();
             comboBox_server.removeAllItems();
             configureServer(region);
         });
-        comboBox_server.addItemListener(_ -> server = (String) comboBox_server.getSelectedItem());
+        comboBox_server.addItemListener(_ -> server = (Server) comboBox_server.getSelectedItem());
     }
 
     private void textValidateListener(JTextField textName) {
         textName.getDocument().addDocumentListener(new DocumentListener() {
-
             @Override
             public void insertUpdate(DocumentEvent e) {
                 enableSubmitButton(idCheck() && nameCheck() && regionServerCheck());

@@ -9,6 +9,8 @@ import model.DatabaseInfo;
 import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
+import model.Region;
+import model.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -27,7 +29,7 @@ import static main.principal.getProperty;
 public class PlayerDataAccess extends GeneralDataAccess {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
-    private HashMap<String, String[]> region_server_map;
+    private HashMap<Region, Server[]> region_server_map;
     private final PlayerDBA playerDBA;
     private final PlayerFileReader fileReader;
     private final PlayerFileWriter fileWriter;
@@ -42,7 +44,14 @@ public class PlayerDataAccess extends GeneralDataAccess {
 
     public void initializeRegionServer(){
         logger.info("Initializing region server: Reading config file...");
-        region_server_map = PlayerFileReader.read_region_server();
+        try {
+            DatabaseInfo info = getDefaultDatabaseInfo(SqlDialect.SQLITE);
+            info.setDataSource(DataSource.HIBERNATE);
+            playerDBA.connect(info);
+        } catch (ConfigErrorException e) {
+            throw new RuntimeException(e);
+        }
+        region_server_map = playerDBA.readRegionServer();
         logger.info("Initializing region server: Region server map updated!");
     }
 
@@ -201,14 +210,14 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     public void isPlayerInvalid(Player player){
-        if(region_server_map == null){
+        if(region_server_map.isEmpty()){
             throw new DataCorruptedException("region_server_map is null");
         }
         if(!region_server_map.containsKey(player.getRegion())){
             throw new DataCorruptedException("Player's region is not found");
         }
         boolean server_valid = false;
-        for(String server : region_server_map.get(player.getRegion())){
+        for(Server server : region_server_map.get(player.getRegion())){
             if (server.equals(player.getServer())) {
                 server_valid = true;
                 break;
@@ -233,7 +242,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         logger.info("isDataValid: Data is valid");
     }
 
-    public HashMap<String, String[]> getRegion_server_map() {
+    public HashMap<Region, Server[]> getRegion_server_map() {
         return region_server_map;
     }
 
