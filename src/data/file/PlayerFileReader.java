@@ -110,7 +110,6 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
                     player.setName(player_txt[3]);
                     player_data.put(player.getID(),player);
                 }
-                System.out.println("Txt file reached the end");
             }
         }catch (Exception e) {
             throw new FileManageException("Error reading this txt data.file");
