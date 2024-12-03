@@ -66,15 +66,14 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
         });
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public void refresh(Object object) {
+    private void refresh(Object object) {
         TreeMap<Integer, Player> playerMap = (TreeMap<Integer, Player>) object;
         tableModel.update_data(playerMap);
         table_data.setModel(tableModel);
     }
 
-    public void setUIText(){
+    private void setUIText(){
         button_add.setText(PlayerText.getDialog().getText("button_add"));
         button_modify.setText(PlayerText.getDialog().getText("button_modify"));
         button_delete.setText(PlayerText.getDialog().getText("button_delete"));

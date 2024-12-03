@@ -9,17 +9,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author SIN
+ */
 public class ClassRegister {
     public static Map<String, Class<? extends GeneralControl>> classMap = new HashMap<>();
     public static Map<String,Class<? extends GeneralDataAccess>> dataAccessMap = new HashMap<>();
-    private static final ClassRegister instance = new ClassRegister();
+    private static final ClassRegister INSTANCE = new ClassRegister();
 
     private ClassRegister() {
         registerControl();
         registerDataAccess();
     }
     public static ClassRegister getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     private void registerControl() {
@@ -51,6 +54,7 @@ public class ClassRegister {
         }
         throw new ConfigErrorException("Failed to getDialog Control class");
     }
+
     public GeneralDataAccess getDA(String class_name) throws Exception {
         Class<? extends GeneralDataAccess> dataAccessClass = dataAccessMap.get(class_name);
         if (dataAccessClass != null) {

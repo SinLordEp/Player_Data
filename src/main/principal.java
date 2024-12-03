@@ -22,7 +22,6 @@ public class principal {
     public static void main(String[] args){
         initializeProperties();
         initializeLogger();
-        logger.info("Main: Properties and logger loaded");
         logger.info("Main: Getting controller...");
         GeneralControl current_control = initializeControl();
         if (current_control != null) {
@@ -52,6 +51,7 @@ public class principal {
         } catch (Exception e) {
             throw new RuntimeException("Initialize logger failed", e);
         }
+        logger.info("Main: Logger loaded");
     }
 
     public static GeneralControl initializeControl(){
