@@ -483,3 +483,71 @@
 2024-12-02 21:11:58 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
 2024-12-02 21:11:58 INFO  data.database.PlayerDBA - Disconnect: Success
 2024-12-02 21:11:58 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-03 14:30:55 INFO  main.principal - Main: Properties and logger loaded
+2024-12-03 14:30:55 INFO  main.principal - Main: Getting controller...
+2024-12-03 14:30:56 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-03 14:30:56 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-03 14:30:56 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-03 14:30:57 INFO  main.principal - Main: Controller loaded
+2024-12-03 14:30:57 INFO  control.PlayerControl - Finished building player frame
+2024-12-03 14:30:57 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-03 14:30:57 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-03 14:30:57 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-03 14:30:57 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-03 14:30:57 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-03 14:30:57 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-03 14:30:57 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-03 14:30:57 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-03 14:30:57 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-03 14:30:58 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-03 14:30:58 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@6e321d9d] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-03 14:30:58 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-03 14:30:58 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-03 14:30:58 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-03 14:30:58 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-03 14:30:58 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-03 14:31:04 INFO  control.PlayerControl - Import data: Processing...
+2024-12-03 14:31:04 INFO  control.PlayerControl - Save: Processing...
+2024-12-03 14:31:04 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-03 14:31:04 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-03 14:31:07 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-03 14:31:07 INFO  Interface.GeneralDataAccess - Setting DataSource...
+2024-12-03 14:31:07 INFO  Interface.GeneralDataAccess - DataSource is set to: FILE
+2024-12-03 14:31:07 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-03 14:31:07 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-03 14:31:07 INFO  control.PlayerControl - Import file: Processing...
+2024-12-03 14:31:07 INFO  Interface.GeneralDataAccess - Setting FileType...
+2024-12-03 14:31:07 INFO  Interface.GeneralDataAccess - FileType is set to: TXT
+2024-12-03 14:31:07 INFO  control.PlayerControl - Import file: Fetching file path...
+2024-12-03 14:31:07 INFO  Interface.GeneralDataAccess - Get path: Getting path with file type paragram: TXT
+2024-12-03 14:31:08 INFO  Interface.GeneralDataAccess - Get path: Finished get path with paragram!
+2024-12-03 14:31:08 INFO  Interface.GeneralDataAccess - Set file path: Path is set to I:\Player_Data\src\main\resources\import\player_txt.txt
+2024-12-03 14:31:08 INFO  Interface.GeneralDataAccess - Set file path: DataSource is set to: File
+2024-12-03 14:31:08 INFO  data.PlayerDataAccess - Read: Reading data from FILE
+2024-12-03 14:31:08 INFO  data.PlayerDataAccess - Read: Data source is FILE, calling file reader...
+2024-12-03 14:31:08 INFO  data.PlayerDataAccess - isDataValid: Validating imported data...
+2024-12-03 14:31:08 INFO  data.PlayerDataAccess - isDataValid: Data is valid
+2024-12-03 14:31:08 INFO  data.PlayerDataAccess - Read: Finished reading data!
+2024-12-03 14:31:08 INFO  control.PlayerControl - Notify listener: Processing with code: data_changed
+2024-12-03 14:31:08 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-03 14:31:08 INFO  control.PlayerControl - Import file: Process finished!
+2024-12-03 14:31:08 INFO  control.PlayerControl - Handling Data source for Import data: Process finished!
+2024-12-03 14:31:08 INFO  control.PlayerControl - Import data: Process finished!
+2024-12-03 14:31:12 INFO  control.PlayerControl - Add: Processing...
+2024-12-03 14:31:12 INFO  control.PlayerControl - Add: Calling Player info dialog...
+2024-12-03 14:31:19 INFO  control.PlayerControl - Add: Process finished!
+2024-12-03 14:31:20 INFO  control.PlayerControl - Save: Processing...
+2024-12-03 14:31:20 INFO  control.PlayerControl - Save: Current data source is FILE, saving...
+2024-12-03 14:31:20 INFO  data.PlayerDataAccess - Save: Saving data to FILE
+2024-12-03 14:31:20 INFO  data.PlayerDataAccess - Save: Finished saving data!
+2024-12-03 14:31:20 INFO  control.PlayerControl - Notify listener: Processing with code: data_saved
+2024-12-03 14:31:21 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-03 14:31:21 INFO  control.PlayerControl - Save: Process finished!
+2024-12-03 14:31:21 INFO  control.PlayerControl - Shutting down

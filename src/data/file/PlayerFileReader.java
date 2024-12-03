@@ -14,13 +14,9 @@ import javax.management.openmbean.OpenDataException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-
-import static main.principal.getProperty;
 
 /**
  * @author SIN
@@ -119,45 +115,6 @@ public class PlayerFileReader implements FileDataReader<Map<?,?>> {
             throw new FileManageException("Error reading this txt data.file");
         }
         return player_data;
-    }
-
-    public static HashMap<Region, Server[]> read_region_server() {
-        Element root = null;
-        URL resource = PlayerFileReader.class.getResource(getProperty("regionServerConfig"));
-        try {
-            if (resource != null) {
-                root = xml_utils.readXml(new File(resource.getFile()));
-            }
-            if(root == null){
-                throw new FileManageException("Failed to read region server file");
-            }
-        } catch (Exception e) {
-            throw new FileManageException("Failed to read region_server settings. Cause: " + e.getMessage());
-        }
-        if (!"region_server".equals(root.getNodeName())) {
-            throw new RuntimeException("Invalid XML: Root element is not region_server");
-        }
-        if (!root.hasChildNodes()) {
-            throw new RuntimeException("Empty XML: No region_server data found");
-        }
-        HashMap<Region, Server[]> regionServerMap = new HashMap<>();
-        NodeList regionList = root.getElementsByTagName("region");
-        for (int i = 0; i < regionList.getLength(); i++) {
-            Node regionNode = regionList.item(i);
-            if (regionNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element regionElement = (Element) regionNode;
-                Region region = new Region(regionElement.getAttribute("name"));
-                NodeList serverList = regionElement.getElementsByTagName("server");
-                Server[] servers = new Server[serverList.getLength()];
-
-                for (int j = 0; j < serverList.getLength(); j++) {
-                    Element serverElement = (Element) serverList.item(j);
-                    servers[j] = new Server(serverElement.getTextContent(), region);
-                }
-                regionServerMap.put(region, servers);
-            }
-        }
-        return regionServerMap;
     }
 
 }

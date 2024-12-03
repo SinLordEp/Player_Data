@@ -327,24 +327,6 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         logger.info("Export Hibernate: Finished!");
     }
 
-    /*public void exportRegionServer(HashMap<Region, Server[]> region_server_map) {
-        Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()){
-            transaction = session.beginTransaction();
-            for(Region region : region_server_map.keySet()){
-                session.persist(region);
-                for(Server server : region_server_map.get(region)){
-                    session.persist(server);
-                }
-            }
-            transaction.commit();
-        }catch(Exception e){
-            if(transaction != null){
-                transaction.rollback();
-            }
-        }
-    }*/
-
     public void setURL(String url) {
         configuration.setProperty("hibernate.connection.url", url);
     }
