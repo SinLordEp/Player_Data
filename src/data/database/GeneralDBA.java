@@ -1,4 +1,4 @@
-package Interface;
+package data.database;
 
 import data.DataSource;
 import exceptions.DatabaseException;

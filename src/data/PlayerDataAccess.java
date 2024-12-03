@@ -2,7 +2,6 @@ package data;
 
 import GUI.GeneralText;
 import data.database.PlayerDBA;
-import Interface.GeneralDataAccess;
 import data.database.SqlDialect;
 import exceptions.*;
 import model.DatabaseInfo;
@@ -113,7 +112,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     break;
                 case DATABASE, HIBERNATE :
                     logger.info("Read: Data source is {}, calling DBA...", dataSource);
-                    playerDBA.read(dataSource);
+                    player_map = playerDBA.read(dataSource);
                     break;
             }
             if(player_map != null && !player_map.isEmpty()){
@@ -139,6 +138,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     playerDBA.connect(databaseInfo);
                     playerDBA.update(dataSource, changed_player_map);
                     playerDBA.disconnect(dataSource);
+                    changed_player_map.clear();
                     break;
             }
         } catch (Exception e) {

@@ -1,7 +1,6 @@
-package Interface;
+package data;
 
 import GUI.GeneralText;
-import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
 import exceptions.ConfigErrorException;

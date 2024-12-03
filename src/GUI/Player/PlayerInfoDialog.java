@@ -165,7 +165,7 @@ public class PlayerInfoDialog extends JDialog {
             return true;
         }
         if(text_id.getText().isEmpty() || text_id.getText().isBlank()){
-            label_error.setText("");
+            label_error.setText(" ");
             return false;
         }
         int id = Integer.parseInt(text_id.getText());
@@ -173,7 +173,7 @@ public class PlayerInfoDialog extends JDialog {
             label_error.setText(PlayerText.getDialog().getText("label_id_error"));
             return false;
         }else{
-            label_error.setText("");
+            label_error.setText(" ");
             return true;
         }
     }

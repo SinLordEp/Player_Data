@@ -1,6 +1,5 @@
 package data.database;
 
-import Interface.GeneralDBA;
 import data.DataOperation;
 import data.DataSource;
 import exceptions.DatabaseException;
@@ -11,7 +10,6 @@ import model.Server;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,9 +53,11 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             switch (databaseInfo.getDialect()){
                 case MYSQL:
                     connection = DriverManager.getConnection("%s:%s/%s".formatted(
-                            databaseInfo.getUrl(),
-                            databaseInfo.getPort(),
-                            databaseInfo.getDatabase()));
+                                    databaseInfo.getUrl(),
+                                    databaseInfo.getPort(),
+                                    databaseInfo.getDatabase()),
+                            databaseInfo.getUser(),
+                            databaseInfo.getPassword());
                     break;
                 case SQLITE:
                     connection = DriverManager.getConnection(databaseInfo.getUrl());
@@ -141,7 +141,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return regionServerMap;
     }
 
-    public TreeMap<Integer, Player> readDatabase() {
+    private TreeMap<Integer, Player> readDatabase() {
         logger.info("Read Database: Reading data from database");
         TreeMap<Integer, Player> player_map = new TreeMap<>();
         String query = "SELECT * FROM player";
@@ -162,13 +162,12 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return player_map;
     }
 
-    public TreeMap<Integer, Player> readHibernate() {
+    private TreeMap<Integer, Player> readHibernate() {
         logger.info("Read Hibernate: Reading data from database");
         TreeMap<Integer, Player> player_map = new TreeMap<>();
         try (Session session = sessionFactory.openSession()) {
-            String HQL = "From Player";
-            Query<Player> query = session.createQuery(HQL, Player.class);
-            List<Player> list = query.list();
+            String HQL = "FROM Player p LEFT JOIN FETCH p.region LEFT JOIN FETCH p.server";
+            List<Player> list = session.createQuery(HQL, Player.class).getResultList();
             for(Player player : list){
                 player_map.put(player.getID(), player);
             }

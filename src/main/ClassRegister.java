@@ -1,7 +1,7 @@
 package main;
 
 import Interface.GeneralControl;
-import Interface.GeneralDataAccess;
+import data.GeneralDataAccess;
 import exceptions.ConfigErrorException;
 import org.reflections.Reflections;
 

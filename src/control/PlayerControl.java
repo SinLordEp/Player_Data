@@ -8,7 +8,7 @@ import GUI.Player.PlayerText;
 import GUI.Player.PlayerUI;
 import Interface.EventListener;
 import Interface.GeneralControl;
-import Interface.GeneralDataAccess;
+import data.GeneralDataAccess;
 import data.DataSource;
 import data.PlayerDataAccess;
 import data.database.SqlDialect;
@@ -155,6 +155,7 @@ public class PlayerControl implements GeneralControl {
         }  catch (DatabaseException e) {
             logger.error("Handling DatabaseLogin for Import data: Failed to read from database with cause: {}", e.getMessage());
             notifyListeners("db_login_failed",null);
+            clearDataSource();
         }
         logger.info("Handling DatabaseLogin for Import data: Process finished!");
     }
@@ -288,6 +289,14 @@ public class PlayerControl implements GeneralControl {
         }
         notifyListeners("data_saved", null);
         logger.info("Save: Process finished!");
+    }
+
+    private void clearDataSource(){
+        logger.info("Clear DataSource: Processing...");
+        playerDA.setDataSource(DataSource.NONE);
+        playerDA.setFileType(FileType.NONE);
+        playerDA.setDatabaseInfo(new DatabaseInfo());
+        logger.info("Clear DataSource: Process finished!");
     }
 
     public void changeLanguage(){
