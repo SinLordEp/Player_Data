@@ -20,6 +20,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -117,36 +118,27 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return player_map;
     }
 
-    //todo:
     public HashMap<Region, Server[]> readRegionServer(){
         logger.info("Read Region server: Reading region server config");
-        HashMap<Region, Server[]> region_server_map = new HashMap<>();
-        List<Region> regionList;
-        List<Server> serverList;
+        HashMap<Region, Server[]> regionServerMap = new HashMap<>();
+        String hql = "SELECT s.region, s FROM Server s";
         try(Session session = sessionFactory.openSession()){
+            HashMap<Region, List<Server>> regionServerListMap = new HashMap<>();
             session.beginTransaction();
-            String HQL = "From Region";
-            Query<Region> query = session.createQuery(HQL, Region.class);
-            regionList = query.list();
-        }
-        try(Session session = sessionFactory.openSession()){
-            session.beginTransaction();
-            String HQL = "From Server";
-            Query<Server> query = session.createQuery(HQL, Server.class);
-            serverList = query.list();
-        }
-        for(Region region : regionList){
-            Server[] servers = new Server[5];
-            int counter = 0;
-            for(Server server : serverList){
-                if(server.getRegion() == region){
-                    servers[counter++] = server;
-                }
+            List<Object[]> results = session.createQuery(hql, Object[].class).getResultList();
+            for (Object[] result : results) {
+                Region region = (Region) result[0];
+                Server server = (Server) result[1];
+                // if region does not exist in map, it will create one
+                regionServerListMap.computeIfAbsent(region, _ -> new ArrayList<>()).add(server);
             }
-            region_server_map.put(region, servers);
+            for (HashMap.Entry<Region, List<Server>> entry : regionServerListMap.entrySet()) {
+                Region region = entry.getKey();
+                regionServerMap.put(region, entry.getValue().toArray(new Server[0]));
+            }
         }
         disconnect(DataSource.HIBERNATE);
-        return region_server_map;
+        return regionServerMap;
     }
 
     public TreeMap<Integer, Player> readDatabase() {
