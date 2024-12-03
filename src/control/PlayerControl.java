@@ -32,9 +32,6 @@ public class PlayerControl implements GeneralControl {
     @Override
     public void run() {
         PlayerUI playerUI = new PlayerUI(this);
-        logger.debug("Trying to build player frame");
-        playerUI.run();
-        logger.info("Finished building player frame");
         try {
             playerDA.initializeRegionServer();
         } catch (FileManageException e) {
@@ -42,6 +39,9 @@ public class PlayerControl implements GeneralControl {
             notifyListeners("region_server_null", null);
             System.exit(0);
         }
+        logger.debug("Trying to build player frame");
+        playerUI.run();
+        logger.info("Finished building player frame");
     }
 
     @Override
