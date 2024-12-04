@@ -3961,3 +3961,371 @@ Caused by: java.sql.SQLIntegrityConstraintViolationException: Cannot add or upda
 2024-12-04 15:39:39 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
 2024-12-04 15:39:39 INFO  control.PlayerControl - Import data: Calling Data source chooser...
 2024-12-04 15:39:46 INFO  control.PlayerControl - Import data: Process finished!
+2024-12-04 20:29:51 INFO  main.principal - Main: Logger loaded
+2024-12-04 20:29:51 INFO  main.principal - Main: Getting controller...
+2024-12-04 20:29:52 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-04 20:29:52 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-04 20:29:52 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-04 20:29:52 INFO  main.principal - Main: Controller loaded
+2024-12-04 20:29:52 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-04 20:29:52 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-04 20:29:52 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-04 20:29:52 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-04 20:29:52 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-04 20:29:52 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-04 20:29:52 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-04 20:29:52 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-04 20:29:53 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-04 20:29:54 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-04 20:29:54 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@36211bbc] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-04 20:29:54 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-04 20:29:54 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-04 20:29:54 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-04 20:29:54 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-04 20:29:54 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-04 20:29:54 INFO  control.PlayerControl - Finished building player frame
+2024-12-04 20:29:56 INFO  control.PlayerControl - Import data: Processing...
+2024-12-04 20:29:56 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:29:56 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-04 20:29:56 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-04 20:30:17 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:30:17 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:30:17 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:30:17 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:30:17 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:30:17 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:30:17 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:30:17 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:30:20 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:30:20 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:30:20 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:30:20 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:30:20 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:30:20 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:30:20 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:30:20 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:30:22 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:30:22 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:30:22 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:30:22 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:30:22 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:30:22 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:30:22 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:30:22 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:30:23 INFO  control.PlayerControl - Import data: Process finished!
+2024-12-04 20:30:24 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:30:24 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-04 20:30:24 INFO  control.PlayerControl - Shutting down
+2024-12-04 20:34:53 INFO  main.principal - Main: Logger loaded
+2024-12-04 20:34:53 INFO  main.principal - Main: Getting controller...
+2024-12-04 20:34:54 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-04 20:34:54 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-04 20:34:54 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-04 20:34:54 INFO  main.principal - Main: Controller loaded
+2024-12-04 20:34:54 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-04 20:34:54 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-04 20:34:54 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-04 20:34:54 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-04 20:34:54 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-04 20:34:54 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-04 20:34:54 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-04 20:34:54 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-04 20:34:54 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-04 20:34:55 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-04 20:34:55 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@3c28181b] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-04 20:34:55 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-04 20:34:55 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-04 20:34:55 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-04 20:34:55 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-04 20:34:55 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-04 20:34:55 INFO  control.PlayerControl - Finished building player frame
+2024-12-04 20:34:56 INFO  control.PlayerControl - Import data: Processing...
+2024-12-04 20:34:56 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:34:56 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-04 20:34:56 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-04 20:34:59 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:34:59 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:34:59 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:34:59 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:34:59 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:34:59 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:34:59 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:34:59 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:35:11 INFO  main.principal - Main: Logger loaded
+2024-12-04 20:35:11 INFO  main.principal - Main: Getting controller...
+2024-12-04 20:35:12 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-04 20:35:12 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-04 20:35:12 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-04 20:35:12 INFO  main.principal - Main: Controller loaded
+2024-12-04 20:35:12 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-04 20:35:12 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-04 20:35:12 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-04 20:35:12 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-04 20:35:12 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-04 20:35:13 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-04 20:35:13 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-04 20:35:13 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-04 20:35:13 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-04 20:35:15 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-04 20:35:15 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@4b32465] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-04 20:35:15 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-04 20:35:15 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-04 20:35:15 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-04 20:35:15 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-04 20:35:15 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-04 20:35:15 INFO  control.PlayerControl - Finished building player frame
+2024-12-04 20:35:16 INFO  control.PlayerControl - Import data: Processing...
+2024-12-04 20:35:16 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:35:16 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-04 20:35:16 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-04 20:35:20 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:35:20 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:35:20 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:35:20 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:35:20 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:35:20 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:35:20 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:35:20 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:36:08 INFO  main.principal - Main: Logger loaded
+2024-12-04 20:36:08 INFO  main.principal - Main: Getting controller...
+2024-12-04 20:36:09 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-04 20:36:09 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-04 20:36:09 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-04 20:36:09 INFO  main.principal - Main: Controller loaded
+2024-12-04 20:36:10 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-04 20:36:10 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-04 20:36:10 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-04 20:36:10 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-04 20:36:10 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-04 20:36:10 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-04 20:36:10 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-04 20:36:10 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-04 20:36:10 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-04 20:36:12 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-04 20:36:12 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@66b6873f] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-04 20:36:12 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-04 20:36:12 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-04 20:36:12 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-04 20:36:12 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-04 20:36:12 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-04 20:36:12 INFO  control.PlayerControl - Finished building player frame
+2024-12-04 20:36:13 INFO  control.PlayerControl - Import data: Processing...
+2024-12-04 20:36:13 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:36:13 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-04 20:36:13 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-04 20:36:16 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:36:16 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:36:16 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:36:16 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:36:16 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:36:16 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:36:16 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:36:16 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:37:14 INFO  main.principal - Main: Logger loaded
+2024-12-04 20:37:14 INFO  main.principal - Main: Getting controller...
+2024-12-04 20:37:15 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-04 20:37:15 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-04 20:37:15 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-04 20:37:15 INFO  main.principal - Main: Controller loaded
+2024-12-04 20:37:15 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-04 20:37:15 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-04 20:37:15 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-04 20:37:15 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-04 20:37:15 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-04 20:37:15 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-04 20:37:15 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-04 20:37:15 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-04 20:37:16 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-04 20:37:17 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-04 20:37:17 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@52285a5f] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-04 20:37:17 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-04 20:37:17 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-04 20:37:18 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-04 20:37:18 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-04 20:37:18 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-04 20:37:18 INFO  control.PlayerControl - Finished building player frame
+2024-12-04 20:37:18 INFO  control.PlayerControl - Import data: Processing...
+2024-12-04 20:37:18 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:37:18 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-04 20:37:18 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-04 20:37:21 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:37:21 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:37:21 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:37:21 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:37:21 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:37:21 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:37:21 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:37:21 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:38:15 INFO  main.principal - Main: Logger loaded
+2024-12-04 20:38:15 INFO  main.principal - Main: Getting controller...
+2024-12-04 20:38:16 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-04 20:38:16 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-04 20:38:16 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-04 20:38:16 INFO  main.principal - Main: Controller loaded
+2024-12-04 20:38:16 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-04 20:38:16 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-04 20:38:16 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-04 20:38:16 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-04 20:38:16 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-04 20:38:16 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-04 20:38:16 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-04 20:38:16 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-04 20:38:17 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-04 20:38:17 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-04 20:38:17 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@3c28181b] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-04 20:38:17 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-04 20:38:17 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-04 20:38:18 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-04 20:38:18 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-04 20:38:18 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-04 20:38:18 INFO  control.PlayerControl - Finished building player frame
+2024-12-04 20:38:19 INFO  control.PlayerControl - Import data: Processing...
+2024-12-04 20:38:19 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:38:19 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-04 20:38:19 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-04 20:38:22 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:38:22 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:38:22 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:38:22 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:38:22 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:38:22 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:38:22 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:38:22 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:38:35 INFO  main.principal - Main: Logger loaded
+2024-12-04 20:38:35 INFO  main.principal - Main: Getting controller...
+2024-12-04 20:38:47 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-04 20:38:47 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-04 20:38:47 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-04 20:38:48 INFO  main.principal - Main: Controller loaded
+2024-12-04 20:38:48 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-04 20:38:48 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-04 20:38:48 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-04 20:38:48 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-04 20:38:48 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-04 20:38:48 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-04 20:38:48 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-04 20:38:48 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-04 20:38:48 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-04 20:38:50 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-04 20:38:50 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@52285a5f] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-04 20:38:50 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-04 20:38:50 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-04 20:38:50 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-04 20:38:50 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-04 20:38:50 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-04 20:38:50 INFO  control.PlayerControl - Finished building player frame
+2024-12-04 20:38:51 INFO  control.PlayerControl - Import data: Processing...
+2024-12-04 20:38:51 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:38:51 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-04 20:38:51 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-04 20:38:53 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:38:53 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:38:53 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:38:53 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:38:53 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:38:53 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:38:53 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:38:53 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:39:41 INFO  main.principal - Main: Logger loaded
+2024-12-04 20:39:41 INFO  main.principal - Main: Getting controller...
+2024-12-04 20:39:42 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-04 20:39:42 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-04 20:39:42 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-04 20:39:42 INFO  main.principal - Main: Controller loaded
+2024-12-04 20:39:42 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-04 20:39:42 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-04 20:39:42 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-04 20:39:42 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-04 20:39:42 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-04 20:39:42 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-04 20:39:42 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-04 20:39:42 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-04 20:39:42 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-04 20:39:43 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-04 20:39:43 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@7a1371] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-04 20:39:43 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-04 20:39:43 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-04 20:39:43 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-04 20:39:43 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-04 20:39:43 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-04 20:39:43 INFO  control.PlayerControl - Finished building player frame
+2024-12-04 20:39:46 INFO  control.PlayerControl - Import data: Processing...
+2024-12-04 20:39:46 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:39:46 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-04 20:39:46 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-04 20:39:49 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-04 20:39:49 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-04 20:39:49 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-04 20:39:49 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-04 20:39:49 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:39:49 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-04 20:39:49 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-04 20:39:49 INFO  data.PlayerDataAccess - Read: Data source is PHP, calling PHP...
+2024-12-04 20:39:49 INFO  data.PlayerDataAccess - isDataValid: Validating imported data...
+2024-12-04 20:39:49 INFO  data.PlayerDataAccess - isDataValid: Data is valid
+2024-12-04 20:39:49 INFO  data.PlayerDataAccess - Read: Finished reading data!
+2024-12-04 20:39:49 INFO  control.PlayerControl - Notify listener: Processing with code: data_changed
+2024-12-04 20:39:49 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:39:49 INFO  control.PlayerControl - Handling Data source for Import data: Process finished!
+2024-12-04 20:39:49 INFO  control.PlayerControl - Import data: Process finished!
+2024-12-04 20:39:53 INFO  control.PlayerControl - Save: Processing...
+2024-12-04 20:39:53 INFO  control.PlayerControl - Notify listener: Processing with code: data_saved
+2024-12-04 20:39:54 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-04 20:39:54 INFO  control.PlayerControl - Save: Process finished!
+2024-12-04 20:39:54 INFO  control.PlayerControl - Shutting down

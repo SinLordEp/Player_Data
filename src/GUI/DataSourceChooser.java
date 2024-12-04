@@ -4,10 +4,11 @@ import Interface.DataSourceCallBack;
 import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
-
+import data.http.DataType;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Objects;
 
 public class DataSourceChooser extends JDialog {
@@ -108,6 +109,12 @@ public class DataSourceChooser extends JDialog {
                 }
                 label_dataType.setText(GeneralText.getDialog().getText("label_sql_dialect"));
                 break;
+            case PHP:
+                for(DataType dataType : DataType.values()){
+                    comboBox_dataType.addItem(dataType);
+                }
+                label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
+                break;
         }
         comboBox_dataType.setEnabled(true);
     }
@@ -123,6 +130,10 @@ public class DataSourceChooser extends JDialog {
                 button_submit.setEnabled(true);
                 break;
             case SqlDialect ignore:
+                this.dataType = dataType;
+                button_submit.setEnabled(true);
+                break;
+            case DataType ignore:
                 this.dataType = dataType;
                 button_submit.setEnabled(true);
                 break;

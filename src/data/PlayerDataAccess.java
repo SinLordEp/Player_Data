@@ -3,6 +3,7 @@ package data;
 import GUI.GeneralText;
 import data.database.PlayerDBA;
 import data.database.SqlDialect;
+import data.http.PlayerPhp;
 import exceptions.*;
 import model.DatabaseInfo;
 import model.Player;
@@ -30,6 +31,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
     private HashMap<Region, Server[]> region_server_map;
     private final PlayerDBA playerDBA;
+    private final PlayerPhp playerPhp;
     private final PlayerFileReader fileReader;
     private final PlayerFileWriter fileWriter;
     private static final Logger logger = LoggerFactory.getLogger(PlayerDataAccess.class);
@@ -39,6 +41,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         fileReader = new PlayerFileReader();
         fileWriter = new PlayerFileWriter();
         playerDBA = new PlayerDBA();
+        playerPhp = new PlayerPhp();
     }
 
     public void initializeRegionServer(){
@@ -114,6 +117,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     logger.info("Read: Data source is {}, calling DBA...", dataSource);
                     player_map = playerDBA.read(dataSource);
                     break;
+                case PHP:
+                    logger.info("Read: Data source is {}, calling PHP...", dataSource);
+                    player_map = playerPhp.read(dataType);
+                    break;
             }
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();
@@ -139,6 +146,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     playerDBA.update(dataSource, changed_player_map);
                     playerDBA.disconnect(dataSource);
                     changed_player_map.clear();
+                    break;
+                case PHP:
+                    playerPhp.update(changed_player_map);
                     break;
             }
         } catch (Exception e) {

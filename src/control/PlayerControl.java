@@ -13,6 +13,7 @@ import data.DataSource;
 import data.PlayerDataAccess;
 import data.database.SqlDialect;
 import data.file.FileType;
+import data.http.DataType;
 import exceptions.*;
 import model.DatabaseInfo;
 import model.Player;
@@ -105,6 +106,7 @@ public class PlayerControl implements GeneralControl {
         switch(dataType){
             case FileType ignore -> importFile((FileType) dataType);
             case SqlDialect ignore -> importDB(dataSource, (SqlDialect) dataType);
+            case DataType ignore -> importHttp((DataType) dataType);
             default -> throw new IllegalStateException("Unexpected value: " + dataType);
         }
         logger.info("Handling Data source for Import data: Process finished!");
@@ -158,6 +160,17 @@ public class PlayerControl implements GeneralControl {
             clearDataSource();
         }
         logger.info("Handling DatabaseLogin for Import data: Process finished!");
+    }
+
+    private void importHttp(DataType dataType) {
+        logger.info("Import HTTP: Processing...");
+        try{
+            playerDA.setDataType(dataType);
+            playerDA.read();
+            notifyListeners("data_changed", playerDA.getPlayerMap());
+        }catch (OperationCancelledException e) {
+            logger.info("Import HTTP: Failed with cause: Operation cancelled");
+        }
     }
 
     public void add() {
@@ -280,6 +293,10 @@ public class PlayerControl implements GeneralControl {
                     break;
                 case DATABASE, HIBERNATE:
                     logger.info("Save: Current data source is DATABASE or HIBERNATE, saving...");
+                    playerDA.save();
+                    break;
+                case PHP:
+                    logger.info("Save: Current data source is PHP, saving...");
                     playerDA.save();
                     break;
             }
