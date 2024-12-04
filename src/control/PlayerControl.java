@@ -110,7 +110,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Handling Data source for Import data: Process finished!");
     }
 
-    public void importFile(FileType fileType) {
+    private void importFile(FileType fileType) {
         logger.info("Import file: Processing...");
         playerDA.setFileType(fileType);
         logger.info("Import file: Fetching file path...");
@@ -127,7 +127,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Import file: Process finished!");
     }
 
-    public void importDB(DataSource dataSource, SqlDialect sqlDialect)  {
+    private void importDB(DataSource dataSource, SqlDialect sqlDialect)  {
         logger.info("Import DB: Processing...");
         try {
             logger.info("Import DB: Fetching default database information...");

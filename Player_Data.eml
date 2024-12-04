@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<excludeFolder url="file://$MODULE_DIR$/.idea/dataSources"/>
+	</contentEntry>
+	<levels>
+		<level name="lib" value="project"/>
+		<level name="jakarta.persistence.api" value="project"/>
+		<level name="hibernate.orm.community.dialects" value="project"/>
+		<level name="reflections" value="project"/>
+		<level name="yaml.snakeyaml" value="project"/>
+		<level name="ch.qos.logback.classic" value="project"/>
+	</levels>
+</component>

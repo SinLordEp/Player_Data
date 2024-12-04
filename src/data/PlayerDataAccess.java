@@ -211,7 +211,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         return player_map;
     }
 
-    public void isPlayerInvalid(Player player){
+    private void isPlayerInvalid(Player player){
         if(region_server_map.isEmpty()){
             throw new DataCorruptedException("region_server_map is null");
         }
@@ -236,7 +236,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         }
     }
 
-    public void isDataValid(){
+    private void isDataValid(){
         logger.info("isDataValid: Validating imported data...");
         for(Player player : player_map.values()){
             isPlayerInvalid(player);

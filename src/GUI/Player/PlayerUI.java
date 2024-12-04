@@ -107,19 +107,47 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
     }
 
     private void buttonListener(){
-        button_add.addActionListener(_ -> playerControl.add());
+        button_add.addActionListener(_ -> {
+            button_add.setEnabled(false);
+            playerControl.add();
+            button_add.setEnabled(true);
+        });
 
-        button_modify.addActionListener(_ -> playerControl.modify(selected_player_id));
+        button_modify.addActionListener(_ -> {
+            button_modify.setEnabled(false);
+            playerControl.modify(selected_player_id);
+            button_modify.setEnabled(true);
+        });
 
-        button_delete.addActionListener(_ -> playerControl.delete(selected_player_id));
+        button_delete.addActionListener(_ -> {
+            button_delete.setEnabled(false);
+            playerControl.delete(selected_player_id);
+            button_delete.setEnabled(true);
+        });
 
-        button_export.addActionListener(_ -> playerControl.export());
+        button_export.addActionListener(_ -> {
+            button_export.setEnabled(false);
+            playerControl.export();
+            button_export.setEnabled(true);
+        });
 
-        button_createFile.addActionListener(_ -> playerControl.createFile());
+        button_createFile.addActionListener(_ -> {
+            button_createFile.setEnabled(false);
+            playerControl.createFile();
+            button_createFile.setEnabled(true);
+        });
 
-        button_import.addActionListener(_ -> playerControl.importData());
+        button_import.addActionListener(_ -> {
+            button_import.setEnabled(false);
+            playerControl.importData();
+            button_import.setEnabled(true);
+        });
 
-        button_language.addActionListener(_ -> playerControl.changeLanguage());
+        button_language.addActionListener(_ -> {
+            button_language.setEnabled(false);
+            playerControl.changeLanguage();
+            button_language.setEnabled(true);
+        });
     }
 
     private void tableListener(){
