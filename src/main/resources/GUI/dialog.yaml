@@ -127,6 +127,10 @@ popup:
     en: "Failed to create new file"
     es: "No se ha podido crear nuevo fichero"
     cn: "创建新文件失败"
+  php_failed:
+    en: "Failed to import data from PHP server"
+    es: "No se ha podido importar datos de servidor PHP"
+    cn: "未能从PHP服务器读取数据"
 
 options:
   controller:

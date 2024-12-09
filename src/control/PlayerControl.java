@@ -170,6 +170,9 @@ public class PlayerControl implements GeneralControl {
             notifyListeners("data_changed", playerDA.getPlayerMap());
         }catch (OperationCancelledException e) {
             logger.info("Import HTTP: Failed with cause: Operation cancelled");
+        }catch (HttpPhpException e){
+            logger.error("Import HTTP: Failed with cause: {}", e.getMessage());
+            notifyListeners("imprt",null);
         }
     }
 

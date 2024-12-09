@@ -1,5 +1,6 @@
 <?php
-require "default_mysql.php";
+global $conn;
+require_once "default_mysql.php";
 
 $query = "SELECT * FROM player";
 $result = $conn->query($query);

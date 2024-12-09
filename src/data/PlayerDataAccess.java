@@ -136,6 +136,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
     @Override
     public void save(){
         logger.info("Save: Saving data to {}", dataSource);
+        if(changed_player_map.isEmpty() && dataSource != DataSource.FILE){
+            logger.info("Save: No data needed to save!");
+            return;
+        }
         try{
             switch (dataSource){
                 case FILE:
@@ -149,10 +153,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     break;
                 case PHP:
                     playerPhp.update(changed_player_map);
+                    changed_player_map.clear();
                     break;
             }
         } catch (Exception e) {
-            throw new OperationException("Failed to save data. Cause: " + e.getMessage());
+            throw new OperationException("Failed to save data with cause: " + e.getMessage());
         }
         logger.info("Save: Finished saving data!");
     }
@@ -175,7 +180,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         logger.info("Modify: Modifying player with ID: {}", player.getID());
         switch(dataSource){
             //case FILE ->
-            case DATABASE, HIBERNATE :
+            case DATABASE, HIBERNATE, PHP :
                 logger.info("Modify: Adding modified player with ID: {} to changed player map", player.getID());
                 changed_player_map.put(player, DataOperation.MODIFY);
         }

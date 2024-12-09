@@ -1,15 +1,17 @@
 <?php
-function validate($expectedFormat, $data):bool
+function validate($expectedFormat, array $data):bool
 {
-    if(!isset($data) && !$data){
+    if(empty($data)){
         return false;
     }
-    foreach ($expectedFormat as $key => $value) {
-        if(!isset($data[$key])){
-            return false;
-        }
-        if($data[$key]->isEmpty()){
-            return false;
+    foreach ($data as $value) {
+        foreach ($expectedFormat as $expectedKey => $expectedValue){
+            if(!array_key_exists($expectedKey, $value)){
+                return false;
+            }
+            if(gettype($value[$expectedKey]) !== gettype($expectedValue)){
+                return false;
+            }
         }
     }
     return true;

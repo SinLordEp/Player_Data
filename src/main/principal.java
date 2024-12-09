@@ -28,7 +28,6 @@ public class principal {
             logger.info("Main: Controller loaded");
             current_control.run();
         }
-
     }
 
     private static void initializeProperties() {

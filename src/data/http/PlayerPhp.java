@@ -21,7 +21,9 @@ import java.util.TreeMap;
  */
 public class PlayerPhp implements GeneralPhp<SortedMap<?,?>> {
     ApiRequests api;
-    private String url, readUrl, writeUrl;
+    private final String url;
+    private final String readUrl;
+    private final String writeUrl;
 
     public PlayerPhp() {
         api = new ApiRequests();
@@ -73,7 +75,30 @@ public class PlayerPhp implements GeneralPhp<SortedMap<?,?>> {
 
     }
 
+    @SuppressWarnings("unchecked")
     public void update(HashMap<Player, DataOperation> changed_player_map){
-
+        JSONArray playerArray = new JSONArray();
+        for(Player player : changed_player_map.keySet()) {
+            JSONObject playerObject = new JSONObject();
+            playerObject.put("id", player.getID());
+            playerObject.put("name", player.getName());
+            playerObject.put("region", player.getRegion().toString());
+            playerObject.put("server", player.getServer().toString());
+            playerObject.put("operation", changed_player_map.get(player).toString());
+            playerArray.add(playerObject);
+        }
+        try {
+            String postRequest = api.postRequest(url + writeUrl, playerArray.toJSONString());
+            JSONObject response = (JSONObject) JSONValue.parse(postRequest);
+            if(response == null) {
+                throw new HttpPhpException("Json was sent to server but did not receive a correct response");
+            }
+            if("error".equals(response.get("status").toString())) {
+                throw new HttpPhpException(response.get("message").toString());
+            }
+            System.out.println(response.toJSONString());
+        } catch (IOException e) {
+            throw new HttpPhpException("Failed to write to target php server with cause: " + e.getMessage());
+        }
     }
 }
