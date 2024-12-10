@@ -177,7 +177,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
     public void onEvent(String event, SortedMap<?,?> data) {
         switch(event){
             case "operation_cancelled", "db_login_failed", "db_login_cancelled", "config_error", "export_failed", "data_saved", "unknown_error","php_error" -> generalPopup(event);
-            case "region_server_null", "player_map_null", "modified_player", "added_player", "deleted_player", "exported_file", "exported_db" -> playerPopup(event);
+            case "region_server_null", "player_map_null", "modified_player", "added_player", "deleted_player", "exported_file", "exported_db", "exported_php"-> playerPopup(event);
             case "data_changed"-> refresh(data);
             case "language_changed"-> changeLanguage();
             case "dataSource_set" -> dataSourceIsSet();

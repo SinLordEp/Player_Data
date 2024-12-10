@@ -6966,3 +6966,170 @@ Caused by: java.sql.SQLIntegrityConstraintViolationException: Cannot add or upda
 2024-12-09 20:46:15 INFO  control.PlayerControl - Save: Processing...
 2024-12-09 20:46:15 INFO  control.PlayerControl - Save: Current data source is PHP, saving...
 2024-12-09 20:46:15 INFO  data.PlayerDataAccess - Save: Saving data to PHP
+2024-12-10 17:41:14 INFO  main.principal - Main: Logger loaded
+2024-12-10 17:41:14 INFO  main.principal - Main: Getting controller...
+2024-12-10 17:41:16 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-10 17:41:16 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-10 17:41:16 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-10 17:41:16 INFO  data.http.PlayerPhp - PlayerPhp: Instantiated
+2024-12-10 17:41:16 INFO  main.principal - Main: Controller loaded
+2024-12-10 17:41:16 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-10 17:41:16 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-10 17:41:16 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-10 17:41:16 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-10 17:41:16 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-10 17:41:16 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-10 17:41:16 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-10 17:41:16 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-10 17:41:16 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-10 17:41:17 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-10 17:41:17 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@5e98032e] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-10 17:41:17 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-10 17:41:17 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-10 17:41:18 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-10 17:41:18 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-10 17:41:18 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-10 17:41:18 INFO  control.PlayerControl - Finished building player frame
+2024-12-10 17:41:20 INFO  control.PlayerControl - Import data: Processing...
+2024-12-10 17:41:20 INFO  control.PlayerControl - Save: Processing...
+2024-12-10 17:41:20 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-10 17:41:20 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-10 17:41:25 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-10 17:41:25 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-10 17:41:25 INFO  data.GeneralDataAccess - DataSource is set to: FILE
+2024-12-10 17:41:25 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-10 17:41:25 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:41:25 INFO  control.PlayerControl - Import file: Processing...
+2024-12-10 17:41:25 INFO  data.GeneralDataAccess - Setting FileType...
+2024-12-10 17:41:25 INFO  data.GeneralDataAccess - FileType is set to: XML
+2024-12-10 17:41:25 INFO  control.PlayerControl - Import file: Fetching file path...
+2024-12-10 17:41:25 INFO  data.GeneralDataAccess - Get path: Getting path with file type paragram: XML
+2024-12-10 17:41:26 INFO  data.GeneralDataAccess - Get path: Finished get path with paragram!
+2024-12-10 17:41:26 INFO  data.GeneralDataAccess - Set file path: Path is set to C:\Sin\Player_Data\src\main\resources\import\player_xml.xml
+2024-12-10 17:41:26 INFO  data.GeneralDataAccess - Set file path: DataSource is set to: File
+2024-12-10 17:41:26 INFO  data.PlayerDataAccess - Read: Reading data from FILE
+2024-12-10 17:41:26 INFO  data.PlayerDataAccess - Read: Calling file reader...
+2024-12-10 17:41:26 INFO  data.PlayerDataAccess - isDataValid: Validating imported data...
+2024-12-10 17:41:26 INFO  data.PlayerDataAccess - isDataValid: Data is valid
+2024-12-10 17:41:26 INFO  data.PlayerDataAccess - Read: Finished reading data!
+2024-12-10 17:41:26 INFO  control.PlayerControl - Notify listener: Processing with code: data_changed
+2024-12-10 17:41:26 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:41:26 INFO  control.PlayerControl - Import file: Process finished!
+2024-12-10 17:41:26 INFO  control.PlayerControl - Handling Data source for Import data: Process finished!
+2024-12-10 17:41:26 INFO  control.PlayerControl - Import data: Process finished!
+2024-12-10 17:41:31 INFO  control.PlayerControl - Export: Processing...
+2024-12-10 17:41:31 INFO  control.PlayerControl - Export: Checking current player data...
+2024-12-10 17:41:31 INFO  control.PlayerControl - Export: Calling DataSourceChooser...
+2024-12-10 17:41:39 INFO  control.PlayerControl - Handle DataSource for Export data: Processing...
+2024-12-10 17:41:39 INFO  control.PlayerControl - Export PHP: Processing...
+2024-12-10 17:41:39 INFO  data.PlayerDataAccess - Export PHP: Calling PHP...
+2024-12-10 17:41:39 INFO  data.http.PlayerPhp - Export: Exporting player data in form of JSON
+2024-12-10 17:41:39 INFO  data.http.PlayerPhp - Read: Reading player data in form of JSON
+2024-12-10 17:41:39 INFO  data.http.PlayerPhp - Read JSON: Reading player data from http://localhost/sin/player_data/read_player.php
+2024-12-10 17:41:39 ERROR data.http.PlayerPhp - Read JSON: Failed to read data with cause: Connection refused: getsockopt
+2024-12-10 17:41:39 ERROR control.PlayerControl - Export PHP: Failed with cause: Failed to read from target php server with cause: Connection refused: getsockopt
+2024-12-10 17:41:39 INFO  control.PlayerControl - Notify listener: Processing with code: php_error
+2024-12-10 17:41:44 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:41:44 INFO  control.PlayerControl - Handle DataSource for Export data: Process finished!
+2024-12-10 17:41:44 INFO  control.PlayerControl - Export: Process finished!
+2024-12-10 17:42:04 INFO  control.PlayerControl - Export: Processing...
+2024-12-10 17:42:04 INFO  control.PlayerControl - Export: Checking current player data...
+2024-12-10 17:42:04 INFO  control.PlayerControl - Export: Calling DataSourceChooser...
+2024-12-10 17:42:07 INFO  control.PlayerControl - Handle DataSource for Export data: Processing...
+2024-12-10 17:42:07 INFO  control.PlayerControl - Export PHP: Processing...
+2024-12-10 17:42:07 INFO  data.PlayerDataAccess - Export PHP: Calling PHP...
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Exporting player data in form of JSON
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Read: Reading player data in form of JSON
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Read JSON: Reading player data from http://localhost/sin/player_data/read_player.php
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Read JSON: Finished reading from PHP server
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Modifying existing player with id 1
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Modifying existing player with id 2
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Modifying existing player with id 3
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Modifying existing player with id 4
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Modifying existing player with id 5
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Modifying existing player with id 6
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Modifying existing player with id 7
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Modifying existing player with id 8
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Modifying existing player with id 11
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Calling update to apply changes...
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Update: Updating PHP server data with changed player map...
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Update: Finished updating data of PHP server
+2024-12-10 17:42:07 INFO  data.http.PlayerPhp - Export: Finished exporting data to target php server
+2024-12-10 17:42:07 INFO  control.PlayerControl - Notify listener: Processing with code: exported_php
+2024-12-10 17:42:07 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:42:07 INFO  control.PlayerControl - Handle DataSource for Export data: Process finished!
+2024-12-10 17:42:07 INFO  control.PlayerControl - Export: Process finished!
+2024-12-10 17:42:50 INFO  control.PlayerControl - Import data: Processing...
+2024-12-10 17:42:50 INFO  control.PlayerControl - Save: Processing...
+2024-12-10 17:42:50 INFO  control.PlayerControl - Save: Current data source is FILE, saving...
+2024-12-10 17:42:50 INFO  data.PlayerDataAccess - Save: Saving data to FILE
+2024-12-10 17:42:50 INFO  data.PlayerDataAccess - Save: Finished saving data!
+2024-12-10 17:42:50 INFO  control.PlayerControl - Notify listener: Processing with code: data_saved
+2024-12-10 17:42:56 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:42:56 INFO  control.PlayerControl - Save: Process finished!
+2024-12-10 17:42:56 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-10 17:42:59 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-10 17:42:59 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-10 17:42:59 INFO  data.GeneralDataAccess - DataSource is set to: FILE
+2024-12-10 17:42:59 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-10 17:42:59 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:42:59 INFO  control.PlayerControl - Import file: Processing...
+2024-12-10 17:42:59 INFO  data.GeneralDataAccess - Setting FileType...
+2024-12-10 17:42:59 INFO  data.GeneralDataAccess - FileType is set to: TXT
+2024-12-10 17:42:59 INFO  control.PlayerControl - Import file: Fetching file path...
+2024-12-10 17:42:59 INFO  data.GeneralDataAccess - Get path: Getting path with file type paragram: TXT
+2024-12-10 17:43:00 INFO  data.GeneralDataAccess - Get path: Finished get path with paragram!
+2024-12-10 17:43:00 INFO  data.GeneralDataAccess - Set file path: Path is set to C:\Sin\Player_Data\src\main\resources\import\player_txt.txt
+2024-12-10 17:43:00 INFO  data.GeneralDataAccess - Set file path: DataSource is set to: File
+2024-12-10 17:43:00 INFO  data.PlayerDataAccess - Read: Reading data from FILE
+2024-12-10 17:43:00 INFO  data.PlayerDataAccess - Read: Calling file reader...
+2024-12-10 17:43:00 INFO  data.PlayerDataAccess - isDataValid: Validating imported data...
+2024-12-10 17:43:00 INFO  data.PlayerDataAccess - isDataValid: Data is valid
+2024-12-10 17:43:00 INFO  data.PlayerDataAccess - Read: Finished reading data!
+2024-12-10 17:43:00 INFO  control.PlayerControl - Notify listener: Processing with code: data_changed
+2024-12-10 17:43:00 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:43:00 INFO  control.PlayerControl - Import file: Process finished!
+2024-12-10 17:43:00 INFO  control.PlayerControl - Handling Data source for Import data: Process finished!
+2024-12-10 17:43:00 INFO  control.PlayerControl - Import data: Process finished!
+2024-12-10 17:43:01 INFO  control.PlayerControl - Import data: Processing...
+2024-12-10 17:43:01 INFO  control.PlayerControl - Save: Processing...
+2024-12-10 17:43:01 INFO  control.PlayerControl - Save: Current data source is FILE, saving...
+2024-12-10 17:43:01 INFO  data.PlayerDataAccess - Save: Saving data to FILE
+2024-12-10 17:43:01 INFO  data.PlayerDataAccess - Save: Finished saving data!
+2024-12-10 17:43:01 INFO  control.PlayerControl - Notify listener: Processing with code: data_saved
+2024-12-10 17:43:02 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:43:02 INFO  control.PlayerControl - Save: Process finished!
+2024-12-10 17:43:02 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-10 17:43:05 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-10 17:43:05 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-10 17:43:05 INFO  data.GeneralDataAccess - DataSource is set to: PHP
+2024-12-10 17:43:05 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-10 17:43:05 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:43:05 INFO  control.PlayerControl - Import HTTP: Processing...
+2024-12-10 17:43:05 INFO  data.PlayerDataAccess - Read: Reading data from PHP
+2024-12-10 17:43:05 INFO  data.PlayerDataAccess - Read: Calling PHP...
+2024-12-10 17:43:05 INFO  data.http.PlayerPhp - Read: Reading player data in form of JSON
+2024-12-10 17:43:05 INFO  data.http.PlayerPhp - Read JSON: Reading player data from http://localhost/sin/player_data/read_player.php
+2024-12-10 17:43:05 INFO  data.http.PlayerPhp - Read JSON: Finished reading from PHP server
+2024-12-10 17:43:05 INFO  data.PlayerDataAccess - isDataValid: Validating imported data...
+2024-12-10 17:43:05 INFO  data.PlayerDataAccess - isDataValid: Data is valid
+2024-12-10 17:43:05 INFO  data.PlayerDataAccess - Read: Finished reading data!
+2024-12-10 17:43:05 INFO  control.PlayerControl - Notify listener: Processing with code: data_changed
+2024-12-10 17:43:05 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:43:05 INFO  control.PlayerControl - Handling Data source for Import data: Process finished!
+2024-12-10 17:43:05 INFO  control.PlayerControl - Import data: Process finished!
+2024-12-10 17:43:08 INFO  control.PlayerControl - Save: Processing...
+2024-12-10 17:43:08 INFO  control.PlayerControl - Save: Current data source is PHP, saving...
+2024-12-10 17:43:08 INFO  data.PlayerDataAccess - Save: Saving data to PHP
+2024-12-10 17:43:08 INFO  data.PlayerDataAccess - Save: No data needed to save!
+2024-12-10 17:43:08 INFO  control.PlayerControl - Notify listener: Processing with code: data_saved
+2024-12-10 17:43:09 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-10 17:43:09 INFO  control.PlayerControl - Save: Process finished!
+2024-12-10 17:43:09 INFO  control.PlayerControl - Shutting down

@@ -88,6 +88,10 @@ popup:
     en: "Players data were exported to database"
     es: "Datos de jugadores exportados correctamente a base de datos"
     cn: "玩家数据已导出至数据库"
+  exported_php:
+    en: "Players data were exported to PHP server"
+    es: "Datos de jugadores exportados correctamente a servidor PHP"
+    cn: "玩家数据已导出至PHP服务器"
   deleted_player:
     en: "Player deleted"
     es: "Jugador eliminada"

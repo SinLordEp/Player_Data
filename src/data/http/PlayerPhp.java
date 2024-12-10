@@ -126,11 +126,13 @@ public class PlayerPhp implements GeneralPhp<SortedMap<Integer,Player>> {
             if("error".equals(response.get("status").toString())) {
                 throw new HttpPhpException(response.get("message").toString());
             }
-            System.out.println(response.toJSONString());
+            if("success".equals(response.get("status").toString())) {
+                logger.info("Update: Successfully updated data on PHP server");
+            }
         } catch (IOException e) {
             logger.error("Update: Failed to update data with cause: {}", e.getMessage());
-            throw new HttpPhpException("Failed to update data of target php server with cause: " + e.getMessage());
+            throw new HttpPhpException("Failed to update data on target php server with cause: " + e.getMessage());
         }
-        logger.info("Update: Finished updating data of PHP server");
+        logger.info("Update: Finished updating data on PHP server");
     }
 }
