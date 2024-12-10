@@ -106,7 +106,7 @@ public class PlayerControl implements GeneralControl {
         switch(dataType){
             case FileType ignore -> importFile((FileType) dataType);
             case SqlDialect ignore -> importDB(dataSource, (SqlDialect) dataType);
-            case DataType ignore -> importHttp((DataType) dataType);
+            case DataType ignore -> importPHP((DataType) dataType);
             default -> throw new IllegalStateException("Unexpected value: " + dataType);
         }
         logger.info("Handling Data source for Import data: Process finished!");
@@ -162,7 +162,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Handling DatabaseLogin for Import data: Process finished!");
     }
 
-    private void importHttp(DataType dataType) {
+    private void importPHP(DataType dataType) {
         logger.info("Import HTTP: Processing...");
         try{
             playerDA.setDataType(dataType);
@@ -170,9 +170,10 @@ public class PlayerControl implements GeneralControl {
             notifyListeners("data_changed", playerDA.getPlayerMap());
         }catch (OperationCancelledException e) {
             logger.info("Import HTTP: Failed with cause: Operation cancelled");
+            notifyListeners("operation_cancelled", null);
         }catch (HttpPhpException e){
             logger.error("Import HTTP: Failed with cause: {}", e.getMessage());
-            notifyListeners("imprt",null);
+            notifyListeners("php_error",null);
         }
     }
 
@@ -232,6 +233,7 @@ public class PlayerControl implements GeneralControl {
         switch (dataSource){
             case FILE -> exportFile((FileType) dataType);
             case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
+            case PHP -> exportPHP((DataType) dataType);
         }
         logger.info("Handle DataSource for Export data: Process finished!");
     }
@@ -280,6 +282,17 @@ public class PlayerControl implements GeneralControl {
             notifyListeners("db_login_failed",null);
         }
         logger.info("Handle DatabaseLogin for Export data: Process finished!");
+    }
+
+    private void exportPHP(DataType dataType) {
+        logger.info("Export PHP: Processing...");
+        try{
+            playerDA.exportPHP(dataType);
+            notifyListeners("exported_php", null);
+        }catch (HttpPhpException e){
+            logger.error("Export PHP: Failed with cause: {}", e.getMessage());
+            notifyListeners("php_error", null);
+        }
     }
 
     public void save(){

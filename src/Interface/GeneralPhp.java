@@ -7,5 +7,5 @@ import data.http.DataType;
  */
 public interface GeneralPhp<T> {
     T read(DataType dataType);
-    void write(T data);
+    void export(DataType dataType, T data);
 }

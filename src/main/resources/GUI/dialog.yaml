@@ -127,10 +127,14 @@ popup:
     en: "Failed to create new file"
     es: "No se ha podido crear nuevo fichero"
     cn: "创建新文件失败"
-  php_failed:
-    en: "Failed to import data from PHP server"
-    es: "No se ha podido importar datos de servidor PHP"
-    cn: "未能从PHP服务器读取数据"
+  php_error:
+    en: "Failed to transfer data between Cliente and PHP server"
+    es: "No se ha podido transferir datos entre cliente y servidor PHP"
+    cn: "客户端未能与PHP服务器交换数据"
+  exported_php:
+    en: "Successfully exported datas to PHP server"
+    es: "Se ha exportado datos correctamente a servidor PHP"
+    cn: "成功导出数据至PHP服务器"
 
 options:
   controller:

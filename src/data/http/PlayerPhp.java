@@ -10,6 +10,8 @@ import model.Server;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,13 +21,15 @@ import java.util.TreeMap;
 /**
  * @author SIN
  */
-public class PlayerPhp implements GeneralPhp<SortedMap<?,?>> {
+public class PlayerPhp implements GeneralPhp<SortedMap<Integer,Player>> {
+    private static final Logger logger = LoggerFactory.getLogger(PlayerPhp.class);
     ApiRequests api;
     private final String url;
     private final String readUrl;
     private final String writeUrl;
 
     public PlayerPhp() {
+        logger.info("PlayerPhp: Instantiated");
         api = new ApiRequests();
         url = "http://localhost/sin/player_data/";
         readUrl = "read_player.php";
@@ -34,6 +38,7 @@ public class PlayerPhp implements GeneralPhp<SortedMap<?,?>> {
 
     @Override
     public TreeMap<Integer, Player> read(DataType dataType) {
+        logger.info("Read: Reading player data in form of {}", dataType);
         return switch (dataType){
             case NONE -> new TreeMap<>();
             case JSON -> read_json();
@@ -41,6 +46,7 @@ public class PlayerPhp implements GeneralPhp<SortedMap<?,?>> {
     }
 
     private TreeMap<Integer, Player> read_json() {
+        logger.info("Read JSON: Reading player data from {}", url + readUrl);
         TreeMap<Integer, Player> playerMap = new TreeMap<>();
         try {
             String rawJson = api.getRequest(url + readUrl);
@@ -53,6 +59,7 @@ public class PlayerPhp implements GeneralPhp<SortedMap<?,?>> {
             }
             JSONArray playersArray = (JSONArray) parsedJson.get("players");
             if(playersArray.isEmpty()) {
+                logger.error("Read JSON: No player datas found");
                 throw new DataCorruptedException("Failed to parse data from target php with cause: No players found");
             }
             for (Object object : playersArray) {
@@ -65,18 +72,41 @@ public class PlayerPhp implements GeneralPhp<SortedMap<?,?>> {
                 playerMap.put(player.getID(), player);
             }
         } catch (IOException e) {
+            logger.error("Read JSON: Failed to read data with cause: {}", e.getMessage());
             throw new HttpPhpException("Failed to read from target php server with cause: " + e.getMessage());
         }
+        logger.info("Read JSON: Finished reading from PHP server");
         return playerMap;
     }
 
     @Override
-    public void write(SortedMap<?, ?> data) {
-
+    public void export(DataType dataType, SortedMap<Integer, Player> player_map) {
+        logger.info("Export: Exporting player data in form of {}", dataType);
+        TreeMap<Integer, Player> existed_player_map = read(DataType.JSON);
+        HashMap<Player, DataOperation> export_player_map = new HashMap<>();
+        for(Player player : existed_player_map.values()) {
+            if(!player_map.containsKey(player.getID())) {
+                logger.info("Export: Eliminated none existing player with id {}", player.getID());
+                export_player_map.put(player, DataOperation.DELETE);
+            }else{
+                logger.info("Export: Modifying existing player with id {}", player.getID());
+                export_player_map.put(player_map.get(player.getID()), DataOperation.MODIFY);
+            }
+        }
+        for(Player player : player_map.values()) {
+            if(!existed_player_map.containsKey(player.getID())) {
+                logger.info("Export: Adding new player with id {}", player.getID());
+                export_player_map.put(player, DataOperation.ADD);
+            }
+        }
+        logger.info("Export: Calling update to apply changes...");
+        update(export_player_map);
+        logger.info("Export: Finished exporting data to target php server");
     }
 
     @SuppressWarnings("unchecked")
     public void update(HashMap<Player, DataOperation> changed_player_map){
+        logger.info("Update: Updating PHP server data with changed player map...");
         JSONArray playerArray = new JSONArray();
         for(Player player : changed_player_map.keySet()) {
             JSONObject playerObject = new JSONObject();
@@ -98,7 +128,9 @@ public class PlayerPhp implements GeneralPhp<SortedMap<?,?>> {
             }
             System.out.println(response.toJSONString());
         } catch (IOException e) {
-            throw new HttpPhpException("Failed to write to target php server with cause: " + e.getMessage());
+            logger.error("Update: Failed to update data with cause: {}", e.getMessage());
+            throw new HttpPhpException("Failed to update data of target php server with cause: " + e.getMessage());
         }
+        logger.info("Update: Finished updating data of PHP server");
     }
 }

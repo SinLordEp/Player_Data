@@ -3,12 +3,15 @@ package data;
 import GUI.GeneralText;
 import data.database.PlayerDBA;
 import data.database.SqlDialect;
-import data.http.PlayerPhp;
-import exceptions.*;
-import model.DatabaseInfo;
-import model.Player;
 import data.file.PlayerFileReader;
 import data.file.PlayerFileWriter;
+import data.http.DataType;
+import data.http.PlayerPhp;
+import exceptions.ConfigErrorException;
+import exceptions.DataCorruptedException;
+import exceptions.OperationException;
+import model.DatabaseInfo;
+import model.Player;
 import model.Region;
 import model.Server;
 import org.slf4j.Logger;
@@ -106,19 +109,19 @@ public class PlayerDataAccess extends GeneralDataAccess {
         try {
             switch (dataSource){
                 case NONE :
-                    logger.info("Read: Data source is {}, resetting player map...", dataSource);
+                    logger.info("Read: Resetting player map...");
                     player_map = new TreeMap<>();
                     break;
                 case FILE:
-                    logger.info("Read: Data source is {}, calling file reader...", dataSource);
+                    logger.info("Read: Calling file reader...");
                     player_map = (TreeMap<Integer, Player>) fileReader.read(fileType, file_path);
                     break;
                 case DATABASE, HIBERNATE :
-                    logger.info("Read: Data source is {}, calling DBA...", dataSource);
+                    logger.info("Read: Calling DBA...");
                     player_map = playerDBA.read(dataSource);
                     break;
                 case PHP:
-                    logger.info("Read: Data source is {}, calling PHP...", dataSource);
+                    logger.info("Read: Calling PHP...");
                     player_map = playerPhp.read(dataType);
                     break;
             }
@@ -165,40 +168,45 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void add(Player player) {
         logger.info("Add: Adding player with ID: {}", player.getID());
         switch(dataSource){
-            //case FILE ->
-            case DATABASE, HIBERNATE:
+            case DATABASE, HIBERNATE, PHP:
                 logger.info("Add: Adding player to changed player map");
                 changed_player_map.put(player, DataOperation.ADD);
+                //Always trigger case FILE
+            case FILE:
+                logger.info("Add: Adding player to current player map");
+                player_map.put(player.getID(), player);
                 break;
         }
-        logger.info("Add: Adding player to current player map");
-        player_map.put(player.getID(), player);
         logger.info("Add: Finished adding player!");
     }
 
     public void modify(Player player) {
         logger.info("Modify: Modifying player with ID: {}", player.getID());
         switch(dataSource){
-            //case FILE ->
-            case DATABASE, HIBERNATE, PHP :
+            case DATABASE, HIBERNATE, PHP:
                 logger.info("Modify: Adding modified player with ID: {} to changed player map", player.getID());
                 changed_player_map.put(player, DataOperation.MODIFY);
+                //Always trigger case FILE
+            case FILE:
+                logger.info("Modify: Adding modified player with ID: {} to current player map", player.getID());
+                player_map.put(player.getID(), player);
+                break;
         }
-        logger.info("Modify: Adding modified player with ID: {} to current player map", player.getID());
-        player_map.put(player.getID(), player);
         logger.info("Modify: Finished modifying player!");
     }
 
     public void delete(int selected_player_id) {
         logger.info("Delete: Deleting player with ID: {}", selected_player_id);
         switch(dataSource){
-            //case FILE ->
-            case DATABASE, HIBERNATE :
+            case DATABASE, HIBERNATE, PHP :
                 logger.info("Delete: Adding deleted player with ID: {} to changed player map", selected_player_id);
                 changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
+                //Always trigger case FILE
+            case FILE:
+                logger.info("Delete: Deleting player with ID: {} from current player map", selected_player_id);
+                player_map.remove(selected_player_id);
+                break;
         }
-        logger.info("Delete: Deleting player with ID: {} from current player map", selected_player_id);
-        player_map.remove(selected_player_id);
         logger.info("Delete: Finished deleting player!");
     }
 
@@ -216,6 +224,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void exportDB(DataSource dataSource) {
         logger.info("Export DB: Calling DBA...");
         playerDBA.export(dataSource, player_map);
+    }
+
+    public void exportPHP(DataType dataType) {
+        logger.info("Export PHP: Calling PHP...");
+        playerPhp.export(dataType, player_map);
     }
 
     public boolean isEmpty(){
@@ -278,4 +291,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
         player_map.clear();
         logger.info("Player data is cleared successfully");
     }
+
+
 }
