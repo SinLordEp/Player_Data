@@ -7133,3 +7133,110 @@ Caused by: java.sql.SQLIntegrityConstraintViolationException: Cannot add or upda
 2024-12-10 17:43:09 INFO  control.PlayerControl - Notify listener: Process finished!
 2024-12-10 17:43:09 INFO  control.PlayerControl - Save: Process finished!
 2024-12-10 17:43:09 INFO  control.PlayerControl - Shutting down
+2024-12-11 20:52:16 INFO  main.principal - Main: Logger loaded
+2024-12-11 20:52:16 INFO  main.principal - Main: Getting controller...
+2024-12-11 20:52:18 INFO  data.PlayerDataAccess - PlayerDataAccess: Instantiated
+2024-12-11 20:52:18 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.1.Final
+2024-12-11 20:52:18 INFO  data.database.PlayerDBA - PlayerDBA: Instantiated
+2024-12-11 20:52:18 INFO  data.http.PlayerPhp - PlayerPhp: Instantiated
+2024-12-11 20:52:18 INFO  main.principal - Main: Controller loaded
+2024-12-11 20:52:18 INFO  data.PlayerDataAccess - Initializing region server: Reading config file...
+2024-12-11 20:52:18 INFO  data.PlayerDataAccess - Get default database info: Reading default database info for dialect: SQLITE
+2024-12-11 20:52:18 INFO  data.PlayerDataAccess - Get default database info: Finished reading database info!
+2024-12-11 20:52:18 INFO  data.database.PlayerDBA - Connect: Connecting to database via jdbc:sqlite:person.db
+2024-12-11 20:52:18 INFO  data.database.PlayerDBA - Connect hibernate: Connecting to database with dialect SQLITE
+2024-12-11 20:52:18 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-11 20:52:18 WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-11 20:52:18 WARN  o.hibernate.orm.connections.pooling - HHH10001006: No JDBC Driver class was specified by property `jakarta.persistence.jdbc.driver`, `hibernate.driver` or `javax.persistence.jdbc.driver`
+2024-12-11 20:52:18 INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:person.db]
+	Database driver: org.sqlite.JDBC, com.mysql.cj.jdbc.Driver
+	Database version: 3.46.1
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-11 20:52:19 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-11 20:52:19 INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@239b98cb] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-11 20:52:19 INFO  data.database.PlayerDBA - Connect hibernate: Success
+2024-12-11 20:52:19 INFO  data.database.PlayerDBA - Read Region server: Reading region server config
+2024-12-11 20:52:20 INFO  data.database.PlayerDBA - Disconnect: Disconnecting from database via HIBERNATE
+2024-12-11 20:52:20 INFO  data.database.PlayerDBA - Disconnect: Success
+2024-12-11 20:52:20 INFO  data.PlayerDataAccess - Initializing region server: Region server map updated!
+2024-12-11 20:52:20 INFO  control.PlayerControl - Finished building player frame
+2024-12-11 20:52:24 INFO  control.PlayerControl - Change language: Processing...
+2024-12-11 20:52:27 INFO  control.PlayerControl - Change language: Language is set to en
+2024-12-11 20:52:27 INFO  control.PlayerControl - Notify listener: Processing with code: language_changed
+2024-12-11 20:52:27 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:52:27 INFO  control.PlayerControl - Change language: Process finished!
+2024-12-11 20:52:43 INFO  control.PlayerControl - Import data: Processing...
+2024-12-11 20:52:43 INFO  control.PlayerControl - Save: Processing...
+2024-12-11 20:52:43 INFO  control.PlayerControl - Save: Current data source is NONE, returning...
+2024-12-11 20:52:43 INFO  control.PlayerControl - Import data: Calling Data source chooser...
+2024-12-11 20:52:58 INFO  control.PlayerControl - Handling Data source for Import data: Processing...
+2024-12-11 20:52:58 INFO  data.GeneralDataAccess - Setting DataSource...
+2024-12-11 20:52:58 INFO  data.GeneralDataAccess - DataSource is set to: FILE
+2024-12-11 20:52:58 INFO  control.PlayerControl - Notify listener: Processing with code: dataSource_set
+2024-12-11 20:52:58 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:52:58 INFO  control.PlayerControl - Import file: Processing...
+2024-12-11 20:52:58 INFO  data.GeneralDataAccess - Setting FileType...
+2024-12-11 20:52:58 INFO  data.GeneralDataAccess - FileType is set to: XML
+2024-12-11 20:52:58 INFO  control.PlayerControl - Import file: Fetching file path...
+2024-12-11 20:52:58 INFO  data.GeneralDataAccess - Get path: Getting path with file type paragram: XML
+2024-12-11 20:53:01 INFO  data.GeneralDataAccess - Get path: Finished get path with paragram!
+2024-12-11 20:53:01 INFO  data.GeneralDataAccess - Set file path: Path is set to C:\Sin\Player_Data\src\main\resources\import\player_xml.xml
+2024-12-11 20:53:01 INFO  data.GeneralDataAccess - Set file path: DataSource is set to: File
+2024-12-11 20:53:01 INFO  data.PlayerDataAccess - Read: Reading data from FILE
+2024-12-11 20:53:01 INFO  data.PlayerDataAccess - Read: Calling file reader...
+2024-12-11 20:53:01 INFO  data.PlayerDataAccess - isDataValid: Validating imported data...
+2024-12-11 20:53:01 INFO  data.PlayerDataAccess - isDataValid: Data is valid
+2024-12-11 20:53:01 INFO  data.PlayerDataAccess - Read: Finished reading data!
+2024-12-11 20:53:01 INFO  control.PlayerControl - Notify listener: Processing with code: data_changed
+2024-12-11 20:53:01 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:53:01 INFO  control.PlayerControl - Import file: Process finished!
+2024-12-11 20:53:01 INFO  control.PlayerControl - Handling Data source for Import data: Process finished!
+2024-12-11 20:53:01 INFO  control.PlayerControl - Import data: Process finished!
+2024-12-11 20:54:10 INFO  control.PlayerControl - Add: Processing...
+2024-12-11 20:54:10 INFO  control.PlayerControl - Add: Calling Player info dialog...
+2024-12-11 20:54:42 INFO  control.PlayerControl - Handle player info for add: Processing...
+2024-12-11 20:54:42 INFO  data.PlayerDataAccess - Add: Adding player with ID: 12
+2024-12-11 20:54:42 INFO  data.PlayerDataAccess - Add: Adding player to current player map
+2024-12-11 20:54:42 INFO  data.PlayerDataAccess - Add: Finished adding player!
+2024-12-11 20:54:42 INFO  control.PlayerControl - Notify listener: Processing with code: data_changed
+2024-12-11 20:54:42 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:54:42 INFO  control.PlayerControl - Notify listener: Processing with code: added_player
+2024-12-11 20:54:43 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:54:43 INFO  control.PlayerControl - Handle player info for add: Process finished!
+2024-12-11 20:54:43 INFO  control.PlayerControl - Add: Process finished!
+2024-12-11 20:55:05 INFO  control.PlayerControl - Delete: Processing...
+2024-12-11 20:55:05 INFO  data.PlayerDataAccess - Delete: Deleting player with ID: 12
+2024-12-11 20:55:05 INFO  data.PlayerDataAccess - Delete: Deleting player with ID: 12 from current player map
+2024-12-11 20:55:05 INFO  data.PlayerDataAccess - Delete: Finished deleting player!
+2024-12-11 20:55:05 INFO  control.PlayerControl - Notify listener: Processing with code: data_changed
+2024-12-11 20:55:05 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:55:05 INFO  control.PlayerControl - Notify listener: Processing with code: deleted_player
+2024-12-11 20:55:06 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:55:06 INFO  control.PlayerControl - Delete: Process finished!
+2024-12-11 20:55:43 INFO  control.PlayerControl - Change language: Processing...
+2024-12-11 20:55:45 INFO  control.PlayerControl - Change language: Language is set to es
+2024-12-11 20:55:45 INFO  control.PlayerControl - Notify listener: Processing with code: language_changed
+2024-12-11 20:55:45 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:55:45 INFO  control.PlayerControl - Change language: Process finished!
+2024-12-11 20:56:10 INFO  control.PlayerControl - Change language: Processing...
+2024-12-11 20:56:12 INFO  control.PlayerControl - Change language: Language is set to cn
+2024-12-11 20:56:12 INFO  control.PlayerControl - Notify listener: Processing with code: language_changed
+2024-12-11 20:56:12 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:56:12 INFO  control.PlayerControl - Change language: Process finished!
+2024-12-11 20:56:17 INFO  control.PlayerControl - Change language: Processing...
+2024-12-11 20:56:18 INFO  control.PlayerControl - Change language: Language is set to es
+2024-12-11 20:56:18 INFO  control.PlayerControl - Notify listener: Processing with code: language_changed
+2024-12-11 20:56:18 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:56:18 INFO  control.PlayerControl - Change language: Process finished!
+2024-12-11 20:56:20 INFO  control.PlayerControl - Save: Processing...
+2024-12-11 20:56:20 INFO  control.PlayerControl - Save: Current data source is FILE, saving...
+2024-12-11 20:56:20 INFO  data.PlayerDataAccess - Save: Saving data to FILE
+2024-12-11 20:56:20 INFO  data.PlayerDataAccess - Save: Finished saving data!
+2024-12-11 20:56:20 INFO  control.PlayerControl - Notify listener: Processing with code: data_saved
+2024-12-11 20:56:22 INFO  control.PlayerControl - Notify listener: Process finished!
+2024-12-11 20:56:22 INFO  control.PlayerControl - Save: Process finished!
+2024-12-11 20:56:22 INFO  control.PlayerControl - Shutting down

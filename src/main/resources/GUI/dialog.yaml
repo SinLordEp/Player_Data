@@ -184,7 +184,7 @@ options:
       cn: "数据来源菜单"
     message:
       en: "Choose a data source"
-      es: "Elige un fuente de dato"
+      es: "Elige una fuente de datos"
       cn: "选择一个数据来源"
   target_dialect:
     title:

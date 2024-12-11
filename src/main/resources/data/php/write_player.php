@@ -21,32 +21,32 @@ function getInput(array $expectedFormat): array
     $rawData = file_get_contents("php://input");
     file_put_contents("debug.log", "Raw Data: " . $rawData . PHP_EOL, FILE_APPEND);
 
-    $arrMensaje = array();
+    $finalMessage = array();
     if (empty($rawData)) {
-        $arrMensaje["status"] = "error";
-        $arrMensaje["message"] = "No data received";
-        return $arrMensaje;
+        $finalMessage["status"] = "error";
+        $finalMessage["message"] = "No data received";
+        return $finalMessage;
     }
 
     $decodedPlayer = json_decode($rawData, true);
     if (json_last_error() !== JSON_ERROR_NONE) {
         file_put_contents("debug.log", "JSON Decode Error: " . json_last_error_msg() . PHP_EOL, FILE_APPEND);
-        $arrMensaje["status"] = "error";
-        $arrMensaje["message"] = "JSON decode error: " . json_last_error_msg();
-        return $arrMensaje;
+        $finalMessage["status"] = "error";
+        $finalMessage["message"] = "JSON decode error: " . json_last_error_msg();
+        return $finalMessage;
     }
 
     if (!is_array($decodedPlayer)) {
         file_put_contents("debug.log", "Decoded Data is not an array: " . print_r($decodedPlayer, true) . PHP_EOL, FILE_APPEND);
-        $arrMensaje["status"] = "error";
-        $arrMensaje["message"] = "Expected JSON array, received something else";
-        return $arrMensaje;
+        $finalMessage["status"] = "error";
+        $finalMessage["message"] = "Expected JSON array, received something else";
+        return $finalMessage;
     }
 
     if(!validate($expectedFormat, $decodedPlayer)){
-        $arrMensaje["status"] = "error";
-        $arrMensaje["message"] = "JSON data format is invalid.";
-        return $arrMensaje;
+        $finalMessage["status"] = "error";
+        $finalMessage["message"] = "JSON data format is invalid.";
+        return $finalMessage;
     }
     foreach ($decodedPlayer as $player) {
         $query = "";
@@ -67,12 +67,12 @@ function getInput(array $expectedFormat): array
         }
         $result = $conn->query ($query);
         if (!isset ( $result ) && $result) {
-            $arrMensaje["status"] = "error";
-            $arrMensaje["message"] = "Failed to modify player with ID: $id with cause: $conn->error";
-            return $arrMensaje;
+            $finalMessage["status"] = "error";
+            $finalMessage["message"] = "Failed to modify player with ID: $id with cause: $conn->error";
+            return $finalMessage;
         }
     }
-    $arrMensaje["status"] = "success";
-    return $arrMensaje;
+    $finalMessage["status"] = "success";
+    return $finalMessage;
 }
 
