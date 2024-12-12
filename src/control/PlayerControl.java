@@ -24,12 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 
-
+/**
+ * Controller for player data with operations like add new player, modify a player and delete a player
+ * Supports importing data from and exporting data to file, database, hibernate and PHP
+ */
 public class PlayerControl implements GeneralControl {
     private static final Logger logger = LoggerFactory.getLogger(PlayerControl.class);
     private PlayerDataAccess playerDA;
     private final List<EventListener<SortedMap<?,?>>> listeners = new ArrayList<>();
 
+    /**
+     * Starts the control operations with a UI
+     */
     @Override
     public void run() {
         PlayerUI playerUI = new PlayerUI(this);
@@ -45,6 +51,10 @@ public class PlayerControl implements GeneralControl {
         logger.info("Finished building player frame");
     }
 
+    /**
+     * Set the data access for current controller
+     * @param DA data access manage for player
+     */
     @Override
     public void setDA(GeneralDataAccess DA) {
         this.playerDA = (PlayerDataAccess) DA;
@@ -58,6 +68,11 @@ public class PlayerControl implements GeneralControl {
         System.exit(0);
     }
 
+    /**
+     * For creating a new file
+     * Will save data first before calling the data source chooser window
+     * Call back is linked to handleDataSourceForCreateFile
+     */
     public void createFile() {
         logger.debug("Create file: Processing...");
         save();
@@ -66,6 +81,11 @@ public class PlayerControl implements GeneralControl {
         logger.info("Create file: Process finished!");
     }
 
+    /**
+     * Call back method for creat a new file
+     * @param dataSource chosen by user via DataSourceChooser
+     * @param dataType chosen by user via DataSourceChooser
+     */
     private void handleDataSourceForCreateFile(DataSource dataSource, Object dataType){
         logger.info("Handling Data source for Create file: Processing...");
         try {
@@ -84,6 +104,10 @@ public class PlayerControl implements GeneralControl {
         logger.info("Handling Data source for Create file: Process finished!");
     }
 
+    /**
+     * General data import method
+     * Call back is linked to handleDataSourceForImportData
+     */
     public void importData() {
         logger.info("Import data: Processing...");
         try {
@@ -99,6 +123,12 @@ public class PlayerControl implements GeneralControl {
         logger.info("Import data: Process finished!");
     }
 
+    /**
+     * Call back method for import data
+     * Depends on what user has chosen will call the corresponding import method
+     * @param dataSource chosen by user via DataSourceChooser
+     * @param dataType chosen by user via DataSourceChooser
+     */
     private void handleDataSourceForImportData(DataSource dataSource, Object dataType){
         logger.info("Handling Data source for Import data: Processing...");
         playerDA.setDataSource(dataSource);
@@ -112,6 +142,10 @@ public class PlayerControl implements GeneralControl {
         logger.info("Handling Data source for Import data: Process finished!");
     }
 
+    /**
+     * Sub method for import data via file
+     * @param fileType file type is chosen by user via DataSourceChooser
+     */
     private void importFile(FileType fileType) {
         logger.info("Import file: Processing...");
         playerDA.setFileType(fileType);
@@ -129,6 +163,11 @@ public class PlayerControl implements GeneralControl {
         logger.info("Import file: Process finished!");
     }
 
+    /**
+     * Sub method for import data via database
+     * @param dataSource choose by user via DataSourceChooser
+     * @param sqlDialect chosen by user via DataSourceChooser
+     */
     private void importDB(DataSource dataSource, SqlDialect sqlDialect)  {
         logger.info("Import DB: Processing...");
         try {
@@ -144,6 +183,11 @@ public class PlayerControl implements GeneralControl {
         logger.info("Import DB: Process finished!");
     }
 
+    /**
+     * Call back method for import data from database
+     * Will send the database info to corresponding class then read data
+     * @param databaseInfo first read from default configuration then user can modify it
+     */
     private void handleDatabaseLoginForImport(DatabaseInfo databaseInfo){
         logger.info("Handling DatabaseLogin for Import data: Processing...");
         try {
