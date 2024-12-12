@@ -12,7 +12,7 @@ $expectedFormat["server"] = "server";
 $expectedFormat["operation"] = "operation";
 
 echo json_encode(getInput($expectedFormat));
-$conn->close ();
+$conn->close();
 die();
 
 function getInput(array $expectedFormat): array
@@ -48,6 +48,8 @@ function getInput(array $expectedFormat): array
         $finalMessage["message"] = "JSON data format is invalid.";
         return $finalMessage;
     }
+
+    $conn->begin_transaction();
     foreach ($decodedPlayer as $player) {
         $query = "";
         $id = $player["id"];
@@ -56,7 +58,8 @@ function getInput(array $expectedFormat): array
         $server = $player["server"];
         switch($player["operation"]){
             case "ADD":
-                $query = "INSERT INTO player (id, name, region, server) values ('$id', '$name', '$region', '$server')";
+                $query = $conn->prepare("INSERT INTO player (id, name, region, server) values (?,?,?,?)");
+                $query->bind_param("isss",$id,$name, $region, $server);
                 break;
             case "MODIFY":
                 $query = "UPDATE player SET name = '$name', region = '$region', server = '$server' WHERE id = '$id'";
@@ -65,13 +68,29 @@ function getInput(array $expectedFormat): array
                 $query = "DELETE FROM player WHERE id = '$id'";
                 break;
         }
-        $result = $conn->query ($query);
-        if (!isset ( $result ) && $result) {
-            $finalMessage["status"] = "error";
-            $finalMessage["message"] = "Failed to modify player with ID: $id with cause: $conn->error";
-            return $finalMessage;
+        $query->execute();
+        switch($query->affected_rows){
+            case -1:
+                $finalMessage["status"] = "error";
+                $finalMessage["message"] = "Failed to modify player data with ID: $id with cause: $conn->error";
+                $query->close();
+                return $finalMessage;
+            case 0:
+                $finalMessage["status"] = "error";
+                $finalMessage["message"] = "Update request eas executed but no player data with $id was affected!";
+                $query->close();
+                return $finalMessage;
+            case 1:
+                break;
+            default:
+                $finalMessage["status"] = "error";
+                $finalMessage["message"] = "Update request was executed but more than one row were affected!";
+                $query->close();
+                return $finalMessage;
         }
+        $query->close();
     }
+    $conn->commit();
     $finalMessage["status"] = "success";
     return $finalMessage;
 }

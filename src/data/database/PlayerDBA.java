@@ -189,12 +189,23 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
 
     private void updateDatabase(HashMap<Player,DataOperation> changed_player_map) {
         logger.info("Update Database: Updating database...");
-        for(Player player : changed_player_map.keySet()) {
-            switch (changed_player_map.get(player)) {
-                case ADD -> addPlayer(player);
-                case MODIFY -> modifyPlayer(player);
-                case DELETE -> deletePlayer(player);
+        try {
+            connection.setAutoCommit(false);
+            for(Player player : changed_player_map.keySet()) {
+                switch (changed_player_map.get(player)) {
+                    case ADD -> addPlayer(player);
+                    case MODIFY -> modifyPlayer(player);
+                    case DELETE -> deletePlayer(player);
+                }
             }
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new DatabaseException("Failed to rollback transaction. Cause: "+ex.getMessage());
+            }
+            throw new DatabaseException("Data rolled back with cause: " + e.getMessage());
         }
         logger.info("Update Database: Finished!");
     }
