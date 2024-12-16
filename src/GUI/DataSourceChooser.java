@@ -11,6 +11,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
 
+/**
+ * The {@code DataSourceChooser} class is a dialog designed to allow users to
+ * choose a data source and its corresponding data type. It provides a graphical
+ * user interface (GUI) for selection, with callback integration for handling
+ * user input.
+ */
 public class DataSourceChooser extends JDialog {
     private JPanel panel_main;
     private JButton button_submit;
@@ -22,6 +28,20 @@ public class DataSourceChooser extends JDialog {
     private DataSource dataSource;
     private Object dataType;
 
+    /**
+     * Constructs a {@code DataSourceChooser} dialog that allows the user to choose a data source
+     * and optionally set the data type. Based on the provided {@code DataSource}, the dialog's
+     * components are initialized and configured, with a callback mechanism for submission
+     * or cancellation of the dialog's operations.
+     *
+     * @param dataSource The initial {@code DataSource} to be pre-selected in the combo box. If
+     *                   the value is {@code DataSource.FILE}, the data source selection is
+     *                   locked and cannot be changed.
+     * @param callback   The callback instance implementing {@code DataSourceCallBack<DataSource, Object>}
+     *                   to handle actions for submission and cancellation. Interaction, such as
+     *                   submitting the selected data source and data type, invokes the {@code onSubmit}
+     *                   method of the callback. Cancellation events invoke the {@code onCancel} method.
+     */
     public DataSourceChooser(DataSource dataSource, DataSourceCallBack<DataSource, Object> callback) {
         initialize(callback);
         this.dataSource = dataSource;
@@ -32,6 +52,18 @@ public class DataSourceChooser extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Initializes and configures the dialog components, including setting up UI text,
+     * populating combo boxes, defining event listeners, and preparing the dialog for use.
+     * This method ensures proper component initialization and registers the necessary
+     * callback handlers for submission and cancellation actions.
+     *
+     * @param callback The callback instance of {@code DataSourceCallBack<DataSource, Object>}
+     *                 that handles actions when the dialog is submitted via {@code onOK(callback)}
+     *                 or canceled via {@code onCancel(callback)}. Submission triggers
+     *                 {@code callback.onSubmit(dataSource, dataType)}, while cancellation
+     *                 calls {@code callback.onCancel()}.
+     */
     private void initialize(DataSourceCallBack<DataSource, Object> callback){
         setUIText();
         initializeDataSourceComboBox();
@@ -53,6 +85,16 @@ public class DataSourceChooser extends JDialog {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Handles the submission action when the dialog's "OK" button is triggered.
+     * This method invokes the {@code onSubmit} method of the provided callback
+     * with the currently selected {@code dataSource} and {@code dataType}.
+     * After submission, it disposes of the dialog.
+     *
+     * @param callback The callback instance of {@code DataSourceCallBack<DataSource, Object>}.
+     *                 If not null, this method calls {@code callback.onSubmit(dataSource, dataType)}
+     *                 to pass the selected data source and data type.
+     */
     private void onOK(DataSourceCallBack<DataSource, Object> callback) {
         if(callback != null){
             callback.onSubmit(dataSource, dataType);
@@ -60,12 +102,36 @@ public class DataSourceChooser extends JDialog {
         dispose();
     }
 
+    /**
+     * Handles the cancellation action for the dialog. This method resets the {@code dataSource}
+     * field to {@code DataSource.NONE}, invokes the {@code onCancel()} method of the provided
+     * callback to notify the caller about the cancellation event, and releases any associated
+     * resources by calling {@code dispose()}.
+     *
+     * @param callback The instance of {@code DataSourceCallBack<DataSource, Object>} that receives
+     *                 the cancellation event through its {@code onCancel()} method.
+     */
     private void onCancel(DataSourceCallBack<DataSource, Object> callback) {
         dataSource = DataSource.NONE;
         callback.onCancel();
         dispose();
     }
 
+    /**
+     * Updates the UI components related to text labels based on the currently selected data source.
+     * This method sets the text of the {@code label_dataSource} and {@code label_dataType} fields
+     * depending on the selected item of the {@code comboBox_dataSource}.
+     * <p>
+     * It retrieves the necessary text values using the {@code GeneralText.getDialog().getText(String)} method
+     * and updates the labels accordingly. The logic varies based on the selected {@code DataSource}.
+     * <p>
+     * Specifically:
+     * - For {@code DataSource.FILE}, it sets the {@code label_dataType} to display the file type text.
+     * - For {@code DataSource.DATABASE} or {@code DataSource.HIBERNATE}, it sets the {@code label_dataType} to display the SQL dialect text.
+     * - For a null or default case, it sets the {@code label_dataType} to display a generic data type text.
+     * <p>
+     * This method ensures the labels dynamically reflect the current selection in the data source combo box.
+     */
     private void setUIText(){
         label_dataSource.setText(GeneralText.getDialog().getText("label_dataSource"));
         switch (comboBox_dataSource.getSelectedItem()){
@@ -75,6 +141,14 @@ public class DataSourceChooser extends JDialog {
         }
     }
 
+    /**
+     * Populates and initializes the {@code comboBox_dataSource} component with all available
+     * {@code DataSource} values. Iterates through the {@code DataSource} enumeration and adds
+     * each value to the combo box as an item.
+     * <p>
+     * After populating the combo box, the {@code DataSource.NONE} value is set as the default
+     * selected item to ensure no specific data source is pre-selected when this method is called.
+     */
     private void initializeDataSourceComboBox(){
         for(DataSource dataSource : DataSource.values()){
             comboBox_dataSource.addItem(dataSource);
@@ -82,12 +156,43 @@ public class DataSourceChooser extends JDialog {
         comboBox_dataSource.setSelectedItem(DataSource.NONE);
     }
 
+    /**
+     * Registers item listeners for {@code comboBox_dataSource} and {@code comboBox_dataType}, enabling
+     * dynamic updates of the associated components and internal states based on user selection. This
+     * method effectively acts as a callback mechanism for handling data source and data type changes.
+     * <p>
+     * The {@code comboBox_dataSource} listener invokes {@code configureDataType(DataSource)} when an item
+     * is selected. This updates the data type combo box and other components based on the selected data source.
+     * <p>
+     * The {@code comboBox_dataType} listener invokes {@code setDataType(Object)} with the currently selected
+     * item. This updates the internal {@code dataType} field and enables the submit button if the selection
+     * is valid.
+     * <p>
+     * This method ensures that the UI and internal state are synchronized properly as the user interacts
+     * with the combo boxes.
+     */
     private void comboBoxListener(){
         comboBox_dataSource.addItemListener(_ -> configureDataType((DataSource) Objects.requireNonNull(comboBox_dataSource.getSelectedItem())));
 
         comboBox_dataType.addItemListener(_ -> setDataType(comboBox_dataType.getSelectedItem()));
     }
 
+    /**
+     * Configures the data type options and updates UI elements based on the selected {@code DataSource}.
+     * This method dynamically adjusts the content of the {@code comboBox_dataType}, its enabled state,
+     * and the {@code label_dataType}'s text based on the {@code DataSource} selection.
+     * <p>
+     * When the selected {@code DataSource} changes, the following behavior is applied:
+     * - For {@code DataSource.NONE}, disables the {@code comboBox_dataType} and resets the label's text.
+     * - For {@code DataSource.FILE}, populates the combo box with {@code FileType} values and updates the label.
+     * - For {@code DataSource.DATABASE} and {@code DataSource.HIBERNATE}, populates the combo box with {@code SqlDialect} values and updates the label.
+     * - For {@code DataSource.PHP}, populates the combo box with {@code DataType} values and updates the label.
+     * <p>
+     * The submit button is disabled during reconfiguration to ensure proper user interaction.
+     *
+     * @param dataSource The selected {@code DataSource} used to determine the available data type options
+     *                   and configure related UI elements.
+     */
     private void configureDataType(DataSource dataSource) {
         this.dataSource = dataSource;
         comboBox_dataType.removeAllItems();
@@ -119,6 +224,18 @@ public class DataSourceChooser extends JDialog {
         comboBox_dataType.setEnabled(true);
     }
 
+    /**
+     * Sets the current data type and adjusts the state of the submit button based on the provided {@code dataType}.
+     * <p>
+     * This method updates the internal {@code dataType} field and controls the enabled state of the "Submit" button.
+     * If the provided {@code dataType} is {@code null}, {@code FileType.NONE}, or {@code SqlDialect.NONE}, the "Submit"
+     * button is disabled to prevent invalid submissions. For valid {@code FileType}, {@code SqlDialect}, or {@code DataType}
+     * values, the method assigns the value to the internal {@code dataType} and enables the "Submit" button.
+     *
+     * @param dataType The data type object representing the selected data type. Possible values include instances of
+     *                 {@code FileType}, {@code SqlDialect}, or {@code DataType}. For invalid or null cases, the button
+     *                 is kept disabled.
+     */
     private void setDataType(Object dataType) {
         switch(dataType){
             case SqlDialect.NONE, FileType.NONE:
