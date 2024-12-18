@@ -18,10 +18,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import static main.principal.getProperty;
 
@@ -346,11 +343,11 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         logger.info("Update Database: Updating database...");
         try {
             connection.setAutoCommit(false);
-            for(Player player : changed_player_map.keySet()) {
-                switch (changed_player_map.get(player)) {
-                    case ADD -> addPlayer(player);
-                    case MODIFY -> modifyPlayer(player);
-                    case DELETE -> deletePlayer(player);
+            for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {
+                switch (player_operation.getValue()) {
+                    case ADD -> addPlayer(player_operation.getKey());
+                    case MODIFY -> modifyPlayer(player_operation.getKey());
+                    case DELETE -> deletePlayer(player_operation.getKey());
                 }
             }
             connection.commit();
@@ -380,11 +377,11 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            for(Player player : changed_player_map.keySet()){
-                switch(changed_player_map.get(player)){
-                    case DataOperation.ADD: session.persist(player); break;
-                    case DataOperation.MODIFY: session.merge(player); break;
-                    case DataOperation.DELETE: session.remove(player); break;
+            for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {
+                switch (player_operation.getValue()) {
+                    case ADD -> session.persist(player_operation.getKey());
+                    case MODIFY -> session.merge(player_operation.getKey());
+                    case DELETE -> session.remove(player_operation.getKey());
                 }
             }
             transaction.commit();
@@ -558,10 +555,10 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            TreeMap<Integer, Player> temp = read(DataSource.HIBERNATE);
-            for(Player player : temp.values()){
-                if(!player_map.containsKey(player.getID())){
-                    session.remove(player);
+            TreeMap<Integer, Player> existed_player_map = read(DataSource.HIBERNATE);
+            for(Map.Entry<Integer, Player> entry : existed_player_map.entrySet()){
+                if(!player_map.containsKey(entry.getKey())){
+                    session.remove(entry.getValue());
                 }
             }
             for(Player player : player_map.values()){

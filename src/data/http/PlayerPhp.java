@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -84,19 +85,19 @@ public class PlayerPhp implements GeneralPhp<SortedMap<Integer,Player>> {
         logger.info("Export: Exporting player data in form of {}", dataType);
         TreeMap<Integer, Player> existed_player_map = read(DataType.JSON);
         HashMap<Player, DataOperation> export_player_map = new HashMap<>();
-        for(Player player : existed_player_map.values()) {
-            if(!player_map.containsKey(player.getID())) {
-                logger.info("Export: Eliminated none existing player with id {}", player.getID());
-                export_player_map.put(player, DataOperation.DELETE);
+        for(Map.Entry<Integer, Player> idAndPlayer : existed_player_map.entrySet() ) {
+            if(!player_map.containsKey(idAndPlayer.getKey())) {
+                logger.info("Export: Eliminating none existing player with id {}", idAndPlayer.getKey());
+                export_player_map.put(idAndPlayer.getValue(), DataOperation.DELETE);
             }else{
-                logger.info("Export: Modifying existing player with id {}", player.getID());
-                export_player_map.put(player_map.get(player.getID()), DataOperation.MODIFY);
+                logger.info("Export: Modifying existing player with id {}", idAndPlayer.getKey());
+                export_player_map.put(player_map.get(idAndPlayer.getKey()), DataOperation.MODIFY);
             }
         }
-        for(Player player : player_map.values()) {
-            if(!existed_player_map.containsKey(player.getID())) {
-                logger.info("Export: Adding new player with id {}", player.getID());
-                export_player_map.put(player, DataOperation.ADD);
+        for(Map.Entry<Integer, Player> idAndPlayer : player_map.entrySet() ) {
+            if(!existed_player_map.containsKey(idAndPlayer.getKey())) {
+                logger.info("Export: Adding new player with id {}", idAndPlayer.getKey());
+                export_player_map.put(idAndPlayer.getValue(), DataOperation.ADD);
             }
         }
         logger.info("Export: Calling update to apply changes...");

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module classpath="eclipse" classpath-dir="$MODULE_DIR$" type="JAVA_MODULE" version="4">
+<module version="4">
   <component name="FacetManager">
     <facet type="hibernate" name="Hibernate">
       <configuration>
         <datasource-map>
           <unit-entry name="config:hibernate.cfg.xml" />
+          <unit-entry name="data:hibernate.cfg.xml" value="d301ca1b-2c58-48e9-a023-9cf0ffcef17f" />
         </datasource-map>
         <naming-strategy-map />
         <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/main/resources/data/hibernate.cfg.xml" />
