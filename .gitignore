@@ -5,7 +5,6 @@ out/
 .idea/datasources/
 .idea/libraries/
 .idea/dataSources.local.xml
-.idea/misc.xml
 .idea/workspace.xml
 .idea/shelf
 !**/logs/
