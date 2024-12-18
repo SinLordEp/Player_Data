@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="hibernate.orm.community.dialects">
+    <archive path="C:/Sin/Player_Data/lib/hibernate-community-dialects-6.6.1.Final.jar" />
+    <archive path="C:/Sin/Player_Data/lib/hibernate-core-6.6.1.Final.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.persistence-api-3.1.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.transaction-api-2.0.1.jar" />
+    <archive path="C:/Sin/Player_Data/lib/hibernate-commons-annotations-7.0.1.Final.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jandex-3.2.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/classmate-1.5.1.jar" />
+    <archive path="C:/Sin/Player_Data/lib/byte-buddy-1.14.18.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.xml.bind-api-4.0.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.activation-api-2.1.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jaxb-runtime-4.0.2.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jaxb-core-4.0.2.jar" />
+    <archive path="C:/Sin/Player_Data/lib/angus-activation-2.0.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/txw2-4.0.2.jar" />
+    <archive path="C:/Sin/Player_Data/lib/istack-commons-runtime-4.1.1.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.inject-api-2.0.1.jar" />
+    <archive path="C:/Sin/Player_Data/lib/antlr4-runtime-4.13.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jboss-logging-3.5.0.Final.jar" />
+  </library>
+  <library name="jakarta.persistence.api">
+    <archive path="C:/Sin/Player_Data/lib/jakarta.persistence-api-3.1.0.jar" />
+  </library>
+  <library name="lib">
+    <archive path="C:/Sin/Player_Data/lib/okio-1.6.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/txw2-4.0.2.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jandex-3.2.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/okhttp-2.6.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/snakeyaml-2.3.jar" />
+    <archive path="C:/Sin/Player_Data/lib/classmate-1.5.1.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jaxb-core-4.0.2.jar" />
+    <archive path="C:/Sin/Player_Data/lib/json_simple-1.1.jar" />
+    <archive path="C:/Sin/Player_Data/lib/slf4j-api-2.0.12.jar" />
+    <archive path="C:/Sin/Player_Data/lib/byte-buddy-1.14.18.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jaxb-runtime-4.0.2.jar" />
+    <archive path="C:/Sin/Player_Data/lib/logback-core-1.5.2.jar" />
+    <archive path="C:/Sin/Player_Data/lib/reflections-0.10.2.jar" />
+    <archive path="C:/Sin/Player_Data/lib/javassist-3.28.0-GA.jar" />
+    <archive path="C:/Sin/Player_Data/lib/sqlite-jdbc-3.46.1.3.jar" />
+    <archive path="C:/Sin/Player_Data/lib/antlr4-runtime-4.13.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/logback-classic-1.5.2.jar" />
+    <archive path="C:/Sin/Player_Data/lib/angus-activation-2.0.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/mysql-connector-j-9.0.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.inject-api-2.0.1.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jboss-logging-3.5.0.Final.jar" />
+    <archive path="C:/Sin/Player_Data/lib/hibernate-core-6.6.1.Final.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.xml.bind-api-4.0.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/istack-commons-runtime-4.1.1.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.activation-api-2.1.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.persistence-api-3.1.0.jar" />
+    <archive path="C:/Sin/Player_Data/lib/jakarta.transaction-api-2.0.1.jar" />
+    <archive path="C:/Sin/Player_Data/lib/hibernate-community-dialects-6.6.1.Final.jar" />
+    <archive path="C:/Sin/Player_Data/lib/hibernate-commons-annotations-7.0.1.Final.jar" />
+  </library>
+</eclipse-userlibraries>
+
