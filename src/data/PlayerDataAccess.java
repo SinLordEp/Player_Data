@@ -44,6 +44,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private final PlayerFileReader fileReader;
     private final PlayerFileWriter fileWriter;
     private static final Logger logger = LoggerFactory.getLogger(PlayerDataAccess.class);
+    private boolean isDataChanged = false;
 
     /**
      * Constructs a new instance of the PlayerDataAccess class and initializes
@@ -219,6 +220,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 case DATABASE, HIBERNATE, OBJECTDB:
                     logger.info("Read: Calling DBA...");
                     player_map = playerDBA.read(dataSource);
+                    playerDBA.disconnect(dataSource);
                     break;
                 case PHP:
                     logger.info("Read: Calling PHP...");
@@ -272,10 +274,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
     @Override
     public void save(){
         logger.info("Save: Saving data to {}", dataSource);
-        if(changed_player_map.isEmpty() && dataSource != DataSource.FILE){
-            logger.info("Save: No data needed to save!");
-            return;
-        }
         try{
             switch (dataSource){
                 case FILE:
@@ -295,6 +293,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         } catch (Exception e) {
             throw new OperationException("Failed to save data with cause: " + e.getMessage());
         }
+        isDataChanged = false;
         logger.info("Save: Finished saving data!");
     }
 
@@ -326,6 +325,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 player_map.put(player.getID(), player);
                 break;
         }
+        isDataChanged = true;
         logger.info("Add: Finished adding player!");
     }
 
@@ -349,6 +349,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 player_map.put(player.getID(), player);
                 break;
         }
+        isDataChanged = true;
         logger.info("Modify: Finished modifying player!");
     }
 
@@ -375,6 +376,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 player_map.remove(selected_player_id);
                 break;
         }
+        isDataChanged = true;
         logger.info("Delete: Finished deleting player!");
     }
 
@@ -517,5 +519,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         logger.info("Player data is cleared successfully");
     }
 
-
+    public boolean isDataChanged() {
+        return isDataChanged;
+    }
 }

@@ -609,9 +609,12 @@ public class PlayerControl implements GeneralControl {
      */
     public void save(){
         logger.info("Save: Processing...");
-        DataSource dataSource = playerDA.getDataSource();
+        if(!playerDA.isDataChanged()){
+            logger.info("Save: Process cancelled with cause: No datas were changed");
+            return;
+        }
         try {
-            switch (dataSource){
+            switch (playerDA.getDataSource()){
                 case NONE:
                     logger.info("Save: Current data source is NONE, returning...");
                     return;

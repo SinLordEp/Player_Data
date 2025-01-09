@@ -226,7 +226,6 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer, Player>> {
             case OBJECTDB -> readObjectDB();
             default -> null;
         };
-        disconnect(dataSource);
         logger.info("Read: Finished reading from database!");
         return player_map;
     }
@@ -644,13 +643,12 @@ public class PlayerDBA implements GeneralDBA<TreeMap<Integer, Player>> {
     private void exportObjectDB(TreeMap<Integer, Player> playerMap) {
         logger.info("Export ObjectDB: Exporting player data...");
         try{
-            //TreeMap<Integer, Player> existed_player_map = read(DataSource.OBJECTDB);
-            entityManager.getTransaction().begin();
-            /*for(Map.Entry<Integer, Player> entry : existed_player_map.entrySet()){
+            TreeMap<Integer, Player> existed_player_map = read(DataSource.OBJECTDB);
+            for(Map.Entry<Integer, Player> entry : existed_player_map.entrySet()){
                 if(!playerMap.containsKey(entry.getKey())){
                     entityManager.remove(entry.getValue());
                 }
-            }*/
+            }
             for(Player player : playerMap.values()){
                 entityManager.merge(player);
             }
