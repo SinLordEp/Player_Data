@@ -5,10 +5,14 @@ import jakarta.persistence.*;
 /**
  * @author SIN
  */
+@javax.persistence.Entity
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Person implements java.io.Serializable{
+    @javax.persistence.Id
+    @javax.persistence.GeneratedValue
     @Id
+    @GeneratedValue
     @Column(name = "id")
     protected int ID = 0;
 

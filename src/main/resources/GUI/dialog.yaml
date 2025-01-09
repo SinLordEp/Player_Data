@@ -135,6 +135,14 @@ popup:
     en: "Successfully exported datas to PHP server"
     es: "Se ha exportado datos correctamente a servidor PHP"
     cn: "成功导出数据至PHP服务器"
+  object_db_error:
+    en: "Failed to read/write ObjectDB file"
+    es: "No se ha podido leer/escribir fichero de ObjectDB"
+    cn: "无法读写ObjectDB文件"
+  exported_object_db:
+    en: "Successfully exported datas to ObjectDB"
+    es: "Se ha exportado datos correctamente a ObjectDB"
+    cn: "成功导出数据至ObjectDB"
 
 options:
   controller:

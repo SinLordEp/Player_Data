@@ -5,5 +5,5 @@ package data;
  */
 
 public enum DataSource {
-    NONE, FILE, DATABASE, HIBERNATE, PHP
+    NONE, FILE, DATABASE, HIBERNATE, PHP, OBJECTDB
 }

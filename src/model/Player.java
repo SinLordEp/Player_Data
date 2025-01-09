@@ -7,6 +7,7 @@ import java.util.Objects;
 /**
  * @author SIN
  */
+@javax.persistence.Entity
 @Entity
 @Table(name = "player")
 public class Player extends Person {

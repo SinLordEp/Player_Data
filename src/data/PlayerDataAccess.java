@@ -149,6 +149,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
                 databaseInfo.setUrl((String) sqlite_info.get("text_url"));
                 break;
+            case NONE:
+                HashMap<String,Object> objectDB_info = (HashMap<String, Object>) default_info.get("OBJECTDB");
+                databaseInfo.setUrl((String) objectDB_info.get("text_url"));
+                break;
         }
         logger.info("Get default database info: Finished reading database info!");
         return databaseInfo;
@@ -212,7 +216,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     logger.info("Read: Calling file reader...");
                     player_map = (TreeMap<Integer, Player>) fileReader.read(fileType, file_path);
                     break;
-                case DATABASE, HIBERNATE :
+                case DATABASE, HIBERNATE, OBJECTDB:
                     logger.info("Read: Calling DBA...");
                     player_map = playerDBA.read(dataSource);
                     break;
@@ -277,7 +281,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 case FILE:
                     fileWriter.write(file_path, player_map);
                     break;
-                case DATABASE, HIBERNATE:
+                case DATABASE, HIBERNATE, OBJECTDB:
                     playerDBA.connect(databaseInfo);
                     playerDBA.update(dataSource, changed_player_map);
                     playerDBA.disconnect(dataSource);
@@ -313,7 +317,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void add(Player player) {
         logger.info("Add: Adding player with ID: {}", player.getID());
         switch(dataSource){
-            case DATABASE, HIBERNATE, PHP:
+            case DATABASE, HIBERNATE, PHP, OBJECTDB:
                 logger.info("Add: Adding player to changed player map");
                 changed_player_map.put(player, DataOperation.ADD);
                 //Always trigger case FILE
@@ -336,7 +340,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void modify(Player player) {
         logger.info("Modify: Modifying player with ID: {}", player.getID());
         switch(dataSource){
-            case DATABASE, HIBERNATE, PHP:
+            case DATABASE, HIBERNATE, PHP, OBJECTDB:
                 logger.info("Modify: Adding modified player with ID: {} to changed player map", player.getID());
                 changed_player_map.put(player, DataOperation.MODIFY);
                 //Always trigger case FILE
@@ -362,7 +366,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void delete(int selected_player_id) {
         logger.info("Delete: Deleting player with ID: {}", selected_player_id);
         switch(dataSource){
-            case DATABASE, HIBERNATE, PHP :
+            case DATABASE, HIBERNATE, PHP, OBJECTDB:
                 logger.info("Delete: Adding deleted player with ID: {} to changed player map", selected_player_id);
                 changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
                 //Always trigger case FILE

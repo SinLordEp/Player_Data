@@ -134,11 +134,7 @@ public class DataSourceChooser extends JDialog {
      */
     private void setUIText(){
         label_dataSource.setText(GeneralText.getDialog().getText("label_dataSource"));
-        switch (comboBox_dataSource.getSelectedItem()){
-            case DataSource.FILE -> label_dataType.setText(GeneralText.getDialog().getText("label_file_type"));
-            case DataSource.DATABASE, DataSource.HIBERNATE -> label_dataType.setText(GeneralText.getDialog().getText("label_sql_dialect"));
-            case null, default -> label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
-        }
+        label_dataType.setText(GeneralText.getDialog().getText("label_file_type"));
     }
 
     /**
@@ -220,6 +216,11 @@ public class DataSourceChooser extends JDialog {
                 }
                 label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
                 break;
+            case OBJECTDB:
+                label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
+                comboBox_dataType.setEnabled(false);
+                button_submit.setEnabled(true);
+                return;
         }
         comboBox_dataType.setEnabled(true);
     }

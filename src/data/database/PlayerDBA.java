@@ -1,23 +1,27 @@
 package data.database;
 
+import Interface.GeneralDBA;
 import data.DataOperation;
 import data.DataSource;
 import exceptions.DatabaseException;
+import exceptions.ObjectDBException;
 import model.DatabaseInfo;
 import model.Player;
 import model.Region;
 import model.Server;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import java.net.URL;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 import static main.principal.getProperty;
@@ -33,9 +37,12 @@ import static main.principal.getProperty;
  * configurations for flexibility in data access and manipulation.
  * @author SIN
  */
-public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
+public class PlayerDBA implements GeneralDBA<TreeMap<Integer, Player>> {
     private static final Logger logger = LoggerFactory.getLogger(PlayerDBA.class);
-
+    private final Configuration configuration = new Configuration();
+    private SessionFactory sessionFactory = null;
+    private Connection connection = null;
+    private EntityManager entityManager = null;
     /**
      * Instantiates a new {@code PlayerDBA} object and configures the Hibernate framework.
      * This constructor initializes the necessary configuration settings for interacting with
@@ -79,6 +86,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return switch (databaseInfo.getDataSource()){
             case DATABASE -> connectDatabase(databaseInfo);
             case HIBERNATE -> connectHibernate(databaseInfo);
+            case OBJECTDB -> connectObjectDB(databaseInfo);
             default -> throw new IllegalStateException("Unexpected value: " + databaseInfo.getDataSource());
         };
     }
@@ -161,6 +169,17 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return sessionFactory.isOpen();
     }
 
+    private boolean connectObjectDB(DatabaseInfo databaseInfo) {
+        logger.info("Connect ObjectDB: Connecting to ObjectDB file server");
+        try{
+            entityManager = Persistence.createEntityManagerFactory(databaseInfo.getUrl()).createEntityManager();
+        }catch (Exception e){
+            throw new ObjectDBException("Failed to connect via ObjectDB. Cause: " + e.getMessage());
+        }
+        logger.info("Connect ObjectDB: Success");
+        return entityManager.isOpen();
+    }
+
     /**
      * Disconnects from the specified {@code DataSource}.
      * This method clears resources associated with the given {@code DataSource},
@@ -175,8 +194,14 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         switch (dataSource){
             case DATABASE:
                 connection = null;
+                break;
             case HIBERNATE:
                 sessionFactory = null;
+                break;
+            case OBJECTDB:
+                entityManager.close();
+                entityManager = null;
+                break;
         }
         logger.info("Disconnect: Success");
     }
@@ -198,6 +223,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         TreeMap<Integer, Player> player_map = switch (dataSource){
             case DATABASE -> readDatabase();
             case HIBERNATE -> readHibernate();
+            case OBJECTDB -> readObjectDB();
             default -> null;
         };
         disconnect(dataSource);
@@ -306,6 +332,24 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         return player_map;
     }
 
+    private TreeMap<Integer, Player> readObjectDB() {
+        logger.info("Read ObjectDB: Reading data from ObjectDB file");
+        TreeMap<Integer, Player> player_map = new TreeMap<>();
+        try{
+            entityManager.getTransaction().begin();
+            TypedQuery<Player> query = entityManager.createQuery("SELECT s FROM Player s", Player.class);
+            if(!query.getResultList().isEmpty()){
+                List<Player> playerList = query.getResultList();
+                for(Player player : playerList){
+                    player_map.put(player.getID(), player);
+                }
+            }
+        }catch (Exception e){
+            throw new ObjectDBException("Failed to read data via ObjectDB. Cause: "+e.getMessage());
+        }
+        return player_map;
+    }
+
     /**
      * Updates the database or Hibernate data source with the provided changes in the player map.
      * This method evaluates the specified {@code DataSource} and delegates the update process
@@ -322,6 +366,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         switch (dataSource){
             case DATABASE -> updateDatabase(changed_player_map);
             case HIBERNATE -> updateHibernate(changed_player_map);
+            case OBJECTDB -> updateObjectDB(changed_player_map);
         }
         logger.info("Update: Finished updating database!");
     }
@@ -385,7 +430,6 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
                 }
             }
             transaction.commit();
-            changed_player_map.clear();
         }catch(Exception e){
             logger.error("Update Hibernate: Failed to update database, rollback data. Cause: {}", e.getMessage());
             if(transaction != null){
@@ -395,6 +439,27 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             throw new DatabaseException("Failed to modify player via Hibernate. Cause: " + e.getMessage());
         }
         logger.info("Update Hibernate: Finished!");
+    }
+
+    private void updateObjectDB(HashMap<Player, DataOperation> changedPlayerMap) {
+        logger.info("Update ObjectDB: Updating database...");
+        try {
+            entityManager.getTransaction().begin();
+            for(Map.Entry<Player, DataOperation> player_operation : changedPlayerMap.entrySet()) {
+                switch (player_operation.getValue()) {
+                    case ADD -> entityManager.persist(player_operation.getKey());
+                    case MODIFY -> entityManager.merge(player_operation.getKey());
+                    case DELETE -> entityManager.remove(player_operation.getKey());
+                }
+            }
+            entityManager.getTransaction().commit();
+        }catch(Exception e){
+            logger.error("Update ObjectDB: Failed to update database, rollback data. Cause: {}", e.getMessage());
+            if(entityManager.getTransaction() != null){
+                entityManager.getTransaction().rollback();
+            }
+        }
+        logger.info("Update ObjectDB: Finished!");
     }
 
     /**
@@ -485,6 +550,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
         switch (dataSource){
             case DATABASE -> exportDatabase(player_map);
             case HIBERNATE -> exportHibernate(player_map);
+            case OBJECTDB -> exportObjectDB(player_map);
         }
         disconnect(dataSource);
         logger.info("Export: Finished exporting player data!");
@@ -511,8 +577,7 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
      */
     private void exportDatabase(TreeMap<Integer,Player> player_map) {
         logger.info("Export Database: Exporting player data...");
-        TreeMap<Integer, Player> target_player_map = read(DataSource.DATABASE);
-        //delete non-exist ID from database
+        TreeMap<Integer, Player> target_player_map = readDatabase();
         try {
             for(Integer player_id: target_player_map.keySet()){
                 if(!player_map.containsKey(player_id)){
@@ -574,6 +639,30 @@ public class PlayerDBA extends GeneralDBA<TreeMap<Integer, Player>> {
             throw new DatabaseException("Failed to exportFile via hibernate. Cause: " + e.getMessage());
         }
         logger.info("Export Hibernate: Finished!");
+    }
+
+    private void exportObjectDB(TreeMap<Integer, Player> playerMap) {
+        logger.info("Export ObjectDB: Exporting player data...");
+        try{
+            //TreeMap<Integer, Player> existed_player_map = read(DataSource.OBJECTDB);
+            entityManager.getTransaction().begin();
+            /*for(Map.Entry<Integer, Player> entry : existed_player_map.entrySet()){
+                if(!playerMap.containsKey(entry.getKey())){
+                    entityManager.remove(entry.getValue());
+                }
+            }*/
+            for(Player player : playerMap.values()){
+                entityManager.merge(player);
+            }
+            entityManager.getTransaction().commit();
+        }catch(Exception e){
+            logger.error("Export ObjectDB: Failed to export data, rollback data. Cause: {}", e.getMessage());
+            if (entityManager.getTransaction() != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new ObjectDBException("Failed to exportFile via hibernate. Cause: " + e.getMessage());
+        }
+        logger.info("Export ObjectDB: Finished!");
     }
 
     /**

@@ -6,3 +6,5 @@ MYSQL:
   text_pwd: "root"
 SQLITE:
   text_url: "jdbc:sqlite:person.db"
+OBJECTDB:
+  text_url: "/main/resources/data/player_data.odb"

@@ -142,7 +142,7 @@ public class DatabaseLogin extends JDialog {
     private void configureTextFieldText(){
         switch (databaseInfo.getDialect()){
             case MYSQL -> configureMySQL();
-            case SQLITE -> configureSQLite();
+            case SQLITE, NONE -> configureUrlOnly();
         }
 
     }
@@ -189,7 +189,7 @@ public class DatabaseLogin extends JDialog {
      * {@code configureTextFieldText()} method, when the SQL dialect is determined
      * to be SQLite.
      */
-    private void configureSQLite(){
+    private void configureUrlOnly(){
         text_url.setText(databaseInfo.getUrl());
     }
 

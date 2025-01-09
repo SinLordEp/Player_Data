@@ -7,9 +7,11 @@ import java.util.Objects;
 /**
  * @author SIN
  */
+@javax.persistence.Entity
 @Entity
 @Table(name = "region")
 public class Region {
+    @javax.persistence.Id
     @Id
     @Column(name = "name_region")
     private String name;

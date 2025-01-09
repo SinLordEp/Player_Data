@@ -33,12 +33,12 @@ import java.util.SortedMap;
  * <p>
  * This class implements the GeneralControl interface, providing implementations for
  * the required methods to initialize, manage, and close the Player UI.
+ * @author SIN
  */
 public class PlayerControl implements GeneralControl {
     private static final Logger logger = LoggerFactory.getLogger(PlayerControl.class);
     private PlayerDataAccess playerDA;
     private final List<EventListener<SortedMap<?,?>>> listeners = new ArrayList<>();
-
 
     /**
      * Executes the logic for initializing and managing the player user interface (UI)
@@ -61,7 +61,7 @@ public class PlayerControl implements GeneralControl {
         try {
             playerDA.initializeRegionServer();
         } catch (FileManageException e) {
-            logger.error("Failed to load region server file. Cause: {}",e.getMessage());
+            logger.error("Failed to load region server file. Cause: {}", e.getMessage());
             notifyListeners("region_server_null", null);
             System.exit(0);
         }
@@ -224,11 +224,12 @@ public class PlayerControl implements GeneralControl {
         logger.info("Handling Data source for Import data: Processing...");
         playerDA.setDataSource(dataSource);
         notifyListeners("dataSource_set",null);
-        switch(dataType){
-            case FileType ignore -> importFile((FileType) dataType);
-            case SqlDialect ignore -> importDB(dataSource, (SqlDialect) dataType);
-            case DataType ignore -> importPHP((DataType) dataType);
-            default -> throw new IllegalStateException("Unexpected value: " + dataType);
+        switch(dataSource){
+            case FILE -> importFile((FileType) dataType);
+            case DATABASE, HIBERNATE -> importDB(dataSource, (SqlDialect) dataType);
+            case PHP -> importPHP((DataType) dataType);
+            case OBJECTDB -> importDB(dataSource, SqlDialect.NONE);
+            default -> throw new IllegalStateException("Unexpected Data Source: " + dataType);
         }
         logger.info("Handling Data source for Import data: Process finished!");
     }
@@ -484,6 +485,7 @@ public class PlayerControl implements GeneralControl {
             case FILE -> exportFile((FileType) dataType);
             case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
             case PHP -> exportPHP((DataType) dataType);
+            case OBJECTDB -> exportDB(dataSource, SqlDialect.NONE);
         }
         logger.info("Handle DataSource for Export data: Process finished!");
     }
@@ -617,7 +619,7 @@ public class PlayerControl implements GeneralControl {
                     logger.info("Save: Current data source is FILE, saving...");
                     playerDA.save();
                     break;
-                case DATABASE, HIBERNATE:
+                case DATABASE, HIBERNATE, OBJECTDB:
                     logger.info("Save: Current data source is DATABASE or HIBERNATE, saving...");
                     playerDA.save();
                     break;
