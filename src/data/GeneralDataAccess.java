@@ -3,7 +3,7 @@ package data;
 import GUI.GeneralText;
 import data.database.SqlDialect;
 import data.file.FileType;
-import data.http.DataType;
+import data.http.PhpType;
 import exceptions.ConfigErrorException;
 import exceptions.FileManageException;
 import exceptions.OperationCancelledException;
@@ -30,7 +30,7 @@ public abstract class GeneralDataAccess {
     protected String file_path = null;
     protected DataSource dataSource = DataSource.NONE;
     protected FileType fileType = FileType.NONE;
-    protected DataType dataType = DataType.NONE;
+    protected PhpType phpType = PhpType.NONE;
     protected DatabaseInfo databaseInfo = new DatabaseInfo();
     public abstract void read();
     public abstract void save();
@@ -172,8 +172,8 @@ public abstract class GeneralDataAccess {
         logger.info("FileType is set to: {}", fileType);
     }
 
-    public void setDataType(DataType dataType) {
-        this.dataType = dataType;
+    public void setPhpType(PhpType phpType) {
+        this.phpType = phpType;
     }
 
     /**

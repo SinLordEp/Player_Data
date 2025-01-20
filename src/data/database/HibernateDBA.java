@@ -15,7 +15,10 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.*;
+
+import static main.principal.getProperty;
 
 public class HibernateDBA implements PlayerDBA {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -40,6 +43,9 @@ public class HibernateDBA implements PlayerDBA {
      */
     @Override
     public PlayerDBA connect(DatabaseInfo databaseInfo) throws DatabaseException {
+        logger.info("Connect hibernate: Fetching hibernate configuration");
+        URL resource = getClass().getResource(getProperty("hibernateConfig"));
+        configuration.configure(resource);
         logger.info("Connect hibernate: Connecting to database with dialect {}", databaseInfo.getDialect());
         switch (databaseInfo.getDialect()){
             case MYSQL:
@@ -56,14 +62,14 @@ public class HibernateDBA implements PlayerDBA {
         }
         try {
             sessionFactory = configuration.buildSessionFactory();
+            logger.info("Connect hibernate: Success");
+            if(sessionFactory != null){
+                return this;
+            }else{
+                throw new DatabaseException("SessionFactory is null");
+            }
         } catch (HibernateException e) {
             throw new DatabaseException("Failed to connect via hibernate. Cause: " + e.getMessage());
-        }
-        logger.info("Connect hibernate: Success");
-        if(sessionFactory != null){
-            return this;
-        }else{
-            throw new DatabaseException("Failed to connect via hibernate. SessionFactory is null");
         }
     }
 

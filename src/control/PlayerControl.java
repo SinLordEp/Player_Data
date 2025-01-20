@@ -8,12 +8,12 @@ import GUI.Player.PlayerText;
 import GUI.Player.PlayerUI;
 import Interface.EventListener;
 import Interface.GeneralControl;
-import data.GeneralDataAccess;
 import data.DataSource;
+import data.GeneralDataAccess;
 import data.PlayerDataAccess;
 import data.database.SqlDialect;
 import data.file.FileType;
-import data.http.DataType;
+import data.http.PhpType;
 import exceptions.*;
 import model.DatabaseInfo;
 import model.Player;
@@ -227,7 +227,7 @@ public class PlayerControl implements GeneralControl {
         switch(dataSource){
             case FILE -> importFile((FileType) dataType);
             case DATABASE, HIBERNATE -> importDB(dataSource, (SqlDialect) dataType);
-            case PHP -> importPHP((DataType) dataType);
+            case PHP -> importPHP((PhpType) dataType);
             case OBJECTDB -> importDB(dataSource, SqlDialect.NONE);
             default -> throw new IllegalStateException("Unexpected Data Source: " + dataType);
         }
@@ -334,14 +334,14 @@ public class PlayerControl implements GeneralControl {
      * or errors accordingly. It logs the process and handles exceptions that might
      * occur during the PHP data import operation.
      *
-     * @param dataType The data type to be set and processed during the PHP import operation.
+     * @param phpType The data type to be set and processed during the PHP import operation.
      *                 This parameter is applied to fetch and manage data through the
      *                 provided data access layer.
      */
-    private void importPHP(DataType dataType) {
+    private void importPHP(PhpType phpType) {
         logger.info("Import HTTP: Processing...");
         try{
-            playerDA.setDataType(dataType);
+            playerDA.setPhpType(phpType);
             playerDA.read();
             notifyListeners("data_changed", playerDA.getPlayerMap());
         }catch (OperationCancelledException e) {
@@ -480,7 +480,7 @@ public class PlayerControl implements GeneralControl {
         switch (dataSource){
             case FILE -> exportFile((FileType) dataType);
             case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
-            case PHP -> exportPHP((DataType) dataType);
+            case PHP -> exportPHP((PhpType) dataType);
             case OBJECTDB -> exportDB(dataSource, SqlDialect.NONE);
         }
         logger.info("Handle DataSource for Export data: Process finished!");
@@ -567,13 +567,13 @@ public class PlayerControl implements GeneralControl {
      * appropriate status. If an exception occurs during the export process, it
      * logs the error and triggers a "php_error" notification.
      *
-     * @param dataType the data to be exported. The specific implementation of
+     * @param phpType the data to be exported. The specific implementation of
      *                 the export is determined by the `playerDA.exportPHP` method.
      */
-    private void exportPHP(DataType dataType) {
+    private void exportPHP(PhpType phpType) {
         logger.info("Export PHP: Processing...");
         try{
-            playerDA.exportPHP(dataType);
+            playerDA.exportPHP(phpType);
             notifyListeners("exported_php", null);
         }catch (HttpPhpException e){
             logger.error("Export PHP: Failed with cause: {}", e.getMessage());

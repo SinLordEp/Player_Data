@@ -6,7 +6,7 @@ import Interface.PlayerFDA;
 import data.database.HibernateDBA;
 import data.database.SqlDialect;
 import data.file.FileType;
-import data.http.DataType;
+import data.http.PhpType;
 import data.http.PlayerPhp;
 import exceptions.ConfigErrorException;
 import exceptions.DataCorruptedException;
@@ -241,7 +241,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     break;
                 case PHP:
                     logger.info("Read: Calling PHP...");
-                    player_map = playerPhp.read(dataType);
+                    player_map = playerPhp.read(phpType);
                     break;
             }
             if(player_map != null && !player_map.isEmpty()){
@@ -463,11 +463,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * Exports the given data type to PHP using the {@code playerPhp.export} method.
      * This method logs an informational message before performing the export operation.
      *
-     * @param dataType the data type that needs to be exported
+     * @param phpType the data type that needs to be exported
      */
-    public void exportPHP(DataType dataType) {
+    public void exportPHP(PhpType phpType) {
         logger.info("Export PHP: Calling PHP...");
-        playerPhp.export(dataType, player_map);
+        playerPhp.export(phpType, player_map);
     }
 
     private boolean isFileAccessible(File file) {

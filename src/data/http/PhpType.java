@@ -4,6 +4,6 @@ package data.http;
  * @author SIN
  */
 
-public enum DataType {
+public enum PhpType {
     NONE, JSON
 }
