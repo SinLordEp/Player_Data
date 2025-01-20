@@ -317,13 +317,9 @@ public class PlayerControl implements GeneralControl {
     private void handleDatabaseLoginForImport(DatabaseInfo databaseInfo){
         logger.info("Handling DatabaseLogin for Import data: Processing...");
         try {
-            if(playerDA.connectDB(databaseInfo)){
-                playerDA.setDatabaseInfo(databaseInfo);
-                playerDA.read();
-                notifyListeners("data_changed", playerDA.getPlayerMap());
-            }else{
-                throw new DatabaseException("Failed to connect to database");
-            }
+            playerDA.setDatabaseInfo(databaseInfo);
+            playerDA.read();
+            notifyListeners("data_changed", playerDA.getPlayerMap());
         }  catch (DatabaseException e) {
             logger.error("Handling DatabaseLogin for Import data: Failed to read from database with cause: {}", e.getMessage());
             notifyListeners("db_login_failed",null);
@@ -553,12 +549,8 @@ public class PlayerControl implements GeneralControl {
     private void handleDatabaseLoginForExport(DatabaseInfo databaseInfo) {
         logger.info("Handle DatabaseLogin for Export data: Processing...");
         try {
-            if(playerDA.connectDB(databaseInfo)){
-                playerDA.exportDB(databaseInfo.getDataSource());
-                notifyListeners("exported_db", null);
-            }else{
-                throw new DatabaseException("Failed to connect to database");
-            }
+            playerDA.exportDB(databaseInfo);
+            notifyListeners("exported_db", null);
         }  catch (DatabaseException e) {
             logger.error("Failed to exportFile data to database. Cause: {}", e.getMessage());
             notifyListeners("db_login_failed",null);
