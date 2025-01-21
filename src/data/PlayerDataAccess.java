@@ -1,11 +1,9 @@
 package data;
 
 import GUI.GeneralText;
-import Interface.PlayerDBA;
-import Interface.PlayerFDA;
-import data.database.HibernateDBA;
+import data.database.PlayerDBAFactory;
 import data.database.SqlDialect;
-import data.file.FileType;
+import data.file.PlayerFDAFactory;
 import data.http.PhpType;
 import data.http.PlayerPhp;
 import exceptions.ConfigErrorException;
@@ -16,7 +14,6 @@ import model.DatabaseInfo;
 import model.Player;
 import model.Region;
 import model.Server;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -26,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.TreeMap;
 
 import static main.principal.getProperty;
@@ -41,8 +37,6 @@ import static main.principal.getProperty;
  * @author SIN
  */
 public class PlayerDataAccess extends GeneralDataAccess {
-    private final HashMap<DataSource, Class<? extends PlayerDBA>> DBAClasses = new HashMap<>();
-    private final HashMap<FileType, Class<? extends PlayerFDA>> FDAClasses = new HashMap<>();
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
     private HashMap<Region, Server[]> region_server_map;
@@ -66,31 +60,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * Logs the initialization process to indicate successful instantiation of the object.
      */
     public PlayerDataAccess() {
-        initializeDBA();
-        initializeFDA();
         playerPhp = new PlayerPhp();
         logger.info("PlayerDataAccess: Instantiated");
     }
 
-    private void initializeDBA(){
-        logger.info("InitializeDBA: Scanning existed DBA classes");
-        Reflections reflections = new Reflections("data.database");
-        Set<Class<? extends PlayerDBA>> tempDBAClasses = reflections.getSubTypesOf(PlayerDBA.class);
-        for(Class<? extends PlayerDBA> tempDBAClass : tempDBAClasses){
-            DBAClasses.put(DataSource.fromString(tempDBAClass.getSimpleName().replace("DBA","")), tempDBAClass);
-        }
-        logger.info("InitializeDBA: Finished.");
-    }
-
-    private void initializeFDA(){
-        logger.info("InitializeFDA: Scanning existed FDA classes");
-        Reflections reflections = new Reflections("data.file");
-        Set<Class<? extends  PlayerFDA>> tempFDAClasses = reflections.getSubTypesOf(PlayerFDA.class);
-        for(Class<? extends PlayerFDA> tempFDAClass : tempFDAClasses){
-            FDAClasses.put(FileType.fromString(tempFDAClass.getSimpleName().replace("FDA","")), tempFDAClass);
-        }
-        logger.info("InitializeFDA: Finished.");
-    }
 
     /**
      * Initializes the region server by setting up the database connection,
@@ -121,7 +94,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
         try {
             DatabaseInfo info = getDefaultDatabaseInfo(SqlDialect.SQLITE);
             info.setDataSource(DataSource.HIBERNATE);
-            region_server_map = new HibernateDBA().connect(info).readRegionServer();
+            region_server_map = PlayerDBAFactory.getInstance()
+                    .getDBA(DataSource.DATABASE)
+                    .connect(info)
+                    .readRegionServer();
         } catch (ConfigErrorException e) {
             throw new RuntimeException(e);
         }
@@ -223,9 +199,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     File file = new File(file_path);
                     if(isFileAccessible(file)){
                         logger.info("Read: File is accessible, reading file...");
-                        player_map = FDAClasses.get(fileType)
-                                .getDeclaredConstructor()
-                                .newInstance()
+                        player_map = PlayerFDAFactory.getInstance()
+                                .getPlayerFDA(fileType)
                                 .read(file);
                     }else{
                         throw new FileManageException("File is not accessible");
@@ -233,9 +208,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB:
                     logger.info("Read: Calling DBA...");
-                    player_map = DBAClasses.get(dataSource)
-                            .getDeclaredConstructor()
-                            .newInstance()
+                    player_map = PlayerDBAFactory.getInstance()
+                            .getDBA(dataSource)
                             .connect(databaseInfo)
                             .read();
                     break;
@@ -296,18 +270,16 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 case FILE:
                     File file = new File(file_path);
                     if(isFileAccessible(file)){
-                        FDAClasses.get(fileType)
-                                .getDeclaredConstructor()
-                                .newInstance()
+                        PlayerFDAFactory.getInstance()
+                                .getPlayerFDA(fileType)
                                 .write(file, player_map);
                     }else {
                         throw new FileManageException("File is not accessible");
                     }
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB:
-                    DBAClasses.get(dataSource)
-                            .getDeclaredConstructor()
-                            .newInstance()
+                    PlayerDBAFactory.getInstance()
+                            .getDBA(dataSource)
                             .connect(databaseInfo)
                             .update(changed_player_map);
                     changed_player_map.clear();
@@ -427,10 +399,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
         try {
             File target_file = new File(target_path);
             if(isFileAccessible(target_file)){
-                FDAClasses.get(fileType)
-                        .getDeclaredConstructor()
-                        .newInstance()
-                        .write(target_file,player_map);
+                PlayerFDAFactory.getInstance()
+                        .getPlayerFDA(fileType)
+                        .write(target_file, player_map);
             }else{
                 throw new FileManageException("File is not accessible");
             }
@@ -449,9 +420,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void exportDB(DatabaseInfo exportDataBaseInfo) {
         logger.info("Export DB: Calling DBA...");
         try {
-            DBAClasses.get(dataSource)
-                    .getDeclaredConstructor()
-                    .newInstance()
+            PlayerDBAFactory.getInstance()
+                    .getDBA(dataSource)
                     .connect(exportDataBaseInfo)
                     .export(player_map);
         } catch (Exception e) {

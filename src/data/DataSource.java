@@ -5,14 +5,21 @@ package data;
  */
 
 public enum DataSource {
-    NONE, FILE, DATABASE, HIBERNATE, PHP, OBJECTDB;
+    NONE("none"),
+    FILE("none"),
+    DATABASE("DataBaseDBA"),
+    HIBERNATE("HibernateDBA"),
+    PHP("none"),
+    OBJECTDB("ObjectDBA");
 
-    public static DataSource fromString(String input) {
-        for (DataSource dataSource : DataSource.values()) {
-            if (dataSource.toString().equalsIgnoreCase(input)) {
-                return dataSource;
-            }
-        }
-        throw new IllegalArgumentException("No enum constant matches the input: " + input);
+    private final String className;
+
+    DataSource(String className) {
+        this.className = className;
     }
+
+    public String getClassName() {
+        return className;
+    }
+
 }

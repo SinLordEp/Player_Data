@@ -5,14 +5,19 @@ package data.file;
  */
 
 public enum FileType {
-    NONE, TXT, DAT, XML;
+    NONE("none"),
+    TXT("TextFDA"),
+    DAT("DatFDA"),
+    XML("XmlFDA");
 
-    public static FileType fromString(String input) {
-        for (FileType fileType : FileType.values()) {
-            if (input.equalsIgnoreCase(fileType.toString())) {
-                return fileType;
-            }
-        }
-        throw new IllegalArgumentException("Unknown file type: " + input);
+    private final String className;
+
+    FileType(String className) {
+        this.className = className;
     }
+
+    public String getClassName() {
+        return className;
+    }
+
 }

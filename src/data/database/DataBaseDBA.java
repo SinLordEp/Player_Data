@@ -11,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author SIN
@@ -263,7 +261,38 @@ public class DataBaseDBA implements PlayerDBA {
      *         mapped to an array of {@code Server} instances that belong to that region.
      */
     @Override
-    public HashMap<Region, Server[]> readRegionServer(){
-        return null;
+    public HashMap<Region, Server[]> readRegionServer() throws DatabaseException {
+        if (connection == null) {
+            throw new DatabaseException("Database is not connected");
+        }
+        logger.info("Read Region server: Reading region server config");
+        HashMap<Region, List<Server>> regionServerListMap = new HashMap<>();
+        HashMap<Region, Server[]> regionServerMap = new HashMap<>();
+
+        String query = "SELECT r.name_region AS region_name, s.name_server AS server_name " +
+                "FROM region r " +
+                "JOIN server s ON r.name_region = s.region";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Region region = new Region(resultSet.getString("region_name"));
+
+                Server server = new Server(resultSet.getString("server_name"), region);
+
+                regionServerListMap.computeIfAbsent(region, _ -> new ArrayList<>()).add(server);
+            }
+
+            for (Map.Entry<Region, List<Server>> entry : regionServerListMap.entrySet()) {
+                regionServerMap.put(entry.getKey(), entry.getValue().toArray(new Server[0]));
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to read region-server data from database. Cause: " + e.getMessage());
+        }
+        logger.info("Read Region server: Finished!");
+        return regionServerMap;
     }
+
+
 }
