@@ -4,7 +4,7 @@ import Interface.DataSourceCallBack;
 import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
-import data.http.DataType;
+import data.http.PhpType;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -211,7 +211,7 @@ public class DataSourceChooser extends JDialog {
                 label_dataType.setText(GeneralText.getDialog().getText("label_sql_dialect"));
                 break;
             case PHP:
-                for(DataType dataType : DataType.values()){
+                for(PhpType dataType : PhpType.values()){
                     comboBox_dataType.addItem(dataType);
                 }
                 label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
@@ -251,7 +251,7 @@ public class DataSourceChooser extends JDialog {
                 this.dataType = dataType;
                 button_submit.setEnabled(true);
                 break;
-            case DataType ignore:
+            case PhpType ignore:
                 this.dataType = dataType;
                 button_submit.setEnabled(true);
                 break;

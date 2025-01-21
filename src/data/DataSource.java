@@ -5,5 +5,21 @@ package data;
  */
 
 public enum DataSource {
-    NONE, FILE, DATABASE, HIBERNATE, PHP, OBJECTDB
+    NONE("none"),
+    FILE("none"),
+    DATABASE("DataBaseDBA"),
+    HIBERNATE("HibernateDBA"),
+    PHP("none"),
+    OBJECTDB("ObjectDBA");
+
+    private final String className;
+
+    DataSource(String className) {
+        this.className = className;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
 }

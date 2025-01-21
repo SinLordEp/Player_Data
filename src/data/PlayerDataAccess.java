@@ -1,14 +1,14 @@
 package data;
 
 import GUI.GeneralText;
-import data.database.PlayerDBA;
+import data.database.PlayerDBAFactory;
 import data.database.SqlDialect;
-import data.file.PlayerFileReader;
-import data.file.PlayerFileWriter;
-import data.http.DataType;
+import data.file.PlayerFDAFactory;
+import data.http.PhpType;
 import data.http.PlayerPhp;
 import exceptions.ConfigErrorException;
 import exceptions.DataCorruptedException;
+import exceptions.FileManageException;
 import exceptions.OperationException;
 import model.DatabaseInfo;
 import model.Player;
@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -39,10 +40,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
     private HashMap<Region, Server[]> region_server_map;
-    private final PlayerDBA playerDBA;
     private final PlayerPhp playerPhp;
-    private final PlayerFileReader fileReader;
-    private final PlayerFileWriter fileWriter;
     private static final Logger logger = LoggerFactory.getLogger(PlayerDataAccess.class);
     private boolean isDataChanged = false;
 
@@ -62,12 +60,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * Logs the initialization process to indicate successful instantiation of the object.
      */
     public PlayerDataAccess() {
-        logger.info("PlayerDataAccess: Instantiated");
-        fileReader = new PlayerFileReader();
-        fileWriter = new PlayerFileWriter();
-        playerDBA = new PlayerDBA();
         playerPhp = new PlayerPhp();
+        logger.info("PlayerDataAccess: Instantiated");
     }
+
 
     /**
      * Initializes the region server by setting up the database connection,
@@ -98,11 +94,13 @@ public class PlayerDataAccess extends GeneralDataAccess {
         try {
             DatabaseInfo info = getDefaultDatabaseInfo(SqlDialect.SQLITE);
             info.setDataSource(DataSource.HIBERNATE);
-            playerDBA.connect(info);
+            region_server_map = PlayerDBAFactory.getInstance()
+                    .getDBA(DataSource.DATABASE)
+                    .connect(info)
+                    .readRegionServer();
         } catch (ConfigErrorException e) {
             throw new RuntimeException(e);
         }
-        region_server_map = playerDBA.readRegionServer();
         logger.info("Initializing region server: Region server map updated!");
     }
 
@@ -160,22 +158,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
     }
 
     /**
-     * Establishes a connection to a database using the provided database information.
-     * The connection details, such as URL, user, and password, are specified in the
-     * given {@code DatabaseInfo} object. This method utilizes the `playerDBA` mechanism
-     * to perform the database connection operation.
-     *
-     * @param databaseInfo an instance of {@code DatabaseInfo} containing the necessary
-     *                     details such as data source, URL, user, and password to
-     *                     establish the database connection
-     * @return {@code true} if the connection is successfully established, {@code false} otherwise
-     */
-    public boolean connectDB(DatabaseInfo databaseInfo) {
-        logger.info("Connect DB: Calling DBA to connect...");
-        return playerDBA.connect(databaseInfo);
-    }
-
-    /**
      * Reads player data from the specified {@code dataSource}. This method determines
      * the type of the data source and delegates the reading operation to the appropriate
      * mechanism. It processes data containing information about players from various
@@ -204,7 +186,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * @throws OperationException if any error occurs during the data reading process.
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void read() {
         logger.info("Read: Reading data from {}", dataSource);
         try {
@@ -214,17 +195,27 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     player_map = new TreeMap<>();
                     break;
                 case FILE:
-                    logger.info("Read: Calling file reader...");
-                    player_map = (TreeMap<Integer, Player>) fileReader.read(fileType, file_path);
+                    logger.info("Read: Checking if file is accessible");
+                    File file = new File(file_path);
+                    if(isFileAccessible(file)){
+                        logger.info("Read: File is accessible, reading file...");
+                        player_map = PlayerFDAFactory.getInstance()
+                                .getPlayerFDA(fileType)
+                                .read(file);
+                    }else{
+                        throw new FileManageException("File is not accessible");
+                    }
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB:
                     logger.info("Read: Calling DBA...");
-                    player_map = playerDBA.read(dataSource);
-                    playerDBA.disconnect(dataSource);
+                    player_map = PlayerDBAFactory.getInstance()
+                            .getDBA(dataSource)
+                            .connect(databaseInfo)
+                            .read();
                     break;
                 case PHP:
                     logger.info("Read: Calling PHP...");
-                    player_map = playerPhp.read(dataType);
+                    player_map = playerPhp.read(phpType);
                     break;
             }
             if(player_map != null && !player_map.isEmpty()){
@@ -277,12 +268,20 @@ public class PlayerDataAccess extends GeneralDataAccess {
         try{
             switch (dataSource){
                 case FILE:
-                    fileWriter.write(file_path, player_map);
+                    File file = new File(file_path);
+                    if(isFileAccessible(file)){
+                        PlayerFDAFactory.getInstance()
+                                .getPlayerFDA(fileType)
+                                .write(file, player_map);
+                    }else {
+                        throw new FileManageException("File is not accessible");
+                    }
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB:
-                    playerDBA.connect(databaseInfo);
-                    playerDBA.update(dataSource, changed_player_map);
-                    playerDBA.disconnect(dataSource);
+                    PlayerDBAFactory.getInstance()
+                            .getDBA(dataSource)
+                            .connect(databaseInfo)
+                            .update(changed_player_map);
                     changed_player_map.clear();
                     break;
                 case PHP:
@@ -319,12 +318,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
             case DATABASE, HIBERNATE, PHP, OBJECTDB:
                 logger.info("Add: Adding player to changed player map");
                 changed_player_map.put(player, DataOperation.ADD);
-                //Always trigger case FILE
-            case FILE:
-                logger.info("Add: Adding player to current player map");
-                player_map.put(player.getID(), player);
-                break;
         }
+        logger.info("Add: Adding player to current player map");
+        player_map.put(player.getID(), player);
         isDataChanged = true;
         logger.info("Add: Finished adding player!");
     }
@@ -400,7 +396,18 @@ public class PlayerDataAccess extends GeneralDataAccess {
         String target_name = GeneralText.getDialog().input("new_file_name");
         target_path += "/" + target_name + target_extension;
         logger.info("Export file: Target path is set to {}", target_path);
-        fileWriter.write(target_path, player_map);
+        try {
+            File target_file = new File(target_path);
+            if(isFileAccessible(target_file)){
+                PlayerFDAFactory.getInstance()
+                        .getPlayerFDA(fileType)
+                        .write(target_file, player_map);
+            }else{
+                throw new FileManageException("File is not accessible");
+            }
+        } catch (Exception e) {
+            throw new FileManageException("Failed to export file with cause: " + e.getMessage());
+        }
         logger.info("Export file: Finished exporting file!");
     }
 
@@ -408,22 +415,33 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * Exports the database using the provided data source.
      * This method utilizes {@code playerDBA.export} to perform the export operation.
      *
-     * @param dataSource the data source used for the export operation
+     * @param exportDataBaseInfo the database info used for the export operation
      */
-    public void exportDB(DataSource dataSource) {
+    public void exportDB(DatabaseInfo exportDataBaseInfo) {
         logger.info("Export DB: Calling DBA...");
-        playerDBA.export(dataSource, player_map);
+        try {
+            PlayerDBAFactory.getInstance()
+                    .getDBA(dataSource)
+                    .connect(exportDataBaseInfo)
+                    .export(player_map);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Exports the given data type to PHP using the {@code playerPhp.export} method.
      * This method logs an informational message before performing the export operation.
      *
-     * @param dataType the data type that needs to be exported
+     * @param phpType the data type that needs to be exported
      */
-    public void exportPHP(DataType dataType) {
+    public void exportPHP(PhpType phpType) {
         logger.info("Export PHP: Calling PHP...");
-        playerPhp.export(dataType, player_map);
+        playerPhp.export(phpType, player_map);
+    }
+
+    private boolean isFileAccessible(File file) {
+        return file.isFile() && file.canRead() && file.canWrite();
     }
 
     public boolean isEmpty(){

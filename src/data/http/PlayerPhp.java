@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import static main.principal.getProperty;
+
 /**
  * @author SIN
  */
@@ -30,17 +32,17 @@ public class PlayerPhp implements GeneralPhp<SortedMap<Integer,Player>> {
     private final String writeUrl;
 
     public PlayerPhp() {
-        logger.info("PlayerPhp: Instantiated");
         api = new ApiRequests();
-        url = "http://localhost/sin/player_data/";
-        readUrl = "read_player.php";
-        writeUrl = "write_player.php";
+        url = getProperty("phpURL");
+        readUrl = getProperty("phpReadURL");
+        writeUrl = getProperty("phpWriteURL");
+        logger.info("PlayerPhp: Instantiated");
     }
 
     @Override
-    public TreeMap<Integer, Player> read(DataType dataType) {
-        logger.info("Read: Reading player data in form of {}", dataType);
-        return switch (dataType){
+    public TreeMap<Integer, Player> read(PhpType phpType) {
+        logger.info("Read: Reading player data in form of {}", phpType);
+        return switch (phpType){
             case NONE -> new TreeMap<>();
             case JSON -> read_json();
         };
@@ -81,9 +83,9 @@ public class PlayerPhp implements GeneralPhp<SortedMap<Integer,Player>> {
     }
 
     @Override
-    public void export(DataType dataType, SortedMap<Integer, Player> player_map) {
-        logger.info("Export: Exporting player data in form of {}", dataType);
-        TreeMap<Integer, Player> existed_player_map = read(DataType.JSON);
+    public void export(PhpType phpType, SortedMap<Integer, Player> player_map) {
+        logger.info("Export: Exporting player data in form of {}", phpType);
+        TreeMap<Integer, Player> existed_player_map = read(PhpType.JSON);
         HashMap<Player, DataOperation> export_player_map = new HashMap<>();
         for(Map.Entry<Integer, Player> idAndPlayer : existed_player_map.entrySet() ) {
             if(!player_map.containsKey(idAndPlayer.getKey())) {

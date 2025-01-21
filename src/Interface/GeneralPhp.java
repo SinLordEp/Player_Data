@@ -1,11 +1,11 @@
 package Interface;
 
-import data.http.DataType;
+import data.http.PhpType;
 
 /**
  * @author SIN
  */
 public interface GeneralPhp<T> {
-    T read(DataType dataType);
-    void export(DataType dataType, T data);
+    T read(PhpType phpType);
+    void export(PhpType phpType, T data);
 }
