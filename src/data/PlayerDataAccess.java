@@ -111,9 +111,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * @return a {@link DatabaseInfo} object populated with database connection details
      * @throws ConfigErrorException if an error occurs while reading or loading the configuration
      */
-    @Override
     @SuppressWarnings("unchecked")
-    public DatabaseInfo getDefaultDatabaseInfo(SqlDialect dialect) throws ConfigErrorException {
+    public DatabaseInfo getDefaultDatabaseInfo(SqlDialect dialect, DataSource... dataSource) throws ConfigErrorException {
         logger.info("Get default database info: Reading default database info for dialect: {}", dialect);
         DatabaseInfo databaseInfo = new DatabaseInfo();
         databaseInfo.setDialect(dialect);
@@ -144,8 +143,17 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 databaseInfo.setUrl((String) sqlite_info.get("text_url"));
                 break;
             case NONE:
-                HashMap<String,Object> objectDB_info = (HashMap<String, Object>) default_info.get("OBJECTDB");
-                databaseInfo.setUrl((String) objectDB_info.get("text_url"));
+                switch(dataSource[0]){
+                    case OBJECTDB:
+                        HashMap<String,Object> objectDB_info = (HashMap<String, Object>) default_info.get("OBJECTDB");
+                        databaseInfo.setUrl((String) objectDB_info.get("text_url"));
+                        break;
+                    case BASEX:
+                        HashMap<String,Object> baseX_info = (HashMap<String, Object>) default_info.get("BASEX");
+                        databaseInfo.setUrl((String) baseX_info.get("text_url"));
+                        databaseInfo.setDatabase((String) baseX_info.get("text_database"));
+                        break;
+                }
                 break;
         }
         logger.info("Get default database info: Finished reading database info!");
@@ -196,7 +204,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                             .prepare(file_path)
                             .read();
                     break;
-                case DATABASE, HIBERNATE, OBJECTDB:
+                case DATABASE, HIBERNATE, OBJECTDB, BASEX:
                     logger.info("Read: Calling DBA...");
                     player_map = PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)

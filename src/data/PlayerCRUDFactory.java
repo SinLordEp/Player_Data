@@ -20,11 +20,6 @@ public class PlayerCRUDFactory {
 
     private PlayerCRUDFactory() {}
 
-    /*
-    //TODO:
-    public <T, V extends Enum<V>, H extends Exception> T getCRUDA(HashMap<V,T> classMap, Class<T> expectedClass, Class<H> exceptionClass ){
-
-    }*/
 
     @SuppressWarnings("unchecked")
     public PlayerCRUD<DatabaseInfo> getCRUD(DataSource dataSource){

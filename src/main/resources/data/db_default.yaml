@@ -8,3 +8,6 @@ SQLITE:
   text_url: "jdbc:sqlite:person.db"
 OBJECTDB:
   text_url: "/main/resources/data/player_data.odb"
+BASEX:
+  text_url: "/data/playerBaseX.xml"
+  text_database: "Player"

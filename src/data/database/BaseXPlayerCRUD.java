@@ -5,6 +5,7 @@ import Interface.PlayerCRUD;
 import data.DataOperation;
 import data.file.xml_utils;
 import exceptions.DatabaseException;
+import model.DatabaseInfo;
 import model.Player;
 import model.Region;
 import model.Server;
@@ -33,17 +34,17 @@ import static main.principal.getProperty;
  * @author SIN
  */
 
-public class BaseXPlayerCRUD implements PlayerCRUD<String> {
+public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     private static final Logger logger = LoggerFactory.getLogger(BaseXPlayerCRUD.class);
     Context context = new Context();
 
     @Override
-    public PlayerCRUD<String> prepare(String dbName) {
+    public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) {
         try {
             String dbList = new List().execute(context);
-            if (!dbList.contains(dbName)) {
+            if (!dbList.contains(databaseInfo.getDatabase())) {
                 String baseXPath = getProperty("baseXPath");
-                new CreateDB(dbName, baseXPath).execute(context);
+                new CreateDB(databaseInfo.getDatabase(), baseXPath).execute(context);
             }
             return this;
         } catch (BaseXException e) {
@@ -99,11 +100,41 @@ public class BaseXPlayerCRUD implements PlayerCRUD<String> {
     }
 
     private void deletePlayer(Player player) {
-
+        try {
+            String query = String.format("delete node doc('Player')/root/player[@id='%d']", player.getID());
+            new XQuery(query).execute(context);
+            logger.info("Deleted player with ID: {}", player.getID());
+        } catch (Exception e) {
+            throw new DatabaseException("Failed to delete player with ID: " + player.getID() + ". Cause: " + e.getMessage());
+        }
     }
 
     private void modifyPlayer(Player player) {
+        try {
+            String updateRegionQuery = String.format(
+                    "replace value of node doc('Player')/root/player[@id='%d']/region with '%s'",
+                    player.getID(),
+                    player.getRegion().toString()
+            );
+            new XQuery(updateRegionQuery).execute(context);
 
+            String updateServerQuery = String.format(
+                    "replace value of node doc('Player')/root/player[@id='%d']/server with '%s'",
+                    player.getID(),
+                    player.getServer().toString()
+            );
+            new XQuery(updateServerQuery).execute(context);
+
+            String updateNameQuery = String.format(
+                    "replace value of node doc('Player')/root/player[@id='%d']/name with '%s'",
+                    player.getID(),
+                    player.getName()
+            );
+            new XQuery(updateNameQuery).execute(context);
+            logger.info("Modified player with ID: {} ", player.getID());
+        } catch (Exception e) {
+            throw new DatabaseException("Failed to modify player with ID: " + player.getID() + ". Cause: " + e.getMessage());
+        }
     }
 
     private void addPlayer(Player player) {
@@ -125,7 +156,28 @@ public class BaseXPlayerCRUD implements PlayerCRUD<String> {
     }
 
     @Override
-    public void export(TreeMap<Integer, Player> player_map) {
+    public void export(TreeMap<Integer, Player> playerMap) {
+        try {
+            Document document = xml_utils.createDocument();
+            Element rootElement = document.createElement("root");
+            document.appendChild(rootElement);
 
+            for (Player player : playerMap.values()) {
+                Element playerElement = document.createElement("player");
+                playerElement.setAttribute("id", String.valueOf(player.getID()));
+                xml_utils.createElementWithText(document, playerElement, "region", player.getRegion().toString());
+                xml_utils.createElementWithText(document, playerElement, "server", player.getServer().toString());
+                xml_utils.createElementWithText(document, playerElement, "name", player.getName());
+                rootElement.appendChild(playerElement);
+            }
+            String xmlString = xml_utils.nodeToString(rootElement);
+            String replaceQuery = String.format("replace node doc('Player')/root with %s", xmlString);
+            new XQuery(replaceQuery).execute(context);
+
+            logger.info("Export: Success");
+        } catch (Exception e) {
+            throw new DatabaseException("Failed to export Player data to database. Cause: " + e.getMessage());
+        }
     }
+
 }

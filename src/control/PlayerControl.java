@@ -228,7 +228,7 @@ public class PlayerControl implements GeneralControl {
             case FILE -> importFile((FileType) dataType);
             case DATABASE, HIBERNATE -> importDB(dataSource, (SqlDialect) dataType);
             case PHP -> importPHP((PhpType) dataType);
-            case OBJECTDB -> importDB(dataSource, SqlDialect.NONE);
+            case OBJECTDB, BASEX -> importDB(dataSource, SqlDialect.NONE);
             default -> throw new IllegalStateException("Unexpected Data Source: " + dataType);
         }
         logger.info("Handling Data source for Import data: Process finished!");
@@ -352,6 +352,7 @@ public class PlayerControl implements GeneralControl {
             notifyListeners("php_error",null);
         }
     }
+
 
     /**
      * Initiates the process for adding a new player entry. This method performs the following:

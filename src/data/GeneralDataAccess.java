@@ -1,10 +1,8 @@
 package data;
 
 import GUI.GeneralText;
-import data.database.SqlDialect;
 import data.file.FileType;
 import data.http.PhpType;
-import exceptions.ConfigErrorException;
 import exceptions.FileManageException;
 import exceptions.OperationCancelledException;
 import model.DatabaseInfo;
@@ -34,7 +32,6 @@ public abstract class GeneralDataAccess {
     protected DatabaseInfo databaseInfo = new DatabaseInfo();
     public abstract void read();
     public abstract void save();
-    public abstract DatabaseInfo getDefaultDatabaseInfo(SqlDialect sqlDialect) throws ConfigErrorException;
     private static final Logger logger = LoggerFactory.getLogger(GeneralDataAccess.class);
 
     /**
