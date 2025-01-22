@@ -1,12 +1,10 @@
 package data.database;
 
-import Interface.PlayerDBA;
+import Interface.PlayerCRUD;
 import data.DataOperation;
 import exceptions.DatabaseException;
 import model.DatabaseInfo;
 import model.Player;
-import model.Region;
-import model.Server;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,11 +14,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static main.principal.getProperty;
 
-public class HibernateDBA implements PlayerDBA {
+/**
+ * @author SIN
+ */
+public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private SessionFactory sessionFactory;
     private final Configuration configuration = new Configuration();
@@ -42,7 +46,7 @@ public class HibernateDBA implements PlayerDBA {
      *                           invalid credentials, or exceptions during session factory creation.
      */
     @Override
-    public PlayerDBA connect(DatabaseInfo databaseInfo) throws DatabaseException {
+    public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) throws DatabaseException {
         logger.info("Connect hibernate: Fetching hibernate configuration");
         URL resource = getClass().getResource(getProperty("hibernateConfig"));
         configuration.configure(resource);
@@ -74,7 +78,7 @@ public class HibernateDBA implements PlayerDBA {
     }
 
     @Override
-    public void disconnect() {
+    public void release() {
         sessionFactory = null;
     }
 
@@ -106,6 +110,7 @@ public class HibernateDBA implements PlayerDBA {
             throw new DatabaseException("Failed to read data via hibernate. Cause: " + e.getMessage());
         }
         logger.info("Read Hibernate: Finished reading from database!");
+        release();
         return player_map;
     }
 
@@ -142,6 +147,7 @@ public class HibernateDBA implements PlayerDBA {
             throw new DatabaseException("Failed to modify player via Hibernate. Cause: " + e.getMessage());
         }
         logger.info("Update Hibernate: Finished!");
+        release();
     }
 
     /**
@@ -187,30 +193,7 @@ public class HibernateDBA implements PlayerDBA {
             throw new DatabaseException("Failed to exportFile via hibernate. Cause: " + e.getMessage());
         }
         logger.info("Export Hibernate: Finished!");
-    }
-
-    @Override
-    public HashMap<Region, Server[]> readRegionServer() {
-        logger.info("Read Region server: Reading region server config");
-        HashMap<Region, Server[]> regionServerMap = new HashMap<>();
-        String hql = "SELECT s.region, s FROM Server s";
-        try(Session session = sessionFactory.openSession()){
-            HashMap<Region, List<Server>> regionServerListMap = new HashMap<>();
-            session.beginTransaction();
-            List<Object[]> results = session.createQuery(hql, Object[].class).getResultList();
-            for (Object[] result : results) {
-                Region region = (Region) result[0];
-                Server server = (Server) result[1];
-                // if region does not exist in map, it will create one
-                regionServerListMap.computeIfAbsent(region, _ -> new ArrayList<>()).add(server);
-            }
-            for (HashMap.Entry<Region, List<Server>> entry : regionServerListMap.entrySet()) {
-                Region region = entry.getKey();
-                regionServerMap.put(region, entry.getValue().toArray(new Server[0]));
-            }
-        }
-        disconnect();
-        return regionServerMap;
+        release();
     }
 
     /**

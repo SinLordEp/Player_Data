@@ -14,6 +14,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.InputStream;
+import java.io.StringWriter;
 
 /**
  * Utility class for working with XML files and documents. Provides methods for reading, writing,
@@ -33,6 +35,14 @@ public class xml_utils {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(file);
+        document.getDocumentElement().normalize();
+        return document.getDocumentElement();
+    }
+
+    public static Element parseStreamXml(InputStream inputStream) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(inputStream);
         document.getDocumentElement().normalize();
         return document.getDocumentElement();
     }
@@ -96,6 +106,7 @@ public class xml_utils {
         parent.appendChild(element);
     }
 
+
     /**
      * Retrieves the text content of the first child element with the specified tag name
      * within the provided parent {@code Element}.
@@ -110,5 +121,13 @@ public class xml_utils {
             return nodeList.item(0).getTextContent();
         }
         return null;
+    }
+
+    public static String nodeToString(Node node) throws Exception {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        StringWriter writer = new StringWriter();
+        transformer.transform(new DOMSource(node), new StreamResult(writer));
+        return writer.toString();
     }
 }

@@ -5,5 +5,17 @@ package data.http;
  */
 
 public enum PhpType {
-    NONE, JSON
+    NONE("none"),
+    JSON("JsonPlayerCRUD");
+
+    private final String className;
+
+    PhpType(String className) {
+        this.className = className;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
 }

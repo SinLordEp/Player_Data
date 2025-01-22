@@ -7,10 +7,11 @@ package data;
 public enum DataSource {
     NONE("none"),
     FILE("none"),
-    DATABASE("DataBaseDBA"),
-    HIBERNATE("HibernateDBA"),
+    DATABASE("DataBasePlayerCRUD"),
+    HIBERNATE("HibernatePlayerCRUD"),
     PHP("none"),
-    OBJECTDB("ObjectDBA");
+    OBJECTDB("ObjectDBPlayerCRUD"),
+    BASEX("BaseXPlayerCRUD"),;
 
     private final String className;
 

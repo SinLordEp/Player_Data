@@ -1,7 +1,8 @@
 package data.file;
 
 import GUI.Player.PlayerText;
-import Interface.PlayerFDA;
+import Interface.PlayerCRUD;
+import data.DataOperation;
 import exceptions.FileManageException;
 import model.Player;
 import model.Region;
@@ -10,13 +11,30 @@ import model.Server;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.TreeMap;
 
 /**
  * @author SIN
  */
-public class TextFDA implements PlayerFDA {
+public class TextPlayerCRUD implements PlayerCRUD<String> {
+    File file;
+
+    @Override
+    public PlayerCRUD<String> prepare(String input) {
+        file = new File(input);
+        if (file.exists() && file.canRead() && file.canWrite()){
+            return this;
+        }else{
+            throw new FileManageException("File cannot be read or write");
+        }
+    }
+
+    @Override
+    public void release() {
+        file = null;
+    }
 
     /**
      * Reads and parses a TXT file containing player data, converting it into a {@code TreeMap}
@@ -27,13 +45,12 @@ public class TextFDA implements PlayerFDA {
      * If the file is empty, it displays a popup notification using {@code PlayerText.getDialog().popup}.
      * In case of any error, it throws a {@code FileManageException}.
      *
-     * @param file The {@code File} object representing the TXT file to be read.
      * @return A {@code TreeMap<Integer, Player>} where the key is the player ID and the value is the corresponding {@code Player} object.
      *         Returns an empty map if the file contains no player data.
      * @throws FileManageException if there is an error during file reading.
      */
     @Override
-    public TreeMap<Integer, Player> read(File file) {
+    public TreeMap<Integer, Player> read() {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         try(Scanner scanner = new Scanner(file)){
             if(!scanner.hasNext()){
@@ -52,7 +69,13 @@ public class TextFDA implements PlayerFDA {
         }catch (Exception e) {
             throw new FileManageException("Error reading this txt data.file");
         }
+        release();
         return player_data;
+    }
+
+    @Override
+    public void update(HashMap<Player, DataOperation> changed_player_map) {
+
     }
 
     /**
@@ -63,8 +86,6 @@ public class TextFDA implements PlayerFDA {
      * <p>
      * If writing to the file fails, the method throws a {@code FileManageException}.
      *
-     * @param file the file where the player data will be written. The existing content of
-     *                    the file will be overwritten.
      * @param player_map a {@code TreeMap<Integer, Player>} containing the player data to be written.
      *                    The map's values represent {@code Player} objects whose properties such as
      *                    {@code getID}, {@code getRegion}, {@code getServer}, and {@code getName}
@@ -72,7 +93,7 @@ public class TextFDA implements PlayerFDA {
      * @throws FileManageException if an error occurs during the file writing process.
      */
     @Override
-    public void write(File file, TreeMap<Integer, Player> player_map) {
+    public void export(TreeMap<Integer, Player> player_map) {
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(file,false))){
             for(Player player : player_map.values()){
                 bw.write(player.getID() + ",");
@@ -84,6 +105,7 @@ public class TextFDA implements PlayerFDA {
         }catch (Exception e){
             throw new FileManageException("Failed to write player data via TXT. Cause: " + e.getMessage());
         }
+        release();
     }
 
 }

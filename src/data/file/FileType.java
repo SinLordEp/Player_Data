@@ -6,9 +6,9 @@ package data.file;
 
 public enum FileType {
     NONE("none"),
-    TXT("TextFDA"),
-    DAT("DatFDA"),
-    XML("XmlFDA");
+    TXT("TextPlayerCRUD"),
+    DAT("DatPlayerCRUD"),
+    XML("XmlPlayerCRUD");
 
     private final String className;
 

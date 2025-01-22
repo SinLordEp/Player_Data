@@ -1,7 +1,8 @@
 package data.file;
 
 import GUI.Player.PlayerText;
-import Interface.PlayerFDA;
+import Interface.PlayerCRUD;
+import data.DataOperation;
 import exceptions.FileManageException;
 import model.Player;
 import model.Region;
@@ -12,9 +13,29 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.TreeMap;
 
-public class XmlFDA implements PlayerFDA {
+/**
+ * @author SIN
+ */
+public class XmlPlayerCRUD implements PlayerCRUD<String> {
+    File file;
+
+    @Override
+    public PlayerCRUD<String> prepare(String input) {
+        file = new File(input);
+        if (file.exists() && file.canRead() && file.canWrite()){
+            return this;
+        }else{
+            throw new FileManageException("File cannot be read or write");
+        }
+    }
+
+    @Override
+    public void release() {
+        file = null;
+    }
 
     /**
      * Reads and parses an XML file containing player data, storing the information
@@ -34,7 +55,6 @@ public class XmlFDA implements PlayerFDA {
      * when the XML document has no child nodes. Throws a {@code FileManageException}
      * if the root element is invalid or if there is an error during file handling.
      *
-     * @param file The {@code File} object representing the XML file to be read.
      * @return A {@code TreeMap<Integer, Player>} where the key is the player ID and
      *         the value is the corresponding {@code Player} object. Returns an empty
      *         map if the file is empty or contains no player data.
@@ -42,7 +62,7 @@ public class XmlFDA implements PlayerFDA {
      *                             root element is invalid.
      */
     @Override
-    public TreeMap<Integer, Player> read(File file) {
+    public TreeMap<Integer, Player> read() {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         Element root;
         try {
@@ -70,7 +90,13 @@ public class XmlFDA implements PlayerFDA {
                 player_data.put(player.getID(), player);
             }
         }
+        release();
         return player_data;
+    }
+
+    @Override
+    public void update(HashMap<Player, DataOperation> changed_player_map) {
+
     }
 
     /**
@@ -79,15 +105,13 @@ public class XmlFDA implements PlayerFDA {
      * {@code add_PlayerElements} to populate the XML with player data, and
      * {@code xml_utils.writeXml} to write the generated XML structure to the provided file.
      *
-     * @param file the file where the player data will be written. If the file already exists,
-     *                    it will be overwritten.
      * @param player_map a {@code TreeMap<Integer, Player>} containing player data to write. If the map
      *                    is null, the resulting XML file will contain only the root element without any
      *                    player data.
      * @throws FileManageException if an error occurs during XML creation, data population, or file writing.
      */
     @Override
-    public void write(File file, TreeMap<Integer, Player> player_map) {
+    public void export(TreeMap<Integer, Player> player_map) {
         try {
             Document document = xml_utils.createDocument();
             Element root = document.createElement("Player");
@@ -99,6 +123,7 @@ public class XmlFDA implements PlayerFDA {
         } catch (Exception e) {
             throw new FileManageException("Failed to write player data via XML. Cause: " + e.getMessage());
         }
+        release();
     }
 
     /**

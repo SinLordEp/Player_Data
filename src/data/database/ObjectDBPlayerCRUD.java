@@ -1,13 +1,11 @@
 package data.database;
 
-import Interface.PlayerDBA;
+import Interface.PlayerCRUD;
 import data.DataOperation;
 import exceptions.DatabaseException;
 import exceptions.ObjectDBException;
 import model.DatabaseInfo;
 import model.Player;
-import model.Region;
-import model.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +20,12 @@ import java.util.TreeMap;
 /**
  * @author SIN
  */
-public class ObjectDBA implements PlayerDBA {
+public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private EntityManager entityManager = null;
 
     @Override
-    public PlayerDBA connect(DatabaseInfo databaseInfo) throws DatabaseException {
+    public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) throws DatabaseException {
         logger.info("Connect ObjectDB: Connecting to ObjectDB file server");
         try{
             entityManager = Persistence.createEntityManagerFactory(databaseInfo.getUrl()).createEntityManager();
@@ -43,7 +41,7 @@ public class ObjectDBA implements PlayerDBA {
     }
 
     @Override
-    public void disconnect() {
+    public void release() {
         entityManager.close();
         entityManager = null;
     }
@@ -64,6 +62,7 @@ public class ObjectDBA implements PlayerDBA {
         }catch (Exception e){
             throw new ObjectDBException("Failed to read data via ObjectDB. Cause: "+e.getMessage());
         }
+        release();
         return player_map;
     }
 
@@ -87,6 +86,7 @@ public class ObjectDBA implements PlayerDBA {
             }
         }
         logger.info("Update ObjectDB: Finished!");
+        release();
     }
 
     @Override
@@ -111,10 +111,7 @@ public class ObjectDBA implements PlayerDBA {
             throw new ObjectDBException("Failed to exportFile via hibernate. Cause: " + e.getMessage());
         }
         logger.info("Export ObjectDB: Finished!");
+        release();
     }
 
-    @Override
-    public HashMap<Region, Server[]> readRegionServer() {
-        return null;
-    }
 }

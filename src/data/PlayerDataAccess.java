@@ -1,9 +1,8 @@
 package data;
 
 import GUI.GeneralText;
-import data.database.PlayerDBAFactory;
+import data.database.DataBasePlayerCRUD;
 import data.database.SqlDialect;
-import data.file.PlayerFDAFactory;
 import data.http.PhpType;
 import data.http.PlayerPhp;
 import exceptions.ConfigErrorException;
@@ -18,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -93,11 +91,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
         logger.info("Initializing region server: Reading config file...");
         try {
             DatabaseInfo info = getDefaultDatabaseInfo(SqlDialect.SQLITE);
-            info.setDataSource(DataSource.HIBERNATE);
-            region_server_map = PlayerDBAFactory.getInstance()
-                    .getDBA(DataSource.DATABASE)
-                    .connect(info)
-                    .readRegionServer();
+            info.setDataSource(DataSource.DATABASE);
+            region_server_map = DataBasePlayerCRUD.readRegionServer(info);
         } catch (ConfigErrorException e) {
             throw new RuntimeException(e);
         }
@@ -195,22 +190,17 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     player_map = new TreeMap<>();
                     break;
                 case FILE:
-                    logger.info("Read: Checking if file is accessible");
-                    File file = new File(file_path);
-                    if(isFileAccessible(file)){
-                        logger.info("Read: File is accessible, reading file...");
-                        player_map = PlayerFDAFactory.getInstance()
-                                .getPlayerFDA(fileType)
-                                .read(file);
-                    }else{
-                        throw new FileManageException("File is not accessible");
-                    }
+                    logger.info("Read: Reading file by calling playerCRUD");
+                    player_map = PlayerCRUDFactory.getInstance()
+                            .getCRUD(fileType)
+                            .prepare(file_path)
+                            .read();
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB:
                     logger.info("Read: Calling DBA...");
-                    player_map = PlayerDBAFactory.getInstance()
-                            .getDBA(dataSource)
-                            .connect(databaseInfo)
+                    player_map = PlayerCRUDFactory.getInstance()
+                            .getCRUD(dataSource)
+                            .prepare(databaseInfo)
                             .read();
                     break;
                 case PHP:
@@ -268,19 +258,15 @@ public class PlayerDataAccess extends GeneralDataAccess {
         try{
             switch (dataSource){
                 case FILE:
-                    File file = new File(file_path);
-                    if(isFileAccessible(file)){
-                        PlayerFDAFactory.getInstance()
-                                .getPlayerFDA(fileType)
-                                .write(file, player_map);
-                    }else {
-                        throw new FileManageException("File is not accessible");
-                    }
+                    PlayerCRUDFactory.getInstance()
+                            .getCRUD(fileType)
+                            .prepare(file_path)
+                            .export(player_map);
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB:
-                    PlayerDBAFactory.getInstance()
-                            .getDBA(dataSource)
-                            .connect(databaseInfo)
+                    PlayerCRUDFactory.getInstance()
+                            .getCRUD(dataSource)
+                            .prepare(databaseInfo)
                             .update(changed_player_map);
                     changed_player_map.clear();
                     break;
@@ -397,14 +383,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
         target_path += "/" + target_name + target_extension;
         logger.info("Export file: Target path is set to {}", target_path);
         try {
-            File target_file = new File(target_path);
-            if(isFileAccessible(target_file)){
-                PlayerFDAFactory.getInstance()
-                        .getPlayerFDA(fileType)
-                        .write(target_file, player_map);
-            }else{
-                throw new FileManageException("File is not accessible");
-            }
+            PlayerCRUDFactory.getInstance()
+                    .getCRUD(fileType)
+                    .prepare(target_path)
+                    .export(player_map);
         } catch (Exception e) {
             throw new FileManageException("Failed to export file with cause: " + e.getMessage());
         }
@@ -420,9 +402,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void exportDB(DatabaseInfo exportDataBaseInfo) {
         logger.info("Export DB: Calling DBA...");
         try {
-            PlayerDBAFactory.getInstance()
-                    .getDBA(dataSource)
-                    .connect(exportDataBaseInfo)
+            PlayerCRUDFactory.getInstance()
+                    .getCRUD(dataSource)
+                    .prepare(exportDataBaseInfo)
                     .export(player_map);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -438,10 +420,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void exportPHP(PhpType phpType) {
         logger.info("Export PHP: Calling PHP...");
         playerPhp.export(phpType, player_map);
-    }
-
-    private boolean isFileAccessible(File file) {
-        return file.isFile() && file.canRead() && file.canWrite();
     }
 
     public boolean isEmpty(){
