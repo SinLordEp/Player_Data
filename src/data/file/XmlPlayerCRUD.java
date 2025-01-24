@@ -21,16 +21,26 @@ import java.util.TreeMap;
  */
 public class XmlPlayerCRUD implements PlayerCRUD<String> {
     File file;
+    String stringXML;
+    boolean parseRawXML = false;
 
     @Override
     public PlayerCRUD<String> prepare(String input) {
-        file = new File(input);
-        if (file.exists() && file.canRead() && file.canWrite()){
+        if(input.charAt(0) == '<'){
+            stringXML = input;
+            parseRawXML = true;
             return this;
         }else{
-            throw new FileManageException("File cannot be read or write");
+            file = new File(input);
+            if (file.exists() && file.canRead() && file.canWrite()){
+                return this;
+            }else{
+                throw new FileManageException("File cannot be read or write");
+            }
         }
     }
+
+
 
     @Override
     public void release() {
@@ -66,7 +76,11 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
         TreeMap<Integer, Player> player_data = new TreeMap<>();
         Element root;
         try {
-            root = xml_utils.readXml(file);
+            if(parseRawXML){
+                root = xml_utils.parseStringXml(stringXML);
+            }else{
+                root = xml_utils.readXml(file);
+            }
         } catch (Exception e) {
             throw new FileManageException("Failed to read xml file. Cause: " + e.getMessage());
         }

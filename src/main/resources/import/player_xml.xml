@@ -1,48 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Player>
     <player id="1">
-        <region>Asia</region>
-        <server>Liyue Harbor</server>
+        <region>North America</region>
+        <server>Stormterror's Lair</server>
         <name>John Doe</name>
     </player>
     <player id="2">
-        <region>Europe</region>
-        <server>Springvale</server>
-        <name>Jane Smith</name>
+        <region>Asia</region>
+        <server>Narukami Shrine</server>
+        <name>SB</name>
     </player>
     <player id="3">
         <region>Asia</region>
         <server>Jueyun Karst</server>
-        <name>Alex Chen</name>
+        <name>Jaime</name>
     </player>
     <player id="4">
-        <region>South America</region>
-        <server>Port Ormos</server>
-        <name>Maria Lopez</name>
+        <region>Asia</region>
+        <server>Inazuma City</server>
+        <name>as</name>
     </player>
     <player id="5">
         <region>North America</region>
         <server>Wolvendom</server>
         <name>Uno</name>
-    </player>
-    <player id="6">
-        <region>South America</region>
-        <server>Port Ormos</server>
-        <name>Pepe</name>
-    </player>
-    <player id="7">
-        <region>Asia</region>
-        <server>Liyue Harbor</server>
-        <name>sa</name>
-    </player>
-    <player id="8">
-        <region>Asia</region>
-        <server>Inazuma City</server>
-        <name>Asasa</name>
-    </player>
-    <player id="11">
-        <region>North America</region>
-        <server>Wolvendom</server>
-        <name>Tesa</name>
     </player>
 </Player>

@@ -23,7 +23,6 @@ public class ApiRequests {
      * Metodo usado para hacer peticiones GET.
      * @param url URL a la que realizar la peticion.
      * @return Cuerpo de la respuesta.
-     * @throws IOException
      */
     public String getRequest(String url) throws IOException {
         Request request= new Request.Builder()

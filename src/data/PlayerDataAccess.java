@@ -282,6 +282,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     playerPhp.update(changed_player_map);
                     changed_player_map.clear();
                     break;
+                case BASEX:
+                    PlayerCRUDFactory.getInstance()
+                            .getCRUD(dataSource)
+                            .prepare(databaseInfo)
+                            .export(player_map);
+                    break;
             }
         } catch (Exception e) {
             throw new OperationException("Failed to save data with cause: " + e.getMessage());
@@ -334,7 +340,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 logger.info("Modify: Adding modified player with ID: {} to changed player map", player.getID());
                 changed_player_map.put(player, DataOperation.MODIFY);
                 //Always trigger case FILE
-            case FILE:
+            case FILE, BASEX:
                 logger.info("Modify: Adding modified player with ID: {} to current player map", player.getID());
                 player_map.put(player.getID(), player);
                 break;
@@ -361,7 +367,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 logger.info("Delete: Adding deleted player with ID: {} to changed player map", selected_player_id);
                 changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
                 //Always trigger case FILE
-            case FILE:
+            case FILE, BASEX:
                 logger.info("Delete: Deleting player with ID: {} from current player map", selected_player_id);
                 player_map.remove(selected_player_id);
                 break;
@@ -411,7 +417,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         logger.info("Export DB: Calling DBA...");
         try {
             PlayerCRUDFactory.getInstance()
-                    .getCRUD(dataSource)
+                    .getCRUD(exportDataBaseInfo.getDataSource())
                     .prepare(exportDataBaseInfo)
                     .export(player_map);
         } catch (Exception e) {

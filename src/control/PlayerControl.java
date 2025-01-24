@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.SortedMap;
 
 /**
@@ -289,7 +290,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Import DB: Processing...");
         try {
             logger.info("Import DB: Fetching default database information...");
-            DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(sqlDialect);
+            DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(sqlDialect, dataSource);
             databaseInfo.setDataSource(dataSource);
             logger.info("Import DB: Calling DatabaseLogin...");
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForImport);
@@ -482,7 +483,7 @@ public class PlayerControl implements GeneralControl {
             case FILE -> exportFile((FileType) dataType);
             case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
             case PHP -> exportPHP((PhpType) dataType);
-            case OBJECTDB -> exportDB(dataSource, SqlDialect.NONE);
+            case OBJECTDB, BASEX -> exportDB(dataSource, SqlDialect.NONE);
         }
         logger.info("Handle DataSource for Export data: Process finished!");
     }
@@ -523,7 +524,7 @@ public class PlayerControl implements GeneralControl {
     private void exportDB(DataSource target_source, SqlDialect target_dialect) {
         logger.info("Export DB: Processing...");
         try {
-            DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(target_dialect);
+            DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(target_dialect, target_source);
             databaseInfo.setDataSource(target_source);
             logger.info("Export DB: Calling DataSourceChooser...");
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForExport);
@@ -607,22 +608,12 @@ public class PlayerControl implements GeneralControl {
             return;
         }
         try {
-            switch (playerDA.getDataSource()){
-                case NONE:
-                    logger.info("Save: Current data source is NONE, returning...");
-                    return;
-                case FILE:
-                    logger.info("Save: Current data source is FILE, saving...");
-                    playerDA.save();
-                    break;
-                case DATABASE, HIBERNATE, OBJECTDB:
-                    logger.info("Save: Current data source is DATABASE or HIBERNATE, saving...");
-                    playerDA.save();
-                    break;
-                case PHP:
-                    logger.info("Save: Current data source is PHP, saving...");
-                    playerDA.save();
-                    break;
+            if (Objects.requireNonNull(playerDA.getDataSource()) == DataSource.NONE) {
+                logger.info("Save: Current data source is NONE, returning...");
+                return;
+            } else {
+                logger.info("Save: Current data source is {}, saving...", playerDA.getDataSource());
+                playerDA.save();
             }
         } catch (DatabaseException e) {
             logger.error("Save: Failed to save data via database with cause: {}", e.getMessage());

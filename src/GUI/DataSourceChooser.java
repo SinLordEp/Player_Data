@@ -216,7 +216,7 @@ public class DataSourceChooser extends JDialog {
                 }
                 label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
                 break;
-            case OBJECTDB:
+            case OBJECTDB, BASEX:
                 label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
                 comboBox_dataType.setEnabled(false);
                 button_submit.setEnabled(true);

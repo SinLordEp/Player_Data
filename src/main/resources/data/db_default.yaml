@@ -9,5 +9,5 @@ SQLITE:
 OBJECTDB:
   text_url: "/main/resources/data/player_data.odb"
 BASEX:
-  text_url: "/data/playerBaseX.xml"
+  text_url: "src/main/resources/import/player_xml.xml"
   text_database: "Player"

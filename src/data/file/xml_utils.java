@@ -13,8 +13,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.io.StringWriter;
 
 /**
@@ -39,10 +39,10 @@ public class xml_utils {
         return document.getDocumentElement();
     }
 
-    public static Element parseStreamXml(InputStream inputStream) throws Exception {
+    public static Element parseStringXml(String rawXML) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(inputStream);
+        Document document = builder.parse(new ByteArrayInputStream(rawXML.getBytes()));
         document.getDocumentElement().normalize();
         return document.getDocumentElement();
     }
