@@ -484,6 +484,7 @@ public class PlayerControl implements GeneralControl {
             case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
             case PHP -> exportPHP((PhpType) dataType);
             case OBJECTDB, BASEX, MONGO -> exportDB(dataSource, SqlDialect.NONE);
+            default -> throw new IllegalArgumentException("Unknown data source: " + dataSource);
         }
         logger.info("Handle DataSource for Export data: Process finished!");
     }

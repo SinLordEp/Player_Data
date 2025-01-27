@@ -26,7 +26,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
 
     @Override
     public PlayerCRUD<String> prepare(String input) {
-        if(input.charAt(0) == '<'){
+        if(input.startsWith("<Player>")){
             stringXML = input;
             parseRawXML = true;
             return this;

@@ -159,8 +159,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
                         databaseInfo.setPort((String) mongo_info.get("text_port"));
                         databaseInfo.setDatabase((String) mongo_info.get("text_database"));
                         break;
+                    default: throw new OperationException("Unknown database type");
                 }
                 break;
+            default:
+                throw new OperationException("Unknown SQL dialect");
         }
         logger.info("Get default database info: Finished reading database info!");
         return databaseInfo;
@@ -221,6 +224,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     logger.info("Read: Calling PHP...");
                     player_map = playerPhp.read(phpType);
                     break;
+                default:
+                    throw new OperationException("Unknown data source: " + dataSource);
             }
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();
@@ -294,6 +299,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
                             .prepare(databaseInfo)
                             .export(player_map);
                     break;
+                default:
+                    throw new OperationException("Save: Unknown data source: " + dataSource);
             }
         } catch (Exception e) {
             throw new OperationException("Failed to save data with cause: " + e.getMessage());
@@ -350,6 +357,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 logger.info("Modify: Adding modified player with ID: {} to current player map", player.getID());
                 player_map.put(player.getID(), player);
                 break;
+            default:
+                throw new OperationException("Modify: Unknown data source: " + dataSource);
         }
         isDataChanged = true;
         logger.info("Modify: Finished modifying player!");
@@ -377,6 +386,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 logger.info("Delete: Deleting player with ID: {} from current player map", selected_player_id);
                 player_map.remove(selected_player_id);
                 break;
+            default:
+                throw new OperationException("Deletion operation not implemented for this data source");
         }
         isDataChanged = true;
         logger.info("Delete: Finished deleting player!");

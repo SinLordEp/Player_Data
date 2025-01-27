@@ -12,6 +12,8 @@ import org.basex.core.Context;
 import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.Open;
 import org.basex.core.cmd.XQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,14 +24,17 @@ import java.util.TreeMap;
  */
 
 public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
+    private final Logger logger = LoggerFactory.getLogger(BaseXPlayerCRUD.class);
     Context context = new Context();
     DatabaseInfo databaseInfo;
 
     @Override
     public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) {
+        logger.info("BaseXPlayerCRUD: Preparing connection");
         try {
             this.databaseInfo = databaseInfo;
             new Open(databaseInfo.getDatabase()).execute(context);
+            logger.info("BaseXPlayerCRUD: connection established");
             return this;
         } catch (BaseXException e) {
             throw new RuntimeException(e);
@@ -43,6 +48,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
 
     @Override
     public TreeMap<Integer, Player> read() {
+        logger.info("BaseXPlayerCRUD: Reading players");
         String query = "/Player";
         try {
             String result =  new XQuery(query).execute(context);
@@ -60,6 +66,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     //TODO:
     @Override
     public void update(HashMap<Player, DataOperation> changed_player_map) {
+        logger.info("BaseXPlayerCRUD: Updating players");
         try {
             for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {
                 Player player = player_operation.getKey();
@@ -80,6 +87,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
 
     @Override
     public void export(TreeMap<Integer, Player> playerMap) {
+        logger.info("BaseXPlayerCRUD: Exporting players");
         try {
             new CreateDB(databaseInfo.getDatabase(), databaseInfo.getUrl()).execute(context);
             for(Player player : playerMap.values()) {
