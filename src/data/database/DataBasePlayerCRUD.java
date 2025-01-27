@@ -65,10 +65,9 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      *
      * @return a {@code TreeMap<Integer, Player>} containing the player data retrieved from the database,
      * where the keys are player IDs and the values are {@code Player} objects.
-     * @throws DatabaseException if there are issues reading from the database, such as SQL errors.
      */
     @Override
-    public TreeMap<Integer, Player> read() throws Exception {
+    public TreeMap<Integer, Player> read() {
         if(connection == null){
             throw new DatabaseException("Database is not connected");
         }

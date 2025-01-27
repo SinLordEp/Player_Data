@@ -11,7 +11,8 @@ public enum DataSource {
     HIBERNATE("HibernatePlayerCRUD"),
     PHP("none"),
     OBJECTDB("ObjectDBPlayerCRUD"),
-    BASEX("BaseXPlayerCRUD"),;
+    BASEX("BaseXPlayerCRUD"),
+    MONGO("MongoPlayerCRUD");
 
     private final String className;
 

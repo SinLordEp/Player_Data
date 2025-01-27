@@ -229,7 +229,7 @@ public class PlayerControl implements GeneralControl {
             case FILE -> importFile((FileType) dataType);
             case DATABASE, HIBERNATE -> importDB(dataSource, (SqlDialect) dataType);
             case PHP -> importPHP((PhpType) dataType);
-            case OBJECTDB, BASEX -> importDB(dataSource, SqlDialect.NONE);
+            case OBJECTDB, BASEX, MONGO -> importDB(dataSource, SqlDialect.NONE);
             default -> throw new IllegalStateException("Unexpected Data Source: " + dataType);
         }
         logger.info("Handling Data source for Import data: Process finished!");
@@ -483,7 +483,7 @@ public class PlayerControl implements GeneralControl {
             case FILE -> exportFile((FileType) dataType);
             case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
             case PHP -> exportPHP((PhpType) dataType);
-            case OBJECTDB, BASEX -> exportDB(dataSource, SqlDialect.NONE);
+            case OBJECTDB, BASEX, MONGO -> exportDB(dataSource, SqlDialect.NONE);
         }
         logger.info("Handle DataSource for Export data: Process finished!");
     }

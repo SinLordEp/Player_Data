@@ -11,3 +11,7 @@ OBJECTDB:
 BASEX:
   text_url: "src/main/resources/import/player_xml.xml"
   text_database: "Player"
+MONGO:
+  text_url: "localhost"
+  text_port: "27017"
+  text_database: "person"

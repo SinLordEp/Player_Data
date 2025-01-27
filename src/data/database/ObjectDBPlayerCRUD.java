@@ -47,7 +47,7 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public TreeMap<Integer, Player> read() throws Exception {
+    public TreeMap<Integer, Player> read() {
         logger.info("Read ObjectDB: Reading data from ObjectDB file");
         TreeMap<Integer, Player> player_map = new TreeMap<>();
         try{

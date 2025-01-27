@@ -4,6 +4,7 @@ import Interface.PlayerCRUD;
 import data.DataOperation;
 import data.PlayerCRUDFactory;
 import data.file.FileType;
+import exceptions.DatabaseException;
 import model.DatabaseInfo;
 import model.Player;
 import org.basex.core.BaseXException;
@@ -11,10 +12,9 @@ import org.basex.core.Context;
 import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.Open;
 import org.basex.core.cmd.XQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -22,7 +22,6 @@ import java.util.TreeMap;
  */
 
 public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
-    private static final Logger logger = LoggerFactory.getLogger(BaseXPlayerCRUD.class);
     Context context = new Context();
     DatabaseInfo databaseInfo;
 
@@ -30,7 +29,6 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) {
         try {
             this.databaseInfo = databaseInfo;
-            new CreateDB(databaseInfo.getDatabase(), databaseInfo.getUrl()).execute(context);
             new Open(databaseInfo.getDatabase()).execute(context);
             return this;
         } catch (BaseXException e) {
@@ -44,7 +42,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public TreeMap<Integer, Player> read() throws Exception {
+    public TreeMap<Integer, Player> read() {
         String query = "/Player";
         try {
             String result =  new XQuery(query).execute(context);
@@ -62,17 +60,36 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     //TODO:
     @Override
     public void update(HashMap<Player, DataOperation> changed_player_map) {
-        String queryInsert = "insert node <player id='10'><region>Asia</region><server>Liyue Harbor</server><name>New Player</name></player> into /Player";
-        String queryReplaceNode = "replace node /Player/player[@id='1'] with <player id='1'><region>Europe</region><server>Springvale</server><name>Updated Player</name></player>";
-        String queryDelete = "delete node /Player/player[@id='1']";
+        try {
+            for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {
+                Player player = player_operation.getKey();
+                String query = switch (player_operation.getValue()){
+                    case ADD -> "insert node <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player> into /Player"
+                            .formatted(player.getID(), player.getRegion(), player.getServer(), player.getName());
+                    case MODIFY -> "replace node /Player/player[@id='%s'] with <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player>"
+                            .formatted(player.getID(), player.getID(), player.getRegion(), player.getServer(), player.getName());
+                    case DELETE -> "delete node /Player/player[@id='%s']".formatted(player.getID());
+                };
+                new XQuery(query).execute(context);
+            }
+        } catch (BaseXException e) {
+            throw new DatabaseException("Failed to update BaseX. Cause: " + e.getMessage());
+        }
+
     }
 
     @Override
     public void export(TreeMap<Integer, Player> playerMap) {
-        PlayerCRUDFactory.getInstance()
-                .getCRUD(FileType.XML)
-                .prepare(databaseInfo.getUrl())
-                .export(playerMap);
+        try {
+            new CreateDB(databaseInfo.getDatabase(), databaseInfo.getUrl()).execute(context);
+            for(Player player : playerMap.values()) {
+                String query = "insert node <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player> into /Player"
+                        .formatted(player.getID(), player.getRegion(), player.getServer(), player.getName());
+                new XQuery(query).execute(context);
+            }
+        } catch (BaseXException e) {
+            throw new DatabaseException("Failed to export BaseX. Cause: " + e.getMessage());
+        }
     }
 
 }

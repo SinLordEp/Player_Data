@@ -153,6 +153,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
                         databaseInfo.setUrl((String) baseX_info.get("text_url"));
                         databaseInfo.setDatabase((String) baseX_info.get("text_database"));
                         break;
+                    case MONGO:
+                        HashMap<String,Object> mongo_info = (HashMap<String, Object>) default_info.get("MONGO");
+                        databaseInfo.setUrl((String) mongo_info.get("text_url"));
+                        databaseInfo.setPort((String) mongo_info.get("text_port"));
+                        databaseInfo.setDatabase((String) mongo_info.get("text_database"));
+                        break;
                 }
                 break;
         }
@@ -204,7 +210,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                             .prepare(file_path)
                             .read();
                     break;
-                case DATABASE, HIBERNATE, OBJECTDB, BASEX:
+                case DATABASE, HIBERNATE, OBJECTDB, BASEX, MONGO:
                     logger.info("Read: Calling DBA...");
                     player_map = PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
@@ -271,7 +277,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
                             .prepare(file_path)
                             .export(player_map);
                     break;
-                case DATABASE, HIBERNATE, OBJECTDB:
+                case DATABASE, HIBERNATE, OBJECTDB, MONGO:
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
@@ -315,7 +321,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void add(Player player) {
         logger.info("Add: Adding player with ID: {}", player.getID());
         switch(dataSource){
-            case DATABASE, HIBERNATE, PHP, OBJECTDB:
+            case DATABASE, HIBERNATE, PHP, OBJECTDB, BASEX, MONGO:
                 logger.info("Add: Adding player to changed player map");
                 changed_player_map.put(player, DataOperation.ADD);
         }
@@ -336,7 +342,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void modify(Player player) {
         logger.info("Modify: Modifying player with ID: {}", player.getID());
         switch(dataSource){
-            case DATABASE, HIBERNATE, PHP, OBJECTDB:
+            case DATABASE, HIBERNATE, PHP, OBJECTDB, MONGO:
                 logger.info("Modify: Adding modified player with ID: {} to changed player map", player.getID());
                 changed_player_map.put(player, DataOperation.MODIFY);
                 //Always trigger case FILE
@@ -363,7 +369,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
     public void delete(int selected_player_id) {
         logger.info("Delete: Deleting player with ID: {}", selected_player_id);
         switch(dataSource){
-            case DATABASE, HIBERNATE, PHP, OBJECTDB:
+            case DATABASE, HIBERNATE, PHP, OBJECTDB, MONGO:
                 logger.info("Delete: Adding deleted player with ID: {} to changed player map", selected_player_id);
                 changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
                 //Always trigger case FILE

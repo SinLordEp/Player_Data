@@ -94,10 +94,9 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      *
      * @return a {@code TreeMap<Integer, Player>} containing the player data read from the database,
      *         where the keys are player IDs, and the values are {@code Player} objects.
-     * @throws DatabaseException if an error occurs while reading data through Hibernate.
      */
     @Override
-    public TreeMap<Integer, Player> read() throws Exception {
+    public TreeMap<Integer, Player> read() {
         logger.info("Read Hibernate: Reading data from database");
         TreeMap<Integer, Player> player_map = new TreeMap<>();
         try (Session session = sessionFactory.openSession()) {

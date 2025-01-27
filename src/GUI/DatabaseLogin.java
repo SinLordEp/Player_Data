@@ -131,66 +131,37 @@ public class DatabaseLogin extends JDialog {
      * <p>
      * This method determines the SQL dialect by invoking {@code databaseInfo.getDialect()}
      * and adjusts the visibility and content of text fields accordingly. It handles
-     * separate configurations for MySQL and SQLite using {@code configureMySQL}
+     * separate configurations for MySQL and SQLite using {@code configureMultipleField}
      * and {@code configureSQLite} methods.
      * <p>
-     * If the dialect is MySQL, it calls {@code configureMySQL}, which sets up the URL, port,
+     * If the dialect is MySQL, it calls {@code configureMultipleField}, which sets up the URL, port,
      * database name, user credentials, and password fields, ensuring the relevant fields are visible.
      * If the dialect is SQLite, it calls {@code configureSQLite}, which configures the URL field
      * while keeping other fields hidden or unspecified.
      */
     private void configureTextFieldText(){
-        switch (databaseInfo.getDialect()){
-            case MYSQL -> configureMySQL();
-            case SQLITE, NONE -> configureUrlOnly();
+        text_url.setText(databaseInfo.getUrl());
+        if(!databaseInfo.getPort().isEmpty()){
+            text_port.setText(databaseInfo.getPort());
+            text_port.setVisible(true);
+            label_port.setVisible(true);
+        }
+        if(!databaseInfo.getDatabase().isEmpty()){
+            text_database.setText(databaseInfo.getDatabase());
+            text_database.setVisible(true);
+            label_database.setVisible(true);
+        }
+        if(databaseInfo.getUser() != null){
+            text_user.setText(databaseInfo.getUser());
+            text_user.setVisible(true);
+            label_user.setVisible(true);
+        }
+        if(databaseInfo.getPassword() != null){
+            passwordField_pwd.setText(databaseInfo.getPassword());
+            passwordField_pwd.setVisible(true);
+            label_pwd.setVisible(true);
         }
 
-    }
-
-    /**
-     * Configures the input fields and visibility settings in the {@code DatabaseLogin} dialog
-     * specifically for MySQL connections.
-     * <p>
-     * This method updates the text and visibility of components based on
-     * the database configuration provided by {@code databaseInfo}.
-     * It sets the URL, port, database name, user credentials, and password fields
-     * to the corresponding values retrieved from {@code databaseInfo}.
-     * Additionally, it ensures that all relevant fields and labels are made visible
-     * for user interaction.
-     * <p>
-     * The method is invoked internally, typically from the {@code configureTextFieldText()} method,
-     * when the SQL dialect in use is determined to be MySQL.
-     */
-    private void configureMySQL(){
-        text_url.setText(databaseInfo.getUrl());
-        text_port.setText(databaseInfo.getPort());
-        text_port.setVisible(true);
-        label_port.setVisible(true);
-        text_database.setText(databaseInfo.getDatabase());
-        text_database.setVisible(true);
-        label_database.setVisible(true);
-        text_user.setText(databaseInfo.getUser());
-        text_user.setVisible(true);
-        label_user.setVisible(true);
-        passwordField_pwd.setText(databaseInfo.getPassword());
-        passwordField_pwd.setVisible(true);
-        label_pwd.setVisible(true);
-    }
-
-    /**
-     * Configures the SQLite-specific settings in the {@code DatabaseLogin} dialog by
-     * updating the URL text field with the SQLite database URL.
-     * <p>
-     * This method retrieves the database URL by calling {@code databaseInfo.getUrl()}
-     * and sets the value in the {@code text_url} field. It ensures the URL is properly
-     * displayed to the user for SQLite connections.
-     * <p>
-     * This method is typically invoked internally, such as within the
-     * {@code configureTextFieldText()} method, when the SQL dialect is determined
-     * to be SQLite.
-     */
-    private void configureUrlOnly(){
-        text_url.setText(databaseInfo.getUrl());
     }
 
     /**
