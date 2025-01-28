@@ -1,12 +1,12 @@
 package GUI.Player;
 
-import GUI.GeneralText;
 import Interface.EventListener;
 import Interface.GeneralUI;
 import control.PlayerControl;
 import model.Player;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.SortedMap;
@@ -34,8 +34,6 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
     private JButton button_import;
     private JButton button_createFile;
     private JButton button_language;
-
-
     private JLabel label_search;
     private JTextField field_search;
 
@@ -130,14 +128,14 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
      * support.
      */
     private void setUIText(){
-        button_add.setText(PlayerText.getDialog().getText("button_add"));
-        button_modify.setText(PlayerText.getDialog().getText("button_modify"));
-        button_delete.setText(PlayerText.getDialog().getText("button_delete"));
-        button_export.setText(PlayerText.getDialog().getText("button_export"));
-        button_import.setText(PlayerText.getDialog().getText("button_import"));
-        button_createFile.setText(PlayerText.getDialog().getText("button_createFile"));
-        button_language.setText(PlayerText.getDialog().getText("button_language"));
-        label_search.setText(PlayerText.getDialog().getText("label_search"));
+        for(Component component : main_panel.getComponents()){
+            if(component instanceof JLabel){
+                ((JLabel) component).setText(PlayerText.getDialog().getText(component.getName()));
+            }
+            if(component instanceof JButton){
+                ((JButton) component).setText(PlayerText.getDialog().getText(component.getName()));
+            }
+        }
     }
 
     /**
@@ -266,7 +264,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
 
     /**
      * Displays a general popup dialog box based on the provided subtype.
-     * This method utilizes {@code GeneralText.getDialog().popup(String)} to display
+     * This method utilizes {@code PlayerText.getDialog().popup(String)} to display
      * a localized dialog, with the content determined by the subtype identifier.
      * The messages are typically retrieved from predefined text configurations.
      *
@@ -276,7 +274,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
      *                 confirmation dialogs, or informational prompts.
      */
     private void generalPopup(String sub_type){
-        GeneralText.getDialog().popup(sub_type);
+        PlayerText.getDialog().popup(sub_type);
     }
 
     /**
@@ -294,6 +292,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
     private void playerPopup(String sub_type){
         PlayerText.getDialog().popup(sub_type);
     }
+
 }
 
 

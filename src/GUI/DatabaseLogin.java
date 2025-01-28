@@ -1,10 +1,13 @@
 package GUI;
 
+import GUI.Player.PlayerText;
 import Interface.CallBack;
 import model.DatabaseInfo;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 /**
@@ -29,6 +32,8 @@ public class DatabaseLogin extends JDialog {
     private JTextField text_user;
     private JLabel label_pwd;
     private JPasswordField passwordField_pwd;
+    private JPanel panel_info;
+    private JPanel panel_button;
     private final DatabaseInfo databaseInfo;
 
     /**
@@ -41,7 +46,7 @@ public class DatabaseLogin extends JDialog {
      */
     public DatabaseLogin(DatabaseInfo databaseInfo, CallBack<DatabaseInfo> callBack) {
         this.databaseInfo = databaseInfo;
-        setTitle(GeneralText.getDialog().getText("db_login_title"));
+        setTitle(PlayerText.getDialog().getText("db_login_title"));
         configureLabelText();
         configureTextFieldText();
         setContentPane(panel_main);
@@ -74,7 +79,7 @@ public class DatabaseLogin extends JDialog {
      */
     private void onOK(CallBack<DatabaseInfo> callBack) {
         if(hasBlank()){
-            GeneralText.getDialog().popup("db_field_empty");
+            PlayerText.getDialog().popup("db_field_empty");
             return;
         }
         databaseInfo.setUrl(text_url.getText());
@@ -114,15 +119,20 @@ public class DatabaseLogin extends JDialog {
      * Configures the text for various labels in the {@code DatabaseLogin} dialog.
      * This method sets the localized text for label components such as {@code label_url},
      * {@code label_port}, {@code label_database}, {@code label_user}, and {@code label_pwd}.
-     * It retrieves the localized text values using the {@code GeneralText.getDialog()} method
+     * It retrieves the localized text values using the {@code PlayerText.getDialog()} method
      * and assigns them to the corresponding labels to ensure proper user interface localization.
      */
     private void configureLabelText(){
-        this.label_url.setText(GeneralText.getDialog().getText("label_url"));
-        this.label_port.setText(GeneralText.getDialog().getText("label_port"));
-        this.label_database.setText(GeneralText.getDialog().getText("label_database"));
-        this.label_user.setText(GeneralText.getDialog().getText("label_user"));
-        this.label_pwd.setText(GeneralText.getDialog().getText("label_pwd"));
+        for(Component component : panel_info.getComponents()){
+            if(component instanceof JLabel){
+                ((JLabel) component).setText(PlayerText.getDialog().getText(component.getName()));
+            }
+        }
+        for(Component component : panel_button.getComponents()){
+            if(component instanceof JButton){
+                ((JButton) component).setText(PlayerText.getDialog().getText(component.getName()));
+            }
+        }
     }
 
     /**

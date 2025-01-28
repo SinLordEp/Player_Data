@@ -19,42 +19,13 @@ import static main.principal.getProperty;
  * pattern to ensure a single instance for managing the dialogs.
  * @author SIN
  */
-public class GeneralText {
-    private static GeneralText instance;
+public abstract class GeneralText {
     protected Map<String,Object> texts;
     protected Map<String,Object> inputs;
     protected Map<String,Object> popups;
     protected Map<String,Object> options;
     protected String language;
 
-    /**
-     * Constructs a new instance of the {@code GeneralText} class.
-     * This constructor initializes dialog configurations using a resource file path
-     * retrieved from the {@code getProperty} method with the property key "generalDialog".
-     * The {@code initialize} method is called to load and process the dialog configuration
-     * from the specified resource.
-     * <p>
-     * If the resource is invalid or loading fails, the {@code initialize} method handles
-     * the exception by providing an error message.
-     */
-    public GeneralText() {
-        URL resource = getClass().getResource(getProperty("generalDialog"));
-        initialize(resource);
-    }
-
-    /**
-     * Returns a singleton instance of the {@code GeneralText} class. This method ensures that
-     * only one instance of {@code GeneralText} is created throughout the application lifecycle.
-     * If the instance is not yet initialized, it creates a new {@code GeneralText} instance.
-     *
-     * @return the singleton instance of the {@code GeneralText} class.
-     */
-    public static GeneralText getDialog() {
-        if (instance == null) {
-            instance = new GeneralText();
-        }
-        return instance;
-    }
 
     /**
      * Initializes the dialog configurations by parsing a YAML file from the provided resource URL.

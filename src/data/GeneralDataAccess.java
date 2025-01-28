@@ -1,6 +1,6 @@
 package data;
 
-import GUI.GeneralText;
+import GUI.Player.PlayerText;
 import data.file.FileType;
 import data.http.PhpType;
 import exceptions.FileManageException;
@@ -85,13 +85,13 @@ public abstract class GeneralDataAccess {
         fileChooser.setDialogTitle("Choosing " + fileType);
         switch(fileType){
             case TXT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.getDialog().getText("extension_txt"), "txt"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(PlayerText.getDialog().getText("extension_txt"), "txt"));
                 break;
             case DAT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.getDialog().getText("extension_dat"), "dat"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(PlayerText.getDialog().getText("extension_dat"), "dat"));
                 break;
             case XML:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.getDialog().getText("extension_xml"), "xml"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(PlayerText.getDialog().getText("extension_xml"), "xml"));
                 break;
         }
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -139,7 +139,7 @@ public abstract class GeneralDataAccess {
         logger.info("New path builder: Building new path...");
         String target_path = GeneralDataAccess.getPath();
         String target_extension = getExtension(fileType);
-        String target_file_name = GeneralText.getDialog().input("file_name");
+        String target_file_name = PlayerText.getDialog().input("file_name");
         target_path += "/" +target_file_name + target_extension;
         logger.info("New path builder: Finished building new path: {}", target_path);
         return target_path;
@@ -177,7 +177,7 @@ public abstract class GeneralDataAccess {
      * Creates a new file at the specified file path. If the file already exists, no file will be created.
      * Logs information about the operation's success or failure.
      * <p>
-     * This method interacts with {@code GeneralText.getDialog()} to display a popup informing the user of a successful
+     * This method interacts with {@code PlayerText.getDialog()} to display a popup informing the user of a successful
      * file creation. If an {@code IOException} occurs during the file creation process, the method wraps and throws it
      * as a {@code FileManageException} with the original exception's message.
      * <p>
@@ -190,7 +190,7 @@ public abstract class GeneralDataAccess {
         try {
             logger.info("Create new file: Creating new file...");
             if(new File(file_path).createNewFile()){
-                GeneralText.getDialog().popup("file_created");
+                PlayerText.getDialog().popup("file_created");
                 logger.info("Create new file: New file has been created!");
             }else{
                 logger.info("Create new file: File already exists, no file will be created");

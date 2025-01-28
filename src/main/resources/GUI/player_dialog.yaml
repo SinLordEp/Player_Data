@@ -63,10 +63,67 @@ text:
     en: "Name: "
     es: "Nombre: "
     cn: "名字: "
+  label_id:
+    en: "ID: "
+    es: "ID: "
+    cn: "ID: "
   label_id_error:
     en: "ID already exists"
     es: "El ID ya existe"
     cn: "ID已存在"
+  label_url:
+    en: "URL:"
+    es: "URL:"
+    cn: "地址:"
+  label_port:
+    en: "Port:"
+    es: "Puerto:"
+    cn: "端口:"
+  label_pwd:
+    en: "Password:"
+    es: "Contraseña:"
+    cn: "密码:"
+  label_user:
+    en: "User:"
+    es: "Usuario:"
+    cn: "用户:"
+  label_database:
+    en: "Database:"
+    es: "Base de datos:"
+    cn: "数据库："
+  db_login_title:
+    en: "Database Menu"
+    es: "Menú Base de datos"
+    cn: "数据库菜单"
+  extension_txt:
+    en: "Text File"
+    es: "Fichero Texto"
+    cn: "文本文件"
+  extension_dat:
+    en: "Binary File"
+    es: "Fichero Binario"
+    cn: "数据文件"
+  extension_xml:
+    en: "XML File"
+    es: "Fichero XML"
+    cn: "XML文件"
+  label_dataSource:
+    en: "Data source:"
+    es: "Fuente de dato:"
+    cn: "数据来源:"
+  label_dataType:
+    en: "Data type:"
+    es: "Tipo de dato:"
+    cn: "数据类型:"
+  label_sql_dialect:
+    en: "SQL dialect:"
+    es: "Dialecto de SQL:"
+    cn: "SQL方言:"
+  label_file_type:
+    en: "File type:"
+    es: "Tipo de fichero:"
+    cn: "文件类型:"
+
 
 
 input:
@@ -78,6 +135,14 @@ input:
     en: "Enter the ID"
     es: "Introducir ID"
     cn: "输入ID"
+  new_file_name:
+    en: "Input new file name"
+    es: "Introducir nombre del nuevo fichero"
+    cn: "输入新文件名"
+  file_name:
+    en: "Input file name"
+    es: "Introducir nombre del fichero"
+    cn: "输入文件名"
 
 popup:
   exported_file:
@@ -128,6 +193,78 @@ popup:
     en: "Player already existed"
     es: "Jugador ya existe"
     cn: "玩家已存在"
+  db_not_connected:
+    en: "Database is not isDBConnected"
+    es: "Base de datos no está conectada"
+    cn: "未连接数据库"
+  id_invalid:
+    en: "ID format is invalid"
+    es: "Formato de ID no es valido"
+    cn: "无效ID格式"
+  number_format_invalid:
+    en: "Number format invalid"
+    es: "Formato del número no es valido"
+    cn: "无效数字格式"
+  db_field_empty:
+    en: "One or more Database field maybe empty"
+    es: "Uno o varios campos de base de datos vacíos"
+    cn: "一个或多个数据库参数为空"
+  db_login_failed:
+    en: "Failed to connect to the database, please check the login info"
+    es: "No ha podido conectar a base de datos, revisa los datos de login"
+    cn: "连接数据库失败，请检查登录参数"
+  db_disconnect_failed:
+    en: "Some errors have occurred while disconnecting, please try again"
+    es: "Ha producido errores desconectando, inténtalo otra vez"
+    cn: "尝试断开连接时发生错误，请再试一次"
+  file_created:
+    en: "New file created"
+    es: "Nuevo fichero creado"
+    cn: "已创建新文件"
+  data_saved:
+    en: "Data is saved correctly"
+    es: "Dato guardado correctamente"
+    cn: "已保存数据"
+  data_invalid:
+    en: "Data invalid"
+    es: "Datos inválidos"
+    cn: "无效数据"
+  db_login_cancelled:
+    en: "You have canceled the database login"
+    es: "Has cancelado de conectar a base de datos"
+    cn: "您已取消连接数据库"
+  operation_cancelled:
+    en: "Operation cancelled!"
+    es: "¡Operación cancelada!"
+    cn: "操作已取消!"
+  export_failed:
+    en: "Failed to exportFile data"
+    es: "No se han podido exportar datos"
+    cn: "导出数据失败"
+  unknown_error:
+    en: "Unknown error has occurred"
+    es: "Se ha producido un error desconocido"
+    cn: "未知错误"
+  config_error:
+    en: "Failed to read config"
+    es: "No se ha podido leer configuración"
+    cn: "无法读取配置文件"
+  file_create_error:
+    en: "Failed to create new file"
+    es: "No se ha podido crear nuevo fichero"
+    cn: "创建新文件失败"
+  php_error:
+    en: "Failed to transfer data between Cliente and PHP server"
+    es: "No se ha podido transferir datos entre cliente y servidor PHP"
+    cn: "客户端未能与PHP服务器交换数据"
+  object_db_error:
+    en: "Failed to read/write ObjectDB file"
+    es: "No se ha podido leer/escribir fichero de ObjectDB"
+    cn: "无法读写ObjectDB文件"
+  exported_object_db:
+    en: "Successfully exported datas to ObjectDB"
+    es: "Se ha exportado datos correctamente a ObjectDB"
+    cn: "成功导出数据至ObjectDB"
 
 options:
   modify_player:
@@ -209,3 +346,61 @@ options:
         - "地区"
         - "服务器"
         - "名字"
+  target_source:
+    title:
+      en: "Data source menu"
+      es: "Menú fuente de datos"
+      cn: "数据来源菜单"
+    message:
+      en: "Choose a data source"
+      es: "Elige una fuente de datos"
+      cn: "选择一个数据来源"
+  target_dialect:
+    title:
+      en: "SQL dialect menu"
+      es: "Menú dialecto de SQL"
+      cn: "SQL方言菜单"
+    message:
+      en: "Choose a SQL dialect"
+      es: "Elige un dialecto de SQL"
+      cn: "选择一个SQL方言"
+  controller:
+    title:
+      en: "Controller menu"
+      es: "Menú de controlador"
+      cn: "控制器目录"
+    message:
+      en: "Choose a controller"
+      es: "Elige una controlador"
+      cn: "选择一个控制器"
+  extension_general:
+    title:
+      en: "Extension selector"
+      es: "Selector de extensión"
+      cn: "后缀选择"
+    message:
+      en: "Choose a File type"
+      es: "Elige un tipo de fichero"
+      cn: "选择一个文件后缀"
+  language:
+    title:
+      en: "Language"
+      es: "Idioma"
+      cn: "语言"
+    message:
+      en: "Choose a language"
+      es: "Elige un idioma"
+      cn: "选择一个语言"
+    option:
+      en:
+        - "English"
+        - "Spanish"
+        - "Chinese"
+      es:
+        - "Inglés"
+        - "Español"
+        - "Chino"
+      cn:
+        - "英语"
+        - "西语"
+        - "中文"

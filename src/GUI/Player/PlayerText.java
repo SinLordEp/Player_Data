@@ -13,7 +13,7 @@ import static main.principal.getProperty;
  * @author SIN
  */
 public class PlayerText extends GeneralText {
-    private static PlayerText instance;
+    private static final PlayerText INSTANCE = new PlayerText();
 
     /**
      * Initializes a new instance of the {@code PlayerText} class.
@@ -30,14 +30,12 @@ public class PlayerText extends GeneralText {
      */
     public PlayerText() {
         URL resource = getClass().getResource(getProperty("playerDialog"));
-        super.initialize(resource);
+        initialize(resource);
     }
 
     public static PlayerText getDialog() {
-        if (instance == null) {
-            instance = new PlayerText();
-        }
-        return instance;
+        return INSTANCE;
     }
+
 
 }

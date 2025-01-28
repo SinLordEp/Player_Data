@@ -8,6 +8,7 @@ import model.Server;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
@@ -36,7 +37,8 @@ public class PlayerInfoDialog extends JDialog {
     private JPanel panel_info;
     private JTextField text_id;
     private JLabel label_id;
-    private JLabel label_error;
+    private JLabel label_id_error;
+    private JPanel panel_button;
     private final Player player;
     private final HashMap<Region, Server[]> regionServerMap;
     private Region region;
@@ -173,12 +175,16 @@ public class PlayerInfoDialog extends JDialog {
      * localization settings, improving usability across different locales.
      */
     private void setUIText(){
-        label_id.setText("ID: ");
-        label_region.setText(PlayerText.getDialog().getText("label_region"));
-        label_server.setText(PlayerText.getDialog().getText("label_server"));
-        label_name.setText(PlayerText.getDialog().getText("label_name"));
-        button_submit.setText(PlayerText.getDialog().getText("button_submit"));
-        button_cancel.setText(PlayerText.getDialog().getText("button_cancel"));
+        for(Component component : panel_info.getComponents()){
+            if(component instanceof JLabel){
+                ((JLabel) component).setText(PlayerText.getDialog().getText(component.getName()));
+            }
+        }
+        for(Component component : panel_button.getComponents()){
+            if(component instanceof JButton){
+                ((JButton) component).setText(PlayerText.getDialog().getText(component.getName()));
+            }
+        }
     }
 
     /**
@@ -317,15 +323,15 @@ public class PlayerInfoDialog extends JDialog {
             return true;
         }
         if(text_id.getText().isEmpty() || text_id.getText().isBlank()){
-            label_error.setText(" ");
+            label_id_error.setText(" ");
             return false;
         }
         int id = Integer.parseInt(text_id.getText());
         if(playerIDs.contains(id)){
-            label_error.setText(PlayerText.getDialog().getText("label_id_error"));
+            label_id_error.setText(PlayerText.getDialog().getText("label_id_error"));
             return false;
         }else{
-            label_error.setText(" ");
+            label_id_error.setText(" ");
             return true;
         }
     }

@@ -2,7 +2,6 @@ package control;
 
 import GUI.DataSourceChooser;
 import GUI.DatabaseLogin;
-import GUI.GeneralText;
 import GUI.Player.PlayerInfoDialog;
 import GUI.Player.PlayerText;
 import GUI.Player.PlayerUI;
@@ -662,7 +661,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Change language: Processing...");
         String language;
         try {
-            language = switch(GeneralText.getDialog().selectionDialog("language")){
+            language = switch(PlayerText.getDialog().selectionDialog("language")){
                 case 0 -> "en";
                 case 1 -> "es";
                 case 2 -> "cn";
@@ -674,7 +673,6 @@ public class PlayerControl implements GeneralControl {
             notifyListeners("operation_cancelled", null);
             return;
         }
-        GeneralText.getDialog().setLanguage(language);
         PlayerText.getDialog().setLanguage(language);
         notifyListeners("language_changed",null);
         logger.info("Change language: Process finished!");

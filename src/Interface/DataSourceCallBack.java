@@ -1,6 +1,6 @@
 package Interface;
 
-import GUI.GeneralText;
+import GUI.Player.PlayerText;
 
 /**
  * @author SIN
@@ -8,6 +8,6 @@ import GUI.GeneralText;
 public interface DataSourceCallBack<T, R> {
     void onSubmit(T datasource, R datatype);
     default void onCancel(){
-        GeneralText.getDialog().popup("operation_cancelled");
+        PlayerText.getDialog().popup("operation_cancelled");
     }
 }

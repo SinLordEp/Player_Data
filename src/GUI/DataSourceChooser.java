@@ -1,5 +1,6 @@
 package GUI;
 
+import GUI.Player.PlayerText;
 import Interface.DataSourceCallBack;
 import data.DataSource;
 import data.database.SqlDialect;
@@ -7,6 +8,7 @@ import data.file.FileType;
 import data.http.PhpType;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
@@ -25,6 +27,8 @@ public class DataSourceChooser extends JDialog {
     private JComboBox<DataSource> comboBox_dataSource;
     private JLabel label_dataType;
     private JComboBox<Object> comboBox_dataType;
+    private JPanel panel_info;
+    private JPanel panel_button;
     private DataSource dataSource;
     private Object dataType;
 
@@ -122,7 +126,7 @@ public class DataSourceChooser extends JDialog {
      * This method sets the text of the {@code label_dataSource} and {@code label_dataType} fields
      * depending on the selected item of the {@code comboBox_dataSource}.
      * <p>
-     * It retrieves the necessary text values using the {@code GeneralText.getDialog().getText(String)} method
+     * It retrieves the necessary text values using the {@code PlayerText.getDialog().getText(String)} method
      * and updates the labels accordingly. The logic varies based on the selected {@code DataSource}.
      * <p>
      * Specifically:
@@ -133,8 +137,16 @@ public class DataSourceChooser extends JDialog {
      * This method ensures the labels dynamically reflect the current selection in the data source combo box.
      */
     private void setUIText(){
-        label_dataSource.setText(GeneralText.getDialog().getText("label_dataSource"));
-        label_dataType.setText(GeneralText.getDialog().getText("label_file_type"));
+        for(Component component : panel_info.getComponents()){
+            if(component instanceof JLabel){
+                ((JLabel) component).setText(PlayerText.getDialog().getText(component.getName()));
+            }
+        }
+        for(Component component : panel_button.getComponents()){
+            if(component instanceof JButton){
+                ((JButton) component).setText(PlayerText.getDialog().getText(component.getName()));
+            }
+        }
     }
 
     /**
@@ -196,28 +208,28 @@ public class DataSourceChooser extends JDialog {
         switch(dataSource){
             case NONE:
                 comboBox_dataType.setEnabled(false);
-                label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
+                label_dataType.setText(PlayerText.getDialog().getText("label_dataType"));
                 return;
             case FILE:
                 for(FileType fileType : FileType.values()){
                     comboBox_dataType.addItem(fileType);
                 }
-                label_dataType.setText(GeneralText.getDialog().getText("label_file_type"));
+                label_dataType.setText(PlayerText.getDialog().getText("label_file_type"));
                 break;
             case DATABASE, HIBERNATE:
                 for(SqlDialect sqlDialect : SqlDialect.values()){
                     comboBox_dataType.addItem(sqlDialect);
                 }
-                label_dataType.setText(GeneralText.getDialog().getText("label_sql_dialect"));
+                label_dataType.setText(PlayerText.getDialog().getText("label_sql_dialect"));
                 break;
             case PHP:
                 for(PhpType dataType : PhpType.values()){
                     comboBox_dataType.addItem(dataType);
                 }
-                label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
+                label_dataType.setText(PlayerText.getDialog().getText("label_dataType"));
                 break;
             case OBJECTDB, BASEX, MONGO:
-                label_dataType.setText(GeneralText.getDialog().getText("label_dataType"));
+                label_dataType.setText(PlayerText.getDialog().getText("label_dataType"));
                 comboBox_dataType.setEnabled(false);
                 button_submit.setEnabled(true);
                 return;

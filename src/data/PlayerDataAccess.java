@@ -1,6 +1,6 @@
 package data;
 
-import GUI.GeneralText;
+import GUI.Player.PlayerText;
 import data.database.DataBasePlayerCRUD;
 import data.database.SqlDialect;
 import data.http.PhpType;
@@ -410,7 +410,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         logger.info("Export file: Building extension...");
         String target_extension = getExtension(fileType);
         String target_path = getPath();
-        String target_name = GeneralText.getDialog().input("new_file_name");
+        String target_name = PlayerText.getDialog().input("new_file_name");
         target_path += "/" + target_name + target_extension;
         logger.info("Export file: Target path is set to {}", target_path);
         try {
