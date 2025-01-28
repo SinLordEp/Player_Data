@@ -88,7 +88,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
      *                           configuration or connecting to the database.
      */
     public void initializeRegionServer(){
-        logger.info("Initializing region server: Reading config file...");
+        logger.info("Reading region server config");
         try {
             DatabaseInfo info = getDefaultDatabaseInfo(SqlDialect.SQLITE);
             info.setDataSource(DataSource.DATABASE);
@@ -96,7 +96,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         } catch (ConfigErrorException e) {
             throw new RuntimeException(e);
         }
-        logger.info("Initializing region server: Region server map updated!");
+        logger.info("Region server map initialized!");
     }
 
     /**
@@ -113,7 +113,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
      */
     @SuppressWarnings("unchecked")
     public DatabaseInfo getDefaultDatabaseInfo(SqlDialect dialect, DataSource... dataSource) throws ConfigErrorException {
-        logger.info("Get default database info: Reading default database info for dialect: {}", dialect);
+        logger.info("Reading default database info for dialect: {}", dialect);
         DatabaseInfo databaseInfo = new DatabaseInfo();
         databaseInfo.setDialect(dialect);
         HashMap<String, Object> default_info = null;
@@ -165,7 +165,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
             default:
                 throw new OperationException("Unknown SQL dialect");
         }
-        logger.info("Get default database info: Finished reading database info!");
+        logger.info("Finished reading database info!");
         return databaseInfo;
     }
 
@@ -199,29 +199,28 @@ public class PlayerDataAccess extends GeneralDataAccess {
      */
     @Override
     public void read() {
-        logger.info("Read: Reading data from {}", dataSource);
         try {
             switch (dataSource){
                 case NONE :
-                    logger.info("Read: Resetting player map...");
+                    logger.info("Resetting player map...");
                     player_map = new TreeMap<>();
                     break;
                 case FILE:
-                    logger.info("Read: Reading file by calling playerCRUD");
+                    logger.info("Reading file from {}PlayerCRUD", fileType);
                     player_map = PlayerCRUDFactory.getInstance()
                             .getCRUD(fileType)
                             .prepare(file_path)
                             .read();
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB, BASEX, MONGO:
-                    logger.info("Read: Calling DBA...");
+                    logger.info("Reading data from {}PlayerCRUD", dataSource);
                     player_map = PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
                             .read();
                     break;
                 case PHP:
-                    logger.info("Read: Calling PHP...");
+                    logger.info("Reading data through PHP");
                     player_map = playerPhp.read(phpType);
                     break;
                 default:
@@ -233,9 +232,9 @@ public class PlayerDataAccess extends GeneralDataAccess {
         } catch (Exception e) {
             player_map = new TreeMap<>();
             dataSource = DataSource.NONE;
-            throw new OperationException("Read: Failed to read data with cause: " + e.getMessage());
+            throw new OperationException("Failed to read data. Cause: " + e.getMessage());
         }
-        logger.info("Read: Finished reading data!");
+        logger.info("Finished reading data!");
     }
 
     /**
@@ -273,16 +272,17 @@ public class PlayerDataAccess extends GeneralDataAccess {
      */
     @Override
     public void save(){
-        logger.info("Save: Saving data to {}", dataSource);
         try{
             switch (dataSource){
                 case FILE:
+                    logger.info("Saving file to {}PlayerCRUD", fileType);
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(fileType)
                             .prepare(file_path)
                             .export(player_map);
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB, MONGO:
+                    logger.info("Saving data to {}PlayerCRUD", dataSource);
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
@@ -290,10 +290,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     changed_player_map.clear();
                     break;
                 case PHP:
+                    logger.info("Saving data through PHP");
                     playerPhp.update(changed_player_map);
                     changed_player_map.clear();
                     break;
                 case BASEX:
+                    logger.info("Saving data through BASEX");
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
@@ -306,7 +308,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
             throw new OperationException("Failed to save data with cause: " + e.getMessage());
         }
         isDataChanged = false;
-        logger.info("Save: Finished saving data!");
+        logger.info("Finished saving data!");
     }
 
     /**
@@ -326,16 +328,16 @@ public class PlayerDataAccess extends GeneralDataAccess {
      *               relevant player details and unique identifier.
      */
     public void add(Player player) {
-        logger.info("Add: Adding player with ID: {}", player.getID());
+        logger.info("Adding player with ID: {}", player.getID());
         switch(dataSource){
             case DATABASE, HIBERNATE, PHP, OBJECTDB, BASEX, MONGO:
                 logger.info("Add: Adding player to changed player map");
                 changed_player_map.put(player, DataOperation.ADD);
         }
-        logger.info("Add: Adding player to current player map");
+        logger.info("Adding player to current player map");
         player_map.put(player.getID(), player);
         isDataChanged = true;
-        logger.info("Add: Finished adding player!");
+        logger.info("Finished adding player!");
     }
 
     /**
@@ -347,21 +349,21 @@ public class PlayerDataAccess extends GeneralDataAccess {
      *               Ensure the {@code Player} object is valid and contains a proper ID.
      */
     public void modify(Player player) {
-        logger.info("Modify: Modifying player with ID: {}", player.getID());
+        logger.info("Modifying player with ID: {}", player.getID());
         switch(dataSource){
             case DATABASE, HIBERNATE, PHP, OBJECTDB, MONGO:
-                logger.info("Modify: Adding modified player with ID: {} to changed player map", player.getID());
+                logger.info("Adding modified player with ID: {} to changed player map", player.getID());
                 changed_player_map.put(player, DataOperation.MODIFY);
                 //Always trigger case FILE
             case FILE, BASEX:
-                logger.info("Modify: Adding modified player with ID: {} to current player map", player.getID());
+                logger.info("Adding modified player with ID: {} to current player map", player.getID());
                 player_map.put(player.getID(), player);
                 break;
             default:
-                throw new OperationException("Modify: Unknown data source: " + dataSource);
+                throw new OperationException("Unknown data source: " + dataSource);
         }
         isDataChanged = true;
-        logger.info("Modify: Finished modifying player!");
+        logger.info("Finished modifying player!");
     }
 
     /**
@@ -376,21 +378,21 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * @param selected_player_id the ID of the player to be deleted
      */
     public void delete(int selected_player_id) {
-        logger.info("Delete: Deleting player with ID: {}", selected_player_id);
+        logger.info("Deleting player with ID: {}", selected_player_id);
         switch(dataSource){
             case DATABASE, HIBERNATE, PHP, OBJECTDB, MONGO:
-                logger.info("Delete: Adding deleted player with ID: {} to changed player map", selected_player_id);
+                logger.info("Adding deleted player with ID: {} to changed player map", selected_player_id);
                 changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
                 //Always trigger case FILE
             case FILE, BASEX:
-                logger.info("Delete: Deleting player with ID: {} from current player map", selected_player_id);
+                logger.info("Deleting player with ID: {} from current player map", selected_player_id);
                 player_map.remove(selected_player_id);
                 break;
             default:
                 throw new OperationException("Deletion operation not implemented for this data source");
         }
         isDataChanged = true;
-        logger.info("Delete: Finished deleting player!");
+        logger.info("Finished deleting player!");
     }
 
     /**
@@ -407,12 +409,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * - Logs progress and success messages during the file export process.
      */
     public void exportFile() {
-        logger.info("Export file: Building extension...");
         String target_extension = getExtension(fileType);
         String target_path = getPath();
         String target_name = PlayerText.getDialog().input("new_file_name");
         target_path += "/" + target_name + target_extension;
-        logger.info("Export file: Target path is set to {}", target_path);
+        logger.info("Target path is set to {}", target_path);
         try {
             PlayerCRUDFactory.getInstance()
                     .getCRUD(fileType)
@@ -421,7 +422,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
         } catch (Exception e) {
             throw new FileManageException("Failed to export file with cause: " + e.getMessage());
         }
-        logger.info("Export file: Finished exporting file!");
+        logger.info("Finished exporting file!");
     }
 
     /**
@@ -431,8 +432,8 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * @param exportDataBaseInfo the database info used for the export operation
      */
     public void exportDB(DatabaseInfo exportDataBaseInfo) {
-        logger.info("Export DB: Calling DBA...");
         try {
+            logger.info("Exporting to database by {}PlayerCRDU", exportDataBaseInfo.getDataSource());
             PlayerCRUDFactory.getInstance()
                     .getCRUD(exportDataBaseInfo.getDataSource())
                     .prepare(exportDataBaseInfo)
@@ -449,7 +450,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * @param phpType the data type that needs to be exported
      */
     public void exportPHP(PhpType phpType) {
-        logger.info("Export PHP: Calling PHP...");
+        logger.info("Export data through PHP");
         playerPhp.export(phpType, player_map);
     }
 

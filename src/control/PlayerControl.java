@@ -65,7 +65,7 @@ public class PlayerControl implements GeneralControl {
             notifyListeners("region_server_null", null);
             System.exit(0);
         }
-        logger.debug("Trying to build player frame");
+        logger.debug("Building player frame");
         playerUI.run();
         logger.info("Finished building player frame");
     }
@@ -110,11 +110,10 @@ public class PlayerControl implements GeneralControl {
      * specific operations related to the chosen data source.
      */
     public void createFile() {
-        logger.debug("Create file: Processing...");
         save();
-        logger.info("Create file: Calling DataSourceChooser...");
+        logger.info("Calling DataSourceChooser...");
         new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile);
-        logger.info("Create file: Process finished!");
+        logger.info("File created");
     }
 
     /**
@@ -141,7 +140,7 @@ public class PlayerControl implements GeneralControl {
      * @param dataType   The type of the file to be created. This is expected to be of type {@code FileType}.
      */
     private void handleDataSourceForCreateFile(DataSource dataSource, Object dataType){
-        logger.info("Handling Data source for Create file: Processing...");
+        logger.info("Processing DataSource-{} and DataType-{} to create file", dataSource, dataType);
         try {
             playerDA.setFilePath(GeneralDataAccess.newPathBuilder((FileType) dataType));
             playerDA.createNewFile();
@@ -150,12 +149,11 @@ public class PlayerControl implements GeneralControl {
             playerDA.clearData();
             notifyListeners("data_changed", playerDA.getPlayerMap());
         } catch (OperationCancelledException e) {
-            logger.info("Handling Data source for Create file: Failed with cause: Operation cancelled");
+            logger.info("File creation cancelled");
         } catch (FileManageException e) {
-            logger.error("Handling Data source for Create file: Failed with cause: {}", e.getMessage());
+            logger.error("Failed to create file. Cause: {}", e.getMessage());
             notifyListeners("file_create_error", null);
         }
-        logger.info("Handling Data source for Create file: Process finished!");
     }
 
     /**
@@ -181,18 +179,17 @@ public class PlayerControl implements GeneralControl {
      * errors or cancellations are gracefully handled.
      */
     public void importData() {
-        logger.info("Import data: Processing...");
+        logger.info("Importing data...");
         try {
             save();
-            logger.info("Import data: Calling Data source chooser...");
+            logger.info("Calling Data source chooser...");
             new DataSourceChooser(null, this::handleDataSourceForImportData);
         } catch (OperationCancelledException e) {
-            logger.info("Import data: Failed with cause: Operation cancelled");
+            logger.info("Data source chooser cancelled");
             notifyListeners("operation_cancelled", null);
         } catch (DataTypeException e){
-            logger.error("Import data: Failed with cause: {}", e.getMessage());
+            logger.error("Failed to import data. Cause: {}", e.getMessage());
         }
-        logger.info("Import data: Process finished!");
     }
 
     /**
@@ -221,7 +218,7 @@ public class PlayerControl implements GeneralControl {
      *                   This defines the specific logic for handling the provided data.
      */
     private void handleDataSourceForImportData(DataSource dataSource, Object dataType){
-        logger.info("Handling Data source for Import data: Processing...");
+        logger.info("Processing DataSource-{} and DataType-{} to import data", dataSource, dataType);
         playerDA.setDataSource(dataSource);
         notifyListeners("dataSource_set",null);
         switch(dataSource){
@@ -231,7 +228,6 @@ public class PlayerControl implements GeneralControl {
             case OBJECTDB, BASEX, MONGO -> importDB(dataSource, SqlDialect.NONE);
             default -> throw new IllegalStateException("Unexpected Data Source: " + dataType);
         }
-        logger.info("Handling Data source for Import data: Process finished!");
     }
 
     /**
@@ -251,9 +247,9 @@ public class PlayerControl implements GeneralControl {
      *                 of the file, such as {@code TXT}, {@code DAT}, or {@code XML}.
      */
     private void importFile(FileType fileType) {
-        logger.info("Import file: Processing...");
+        logger.info("Processing file type-{} to import", fileType);
         playerDA.setFileType(fileType);
-        logger.info("Import file: Fetching file path...");
+        logger.info("Fetching file path");
         String file_path;
         try {
             file_path = GeneralDataAccess.getPath(playerDA.getFileType());
@@ -261,10 +257,10 @@ public class PlayerControl implements GeneralControl {
             playerDA.read();
             notifyListeners("data_changed", playerDA.getPlayerMap());
         } catch (OperationCancelledException e) {
-            logger.info("Import file: Failed with cause: Operation cancelled");
+            logger.info("Import from file cancelled");
             notifyListeners("operation_cancelled", null);
         }
-        logger.info("Import file: Process finished!");
+        logger.info("File data imported");
     }
 
     /**
@@ -286,12 +282,12 @@ public class PlayerControl implements GeneralControl {
      *                   This specifies the type of database operation to configure.
      */
     private void importDB(DataSource dataSource, SqlDialect sqlDialect)  {
-        logger.info("Import DB: Processing...");
+        logger.info("Processing DataSource-{} and SQL Dialect-{} to import", dataSource, sqlDialect);
         try {
-            logger.info("Import DB: Fetching default database information...");
+            logger.info("Fetching default database information");
             DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(sqlDialect, dataSource);
             databaseInfo.setDataSource(dataSource);
-            logger.info("Import DB: Calling DatabaseLogin...");
+            logger.info("Calling DatabaseLogin");
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForImport);
         } catch (ConfigErrorException e) {
             logger.error("Import DB: Failed to read configuration with cause: {}", e.getMessage());
@@ -339,16 +335,16 @@ public class PlayerControl implements GeneralControl {
      *                 provided data access layer.
      */
     private void importPHP(PhpType phpType) {
-        logger.info("Import HTTP: Processing...");
+        logger.info("Processing PHP type-{} to import", phpType);
         try{
             playerDA.setPhpType(phpType);
             playerDA.read();
             notifyListeners("data_changed", playerDA.getPlayerMap());
         }catch (OperationCancelledException e) {
-            logger.info("Import HTTP: Failed with cause: Operation cancelled");
+            logger.info("Importe from PHP cancelled");
             notifyListeners("operation_cancelled", null);
         }catch (HttpPhpException e){
-            logger.error("Import HTTP: Failed with cause: {}", e.getMessage());
+            logger.error("Failed to import from php server. Cause: {}", e.getMessage());
             notifyListeners("php_error",null);
         }
     }
@@ -367,10 +363,8 @@ public class PlayerControl implements GeneralControl {
      * {@code logger} to record the workflow.
      */
     public void add() {
-        logger.info("Add: Processing...");
-        logger.info("Add: Calling Player info dialog...");
+        logger.info("Calling Player info dialog...");
         new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player(), this::handlePlayerInfoForAdd);
-        logger.info("Add: Process finished!");
     }
 
     /**
@@ -381,11 +375,10 @@ public class PlayerControl implements GeneralControl {
      * @param player The Player object containing the details to be added.
      */
     private void handlePlayerInfoForAdd(Player player){
-        logger.info("Handle player info for add: Processing...");
         playerDA.add(player);
         notifyListeners("data_changed", playerDA.getPlayerMap());
         notifyListeners("added_player", null);
-        logger.info("Handle player info for add: Process finished!");
+        logger.info("Player with id-{} has been added", player.getID());
     }
 
     /**
@@ -399,10 +392,8 @@ public class PlayerControl implements GeneralControl {
      * @param selected_player_id the unique identifier of the player to be modified
      */
     public void modify(int selected_player_id){
-        logger.info("Modify: Processing...");
-        logger.info("Modify: Calling Player info dialog with player id: {}", selected_player_id);
+        logger.info("Calling Player info dialog with player id: {}", selected_player_id);
         new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id), this::handlePlayerInfoForModify);
-        logger.info("Modify: Process finished!");
     }
 
     /**
@@ -412,11 +403,10 @@ public class PlayerControl implements GeneralControl {
      * @param player The player object containing the information to be modified.
      */
     private void handlePlayerInfoForModify(Player player){
-        logger.info("Handle player info for modify: Processing...");
         playerDA.modify(player);
         notifyListeners("modified_player", null);
         notifyListeners("data_changed", playerDA.getPlayerMap());
-        logger.info("Handle player info for modify: Process finished!");
+        logger.info("Player with id-{} has been modified", player.getID());
     }
 
     /**
@@ -427,11 +417,10 @@ public class PlayerControl implements GeneralControl {
      * @param selected_player_id the unique identifier of the player to be deleted
      */
     public void delete(int selected_player_id) {
-        logger.info("Delete: Processing...");
         playerDA.delete(selected_player_id);
         notifyListeners("data_changed", playerDA.getPlayerMap());
         notifyListeners("deleted_player", null);
-        logger.info("Delete: Process finished!");
+        logger.info("Player with id-{} has been deleted", selected_player_id);
     }
 
     /**
@@ -450,16 +439,13 @@ public class PlayerControl implements GeneralControl {
      * and is responsible for processing the export operation once the user selects a destination for data export.
      */
     public void export() {
-        logger.info("Export: Processing...");
-        logger.info("Export: Checking current player data...");
+        logger.info("Checking current player data");
         if(playerDA.isEmpty()){
-            logger.info("Export: Process cancelled with cause: No player data found");
+            logger.info("Exportation is cancelled. Cause: No player data found");
             notifyListeners("player_map_null", null);
             return;
         }
-        logger.info("Export: Calling DataSourceChooser...");
         new DataSourceChooser(null, this::handleDataSourceForExport);
-        logger.info("Export: Process finished!");
     }
 
     /**
@@ -477,7 +463,7 @@ public class PlayerControl implements GeneralControl {
      *                   - For PHP, dataType is an instance of DataType.
      */
     private void handleDataSourceForExport(DataSource dataSource, Object dataType){
-        logger.info("Handle DataSource for Export data: Processing...");
+        logger.info("Processing DataSource-{} and DataType-{} to export", dataSource, dataType);
         switch (dataSource){
             case FILE -> exportFile((FileType) dataType);
             case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
@@ -485,7 +471,6 @@ public class PlayerControl implements GeneralControl {
             case OBJECTDB, BASEX, MONGO -> exportDB(dataSource, SqlDialect.NONE);
             default -> throw new IllegalArgumentException("Unknown data source: " + dataSource);
         }
-        logger.info("Handle DataSource for Export data: Process finished!");
     }
 
     /**
@@ -498,7 +483,7 @@ public class PlayerControl implements GeneralControl {
      *                 Must not be null, and should represent a valid file type.
      */
     private void exportFile(FileType fileType) {
-        logger.info("Export File: Processing...");
+        logger.info("Processing file type-{} to export", fileType);
         playerDA.setFileType(fileType);
         try {
             playerDA.exportFile();
@@ -510,7 +495,7 @@ public class PlayerControl implements GeneralControl {
             logger.error("Failed to exportFile data to file. Cause: {}", e.getMessage());
             notifyListeners("export_failed", null);
         }
-        logger.info("Export File: Process finished!");
+        logger.info("Completed exporting to file");
     }
 
     /**
@@ -522,17 +507,15 @@ public class PlayerControl implements GeneralControl {
      * @param target_dialect The SQL dialect to be used for the export operation.
      */
     private void exportDB(DataSource target_source, SqlDialect target_dialect) {
-        logger.info("Export DB: Processing...");
+        logger.info("Processing target DataSource-{} and SQL dialect {} to export", target_source,  target_dialect);
         try {
             DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(target_dialect, target_source);
             databaseInfo.setDataSource(target_source);
-            logger.info("Export DB: Calling DataSourceChooser...");
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForExport);
         } catch (ConfigErrorException e) {
             logger.error("Failed to read default database config. Cause: {}", e.getMessage());
             notifyListeners("config_error", null);
         }
-        logger.info("Export DB: Process finished!");
     }
 
     /**
@@ -549,7 +532,6 @@ public class PlayerControl implements GeneralControl {
      *                     required to connect and perform the export operation.
      */
     private void handleDatabaseLoginForExport(DatabaseInfo databaseInfo) {
-        logger.info("Handle DatabaseLogin for Export data: Processing...");
         try {
             playerDA.exportDB(databaseInfo);
             notifyListeners("exported_db", null);
@@ -557,7 +539,6 @@ public class PlayerControl implements GeneralControl {
             logger.error("Failed to exportFile data to database. Cause: {}", e.getMessage());
             notifyListeners("db_login_failed",null);
         }
-        logger.info("Handle DatabaseLogin for Export data: Process finished!");
     }
 
     /**
@@ -573,7 +554,7 @@ public class PlayerControl implements GeneralControl {
      *                 the export is determined by the `playerDA.exportPHP` method.
      */
     private void exportPHP(PhpType phpType) {
-        logger.info("Export PHP: Processing...");
+        logger.info("Processing PHP type-{} to export", phpType);
         try{
             playerDA.exportPHP(phpType);
             notifyListeners("exported_php", null);
@@ -602,25 +583,24 @@ public class PlayerControl implements GeneralControl {
      * This function ensures proper logging and listener notification during its operation.
      */
     public void save(){
-        logger.info("Save: Processing...");
         if(!playerDA.isDataChanged()){
             logger.info("Save: Process cancelled with cause: No datas were changed");
             return;
         }
         try {
             if (Objects.requireNonNull(playerDA.getDataSource()) == DataSource.NONE) {
-                logger.info("Save: Current data source is NONE, returning...");
+                logger.info("Current data source is NONE, returning...");
                 return;
             } else {
-                logger.info("Save: Current data source is {}, saving...", playerDA.getDataSource());
+                logger.info("Current data source is {}, saving...", playerDA.getDataSource());
                 playerDA.save();
             }
         } catch (DatabaseException e) {
-            logger.error("Save: Failed to save data via database with cause: {}", e.getMessage());
+            logger.error("Failed to save data via database. Cause: {}", e.getMessage());
             notifyListeners("config_error", null);
         }
         notifyListeners("data_saved", null);
-        logger.info("Save: Process finished!");
+        logger.info("Data saved");
     }
 
     /**
@@ -633,11 +613,11 @@ public class PlayerControl implements GeneralControl {
      * process.
      */
     private void clearDataSource(){
-        logger.info("Clear DataSource: Processing...");
+        logger.info("Clearing current data source");
         playerDA.setDataSource(DataSource.NONE);
         playerDA.setFileType(FileType.NONE);
         playerDA.setDatabaseInfo(new DatabaseInfo());
-        logger.info("Clear DataSource: Process finished!");
+        logger.info("Completed clearing current data source");
     }
 
     /**
@@ -658,7 +638,6 @@ public class PlayerControl implements GeneralControl {
      * Logging is implemented to track the process at different stages.
      */
     public void changeLanguage(){
-        logger.info("Change language: Processing...");
         String language;
         try {
             language = switch(PlayerText.getDialog().selectionDialog("language")){
@@ -675,7 +654,6 @@ public class PlayerControl implements GeneralControl {
         }
         PlayerText.getDialog().setLanguage(language);
         notifyListeners("language_changed",null);
-        logger.info("Change language: Process finished!");
     }
 
     /**
@@ -697,11 +675,10 @@ public class PlayerControl implements GeneralControl {
      * @param data the data associated with the event, passed as a {@code SortedMap} object
      */
     private void notifyListeners(String event, SortedMap<?,?> data){
-        logger.info("Notify listener: Processing with code: {}", event);
+        logger.info("Notifying listener with code: {}", event);
         for(EventListener<SortedMap<?,?>> listener : listeners){
             listener.onEvent(event, data);
         }
-        logger.info("Notify listener: Process finished!");
     }
 
 }
