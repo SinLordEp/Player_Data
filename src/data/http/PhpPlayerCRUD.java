@@ -1,6 +1,6 @@
 package data.http;
 
-import Interface.GeneralPhp;
+import Interface.PlayerCRUD;
 import data.DataOperation;
 import exceptions.DataCorruptedException;
 import exceptions.HttpPhpException;
@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import static main.principal.getProperty;
@@ -24,32 +23,34 @@ import static main.principal.getProperty;
 /**
  * @author SIN
  */
-public class PlayerPhp implements GeneralPhp<SortedMap<Integer,Player>> {
-    private static final Logger logger = LoggerFactory.getLogger(PlayerPhp.class);
+public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
+    private static final Logger logger = LoggerFactory.getLogger(PhpPlayerCRUD.class);
     ApiRequests api;
-    private final String url;
-    private final String readUrl;
-    private final String writeUrl;
+    private String url;
+    private String readUrl;
+    private String writeUrl;
+    PhpType phpType;
 
-    public PlayerPhp() {
-        api = new ApiRequests();
-        url = getProperty("phpURL");
-        readUrl = getProperty("phpReadURL");
-        writeUrl = getProperty("phpWriteURL");
-        logger.info("PlayerPhp: Instantiated");
+    @Override
+    public PlayerCRUD<PhpType> prepare(PhpType phpType) {
+        this.phpType = phpType;
+        if(phpType == PhpType.JSON){
+            api = new ApiRequests();
+            url = getProperty("phpURL");
+            readUrl = getProperty("phpReadURL");
+            writeUrl = getProperty("phpWriteURL");
+            return this;
+        }
+        throw new HttpPhpException("Invalid php type");
     }
 
     @Override
-    public TreeMap<Integer, Player> read(PhpType phpType) {
-        logger.info("Read: Reading player data in form of {}", phpType);
-        return switch (phpType){
-            case NONE -> new TreeMap<>();
-            case JSON -> read_json();
-        };
+    public void release() {
     }
 
-    private TreeMap<Integer, Player> read_json() {
-        logger.info("Read JSON: Reading player data from {}", url + readUrl);
+    @Override
+    public TreeMap<Integer, Player> read() {
+        logger.info("Reading player data from {}", url + readUrl);
         TreeMap<Integer, Player> playerMap = new TreeMap<>();
         try {
             String rawJson = api.getRequest(url + readUrl);
@@ -75,41 +76,16 @@ public class PlayerPhp implements GeneralPhp<SortedMap<Integer,Player>> {
                 playerMap.put(player.getID(), player);
             }
         } catch (IOException e) {
-            logger.error("Read JSON: Failed to read data with cause: {}", e.getMessage());
+            logger.error("Failed to read data with cause: {}", e.getMessage());
             throw new HttpPhpException("Failed to read from target php server with cause: " + e.getMessage());
         }
-        logger.info("Read JSON: Finished reading from PHP server");
+        logger.info("Completed reading from PHP server");
         return playerMap;
     }
 
     @Override
-    public void export(PhpType phpType, SortedMap<Integer, Player> player_map) {
-        logger.info("Export: Exporting player data in form of {}", phpType);
-        TreeMap<Integer, Player> existed_player_map = read(PhpType.JSON);
-        HashMap<Player, DataOperation> export_player_map = new HashMap<>();
-        for(Map.Entry<Integer, Player> idAndPlayer : existed_player_map.entrySet() ) {
-            if(!player_map.containsKey(idAndPlayer.getKey())) {
-                logger.info("Export: Eliminating none existing player with id {}", idAndPlayer.getKey());
-                export_player_map.put(idAndPlayer.getValue(), DataOperation.DELETE);
-            }else{
-                logger.info("Export: Modifying existing player with id {}", idAndPlayer.getKey());
-                export_player_map.put(player_map.get(idAndPlayer.getKey()), DataOperation.MODIFY);
-            }
-        }
-        for(Map.Entry<Integer, Player> idAndPlayer : player_map.entrySet() ) {
-            if(!existed_player_map.containsKey(idAndPlayer.getKey())) {
-                logger.info("Export: Adding new player with id {}", idAndPlayer.getKey());
-                export_player_map.put(idAndPlayer.getValue(), DataOperation.ADD);
-            }
-        }
-        logger.info("Export: Calling update to apply changes...");
-        update(export_player_map);
-        logger.info("Export: Finished exporting data to target php server");
-    }
-
     @SuppressWarnings("unchecked")
-    public void update(HashMap<Player, DataOperation> changed_player_map){
-        logger.info("Update: Updating PHP server data with changed player map...");
+    public void update(HashMap<Player, DataOperation> changed_player_map) {
         JSONArray playerArray = new JSONArray();
         for(Player player : changed_player_map.keySet()) {
             JSONObject playerObject = new JSONObject();
@@ -130,12 +106,34 @@ public class PlayerPhp implements GeneralPhp<SortedMap<Integer,Player>> {
                 throw new HttpPhpException(response.get("message").toString());
             }
             if("success".equals(response.get("status").toString())) {
-                logger.info("Update: Successfully updated data on PHP server");
+                logger.info("Successfully updated data on PHP server");
             }
         } catch (IOException e) {
-            logger.error("Update: Failed to update data with cause: {}", e.getMessage());
+            logger.error("Failed to update data with cause: {}", e.getMessage());
             throw new HttpPhpException("Failed to update data on target php server with cause: " + e.getMessage());
         }
-        logger.info("Update: Finished updating data on PHP server");
+    }
+
+    @Override
+    public void export(TreeMap<Integer, Player> player_map) {
+        TreeMap<Integer, Player> existed_player_map = read();
+        HashMap<Player, DataOperation> export_player_map = new HashMap<>();
+        for(Map.Entry<Integer, Player> idAndPlayer : existed_player_map.entrySet() ) {
+            if(!player_map.containsKey(idAndPlayer.getKey())) {
+                logger.info("Eliminating none existing player with id {}", idAndPlayer.getKey());
+                export_player_map.put(idAndPlayer.getValue(), DataOperation.DELETE);
+            }else{
+                logger.info("Modifying existing player with id {}", idAndPlayer.getKey());
+                export_player_map.put(player_map.get(idAndPlayer.getKey()), DataOperation.MODIFY);
+            }
+        }
+        for(Map.Entry<Integer, Player> idAndPlayer : player_map.entrySet() ) {
+            if(!existed_player_map.containsKey(idAndPlayer.getKey())) {
+                logger.info("Adding new player with id {}", idAndPlayer.getKey());
+                export_player_map.put(idAndPlayer.getValue(), DataOperation.ADD);
+            }
+        }
+        update(export_player_map);
+        logger.info("Completed exporting data to target php server");
     }
 }

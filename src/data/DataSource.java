@@ -9,7 +9,7 @@ public enum DataSource {
     FILE("none"),
     DATABASE("DataBasePlayerCRUD"),
     HIBERNATE("HibernatePlayerCRUD"),
-    PHP("none"),
+    PHP("PhpPlayerCRUD"),
     OBJECTDB("ObjectDBPlayerCRUD"),
     BASEX("BaseXPlayerCRUD"),
     MONGO("MongoPlayerCRUD");

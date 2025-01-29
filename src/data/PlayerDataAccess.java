@@ -4,7 +4,6 @@ import GUI.Player.PlayerText;
 import data.database.DataBasePlayerCRUD;
 import data.database.SqlDialect;
 import data.http.PhpType;
-import data.http.PlayerPhp;
 import exceptions.ConfigErrorException;
 import exceptions.DataCorruptedException;
 import exceptions.FileManageException;
@@ -38,7 +37,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
     private HashMap<Region, Server[]> region_server_map;
-    private final PlayerPhp playerPhp;
     private static final Logger logger = LoggerFactory.getLogger(PlayerDataAccess.class);
     private boolean isDataChanged = false;
 
@@ -58,8 +56,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * Logs the initialization process to indicate successful instantiation of the object.
      */
     public PlayerDataAccess() {
-        playerPhp = new PlayerPhp();
-        logger.info("PlayerDataAccess: Instantiated");
+        logger.info("Instantiated");
     }
 
 
@@ -221,7 +218,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     break;
                 case PHP:
                     logger.info("Reading data through PHP");
-                    player_map = playerPhp.read(phpType);
+                    player_map = PlayerCRUDFactory.getInstance()
+                            .getCRUD()
+                            .prepare(phpType)
+                            .read();
                     break;
                 default:
                     throw new OperationException("Unknown data source: " + dataSource);
@@ -291,7 +291,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     break;
                 case PHP:
                     logger.info("Saving data through PHP");
-                    playerPhp.update(changed_player_map);
+                    PlayerCRUDFactory.getInstance()
+                            .getCRUD()
+                            .prepare(phpType)
+                            .update(changed_player_map);
                     changed_player_map.clear();
                     break;
                 case BASEX:
@@ -451,7 +454,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
      */
     public void exportPHP(PhpType phpType) {
         logger.info("Export data through PHP");
-        playerPhp.export(phpType, player_map);
+        PlayerCRUDFactory.getInstance()
+                .getCRUD()
+                .prepare(phpType)
+                .export(player_map);
     }
 
     public boolean isEmpty(){

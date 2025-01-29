@@ -2,6 +2,7 @@ package data;
 
 import Interface.PlayerCRUD;
 import data.file.FileType;
+import data.http.PhpType;
 import exceptions.DatabaseException;
 import model.DatabaseInfo;
 
@@ -35,6 +36,19 @@ public class PlayerCRUDFactory {
     }
 
     @SuppressWarnings("unchecked")
+    public PlayerCRUD<PhpType> getCRUD(){
+        return (PlayerCRUD<PhpType>) playerCRUDHashMap.computeIfAbsent(DataSource.PHP, _->{
+            try {
+                String classPackagePath = "data.http.%s".formatted(DataSource.PHP.getClassName());
+                Class<?> tempClass = Class.forName(classPackagePath);
+                return (PlayerCRUD<PhpType>) tempClass.getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                throw new DatabaseException("PlayerCRUD could not be instantiated");
+            }
+        });
+    }
+
+    @SuppressWarnings("unchecked")
     public PlayerCRUD<String> getCRUD(FileType fileType){
         return (PlayerCRUD<String>) playerCRUDHashMap.computeIfAbsent(fileType, _->{
             try {
@@ -46,5 +60,6 @@ public class PlayerCRUDFactory {
             }
         });
     }
+
 
 }
