@@ -34,10 +34,10 @@ public class principal {
     public static void main(String[] args){
         initializeProperties();
         initializeLogger();
-        logger.info("Main: Getting controller...");
+        logger.info("Getting controller...");
         GeneralControl current_control = initializeControl();
         if (current_control != null) {
-            logger.info("Main: Controller loaded");
+            logger.info("Controller loaded");
             current_control.run();
         }
     }
