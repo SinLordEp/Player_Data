@@ -519,11 +519,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * and logs messages before and after the validation process.
      */
     private void isDataValid(){
-        logger.info("isDataValid: Validating imported data...");
+        logger.info("Validating imported data...");
         for(Player player : player_map.values()){
             isPlayerInvalid(player);
         }
-        logger.info("isDataValid: Data is valid");
+        logger.info("Data is valid");
     }
 
     public HashMap<Region, Server[]> getRegion_server_map() {
