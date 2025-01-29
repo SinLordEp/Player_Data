@@ -65,9 +65,7 @@ public class PlayerControl implements GeneralControl {
             notifyListeners("region_server_null", null);
             System.exit(0);
         }
-        logger.debug("Building player frame");
         playerUI.run();
-        logger.info("Finished building player frame");
     }
 
     /**
