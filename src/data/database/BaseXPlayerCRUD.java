@@ -74,6 +74,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                     case DELETE -> "delete node /Player/player[@id='%s']".formatted(player.getID());
                 };
                 new XQuery(query).execute(context);
+                logger.info("Player {} has been updated", player.getID());
             }
         } catch (BaseXException e) {
             throw new DatabaseException("Failed to update BaseX. Cause: " + e.getMessage());
