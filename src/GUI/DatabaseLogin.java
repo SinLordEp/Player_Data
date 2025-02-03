@@ -151,12 +151,12 @@ public class DatabaseLogin extends JDialog {
      */
     private void configureTextFieldText(){
         text_url.setText(databaseInfo.getUrl());
-        if(!databaseInfo.getPort().isEmpty()){
+        if(databaseInfo.getPort() != null){
             text_port.setText(databaseInfo.getPort());
             text_port.setVisible(true);
             label_port.setVisible(true);
         }
-        if(!databaseInfo.getDatabase().isEmpty()){
+        if(databaseInfo.getDatabase() != null){
             text_database.setText(databaseInfo.getDatabase());
             text_database.setVisible(true);
             label_database.setVisible(true);
