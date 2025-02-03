@@ -94,7 +94,7 @@ public class principal {
         } catch (Exception e) {
             throw new RuntimeException("Initialize logger failed", e);
         }
-        logger.info("Main: Logger loaded");
+        logger.info("Logger loaded");
     }
 
     /**
