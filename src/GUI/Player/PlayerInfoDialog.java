@@ -296,11 +296,13 @@ public class PlayerInfoDialog extends JDialog {
         if(player.getID() == 0){
             label_id.setVisible(true);
             text_id.setVisible(true);
+            label_id_error.setVisible(true);
             configureServer(comboBox_region.getItemAt(0));
             textValidateListener(text_id);
         }else{
             text_id.setVisible(false);
             label_id.setVisible(false);
+            label_id_error.setVisible(false);
             panel_info.setBorder(BorderFactory.createTitledBorder("ID: " + player.getID()));
             comboBox_region.setSelectedItem(player.getRegion());
             configureServer(player.getRegion());
