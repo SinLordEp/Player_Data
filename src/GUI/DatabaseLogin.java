@@ -5,7 +5,6 @@ import Interface.CallBack;
 import model.DatabaseInfo;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
@@ -47,7 +46,7 @@ public class DatabaseLogin extends JDialog {
     public DatabaseLogin(DatabaseInfo databaseInfo, CallBack<DatabaseInfo> callBack) {
         this.databaseInfo = databaseInfo;
         setTitle(PlayerText.getDialog().getText("db_login_title"));
-        configureLabelText();
+        UiUtilities.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
         configureTextFieldText();
         setContentPane(panel_main);
         setModal(true);
@@ -113,26 +112,6 @@ public class DatabaseLogin extends JDialog {
     private void onCancel(CallBack<DatabaseInfo> callBack) {
         callBack.onCancel();
         dispose();
-    }
-
-    /**
-     * Configures the text for various labels in the {@code DatabaseLogin} dialog.
-     * This method sets the localized text for label components such as {@code label_url},
-     * {@code label_port}, {@code label_database}, {@code label_user}, and {@code label_pwd}.
-     * It retrieves the localized text values using the {@code PlayerText.getDialog()} method
-     * and assigns them to the corresponding labels to ensure proper user interface localization.
-     */
-    private void configureLabelText(){
-        for(Component component : panel_info.getComponents()){
-            if(component instanceof JLabel){
-                ((JLabel) component).setText(PlayerText.getDialog().getText(component.getName()));
-            }
-        }
-        for(Component component : panel_button.getComponents()){
-            if(component instanceof JButton){
-                ((JButton) component).setText(PlayerText.getDialog().getText(component.getName()));
-            }
-        }
     }
 
     /**

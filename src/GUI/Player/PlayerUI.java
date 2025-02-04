@@ -1,12 +1,12 @@
 package GUI.Player;
 
+import GUI.UiUtilities;
 import Interface.EventListener;
 import Interface.GeneralUI;
 import control.PlayerControl;
 import model.Player;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.SortedMap;
@@ -52,7 +52,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scroll_data.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        setUIText();
+        UiUtilities.setLabelButtonText(PlayerText.getDialog(), main_panel);
         searchListener();
         buttonListener();
         tableListener();
@@ -110,32 +110,6 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
         TreeMap<Integer, Player> playerMap = (TreeMap<Integer, Player>) object;
         tableModel.update_data(playerMap);
         table_data.setModel(tableModel);
-    }
-
-    /**
-     * Sets the localized text for various UI components of the {@code PlayerUI}.
-     * The method retrieves language-specific text using {@code PlayerText.getDialog().getText(sub_type)}
-     * and assigns it to corresponding UI elements such as buttons and labels.
-     * <p>
-     * This method updates the following components:
-     * - Buttons: {@code button_add}, {@code button_modify}, {@code button_delete},
-     *   {@code button_export}, {@code button_import}, {@code button_createFile},
-     *   {@code button_language}.
-     * - Label: {@code label_search}.
-     * <p>
-     * The retrieved text corresponds to predefined keys such as "button_add",
-     * "button_modify", "button_delete", etc., ensuring proper internationalization
-     * support.
-     */
-    private void setUIText(){
-        for(Component component : main_panel.getComponents()){
-            if(component instanceof JLabel){
-                ((JLabel) component).setText(PlayerText.getDialog().getText(component.getName()));
-            }
-            if(component instanceof JButton){
-                ((JButton) component).setText(PlayerText.getDialog().getText(component.getName()));
-            }
-        }
     }
 
     /**
@@ -218,7 +192,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
     }
 
     private void changeLanguage(){
-        setUIText();
+        UiUtilities.setLabelButtonText(PlayerText.getDialog(), main_panel);
         tableModel.language_changed();
     }
 

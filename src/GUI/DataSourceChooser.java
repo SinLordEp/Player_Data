@@ -8,7 +8,6 @@ import data.file.FileType;
 import data.http.PhpType;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
@@ -69,7 +68,7 @@ public class DataSourceChooser extends JDialog {
      *                 calls {@code callback.onCancel()}.
      */
     private void initialize(DataSourceCallBack<DataSource, Object> callback){
-        setUIText();
+        UiUtilities.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
         initializeDataSourceComboBox();
         comboBoxListener();
         setContentPane(panel_main);
@@ -119,34 +118,6 @@ public class DataSourceChooser extends JDialog {
         dataSource = DataSource.NONE;
         callback.onCancel();
         dispose();
-    }
-
-    /**
-     * Updates the UI components related to text labels based on the currently selected data source.
-     * This method sets the text of the {@code label_dataSource} and {@code label_dataType} fields
-     * depending on the selected item of the {@code comboBox_dataSource}.
-     * <p>
-     * It retrieves the necessary text values using the {@code PlayerText.getDialog().getText(String)} method
-     * and updates the labels accordingly. The logic varies based on the selected {@code DataSource}.
-     * <p>
-     * Specifically:
-     * - For {@code DataSource.FILE}, it sets the {@code label_dataType} to display the file type text.
-     * - For {@code DataSource.DATABASE} or {@code DataSource.HIBERNATE}, it sets the {@code label_dataType} to display the SQL dialect text.
-     * - For a null or default case, it sets the {@code label_dataType} to display a generic data type text.
-     * <p>
-     * This method ensures the labels dynamically reflect the current selection in the data source combo box.
-     */
-    private void setUIText(){
-        for(Component component : panel_info.getComponents()){
-            if(component instanceof JLabel){
-                ((JLabel) component).setText(PlayerText.getDialog().getText(component.getName()));
-            }
-        }
-        for(Component component : panel_button.getComponents()){
-            if(component instanceof JButton){
-                ((JButton) component).setText(PlayerText.getDialog().getText(component.getName()));
-            }
-        }
     }
 
     /**

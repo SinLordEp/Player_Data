@@ -1,5 +1,6 @@
 package GUI.Player;
 
+import GUI.UiUtilities;
 import Interface.CallBack;
 import model.Player;
 import model.Region;
@@ -8,7 +9,6 @@ import model.Server;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
@@ -105,7 +105,7 @@ public class PlayerInfoDialog extends JDialog {
         getRootPane().setDefaultButton(button_submit);
         setResizable(false);
         setLocationRelativeTo(null);
-        setUIText();
+        UiUtilities.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
         comboBoxListener();
         configureRegion();
         textValidateListener(text_name);
@@ -157,34 +157,6 @@ public class PlayerInfoDialog extends JDialog {
     private void onCancel(CallBack<Player> callBack) {
         callBack.onCancel();
         dispose();
-    }
-
-    /**
-     * Sets the UI text for various dialog components. It retrieves localized text strings
-     * for labels and buttons from the {@code PlayerText} class and applies them to the
-     * corresponding UI elements in the dialog.
-     * <p>
-     * The method uses {@code PlayerText.getDialog().getText(String)} to fetch the appropriate
-     * text based on predefined keys. Specifically:
-     * - Sets the text for component {@code label_id} to display the string "ID: ".
-     * - Retrieves and sets localized text for {@code label_region}, {@code label_server},
-     *   and {@code label_name}.
-     * - Updates the text for action buttons {@code button_submit} and {@code button_cancel}.
-     * <p>
-     * This method ensures that the user interface reflects the current language
-     * localization settings, improving usability across different locales.
-     */
-    private void setUIText(){
-        for(Component component : panel_info.getComponents()){
-            if(component instanceof JLabel){
-                ((JLabel) component).setText(PlayerText.getDialog().getText(component.getName()));
-            }
-        }
-        for(Component component : panel_button.getComponents()){
-            if(component instanceof JButton){
-                ((JButton) component).setText(PlayerText.getDialog().getText(component.getName()));
-            }
-        }
     }
 
     /**
