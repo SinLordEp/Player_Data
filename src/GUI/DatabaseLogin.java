@@ -77,6 +77,7 @@ public class DatabaseLogin extends JDialog {
      *                 database login information or perform actions based on the user's input.
      */
     private void onOK(CallBack<DatabaseInfo> callBack) {
+        dispose();
         if(hasBlank()){
             PlayerText.getDialog().popup("db_field_empty");
             return;
@@ -98,7 +99,6 @@ public class DatabaseLogin extends JDialog {
         if(callBack != null){
             callBack.onSubmit(databaseInfo);
         }
-        dispose();
     }
 
     /**
@@ -110,8 +110,8 @@ public class DatabaseLogin extends JDialog {
      *                 and perform any necessary actions in response to the operation being terminated.
      */
     private void onCancel(CallBack<DatabaseInfo> callBack) {
-        callBack.onCancel();
         dispose();
+        callBack.onCancel();
     }
 
     /**

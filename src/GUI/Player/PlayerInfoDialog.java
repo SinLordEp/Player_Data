@@ -133,6 +133,7 @@ public class PlayerInfoDialog extends JDialog {
      *                 object if the callback is not null.
      */
     private void onOK(CallBack<Player> callBack) {
+        dispose();
         player.setRegion(region);
         player.setServer(server);
         player.setName(text_name.getText());
@@ -142,7 +143,6 @@ public class PlayerInfoDialog extends JDialog {
         if(callBack != null){
             callBack.onSubmit(player);
         }
-        dispose();
     }
 
     /**
@@ -155,8 +155,8 @@ public class PlayerInfoDialog extends JDialog {
      *                 The {@code onCancel()} method is triggered to execute cancellation-related logic.
      */
     private void onCancel(CallBack<Player> callBack) {
-        callBack.onCancel();
         dispose();
+        callBack.onCancel();
     }
 
     /**

@@ -99,10 +99,10 @@ public class DataSourceChooser extends JDialog {
      *                 to pass the selected data source and data type.
      */
     private void onOK(DataSourceCallBack<DataSource, Object> callback) {
+        dispose();
         if(callback != null){
             callback.onSubmit(dataSource, dataType);
         }
-        dispose();
     }
 
     /**
@@ -115,9 +115,9 @@ public class DataSourceChooser extends JDialog {
      *                 the cancellation event through its {@code onCancel()} method.
      */
     private void onCancel(DataSourceCallBack<DataSource, Object> callback) {
+        dispose();
         dataSource = DataSource.NONE;
         callback.onCancel();
-        dispose();
     }
 
     /**
