@@ -1,6 +1,6 @@
 package GUI.Player;
 
-import GUI.UiUtilities;
+import GUI.UiUtils;
 import Interface.CallBack;
 import model.Player;
 import model.Region;
@@ -105,7 +105,7 @@ public class PlayerInfoDialog extends JDialog {
         getRootPane().setDefaultButton(button_submit);
         setResizable(false);
         setLocationRelativeTo(null);
-        UiUtilities.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
+        UiUtils.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
         comboBoxListener();
         configureRegion();
         textValidateListener(text_name);

@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * @author SIN
  */
-public class UiUtilities {
+public class UiUtils {
     public static void setLabelButtonText(GeneralText generalText, JPanel... panels) {
         for (JPanel panel : panels) {
             for(Component component : panel.getComponents()){

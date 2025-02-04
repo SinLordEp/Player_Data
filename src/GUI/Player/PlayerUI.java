@@ -1,6 +1,6 @@
 package GUI.Player;
 
-import GUI.UiUtilities;
+import GUI.UiUtils;
 import Interface.EventListener;
 import Interface.GeneralUI;
 import control.PlayerControl;
@@ -52,7 +52,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scroll_data.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        UiUtilities.setLabelButtonText(PlayerText.getDialog(), main_panel);
+        UiUtils.setLabelButtonText(PlayerText.getDialog(), main_panel);
         searchListener();
         buttonListener();
         tableListener();
@@ -192,7 +192,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
     }
 
     private void changeLanguage(){
-        UiUtilities.setLabelButtonText(PlayerText.getDialog(), main_panel);
+        UiUtils.setLabelButtonText(PlayerText.getDialog(), main_panel);
         tableModel.language_changed();
     }
 

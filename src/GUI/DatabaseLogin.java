@@ -46,7 +46,7 @@ public class DatabaseLogin extends JDialog {
     public DatabaseLogin(DatabaseInfo databaseInfo, CallBack<DatabaseInfo> callBack) {
         this.databaseInfo = databaseInfo;
         setTitle(PlayerText.getDialog().getText("db_login_title"));
-        UiUtilities.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
+        UiUtils.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
         configureTextFieldText();
         setContentPane(panel_main);
         setModal(true);

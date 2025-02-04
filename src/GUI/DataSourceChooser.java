@@ -68,7 +68,7 @@ public class DataSourceChooser extends JDialog {
      *                 calls {@code callback.onCancel()}.
      */
     private void initialize(DataSourceCallBack<DataSource, Object> callback){
-        UiUtilities.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
+        UiUtils.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
         initializeDataSourceComboBox();
         comboBoxListener();
         setContentPane(panel_main);
