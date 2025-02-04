@@ -1,16 +1,27 @@
 package GUI.Player;
 
+import GUI.LogStage;
 import GUI.UiUtils;
 import Interface.EventListener;
 import Interface.GeneralUI;
 import control.PlayerControl;
 import model.Player;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.function.Consumer;
+
+import static main.principal.getProperty;
 
 /**
  * The {@code PlayerUI} class serves as the user interface to manage player-related operations.
@@ -23,7 +34,7 @@ import java.util.TreeMap;
  * It connects to player-specific logic through {@code PlayerControl} to execute commands
  * such as adding, modifying, exporting, or deleting player data.
  */
-public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
+public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Player>> {
     private final PlayerControl playerControl;
     private JTable table_data;
 
@@ -39,12 +50,19 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
 
     private JPanel main_panel;
     private JScrollPane scroll_data;
+    private JTextPane textPane_log;
     private PlayerTableModel tableModel;
     private int selected_player_id;
+
+    private final HashMap<String, Consumer<TreeMap<Integer, Player>>> eventWithMapHandler = new HashMap<>();
+    private final HashMap<String, Consumer<String>> eventWithStringHandler = new HashMap<>();
+    private final HashMap<String, Runnable> eventWithoutDataHandler = new HashMap<>();
+    private StyledDocument log_document;
 
     public PlayerUI(PlayerControl control) {
         playerControl = control;
         this.playerControl.addListener(this);
+        log_document = textPane_log.getStyledDocument();
     }
 
     private void initialize(){
@@ -56,6 +74,7 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
         searchListener();
         buttonListener();
         tableListener();
+        initializeEvent();
     }
 
     /**
@@ -101,13 +120,11 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
      * and updates the associated table model by invoking {@code tableModel.update_data}.
      * The table view is refreshed by setting the updated model.
      *
-     * @param object an {@code Object} expected to be a {@code TreeMap<Integer, Player>}
+     * @param playerMap an {@code Object} expected to be a {@code TreeMap<Integer, Player>}
      *               containing player IDs as keys and their corresponding {@code Player} objects as values.
      *               This map is used to update the table model data.
      */
-    @SuppressWarnings("unchecked")
-    private void refresh(Object object) {
-        TreeMap<Integer, Player> playerMap = (TreeMap<Integer, Player>) object;
+    private void refresh(TreeMap<Integer, Player> playerMap) {
         tableModel.update_data(playerMap);
         table_data.setModel(tableModel);
     }
@@ -200,6 +217,30 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
         button_add.setEnabled(true);
     }
 
+    private void initializeEvent(){
+        try(InputStream inputStream = Objects.requireNonNull(getClass().getResource(getProperty("playerEvent"))).openStream()){
+            Map<String, ArrayList<String>> events = new Yaml().load(inputStream);
+            for(String event : events.get("refresh")){
+                eventWithMapHandler.put(event, this::refresh);
+            }
+
+            for(String event : events.get("playerPopup")){
+                eventWithStringHandler.put(event, this::playerPopup);
+            }
+
+            for(String event : events.get("changeLanguage")){
+                eventWithoutDataHandler.put(event, this::changeLanguage);
+            }
+
+            for(String event : events.get("dataSourceIsSet")){
+                eventWithoutDataHandler.put(event, this::dataSourceIsSet);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     /**
      * Handles an event triggered by the application or its components. This callback method
      * processes specific event types and executes corresponding operations, such as displaying
@@ -226,29 +267,43 @@ public class PlayerUI implements GeneralUI, EventListener<SortedMap<?,?>> {
      *             updated player data for refreshing the table view.
      */
     @Override
-    public void onEvent(String event, SortedMap<?,?> data) {
-        switch(event){
-            case "operation_cancelled", "db_login_failed", "db_login_cancelled", "config_error", "export_failed", "data_saved", "unknown_error","php_error","object_db_error" -> generalPopup(event);
-            case "region_server_null", "player_map_null", "modified_player", "added_player", "deleted_player", "exported_file", "exported_db", "exported_php"-> playerPopup(event);
-            case "data_changed"-> refresh(data);
-            case "language_changed"-> changeLanguage();
-            case "dataSource_set" -> dataSourceIsSet();
+    public void onEvent(String event, TreeMap<Integer,Player> data) {
+        if(eventWithMapHandler.containsKey(event)){
+            eventWithMapHandler.get(event).accept(data);
+        } else if (eventWithStringHandler.containsKey(event)) {
+            eventWithStringHandler.get(event).accept(event);
+        } else if (eventWithoutDataHandler.containsKey(event)) {
+            eventWithoutDataHandler.get(event).run();
+        } else{
+            handleUnknownEvent(event);
         }
     }
 
-    /**
-     * Displays a general popup dialog box based on the provided subtype.
-     * This method utilizes {@code PlayerText.getDialog().popup(String)} to display
-     * a localized dialog, with the content determined by the subtype identifier.
-     * The messages are typically retrieved from predefined text configurations.
-     *
-     * @param sub_type a {@code String} representing the type of popup dialog to display.
-     *                 The value of this parameter determines the content and behavior
-     *                 of the popup dialog. Common subtypes include error messages,
-     *                 confirmation dialogs, or informational prompts.
-     */
-    private void generalPopup(String sub_type){
-        PlayerText.getDialog().popup(sub_type);
+    @Override
+    public void onLog(LogStage stage, String... message) {
+        SimpleAttributeSet set = new SimpleAttributeSet();
+        Color color = switch (stage){
+            case ONGOING -> Color.blue;
+            case PASS -> Color.green;
+            case FAIL -> Color.red;
+            case ERROR -> Color.ORANGE;
+            case INFO -> Color.darkGray;
+        };
+        StyleConstants.setForeground(set, color);
+        try {
+            if(message.length == 1){
+                log_document.insertString(log_document.getLength(), PlayerText.getDialog().getText(message[0]) + "\n", set);
+            }else{
+                log_document.insertString(log_document.getLength(), PlayerText.getDialog().getText(message[0])+ message[1] + "\n", set);
+            }
+            textPane_log.setCaretPosition(log_document.getLength());
+        } catch (BadLocationException e) {
+            PlayerText.getDialog().message("Failed to append log message with Cause: " + e.getMessage());
+        }
+    }
+
+    private void handleUnknownEvent(String event){
+        throw new RuntimeException("Unknown event " + event);
     }
 
     /**

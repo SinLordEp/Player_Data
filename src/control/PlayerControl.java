@@ -2,6 +2,7 @@ package control;
 
 import GUI.DataSourceChooser;
 import GUI.DatabaseLogin;
+import GUI.LogStage;
 import GUI.Player.PlayerInfoDialog;
 import GUI.Player.PlayerText;
 import GUI.Player.PlayerUI;
@@ -19,10 +20,7 @@ import model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.SortedMap;
+import java.util.*;
 
 /**
  * The PlayerControl class is responsible for managing the core functionalities of the Player UI,
@@ -38,7 +36,7 @@ import java.util.SortedMap;
 public class PlayerControl implements GeneralControl {
     private static final Logger logger = LoggerFactory.getLogger(PlayerControl.class);
     private PlayerDataAccess playerDA;
-    private final List<EventListener<SortedMap<?,?>>> listeners = new ArrayList<>();
+    private final List<EventListener<TreeMap<Integer, Player>>> listeners = new ArrayList<>();
 
     /**
      * Executes the logic for initializing and managing the player user interface (UI)
@@ -62,7 +60,7 @@ public class PlayerControl implements GeneralControl {
             playerDA.initializeRegionServer();
         } catch (FileManageException e) {
             logger.error("Failed to load region server file. Cause: {}", e.getMessage());
-            notifyListeners("region_server_null", null);
+            notifyEvent("region_server_null", null);
             System.exit(0);
         }
         playerUI.run();
@@ -143,14 +141,14 @@ public class PlayerControl implements GeneralControl {
             playerDA.setFilePath(GeneralDataAccess.newPathBuilder((FileType) dataType));
             playerDA.createNewFile();
             playerDA.setDataSource(dataSource);
-            notifyListeners("dataSource_set",null);
+            notifyEvent("dataSource_set",null);
             playerDA.clearData();
-            notifyListeners("data_changed", playerDA.getPlayerMap());
+            notifyEvent("data_changed", playerDA.getPlayerMap());
         } catch (OperationCancelledException e) {
             logger.info("File creation cancelled");
         } catch (FileManageException e) {
             logger.error("Failed to create file. Cause: {}", e.getMessage());
-            notifyListeners("file_create_error", null);
+            notifyEvent("file_create_error", null);
         }
     }
 
@@ -184,7 +182,7 @@ public class PlayerControl implements GeneralControl {
             new DataSourceChooser(null, this::handleDataSourceForImportData);
         } catch (OperationCancelledException e) {
             logger.info("Data source chooser cancelled");
-            notifyListeners("operation_cancelled", null);
+            notifyEvent("operation_cancelled", null);
         } catch (DataTypeException e){
             logger.error("Failed to import data. Cause: {}", e.getMessage());
         }
@@ -218,7 +216,7 @@ public class PlayerControl implements GeneralControl {
     private void handleDataSourceForImportData(DataSource dataSource, Object dataType){
         logger.info("Processing DataSource-{} and DataType-{} to import data", dataSource, dataType);
         playerDA.setDataSource(dataSource);
-        notifyListeners("dataSource_set",null);
+        notifyEvent("dataSource_set",null);
         switch(dataSource){
             case FILE -> importFile((FileType) dataType);
             case DATABASE, HIBERNATE -> importDB(dataSource, (SqlDialect) dataType);
@@ -253,10 +251,10 @@ public class PlayerControl implements GeneralControl {
             file_path = GeneralDataAccess.getPath(playerDA.getFileType());
             playerDA.setFilePath(file_path);
             playerDA.read();
-            notifyListeners("data_changed", playerDA.getPlayerMap());
+            notifyEvent("data_changed", playerDA.getPlayerMap());
         } catch (OperationCancelledException e) {
             logger.info("Import from file cancelled");
-            notifyListeners("operation_cancelled", null);
+            notifyEvent("operation_cancelled", null);
         }
         logger.info("File data imported");
     }
@@ -289,7 +287,7 @@ public class PlayerControl implements GeneralControl {
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForImport);
         } catch (ConfigErrorException e) {
             logger.error("Import DB: Failed to read configuration with cause: {}", e.getMessage());
-            notifyListeners("config_error", null);
+            notifyEvent("config_error", null);
         }
         logger.info("Import DB: Process finished!");
     }
@@ -313,10 +311,10 @@ public class PlayerControl implements GeneralControl {
         try {
             playerDA.setDatabaseInfo(databaseInfo);
             playerDA.read();
-            notifyListeners("data_changed", playerDA.getPlayerMap());
+            notifyEvent("data_changed", playerDA.getPlayerMap());
         }  catch (DatabaseException e) {
             logger.error("Handling DatabaseLogin for Import data: Failed to read from database with cause: {}", e.getMessage());
-            notifyListeners("db_login_failed",null);
+            notifyEvent("db_login_failed",null);
             clearDataSource();
         }
         logger.info("Handling DatabaseLogin for Import data: Process finished!");
@@ -337,13 +335,13 @@ public class PlayerControl implements GeneralControl {
         try{
             playerDA.setPhpType(phpType);
             playerDA.read();
-            notifyListeners("data_changed", playerDA.getPlayerMap());
+            notifyEvent("data_changed", playerDA.getPlayerMap());
         }catch (OperationCancelledException e) {
             logger.info("Importe from PHP cancelled");
-            notifyListeners("operation_cancelled", null);
+            notifyEvent("operation_cancelled", null);
         }catch (HttpPhpException e){
             logger.error("Failed to import from php server. Cause: {}", e.getMessage());
-            notifyListeners("php_error",null);
+            notifyEvent("php_error",null);
         }
     }
 
@@ -374,8 +372,8 @@ public class PlayerControl implements GeneralControl {
      */
     private void handlePlayerInfoForAdd(Player player){
         playerDA.add(player);
-        notifyListeners("data_changed", playerDA.getPlayerMap());
-        notifyListeners("added_player", null);
+        notifyEvent("data_changed", playerDA.getPlayerMap());
+        notifyEvent("added_player", null);
         logger.info("Player with id-{} has been added", player.getID());
     }
 
@@ -402,8 +400,8 @@ public class PlayerControl implements GeneralControl {
      */
     private void handlePlayerInfoForModify(Player player){
         playerDA.modify(player);
-        notifyListeners("modified_player", null);
-        notifyListeners("data_changed", playerDA.getPlayerMap());
+        notifyEvent("modified_player", null);
+        notifyEvent("data_changed", playerDA.getPlayerMap());
         logger.info("Player with id-{} has been modified", player.getID());
     }
 
@@ -416,8 +414,8 @@ public class PlayerControl implements GeneralControl {
      */
     public void delete(int selected_player_id) {
         playerDA.delete(selected_player_id);
-        notifyListeners("data_changed", playerDA.getPlayerMap());
-        notifyListeners("deleted_player", null);
+        notifyEvent("data_changed", playerDA.getPlayerMap());
+        notifyEvent("deleted_player", null);
         logger.info("Player with id-{} has been deleted", selected_player_id);
     }
 
@@ -440,7 +438,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Checking current player data");
         if(playerDA.isEmpty()){
             logger.info("Exportation is cancelled. Cause: No player data found");
-            notifyListeners("player_map_null", null);
+            notifyEvent("player_map_null", null);
             return;
         }
         new DataSourceChooser(null, this::handleDataSourceForExport);
@@ -485,13 +483,13 @@ public class PlayerControl implements GeneralControl {
         playerDA.setFileType(fileType);
         try {
             playerDA.exportFile();
-            notifyListeners("exported_file", null);
+            notifyEvent("exported_file", null);
         } catch (OperationCancelledException e) {
             logger.info("Failed to exportFile data to file. Cause: Operation cancelled");
-            notifyListeners("operation_cancelled", null);
+            notifyEvent("operation_cancelled", null);
         } catch (Exception e) {
             logger.error("Failed to exportFile data to file. Cause: {}", e.getMessage());
-            notifyListeners("export_failed", null);
+            notifyEvent("export_failed", null);
         }
         logger.info("Completed exporting to file");
     }
@@ -512,7 +510,7 @@ public class PlayerControl implements GeneralControl {
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForExport);
         } catch (ConfigErrorException e) {
             logger.error("Failed to read default database config. Cause: {}", e.getMessage());
-            notifyListeners("config_error", null);
+            notifyEvent("config_error", null);
         }
     }
 
@@ -532,10 +530,10 @@ public class PlayerControl implements GeneralControl {
     private void handleDatabaseLoginForExport(DatabaseInfo databaseInfo) {
         try {
             playerDA.exportDB(databaseInfo);
-            notifyListeners("exported_db", null);
+            notifyEvent("exported_db", null);
         }  catch (DatabaseException e) {
             logger.error("Failed to exportFile data to database. Cause: {}", e.getMessage());
-            notifyListeners("db_login_failed",null);
+            notifyEvent("db_login_failed",null);
         }
     }
 
@@ -555,10 +553,10 @@ public class PlayerControl implements GeneralControl {
         logger.info("Processing PHP type-{} to export", phpType);
         try{
             playerDA.exportPHP(phpType);
-            notifyListeners("exported_php", null);
+            notifyEvent("exported_php", null);
         }catch (HttpPhpException e){
             logger.error("Export PHP: Failed with cause: {}", e.getMessage());
-            notifyListeners("php_error", null);
+            notifyEvent("php_error", null);
         }
     }
 
@@ -595,9 +593,9 @@ public class PlayerControl implements GeneralControl {
             }
         } catch (DatabaseException e) {
             logger.error("Failed to save data via database. Cause: {}", e.getMessage());
-            notifyListeners("config_error", null);
+            notifyEvent("config_error", null);
         }
-        notifyListeners("data_saved", null);
+        notifyEvent("data_saved", null);
         logger.info("Data saved");
     }
 
@@ -647,11 +645,11 @@ public class PlayerControl implements GeneralControl {
             logger.info("Change language: Language is set to {}", language);
         } catch (OperationCancelledException e) {
             logger.info("Change language: Failed to change language with cause: Operation cancelled");
-            notifyListeners("operation_cancelled", null);
+            notifyEvent("operation_cancelled", null);
             return;
         }
         PlayerText.getDialog().setLanguage(language);
-        notifyListeners("language_changed",null);
+        notifyEvent("language_changed",null);
     }
 
     /**
@@ -661,7 +659,7 @@ public class PlayerControl implements GeneralControl {
      * @param listener the event listener to be added. It must implement the EventListener interface
      *                 and handle events related to a SortedMap with any key-value pair types.
      */
-    public void addListener(EventListener<SortedMap<?,?>> listener){
+    public void addListener(EventListener<TreeMap<Integer, Player>> listener){
         listeners.add(listener);
     }
 
@@ -672,10 +670,16 @@ public class PlayerControl implements GeneralControl {
      * @param event the name or identifier of the event to notify about
      * @param data the data associated with the event, passed as a {@code SortedMap} object
      */
-    private void notifyListeners(String event, SortedMap<?,?> data){
+    private void notifyEvent(String event, TreeMap<Integer, Player> data){
         logger.info("Notifying listener with code: {}", event);
-        for(EventListener<SortedMap<?,?>> listener : listeners){
+        for(EventListener<TreeMap<Integer, Player>> listener : listeners){
             listener.onEvent(event, data);
+        }
+    }
+
+    private void notifyLog(LogStage stage, String... message){
+        for(EventListener<TreeMap<Integer, Player>> listener : listeners){
+            listener.onLog(stage, message);
         }
     }
 
