@@ -121,9 +121,11 @@
         <constraints>
           <grid row="0" column="4" row-span="4" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <foreground color="-8223608"/>
+        </properties>
         <border type="line">
-          <color color="-16777216"/>
+          <color color="-8223608"/>
         </border>
         <children>
           <component id="648e1" class="javax.swing.JTextPane" binding="textPane_log">
@@ -133,7 +135,9 @@
               </grid>
             </constraints>
             <properties>
+              <background color="-4868165"/>
               <editable value="false"/>
+              <foreground color="-8223608"/>
             </properties>
           </component>
         </children>

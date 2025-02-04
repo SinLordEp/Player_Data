@@ -127,6 +127,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
     private void refresh(TreeMap<Integer, Player> playerMap) {
         tableModel.update_data(playerMap);
         table_data.setModel(tableModel);
+        onLog(LogStage.PASS, "refresh_pass");
     }
 
     /**

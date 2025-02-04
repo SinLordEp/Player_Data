@@ -123,6 +123,10 @@ text:
     en: "File type:"
     es: "Tipo de fichero:"
     cn: "文件类型:"
+  refresh_pass:
+    en: "Data table is refreshed"
+    es: "Tabla de datos se ha actualizado"
+    cn: "数据表已刷新"
 
 
 
