@@ -1,11 +1,13 @@
 package data.database;
 
 import Interface.PlayerCRUD;
-import com.mongodb.MongoClient;
+import com.mongodb.async.client.MongoClient;
+import com.mongodb.async.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.async.client.MongoDatabase;
 import data.DataOperation;
+import exceptions.DatabaseException;
 import model.DatabaseInfo;
 import model.Player;
 import model.Region;
@@ -26,13 +28,19 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     DatabaseInfo databaseInfo;
     MongoClient mongoClient;
     MongoCollection<Document> playerCollection;
+
     @Override
+    @SuppressWarnings("unchecked")
     public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) {
         logger.info("Preparing connection to MongoDB");
         this.databaseInfo = databaseInfo;
-        mongoClient = new MongoClient(databaseInfo.getUrl(), Integer.parseInt(databaseInfo.getPort()));
-        MongoDatabase database = mongoClient.getDatabase(databaseInfo.getDatabase());
-        playerCollection = database.getCollection("player");
+        try {
+            mongoClient = MongoClients.create(databaseInfo.getUrl() + ":" + databaseInfo.getPort());
+            MongoDatabase database = mongoClient.getDatabase(databaseInfo.getDatabase());
+            playerCollection = (MongoCollection<Document>) database.getCollection("player");
+        } catch (Exception e) {
+            throw new DatabaseException("Error connecting to MongoDB");
+        }
         logger.info("Connection established");
         return this;
     }
@@ -57,6 +65,8 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 player.setServer(new Server(document.getString("server"), player.getRegion()));
                 playerMap.put(player.getID(), player);
             }
+        }catch (Exception e){
+            throw new DatabaseException("Failed to read data from MongoDB. \nCause: " + e.getMessage());
         }
         release();
         return playerMap;

@@ -183,10 +183,9 @@ public class PlayerControl implements GeneralControl {
             logger.info("Calling Data source chooser...");
             new DataSourceChooser(null, this::handleDataSourceForImportData);
         } catch (OperationCancelledException e) {
-            logger.info("Data source chooser cancelled");
             notifyLog(LogStage.INFO, "operation_cancelled");
         } catch (DataTypeException e){
-            logger.error("Failed to import data. Cause: {}", e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 
@@ -255,12 +254,11 @@ public class PlayerControl implements GeneralControl {
             notifyLog(LogStage.ONGOING, "importFile_ongoing", "\n>>>" + file_path);
             playerDA.read();
             notifyEvent("data_changed", playerDA.getPlayerMap());
+            logger.info("File data imported");
+            notifyLog(LogStage.PASS, "import_pass");
         } catch (OperationCancelledException e) {
-            logger.info("Import from file cancelled");
             notifyLog(LogStage.INFO, "operation_cancelled");
         }
-        logger.info("File data imported");
-        notifyLog(LogStage.PASS, "import_pass");
     }
 
     /**
@@ -290,7 +288,7 @@ public class PlayerControl implements GeneralControl {
             logger.info("Calling DatabaseLogin");
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForImport);
         } catch (ConfigErrorException e) {
-            logger.error("Failed to read configuration with cause: {}", e.getMessage());
+            logger.error("Failed to read default database configuration with cause: {}", e.getMessage());
             notifyLog(LogStage.ERROR, "config_error");
         }
     }
@@ -316,13 +314,16 @@ public class PlayerControl implements GeneralControl {
             notifyLog(LogStage.ONGOING, "importDB_ongoing", "\n>>> URL: " + databaseInfo.getUrl());
             playerDA.read();
             notifyEvent("data_changed", playerDA.getPlayerMap());
-        }  catch (DatabaseException e) {
-            logger.error("Failed to read from database with cause: {}", e.getMessage());
+            logger.info("Database data imported");
+            notifyLog(LogStage.PASS, "import_pass");
+        } catch (DatabaseException e) {
+            logger.error(e.getMessage());
             notifyLog(LogStage.FAIL, "db_login_fail");
             clearDataSource();
+        } catch (OperationException e){
+            logger.error(e.getMessage());
+            notifyLog(LogStage.ERROR, "import_fail");
         }
-        logger.info("Database data imported");
-        notifyLog(LogStage.PASS, "import_pass");
     }
 
     /**
@@ -342,15 +343,14 @@ public class PlayerControl implements GeneralControl {
             notifyLog(LogStage.ONGOING, "importPHP_ongoing");
             playerDA.read();
             notifyEvent("data_changed", playerDA.getPlayerMap());
+            logger.info("PHP data imported");
+            notifyLog(LogStage.PASS, "import_pass");
         }catch (OperationCancelledException e) {
-            logger.info("Importe from PHP cancelled");
             notifyLog(LogStage.INFO, "operation_cancelled");
         }catch (HttpPhpException e){
-            logger.error("Failed to import from php server. Cause: {}", e.getMessage());
+            logger.error(e.getMessage());
             notifyLog(LogStage.ERROR, "php_error");
         }
-        logger.info("PHP data imported");
-        notifyLog(LogStage.PASS, "import_pass");
     }
 
 
@@ -491,15 +491,14 @@ public class PlayerControl implements GeneralControl {
         playerDA.setFileType(fileType);
         try {
             playerDA.exportFile();
+            logger.info("Completed exporting to file");
+            notifyLog(LogStage.PASS, "exportFile_pass");
         } catch (OperationCancelledException e) {
-            logger.info("Failed to exportFile data to file. Cause: Operation cancelled");
             notifyLog(LogStage.INFO, "operation_cancelled");
         } catch (Exception e) {
-            logger.error("Failed to exportFile data to file. Cause: {}", e.getMessage());
+            logger.error(e.getMessage());
             notifyLog(LogStage.FAIL, "export_fail");
         }
-        logger.info("Completed exporting to file");
-        notifyLog(LogStage.PASS, "exportFile_pass");
     }
 
     /**
@@ -540,7 +539,7 @@ public class PlayerControl implements GeneralControl {
             playerDA.exportDB(databaseInfo);
             notifyEvent("exported_db", null);
         }  catch (DatabaseException e) {
-            logger.error("Failed to exportFile data to database. Cause: {}", e.getMessage());
+            logger.error(e.getMessage());
             notifyLog(LogStage.FAIL, "db_login_fail");
         }
     }
@@ -561,12 +560,12 @@ public class PlayerControl implements GeneralControl {
         logger.info("Processing PHP type-{} to export", phpType);
         try{
             playerDA.exportPHP(phpType);
+            logger.info("Completed exporting to PHP");
+            notifyLog(LogStage.PASS, "exportPhp_pass");
         }catch (HttpPhpException e){
-            logger.error("Export PHP: Failed with cause: {}", e.getMessage());
-            notifyEvent("php_error", null);
+            logger.error(e.getMessage());
+            notifyLog(LogStage.FAIL, "export_fail");
         }
-        logger.info("Completed exporting to PHP");
-        notifyLog(LogStage.PASS, "exportPhp_pass");
     }
 
     /**
@@ -601,13 +600,12 @@ public class PlayerControl implements GeneralControl {
                 logger.info("Current data source is {}, saving...", playerDA.getDataSource());
                 playerDA.save();
             }
+            logger.info("Data saved");
+            notifyLog(LogStage.PASS, "save_pass");
         } catch (DatabaseException e) {
-            logger.error("Failed to save data via database. Cause: {}", e.getMessage());
-            notifyLog(LogStage.ERROR, "config_error");
+            logger.error(e.getMessage());
             notifyLog(LogStage.FAIL, "save_fail");
         }
-        logger.info("Data saved");
-        notifyLog(LogStage.PASS, "save_pass");
     }
 
     /**
@@ -653,14 +651,12 @@ public class PlayerControl implements GeneralControl {
                 case 2 -> "cn";
                 default -> throw new IllegalStateException("Unexpected language value.");
             };
-            logger.info("Change language: Language is set to {}", language);
+            logger.info("Language is set to {}", language);
+            PlayerText.getDialog().setLanguage(language);
+            notifyEvent("language_changed",null);
         } catch (OperationCancelledException e) {
-            logger.info("Change language: Failed to change language with cause: Operation cancelled");
             notifyLog(LogStage.INFO, "operation_cancelled");
-            return;
         }
-        PlayerText.getDialog().setLanguage(language);
-        notifyEvent("language_changed",null);
     }
 
     /**

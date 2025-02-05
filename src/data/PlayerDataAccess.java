@@ -90,10 +90,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
             DatabaseInfo info = getDefaultDatabaseInfo(SqlDialect.SQLITE);
             info.setDataSource(DataSource.DATABASE);
             region_server_map = DataBasePlayerCRUD.readRegionServer(info);
+            logger.info("Region server map initialized!");
         } catch (ConfigErrorException e) {
             throw new RuntimeException(e);
         }
-        logger.info("Region server map initialized!");
     }
 
     /**
@@ -229,12 +229,12 @@ public class PlayerDataAccess extends GeneralDataAccess {
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();
             }
+            logger.info("Finished reading data!");
         } catch (Exception e) {
             player_map = new TreeMap<>();
             dataSource = DataSource.NONE;
             throw new OperationException("Failed to read data. Cause: " + e.getMessage());
         }
-        logger.info("Finished reading data!");
     }
 
     /**
@@ -307,11 +307,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 default:
                     throw new OperationException("Save: Unknown data source: " + dataSource);
             }
+            isDataChanged = false;
+            logger.info("Finished saving data!");
         } catch (Exception e) {
             throw new OperationException("Failed to save data with cause: " + e.getMessage());
         }
-        isDataChanged = false;
-        logger.info("Finished saving data!");
     }
 
     /**
@@ -422,10 +422,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
                     .getCRUD(fileType)
                     .prepare(target_path)
                     .export(player_map);
+            logger.info("Finished exporting file!");
         } catch (Exception e) {
             throw new FileManageException("Failed to export file with cause: " + e.getMessage());
         }
-        logger.info("Finished exporting file!");
     }
 
     /**
