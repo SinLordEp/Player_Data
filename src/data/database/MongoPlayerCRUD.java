@@ -32,7 +32,6 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
         this.databaseInfo = databaseInfo;
         mongoClient = new MongoClient(databaseInfo.getUrl(), Integer.parseInt(databaseInfo.getPort()));
         MongoDatabase database = mongoClient.getDatabase(databaseInfo.getDatabase());
-
         playerCollection = database.getCollection("player");
         logger.info("Connection established");
         return this;
