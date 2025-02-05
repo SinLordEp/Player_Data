@@ -144,9 +144,9 @@ text:
     es: "Guardando cambios..."
     cn: "正在保存改动..."
   save_pass:
-    en: "Saved!"
-    es: "Guardado!"
-    cn: "已保存!"
+    en: "Data is saved correctly"
+    es: "Dato guardado correctamente"
+    cn: "已保存数据"
   save_fail:
     en: "Failed to save changes!"
     es: "No se ha podido guardar los cambios!"
@@ -171,6 +171,51 @@ text:
     en: "Importing data from PHP server..."
     es: "Importando datos desde servidor PHP..."
     cn: "正在从PHP服务器导入数据..."
+  operation_cancelled:
+    en: "Operation cancelled!"
+    es: "¡Operación cancelada!"
+    cn: "操作已取消!"
+  config_error:
+    en: "Failed to read config"
+    es: "No se ha podido leer configuración"
+    cn: "无法读取配置文件"
+  db_login_fail:
+    en: "Failed to connect to the database, please check the login info"
+    es: "No ha podido conectar a base de datos, revisa los datos de login"
+    cn: "连接数据库失败，请检查登录参数"
+  php_error:
+    en: "Failed to transfer data between Cliente and PHP server"
+    es: "No se ha podido transferir datos entre cliente y servidor PHP"
+    cn: "客户端未能与PHP服务器交换数据"
+  added_player:
+    en: "Player added"
+    es: "Jugador añadida"
+    cn: "已添加玩家"
+  modified_player:
+    en: "Player  modified"
+    es: "Jugador modificada"
+    cn: "已修改玩家"
+  deleted_player:
+    en: "Player deleted"
+    es: "Jugador eliminada"
+    cn: "已删除玩家"
+  player_map_null:
+    en: "No player data registered"
+    es: "No hay jugador registrada"
+    cn: "无玩家数据"
+  exportFile_pass:
+    en: "Players data were exported to file"
+    es: "Datos de jugadores exportados correctamente a fichero"
+    cn: "玩家数据已导出至文件"
+  export_fail:
+    en: "Failed to exportFile data"
+    es: "No se han podido exportar datos"
+    cn: "导出数据失败"
+  exportPhp_pass:
+    en: "Players data were exported to PHP server"
+    es: "Datos de jugadores exportados correctamente a servidor PHP"
+    cn: "玩家数据已导出至PHP服务器"
+
 
 
 input:
@@ -192,30 +237,10 @@ input:
     cn: "输入文件名"
 
 popup:
-  exported_file:
-    en: "Players data were exported to file"
-    es: "Datos de jugadores exportados correctamente a fichero"
-    cn: "玩家数据已导出至文件"
   exported_db:
     en: "Players data were exported to database"
     es: "Datos de jugadores exportados correctamente a base de datos"
     cn: "玩家数据已导出至数据库"
-  exported_php:
-    en: "Players data were exported to PHP server"
-    es: "Datos de jugadores exportados correctamente a servidor PHP"
-    cn: "玩家数据已导出至PHP服务器"
-  deleted_player:
-    en: "Player deleted"
-    es: "Jugador eliminada"
-    cn: "已删除玩家"
-  added_player:
-    en: "Player added"
-    es: "Jugador añadida"
-    cn: "已添加玩家"
-  modified_player:
-    en: "Player  modified"
-    es: "Jugador modificada"
-    cn: "已修改玩家"
   region_server_null:
     en: "Region and server null"
     es: "Region y servidor null"
@@ -232,10 +257,6 @@ popup:
     en: "Player Name is blank"
     es: "Nombre de jugador está vacío"
     cn: "玩家名字为空"
-  player_map_null:
-    en: "No player data registered"
-    es: "No hay jugador registrada"
-    cn: "无玩家数据"
   duplicate_player:
     en: "Player already existed"
     es: "Jugador ya existe"
@@ -256,10 +277,6 @@ popup:
     en: "One or more Database field maybe empty"
     es: "Uno o varios campos de base de datos vacíos"
     cn: "一个或多个数据库参数为空"
-  db_login_failed:
-    en: "Failed to connect to the database, please check the login info"
-    es: "No ha podido conectar a base de datos, revisa los datos de login"
-    cn: "连接数据库失败，请检查登录参数"
   db_disconnect_failed:
     en: "Some errors have occurred while disconnecting, please try again"
     es: "Ha producido errores desconectando, inténtalo otra vez"
@@ -280,30 +297,10 @@ popup:
     en: "You have canceled the database login"
     es: "Has cancelado de conectar a base de datos"
     cn: "您已取消连接数据库"
-  operation_cancelled:
-    en: "Operation cancelled!"
-    es: "¡Operación cancelada!"
-    cn: "操作已取消!"
-  export_failed:
-    en: "Failed to exportFile data"
-    es: "No se han podido exportar datos"
-    cn: "导出数据失败"
   unknown_error:
     en: "Unknown error has occurred"
     es: "Se ha producido un error desconocido"
     cn: "未知错误"
-  config_error:
-    en: "Failed to read config"
-    es: "No se ha podido leer configuración"
-    cn: "无法读取配置文件"
-  file_create_error:
-    en: "Failed to create new file"
-    es: "No se ha podido crear nuevo fichero"
-    cn: "创建新文件失败"
-  php_error:
-    en: "Failed to transfer data between Cliente and PHP server"
-    es: "No se ha podido transferir datos entre cliente y servidor PHP"
-    cn: "客户端未能与PHP服务器交换数据"
   object_db_error:
     en: "Failed to read/write ObjectDB file"
     es: "No se ha podido leer/escribir fichero de ObjectDB"
