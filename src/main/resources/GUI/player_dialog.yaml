@@ -125,9 +125,52 @@ text:
     cn: "文件类型:"
   refresh_pass:
     en: "Data table is refreshed"
-    es: "Tabla de datos se ha actualizado"
+    es: "La tabla de datos se ha actualizado"
     cn: "数据表已刷新"
-
+  createFile_ongoing:
+    en: "Creating new file..."
+    es: "Creando fichero nuevo..."
+    cn: "正在创建新文件..."
+  createFile_pass:
+    en: "File created!"
+    es: "Fichero creado!"
+    cn: "文件已创建!"
+  createFile_fail:
+    en: "Failed to create new file!"
+    es: "No se ha podido crear fichero nuevo!"
+    cn: "未能创建新文件!"
+  save_ongoing:
+    en: "Saving changes..."
+    es: "Guardando cambios..."
+    cn: "正在保存改动..."
+  save_pass:
+    en: "Saved!"
+    es: "Guardado!"
+    cn: "已保存!"
+  save_fail:
+    en: "Failed to save changes!"
+    es: "No se ha podido guardar los cambios!"
+    cn: "未能保存改动!"
+  importFile_ongoing:
+    en: "Importing data from file..."
+    es: "Importando datos desde fichero..."
+    cn: "正在从文件导入数据..."
+  import_pass:
+    en: "Data imported!"
+    es: "Datos importados!"
+    cn: "数据已导入!"
+  import_fail:
+    en: "Failed to importa data!"
+    es: "No se ha podido importar datos!"
+    cn: "未能导入数据!"
+  importDB_ongoing:
+    en: "Importing data from database..."
+    es: "Importando datos desde base de datos..."
+    cn: "正在从数据库导入数据..."
+  importPHP_ongoing:
+    en: "Importing data from PHP server..."
+    es: "Importando datos desde servidor PHP..."
+    cn: "正在从PHP服务器导入数据..."
 
 
 input:
