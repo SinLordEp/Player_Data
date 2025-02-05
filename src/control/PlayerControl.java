@@ -108,8 +108,10 @@ public class PlayerControl implements GeneralControl {
     public void createFile() {
         save();
         logger.info("Calling DataSourceChooser...");
+        notifyLog(LogStage.ONGOING, "createFile_ongoing");
         new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile);
         logger.info("File created");
+        notifyLog(LogStage.PASS, "createFile_pass");
     }
 
     /**
@@ -250,13 +252,15 @@ public class PlayerControl implements GeneralControl {
         try {
             file_path = GeneralDataAccess.getPath(playerDA.getFileType());
             playerDA.setFilePath(file_path);
+            notifyLog(LogStage.ONGOING, "importFile_ongoing", "\n>>>" + file_path);
             playerDA.read();
             notifyEvent("data_changed", playerDA.getPlayerMap());
         } catch (OperationCancelledException e) {
             logger.info("Import from file cancelled");
-            notifyEvent("operation_cancelled", null);
+            notifyLog(LogStage.INFO, "operation_cancelled");
         }
         logger.info("File data imported");
+        notifyLog(LogStage.PASS, "import_pass");
     }
 
     /**
@@ -286,10 +290,9 @@ public class PlayerControl implements GeneralControl {
             logger.info("Calling DatabaseLogin");
             new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForImport);
         } catch (ConfigErrorException e) {
-            logger.error("Import DB: Failed to read configuration with cause: {}", e.getMessage());
+            logger.error("Failed to read configuration with cause: {}", e.getMessage());
             notifyEvent("config_error", null);
         }
-        logger.info("Import DB: Process finished!");
     }
 
     /**
@@ -307,17 +310,20 @@ public class PlayerControl implements GeneralControl {
      *                     connection to the database (e.g., credentials, database URL, etc.).
      */
     private void handleDatabaseLoginForImport(DatabaseInfo databaseInfo){
-        logger.info("Handling DatabaseLogin for Import data: Processing...");
+        logger.info("Processing...");
         try {
             playerDA.setDatabaseInfo(databaseInfo);
+            notifyLog(LogStage.ONGOING, "importDB_ongoing", "\n>>> URL: " + databaseInfo.getUrl());
             playerDA.read();
             notifyEvent("data_changed", playerDA.getPlayerMap());
         }  catch (DatabaseException e) {
-            logger.error("Handling DatabaseLogin for Import data: Failed to read from database with cause: {}", e.getMessage());
+            logger.error("Failed to read from database with cause: {}", e.getMessage());
             notifyEvent("db_login_failed",null);
+            notifyLog(LogStage.FAIL, "import_fail");
             clearDataSource();
         }
-        logger.info("Handling DatabaseLogin for Import data: Process finished!");
+        logger.info("Database data imported");
+        notifyLog(LogStage.PASS, "import_pass");
     }
 
     /**
@@ -334,6 +340,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Processing PHP type-{} to import", phpType);
         try{
             playerDA.setPhpType(phpType);
+            notifyLog(LogStage.ONGOING, "importPHP_ongoing");
             playerDA.read();
             notifyEvent("data_changed", playerDA.getPlayerMap());
         }catch (OperationCancelledException e) {
@@ -342,7 +349,10 @@ public class PlayerControl implements GeneralControl {
         }catch (HttpPhpException e){
             logger.error("Failed to import from php server. Cause: {}", e.getMessage());
             notifyEvent("php_error",null);
+            notifyLog(LogStage.FAIL, "import_fail");
         }
+        logger.info("PHP data imported");
+        notifyLog(LogStage.PASS, "import_pass");
     }
 
 
@@ -580,9 +590,10 @@ public class PlayerControl implements GeneralControl {
      */
     public void save(){
         if(!playerDA.isDataChanged()){
-            logger.info("Save: Process cancelled with cause: No datas were changed");
+            logger.info("Process cancelled with cause: No datas were changed");
             return;
         }
+        notifyLog(LogStage.ONGOING, "save_ongoing");
         try {
             if (Objects.requireNonNull(playerDA.getDataSource()) == DataSource.NONE) {
                 logger.info("Current data source is NONE, returning...");
@@ -594,9 +605,11 @@ public class PlayerControl implements GeneralControl {
         } catch (DatabaseException e) {
             logger.error("Failed to save data via database. Cause: {}", e.getMessage());
             notifyEvent("config_error", null);
+            notifyLog(LogStage.FAIL, "save_fail");
         }
         notifyEvent("data_saved", null);
         logger.info("Data saved");
+        notifyLog(LogStage.PASS, "save_pass");
     }
 
     /**
