@@ -57,7 +57,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
     private final HashMap<String, Consumer<TreeMap<Integer, Player>>> eventWithMapHandler = new HashMap<>();
     private final HashMap<String, Consumer<String>> eventWithStringHandler = new HashMap<>();
     private final HashMap<String, Runnable> eventWithoutDataHandler = new HashMap<>();
-    private StyledDocument log_document;
+    private final StyledDocument log_document;
 
     public PlayerUI(PlayerControl control) {
         playerControl = control;
@@ -126,7 +126,6 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
      */
     private void refresh(TreeMap<Integer, Player> playerMap) {
         tableModel.update_data(playerMap);
-        table_data.setModel(tableModel);
         onLog(LogStage.PASS, "refresh_pass");
     }
 
