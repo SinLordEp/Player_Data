@@ -19,5 +19,5 @@
     </root>
 
     <!--logger name="control.PlayerControl" level="debug" /-->
-    <!--logger name="data.PlayerDataAccess" level="warn" /-->
+    <!--logger name="data.PlayerDAO" level="warn" /-->
 </configuration>

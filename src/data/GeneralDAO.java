@@ -24,7 +24,7 @@ import static main.principal.getProperty;
  * different types of data sources and file types.
  * @author SIN
  */
-public abstract class GeneralDataAccess {
+public abstract class GeneralDAO {
     protected String file_path = null;
     protected DataSource dataSource = DataSource.NONE;
     protected FileType fileType = FileType.NONE;
@@ -32,7 +32,7 @@ public abstract class GeneralDataAccess {
     protected DatabaseInfo databaseInfo = new DatabaseInfo();
     public abstract void read();
     public abstract void save();
-    private static final Logger logger = LoggerFactory.getLogger(GeneralDataAccess.class);
+    private static final Logger logger = LoggerFactory.getLogger(GeneralDAO.class);
 
     /**
      * Sets the file path and updates the associated {@code dataSource} to {@code DataSource.FILE}.
@@ -137,7 +137,7 @@ public abstract class GeneralDataAccess {
      */
     public static String newPathBuilder(FileType fileType) {
         logger.info("New path builder: Building new path...");
-        String target_path = GeneralDataAccess.getPath();
+        String target_path = GeneralDAO.getPath();
         String target_extension = getExtension(fileType);
         String target_file_name = PlayerText.getDialog().input("file_name");
         target_path += "/" +target_file_name + target_extension;

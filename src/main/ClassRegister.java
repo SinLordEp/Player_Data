@@ -1,7 +1,7 @@
 package main;
 
 import Interface.GeneralControl;
-import data.GeneralDataAccess;
+import data.GeneralDAO;
 import exceptions.ConfigErrorException;
 import org.reflections.Reflections;
 
@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class ClassRegister {
     public static Map<String, Class<? extends GeneralControl>> classMap = new HashMap<>();
-    public static Map<String,Class<? extends GeneralDataAccess>> dataAccessMap = new HashMap<>();
+    public static Map<String,Class<? extends GeneralDAO>> dataAccessMap = new HashMap<>();
     private static final ClassRegister INSTANCE = new ClassRegister();
 
     /**
@@ -84,8 +84,8 @@ public class ClassRegister {
      */
     private void registerDataAccess() {
         Reflections reflections = new Reflections("data");
-        Set<Class<? extends GeneralDataAccess>> dataSet = reflections.getSubTypesOf(GeneralDataAccess.class);
-        for (Class<? extends GeneralDataAccess> dataClass : dataSet) {
+        Set<Class<? extends GeneralDAO>> dataSet = reflections.getSubTypesOf(GeneralDAO.class);
+        for (Class<? extends GeneralDAO> dataClass : dataSet) {
             dataAccessMap.put(dataClass.getSimpleName().replace("DataAccess",""), dataClass);
         }
     }
@@ -135,8 +135,8 @@ public class ClassRegister {
      * @return an instance of the requested {@code GeneralDataAccess} class, dynamically created using reflection.
      * @throws Exception if the class could not be found, instantiated, or if there is a configuration error.
      */
-    public GeneralDataAccess getDA(String class_name) throws Exception {
-        Class<? extends GeneralDataAccess> dataAccessClass = dataAccessMap.get(class_name);
+    public GeneralDAO getDA(String class_name) throws Exception {
+        Class<? extends GeneralDAO> dataAccessClass = dataAccessMap.get(class_name);
         if (dataAccessClass != null) {
             return dataAccessClass.getDeclaredConstructor().newInstance();
         }

@@ -30,11 +30,11 @@ import static main.principal.getProperty;
  * connect and interact with the underlying data sources while maintaining a local map of player data.
  * @author SIN
  */
-public class PlayerDataAccess extends GeneralDataAccess {
+public class PlayerDAO extends GeneralDAO {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
     private HashMap<Region, Server[]> region_server_map;
-    private static final Logger logger = LoggerFactory.getLogger(PlayerDataAccess.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlayerDAO.class);
     private boolean isDataChanged = false;
 
     /**
@@ -52,7 +52,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * <p>
      * Logs the initialization process to indicate successful instantiation of the object.
      */
-    public PlayerDataAccess() {
+    public PlayerDAO() {
         logger.info("Instantiated");
     }
 

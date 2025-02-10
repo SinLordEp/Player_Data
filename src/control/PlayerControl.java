@@ -9,8 +9,8 @@ import GUI.Player.PlayerUI;
 import Interface.EventListener;
 import Interface.GeneralControl;
 import data.DataSource;
-import data.GeneralDataAccess;
-import data.PlayerDataAccess;
+import data.GeneralDAO;
+import data.PlayerDAO;
 import data.database.SqlDialect;
 import data.file.FileType;
 import data.http.PhpType;
@@ -35,7 +35,7 @@ import java.util.*;
  */
 public class PlayerControl implements GeneralControl {
     private static final Logger logger = LoggerFactory.getLogger(PlayerControl.class);
-    private PlayerDataAccess playerDA;
+    private PlayerDAO playerDA;
     private final List<EventListener<TreeMap<Integer, Player>>> listeners = new ArrayList<>();
 
     /**
@@ -67,8 +67,8 @@ public class PlayerControl implements GeneralControl {
      * @param DA data access manage for player
      */
     @Override
-    public void setDA(GeneralDataAccess DA) {
-        this.playerDA = (PlayerDataAccess) DA;
+    public void setDA(GeneralDAO DA) {
+        this.playerDA = (PlayerDAO) DA;
     }
 
     /**
@@ -133,7 +133,7 @@ public class PlayerControl implements GeneralControl {
      */
     private void handleDataSourceForCreateFile(DataSource dataSource, Object dataType){
         logger.info("Processing DataSource-{} and DataType-{} to create file", dataSource, dataType);
-        playerDA.setFilePath(GeneralDataAccess.newPathBuilder((FileType) dataType));
+        playerDA.setFilePath(GeneralDAO.newPathBuilder((FileType) dataType));
         playerDA.createNewFile();
         playerDA.setDataSource(dataSource);
         notifyEvent("dataSource_set",null);
@@ -231,7 +231,7 @@ public class PlayerControl implements GeneralControl {
         logger.info("Processing file type-{} to import", fileType);
         playerDA.setFileType(fileType);
         logger.info("Fetching file path");
-        String file_path = PlayerExceptionHandler.getInstance().handle(() -> GeneralDataAccess.getPath(playerDA.getFileType()),
+        String file_path = PlayerExceptionHandler.getInstance().handle(() -> GeneralDAO.getPath(playerDA.getFileType()),
                 "GeneralDataAccess-getPath()", "getPath");
         playerDA.setFilePath(file_path);
         PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
