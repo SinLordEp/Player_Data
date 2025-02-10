@@ -56,14 +56,10 @@ public class PlayerControl implements GeneralControl {
     @Override
     public void run() {
         PlayerUI playerUI = new PlayerUI(this);
-        try {
-            playerDA.initializeRegionServer();
-        } catch (FileManageException e) {
-            logger.error("Failed to load region server file. Cause: {}", e.getMessage());
-            notifyEvent("region_server_null", null);
-            System.exit(0);
-        }
+        addListener(playerUI);
+        PlayerExceptionHandler.getInstance().addListener(playerUI);
         playerUI.run();
+        playerDA.initializeRegionServer();
     }
 
     /**
@@ -87,7 +83,6 @@ public class PlayerControl implements GeneralControl {
      */
     @Override
     public void onWindowClosing() {
-        logger.debug("Trigger Player window closing procedure...");
         save();
         logger.info("Shutting down");
         System.exit(0);
@@ -109,7 +104,8 @@ public class PlayerControl implements GeneralControl {
         save();
         logger.info("Calling DataSourceChooser...");
         notifyLog(LogStage.ONGOING, "createFile_ongoing");
-        new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile);
+        PlayerExceptionHandler.getInstance().handle(() -> new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile),
+                "PlayerControl-createFile", "createFile");
     }
 
     /**
@@ -137,19 +133,12 @@ public class PlayerControl implements GeneralControl {
      */
     private void handleDataSourceForCreateFile(DataSource dataSource, Object dataType){
         logger.info("Processing DataSource-{} and DataType-{} to create file", dataSource, dataType);
-        try {
-            playerDA.setFilePath(GeneralDataAccess.newPathBuilder((FileType) dataType));
-            playerDA.createNewFile();
-            playerDA.setDataSource(dataSource);
-            notifyEvent("dataSource_set",null);
-            playerDA.clearData();
-            notifyEvent("data_changed", playerDA.getPlayerMap());
-        } catch (OperationCancelledException e) {
-            logger.info("File creation cancelled");
-        } catch (FileManageException e) {
-            logger.error("Failed to create file. Cause: {}", e.getMessage());
-            notifyLog(LogStage.FAIL, "createFile_fail");
-        }
+        playerDA.setFilePath(GeneralDataAccess.newPathBuilder((FileType) dataType));
+        playerDA.createNewFile();
+        playerDA.setDataSource(dataSource);
+        notifyEvent("dataSource_set",null);
+        playerDA.clearData();
+        notifyEvent("data_changed", playerDA.getPlayerMap());
         logger.info("File created");
         notifyLog(LogStage.PASS, "createFile_pass");
     }
@@ -178,15 +167,10 @@ public class PlayerControl implements GeneralControl {
      */
     public void importData() {
         logger.info("Importing data...");
-        try {
-            save();
-            logger.info("Calling Data source chooser...");
-            new DataSourceChooser(null, this::handleDataSourceForImportData);
-        } catch (OperationCancelledException e) {
-            notifyLog(LogStage.INFO, "operation_cancelled");
-        } catch (DataTypeException e){
-            logger.error(e.getMessage());
-        }
+        save();
+        logger.info("Calling Data source chooser...");
+        PlayerExceptionHandler.getInstance().handle(() -> new DataSourceChooser(null, this::handleDataSourceForImportData),
+                "PlayerControl-importData", "dataSourceChooser");
     }
 
     /**
@@ -247,18 +231,13 @@ public class PlayerControl implements GeneralControl {
         logger.info("Processing file type-{} to import", fileType);
         playerDA.setFileType(fileType);
         logger.info("Fetching file path");
-        String file_path;
-        try {
-            file_path = GeneralDataAccess.getPath(playerDA.getFileType());
-            playerDA.setFilePath(file_path);
-            notifyLog(LogStage.ONGOING, "importFile_ongoing", "\n>>>" + file_path);
-            playerDA.read();
-            notifyEvent("data_changed", playerDA.getPlayerMap());
-            logger.info("File data imported");
-            notifyLog(LogStage.PASS, "import_pass");
-        } catch (OperationCancelledException e) {
-            notifyLog(LogStage.INFO, "operation_cancelled");
-        }
+        String file_path = PlayerExceptionHandler.getInstance().handle(() -> GeneralDataAccess.getPath(playerDA.getFileType()),
+                "GeneralDataAccess-getPath()", "getPath");
+        playerDA.setFilePath(file_path);
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
+                "PlayerControl-importFile", "importFile", "\n>>>" + file_path);
+        notifyEvent("data_changed", playerDA.getPlayerMap());
+        logger.info("File data imported");
     }
 
     /**
@@ -281,16 +260,8 @@ public class PlayerControl implements GeneralControl {
      */
     private void importDB(DataSource dataSource, SqlDialect sqlDialect)  {
         logger.info("Processing DataSource-{} and SQL Dialect-{} to import", dataSource, sqlDialect);
-        try {
-            logger.info("Fetching default database information");
-            DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(sqlDialect, dataSource);
-            databaseInfo.setDataSource(dataSource);
-            logger.info("Calling DatabaseLogin");
-            new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForImport);
-        } catch (ConfigErrorException e) {
-            logger.error("Failed to read default database configuration with cause: {}", e.getMessage());
-            notifyLog(LogStage.ERROR, "config_error");
-        }
+        PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(sqlDialect, dataSource), this::handleDatabaseLoginForImport),
+                "PlayerControl-importDB()", "default_database");
     }
 
     /**
@@ -308,22 +279,10 @@ public class PlayerControl implements GeneralControl {
      *                     connection to the database (e.g., credentials, database URL, etc.).
      */
     private void handleDatabaseLoginForImport(DatabaseInfo databaseInfo){
-        logger.info("Processing...");
-        try {
-            playerDA.setDatabaseInfo(databaseInfo);
-            notifyLog(LogStage.ONGOING, "importDB_ongoing", "\n>>> URL: " + databaseInfo.getUrl());
-            playerDA.read();
-            notifyEvent("data_changed", playerDA.getPlayerMap());
-            logger.info("Database data imported");
-            notifyLog(LogStage.PASS, "import_pass");
-        } catch (DatabaseException e) {
-            logger.error(e.getMessage());
-            notifyLog(LogStage.FAIL, "db_login_fail");
-            clearDataSource();
-        } catch (OperationException e){
-            logger.error(e.getMessage());
-            notifyLog(LogStage.ERROR, "import_fail");
-        }
+        PlayerExceptionHandler.getInstance().handle(()-> playerDA.read(),
+                "PlayerControl-handleDatabaseLoginForImport()", "importDB", "\n>>>" + databaseInfo.getUrl());
+        notifyEvent("data_changed", playerDA.getPlayerMap());
+        logger.info("Database data imported");
     }
 
     /**
@@ -338,19 +297,12 @@ public class PlayerControl implements GeneralControl {
      */
     private void importPHP(PhpType phpType) {
         logger.info("Processing PHP type-{} to import", phpType);
-        try{
-            playerDA.setPhpType(phpType);
-            notifyLog(LogStage.ONGOING, "importPHP_ongoing");
-            playerDA.read();
-            notifyEvent("data_changed", playerDA.getPlayerMap());
-            logger.info("PHP data imported");
-            notifyLog(LogStage.PASS, "import_pass");
-        }catch (OperationCancelledException e) {
-            notifyLog(LogStage.INFO, "operation_cancelled");
-        }catch (HttpPhpException e){
-            logger.error(e.getMessage());
-            notifyLog(LogStage.ERROR, "php_error");
-        }
+        playerDA.setPhpType(phpType);
+        notifyLog(LogStage.ONGOING, "importPHP_ongoing");
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
+                "PlayerControl-importPHP" , "importPHP");
+        notifyEvent("data_changed", playerDA.getPlayerMap());
+        logger.info("PHP data imported");
     }
 
 
@@ -368,7 +320,8 @@ public class PlayerControl implements GeneralControl {
      */
     public void add() {
         logger.info("Calling Player info dialog...");
-        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player(), this::handlePlayerInfoForAdd);
+        PlayerExceptionHandler.getInstance().handle(() -> new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player(), this::handlePlayerInfoForAdd),
+                "PlayerControl-add()", "playerInfo");
     }
 
     /**
@@ -397,7 +350,8 @@ public class PlayerControl implements GeneralControl {
      */
     public void modify(int selected_player_id){
         logger.info("Calling Player info dialog with player id: {}", selected_player_id);
-        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id), this::handlePlayerInfoForModify);
+        PlayerExceptionHandler.getInstance().handle(() -> new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id), this::handlePlayerInfoForModify),
+                "PlayerControl-modify()", "playerInfo");
     }
 
     /**
@@ -449,7 +403,8 @@ public class PlayerControl implements GeneralControl {
             notifyLog(LogStage.INFO, "player_map_null");
             return;
         }
-        new DataSourceChooser(null, this::handleDataSourceForExport);
+        PlayerExceptionHandler.getInstance().handle(() -> new DataSourceChooser(null, this::handleDataSourceForExport),
+                "PlayerControl-export()", "dataSourceChooser");
     }
 
     /**
@@ -489,16 +444,9 @@ public class PlayerControl implements GeneralControl {
     private void exportFile(FileType fileType) {
         logger.info("Processing file type-{} to export", fileType);
         playerDA.setFileType(fileType);
-        try {
-            playerDA.exportFile();
-            logger.info("Completed exporting to file");
-            notifyLog(LogStage.PASS, "exportFile_pass");
-        } catch (OperationCancelledException e) {
-            notifyLog(LogStage.INFO, "operation_cancelled");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            notifyLog(LogStage.FAIL, "export_fail");
-        }
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportFile(),
+                "PlayerControl-exportFile()", "exportFile");
+        logger.info("Completed exporting to file");
     }
 
     /**
@@ -511,14 +459,8 @@ public class PlayerControl implements GeneralControl {
      */
     private void exportDB(DataSource target_source, SqlDialect target_dialect) {
         logger.info("Processing target DataSource-{} and SQL dialect {} to export", target_source,  target_dialect);
-        try {
-            DatabaseInfo databaseInfo = playerDA.getDefaultDatabaseInfo(target_dialect, target_source);
-            databaseInfo.setDataSource(target_source);
-            new DatabaseLogin(databaseInfo, this::handleDatabaseLoginForExport);
-        } catch (ConfigErrorException e) {
-            logger.error("Failed to read default database config. Cause: {}", e.getMessage());
-            notifyLog(LogStage.ERROR, "config_error");
-        }
+        PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(target_dialect, target_source), this::handleDatabaseLoginForExport),
+                "PlayerControl-exportDB()", "default_database");
     }
 
     /**
@@ -535,13 +477,8 @@ public class PlayerControl implements GeneralControl {
      *                     required to connect and perform the export operation.
      */
     private void handleDatabaseLoginForExport(DatabaseInfo databaseInfo) {
-        try {
-            playerDA.exportDB(databaseInfo);
-            notifyEvent("exported_db", null);
-        }  catch (DatabaseException e) {
-            logger.error(e.getMessage());
-            notifyLog(LogStage.FAIL, "db_login_fail");
-        }
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportDB(databaseInfo),
+                "PlayerControl-exportDB()", "exportDB");
     }
 
     /**
@@ -558,14 +495,9 @@ public class PlayerControl implements GeneralControl {
      */
     private void exportPHP(PhpType phpType) {
         logger.info("Processing PHP type-{} to export", phpType);
-        try{
-            playerDA.exportPHP(phpType);
-            logger.info("Completed exporting to PHP");
-            notifyLog(LogStage.PASS, "exportPhp_pass");
-        }catch (HttpPhpException e){
-            logger.error(e.getMessage());
-            notifyLog(LogStage.FAIL, "export_fail");
-        }
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportPHP(phpType),
+                "PlayerControl-exportPHP()", "exportPHP");
+        logger.info("Completed exporting to PHP");
     }
 
     /**
@@ -591,21 +523,15 @@ public class PlayerControl implements GeneralControl {
             logger.info("Process cancelled with cause: No datas were changed");
             return;
         }
-        notifyLog(LogStage.ONGOING, "save_ongoing");
-        try {
-            if (Objects.requireNonNull(playerDA.getDataSource()) == DataSource.NONE) {
-                logger.info("Current data source is NONE, returning...");
-                return;
-            } else {
-                logger.info("Current data source is {}, saving...", playerDA.getDataSource());
-                playerDA.save();
-            }
-            logger.info("Data saved");
-            notifyLog(LogStage.PASS, "save_pass");
-        } catch (DatabaseException e) {
-            logger.error(e.getMessage());
-            notifyLog(LogStage.FAIL, "save_fail");
+        if (Objects.requireNonNull(playerDA.getDataSource()) == DataSource.NONE) {
+            logger.info("Current data source is NONE, returning...");
+            return;
+        } else {
+            logger.info("Current data source is {}, saving...", playerDA.getDataSource());
+            PlayerExceptionHandler.getInstance().handle(() -> playerDA.save(),
+                    "PlayerControl-save()", "save");
         }
+        logger.info("Data saved");
     }
 
     /**

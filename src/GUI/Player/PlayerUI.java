@@ -6,7 +6,6 @@ import Interface.EventListener;
 import Interface.GeneralUI;
 import control.PlayerControl;
 import model.Player;
-import org.yaml.snakeyaml.Yaml;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -16,12 +15,9 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.function.Consumer;
-
-import static main.principal.getProperty;
 
 /**
  * The {@code PlayerUI} class serves as the user interface to manage player-related operations.
@@ -55,13 +51,11 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
     private int selected_player_id;
 
     private final HashMap<String, Consumer<TreeMap<Integer, Player>>> eventWithMapHandler = new HashMap<>();
-    private final HashMap<String, Consumer<String>> eventWithStringHandler = new HashMap<>();
     private final HashMap<String, Runnable> eventWithoutDataHandler = new HashMap<>();
     private final StyledDocument log_document;
 
     public PlayerUI(PlayerControl control) {
         playerControl = control;
-        this.playerControl.addListener(this);
         log_document = textPane_log.getStyledDocument();
     }
 
@@ -218,27 +212,9 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
     }
 
     private void initializeEvent(){
-        try(InputStream inputStream = Objects.requireNonNull(getClass().getResource(getProperty("playerEvent"))).openStream()){
-            Map<String, ArrayList<String>> events = new Yaml().load(inputStream);
-            for(String event : events.get("refresh")){
-                eventWithMapHandler.put(event, this::refresh);
-            }
-
-            for(String event : events.get("playerPopup")){
-                eventWithStringHandler.put(event, this::playerPopup);
-            }
-
-            for(String event : events.get("changeLanguage")){
-                eventWithoutDataHandler.put(event, this::changeLanguage);
-            }
-
-            for(String event : events.get("dataSourceIsSet")){
-                eventWithoutDataHandler.put(event, this::dataSourceIsSet);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        eventWithMapHandler.put("data_changed", this::refresh);
+        eventWithoutDataHandler.put("language_changed", this::changeLanguage);
+        eventWithoutDataHandler.put("dataSource_set", this::dataSourceIsSet);
     }
 
     /**
@@ -270,8 +246,6 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
     public void onEvent(String event, TreeMap<Integer,Player> data) {
         if(eventWithMapHandler.containsKey(event)){
             eventWithMapHandler.get(event).accept(data);
-        } else if (eventWithStringHandler.containsKey(event)) {
-            eventWithStringHandler.get(event).accept(event);
         } else if (eventWithoutDataHandler.containsKey(event)) {
             eventWithoutDataHandler.get(event).run();
         } else{
@@ -304,22 +278,6 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
 
     private void handleUnknownEvent(String event){
         throw new RuntimeException("Unknown event " + event);
-    }
-
-    /**
-     * Displays a player-specific popup dialog based on the provided subtype.
-     * This method invokes {@code PlayerText.getDialog().popup(String)} to show a
-     * localized dialog, with the content determined by the subtype identifier.
-     * The dialog typically displays messages relevant to player-related events
-     * such as modifications, additions, deletions, or exports.
-     *
-     * @param sub_type a {@code String} representing the specific type of popup dialog
-     *                 to display. The value determines the content shown in the dialog.
-     *                 Common subtypes include "region_server_null", "player_map_null",
-     *                 "modified_player", "added_player", "deleted_player", and others.
-     */
-    private void playerPopup(String sub_type){
-        PlayerText.getDialog().popup(sub_type);
     }
 
 }

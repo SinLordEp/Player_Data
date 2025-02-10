@@ -4,10 +4,7 @@ import GUI.Player.PlayerText;
 import data.database.DataBasePlayerCRUD;
 import data.database.SqlDialect;
 import data.http.PhpType;
-import exceptions.ConfigErrorException;
-import exceptions.DataCorruptedException;
-import exceptions.FileManageException;
-import exceptions.OperationException;
+import exceptions.*;
 import model.DatabaseInfo;
 import model.Player;
 import model.Region;
@@ -85,15 +82,11 @@ public class PlayerDataAccess extends GeneralDataAccess {
      *                           configuration or connecting to the database.
      */
     public void initializeRegionServer(){
-        logger.info("Reading region server config");
-        try {
-            DatabaseInfo info = getDefaultDatabaseInfo(SqlDialect.SQLITE);
-            info.setDataSource(DataSource.DATABASE);
-            region_server_map = DataBasePlayerCRUD.readRegionServer(info);
-            logger.info("Region server map initialized!");
-        } catch (ConfigErrorException e) {
-            throw new RuntimeException(e);
-        }
+        DatabaseInfo info = PlayerExceptionHandler.getInstance().handle(() -> getDefaultDatabaseInfo(SqlDialect.SQLITE),
+                "PlayerDAO-getDefaultDatabaseInfo", "default_database");
+        info.setDataSource(DataSource.DATABASE);
+        region_server_map = PlayerExceptionHandler.getInstance().handle(() -> DataBasePlayerCRUD.readRegionServer(info),
+                "PlayerDA-initializeRegionServer()", "region_server");
     }
 
     /**
@@ -109,7 +102,7 @@ public class PlayerDataAccess extends GeneralDataAccess {
      * @throws ConfigErrorException if an error occurs while reading or loading the configuration
      */
     @SuppressWarnings("unchecked")
-    public DatabaseInfo getDefaultDatabaseInfo(SqlDialect dialect, DataSource... dataSource) throws ConfigErrorException {
+    public DatabaseInfo getDefaultDatabaseInfo(SqlDialect dialect, DataSource... dataSource) throws ConfigErrorException, IOException {
         logger.info("Reading default database info for dialect: {}", dialect);
         DatabaseInfo databaseInfo = new DatabaseInfo();
         databaseInfo.setDialect(dialect);
@@ -119,8 +112,6 @@ public class PlayerDataAccess extends GeneralDataAccess {
             try(InputStream inputStream = resource.openStream()){
                 Yaml yaml = new Yaml();
                 default_info = yaml.load(inputStream);
-            }catch (IOException e){
-                throw new ConfigErrorException("Error loading default database info");
             }
         }
         if(default_info == null){
@@ -163,6 +154,10 @@ public class PlayerDataAccess extends GeneralDataAccess {
                 throw new OperationException("Unknown SQL dialect");
         }
         logger.info("Finished reading database info!");
+        if(dataSource.length > 0){
+            databaseInfo.setDataSource(dataSource[0]);
+            this.databaseInfo = databaseInfo;
+        }
         return databaseInfo;
     }
 

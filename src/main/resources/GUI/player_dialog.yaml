@@ -155,6 +155,14 @@ text:
     en: "Importing data from file..."
     es: "Importando datos desde fichero..."
     cn: "正在从文件导入数据..."
+  importFile_pass:
+    en: "Successfully imported data from file!"
+    es: "Se ha importado datos desde fichero!"
+    cn: "成功从文件导入数据!"
+  importFile_fail:
+    en: "Failed to import data from file!"
+    es: "No ha podido importar datos desde fichero!"
+    cn: "从文件导入数据失败!"
   import_pass:
     en: "Data imported!"
     es: "Datos importados!"
@@ -167,10 +175,26 @@ text:
     en: "Importing data from database..."
     es: "Importando datos desde base de datos..."
     cn: "正在从数据库导入数据..."
+  importDB_pass:
+    en: "Data of database imported successfully!"
+    es: "Se ha importado datos desde base de datos con éxito!"
+    cn: "成功从数据库导入数据!"
+  importDB_fail:
+    en: "Failed to import data from database!"
+    es: "No ha podido importar datos desde la base de datos!"
+    cn: "从数据库导入数据失败!"
   importPHP_ongoing:
     en: "Importing data from PHP server..."
     es: "Importando datos desde servidor PHP..."
     cn: "正在从PHP服务器导入数据..."
+  importPHP_pass:
+    en: "Data was imported successfully from PHP server!"
+    es: "Se ha importado los datos desde servidor PHP con éxito!"
+    cn: "成功从PHP服务器导入数据!"
+  importPHP_fail:
+    en: "Failed to import data from PHP server!"
+    es: "No ha podido importar datos desde servidor PHP!"
+    cn: "从PHP服务器导入数据失败"
   operation_cancelled:
     en: "Operation cancelled!"
     es: "¡Operación cancelada!"
@@ -187,6 +211,18 @@ text:
     en: "Failed to transfer data between Cliente and PHP server"
     es: "No se ha podido transferir datos entre cliente y servidor PHP"
     cn: "客户端未能与PHP服务器交换数据"
+  playerInfo_ongoing:
+    en: "Building player panel..."
+    es: "Construyendo el panel de jugador..."
+    cn: "正在构建玩家面板..."
+  playerInfo_pass:
+    en: "Player panel is built!"
+    es: "Panel de jugador se ha construido!"
+    cn: "已构建玩家面板!"
+  playerInfo_fail:
+    en: "Failed to build player panel!"
+    es: "No ha podido construir el panel de jugador!"
+    cn: "未能构建玩家面板"
   added_player:
     en: "Player added"
     es: "Jugador añadida"
@@ -203,18 +239,95 @@ text:
     en: "No player data registered"
     es: "No hay jugador registrada"
     cn: "无玩家数据"
+  exportFile_ongoing:
+    en: "Exporting player data to file..."
+    es: "Exportando los datos de jugadores al archivo..."
+    cn: "正在导出玩家数据至文件..."
   exportFile_pass:
     en: "Players data were exported to file"
     es: "Datos de jugadores exportados correctamente a fichero"
     cn: "玩家数据已导出至文件"
+  exportFile_fail:
+    en: "Failed to export player data to file!"
+    es: "No ha podido exportar los datos de jugadores al archivo!"
+    cn: "未能导出玩家数据至文件!"
+  exportDB_ongoing:
+    en: "Exporting player data to database..."
+    es: "Exportando los datos de jugadores a la base de datos..."
+    cn: "正在导出玩家数据至数据库..."
+  exportDB_pass:
+    en: "Players data were exported to database!"
+    es: "Datos de jugadores exportados correctamente a la base de datos!"
+    cn: "玩家数据已导出至数据库!"
+  exportDB_fail:
+    en: "Failed to export player data to database!"
+    es: "No ha podido exportar los datos de jugadores a la base de datos!"
+    cn: "未能导出玩家数据至数据库!"
   export_fail:
     en: "Failed to exportFile data"
     es: "No se han podido exportar datos"
     cn: "导出数据失败"
-  exportPhp_pass:
+  exportPHP_ongoing:
+    en: "Exporting player data to PHP server..."
+    es: "Exportando los datos de jugadores al servidor PHP..."
+    cn: "正在导出玩家数据至PHP服务器..."
+  exportPHP_pass:
     en: "Players data were exported to PHP server"
     es: "Datos de jugadores exportados correctamente a servidor PHP"
     cn: "玩家数据已导出至PHP服务器"
+  exportPHP_fail:
+    en: "Failed to export player data to database!"
+    es: "No ha podido exportar los datos de jugadores al servidor PHP!"
+    cn: "未能导出玩家数据至PHP服务器!"
+  region_server_ongoing:
+    en: "Loading region and server info..."
+    es: "Cargando información de region y servidor..."
+    cn: "正在载入地区和服务器的信息..."
+  region_server_pass:
+    en: "Region and server lists loaded!"
+    es: "Listas de region y servidor se han cargado!"
+    cn: "地区和服务器信息已载入!"
+  region_server_fail:
+    en: "Region and server are null"
+    es: "Region y servidor están nulos"
+    cn: "地区和服务器为空"
+  default_database_ongoing:
+    en: "Reading default database info..."
+    es: "Leyendo la información de la base de datos predeterminada..."
+    cn: "正在读取默认数据库配置..."
+  default_database_pass:
+    en: "Default database info loaded!"
+    es: "La información de la base de datos está cargada!"
+    cn: "默认数据库配置已加载!"
+  default_database_fail:
+    en: "Failed to read default database info!"
+    es: "No ha podido cargar la información de la base de datos predeterminada"
+    cn: "未能读取默认数据库配置!"
+  getPath_ongoing:
+    en: "Fetching file path..."
+    es: "Obteniendo la ruta del archivo..."
+    cn: "正在获取文件路径..."
+  getPath_pass:
+    en: "File path successfully fetched!"
+    es: "La ruta del archivo se ha obtenido satisfactoriamente!"
+    cn: "成功获取文件路径!"
+  getPath_fail:
+    en: "Failed to fetch file path!"
+    es: "No ha podido obtener la ruta del archivo!"
+    cn: "获取文件路劲失败!"
+  dataSourceChooser_ongoing:
+    en: "Building data source choosing panel..."
+    es: "Construyendo el panel para elegir origen del dato..."
+    cn: "正在构建数据来源面板..."
+  dataSourceChooser_pass:
+    en: "Data source choosing panel is built!"
+    es: "Panel para elegir origen del dato se ha construido!"
+    cn: "已构建数据来源面板!"
+  dataSourceChooser_fail:
+    en: "Failed to build Data source choosing panel!"
+    es: "No ha podido construir el panel para elegir origen del dato!"
+    cn: "未能构建数据来源面板"
+
 
 
 
@@ -241,10 +354,6 @@ popup:
     en: "Players data were exported to database"
     es: "Datos de jugadores exportados correctamente a base de datos"
     cn: "玩家数据已导出至数据库"
-  region_server_null:
-    en: "Region and server null"
-    es: "Region y servidor null"
-    cn: "地区和服务器为空"
   region_invalid:
     en: "Region doesn't exist"
     es: "Region no existe"

@@ -52,12 +52,12 @@ public class DatabaseLogin extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(button_submit);
         button_submit.addActionListener(_ -> onOK(callBack));
-        button_cancel.addActionListener(_ -> onCancel(callBack));
+        button_cancel.addActionListener(_ -> onCancel());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                onCancel(callBack);
+                onCancel();
             }
         });
         pack();
@@ -106,12 +106,9 @@ public class DatabaseLogin extends JDialog {
      * This method invokes the {@code onCancel} method of the provided callback
      * to notify that the database login operation has been canceled and releases resources associated with the dialog.
      *
-     * @param callBack a {@code CallBack<DatabaseInfo>} implementation to handle the cancellation
-     *                 and perform any necessary actions in response to the operation being terminated.
      */
-    private void onCancel(CallBack<DatabaseInfo> callBack) {
+    private void onCancel() {
         dispose();
-        callBack.onCancel();
     }
 
     /**

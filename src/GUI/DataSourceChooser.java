@@ -6,6 +6,7 @@ import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
 import data.http.PhpType;
+import exceptions.OperationCancelledException;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -75,12 +76,12 @@ public class DataSourceChooser extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(button_submit);
         button_submit.addActionListener(_ -> onOK(callback));
-        button_cancel.addActionListener(_ -> onCancel(callback));
+        button_cancel.addActionListener(_ -> onCancel());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                onCancel(callback);
+                onCancel();
             }
         });
         pack();
@@ -111,13 +112,10 @@ public class DataSourceChooser extends JDialog {
      * callback to notify the caller about the cancellation event, and releases any associated
      * resources by calling {@code dispose()}.
      *
-     * @param callback The instance of {@code DataSourceCallBack<DataSource, Object>} that receives
-     *                 the cancellation event through its {@code onCancel()} method.
      */
-    private void onCancel(DataSourceCallBack<DataSource, Object> callback) {
-        dispose();
+    private void onCancel() throws OperationCancelledException {
         dataSource = DataSource.NONE;
-        callback.onCancel();
+        dispose();
     }
 
     /**

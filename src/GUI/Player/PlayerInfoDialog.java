@@ -2,6 +2,7 @@ package GUI.Player;
 
 import GUI.UiUtils;
 import Interface.CallBack;
+import exceptions.OperationCancelledException;
 import model.Player;
 import model.Region;
 import model.Server;
@@ -112,12 +113,12 @@ public class PlayerInfoDialog extends JDialog {
         parsePlayer();
         pack();
         button_submit.addActionListener(_ -> onOK(callBack));
-        button_cancel.addActionListener(_ -> onCancel(callBack));
+        button_cancel.addActionListener(_ -> onCancel());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                onCancel(callBack);
+                onCancel();
             }
         });
     }
@@ -151,12 +152,10 @@ public class PlayerInfoDialog extends JDialog {
      * to notify that the operation has been canceled and then disposes of the dialog
      * to release resources and close the interface.
      *
-     * @param callBack the {@code CallBack<Player>} instance used to handle the cancellation action.
-     *                 The {@code onCancel()} method is triggered to execute cancellation-related logic.
      */
-    private void onCancel(CallBack<Player> callBack) {
+    private void onCancel() {
         dispose();
-        callBack.onCancel();
+        throw new OperationCancelledException();
     }
 
     /**
