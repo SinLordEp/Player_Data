@@ -1,0 +1,42 @@
+MYSQL:
+  text_url: "jdbc:mysql://localhost"
+  text_port: "3306"
+  text_database: "person"
+  text_user: "root"
+  text_pwd: "root"
+  query_read: "SELECT * FROM player"
+  query_add: "INSERT INTO player (id, region, server, name) VALUES (?,?,?,?)"
+  query_update: "UPDATE player SET region = ?, server = ?, name = ? WHERE id = ?"
+  query_delete: "DELETE FROM player WHERE id = ?"
+  query_export:
+SQLITE:
+  text_url: "jdbc:sqlite:person.db"
+  query_read:
+  query_add:
+  query_update:
+  query_delete:
+  query_export:
+OBJECTDB:
+  text_url: "/main/resources/data/player_data.odb"
+  query_read:
+  query_add:
+  query_update:
+  query_delete:
+  query_export:
+BASEX:
+  text_url: "src/main/resources/import/player_xml.xml"
+  text_database: "Player"
+  query_read:
+  query_add: "insert node <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player> into /Player"
+  query_update: "replace node /Player/player[@id='%s'] with <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player>"
+  query_delete: "delete node /Player/player[@id='%s']"
+  query_export: "insert node <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player> into /Player"
+MONGO:
+  text_url: "localhost"
+  text_port: "27017"
+  text_database: "person"
+  query_read: "/Player"
+  query_add:
+  query_update:
+  query_delete:
+  query_export:

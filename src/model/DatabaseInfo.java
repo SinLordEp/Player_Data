@@ -9,7 +9,7 @@ import data.database.SqlDialect;
 public class DatabaseInfo {
     private DataSource dataSource;
     private SqlDialect dialect;
-    private String url, port, database, user, password;
+    private String url, port, database, user, password, queryRead, queryADD, queryUpdate, queryDelete, queryExport;
 
     public DatabaseInfo() {
     }
@@ -68,5 +68,45 @@ public class DatabaseInfo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getQueryRead() {
+        return queryRead;
+    }
+
+    public void setQueryRead(String queryRead) {
+        this.queryRead = queryRead;
+    }
+
+    public String getQueryADD() {
+        return queryADD;
+    }
+
+    public void setQueryADD(String queryADD) {
+        this.queryADD = queryADD;
+    }
+
+    public String getQueryUpdate() {
+        return queryUpdate;
+    }
+
+    public void setQueryUpdate(String queryUpdate) {
+        this.queryUpdate = queryUpdate;
+    }
+
+    public String getQueryDelete() {
+        return queryDelete;
+    }
+
+    public void setQueryDelete(String queryDelete) {
+        this.queryDelete = queryDelete;
+    }
+
+    public String getQueryExport() {
+        return queryExport;
+    }
+
+    public void setQueryExport(String queryExport) {
+        this.queryExport = queryExport;
     }
 }
