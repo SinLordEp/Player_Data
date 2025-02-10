@@ -220,7 +220,7 @@ public class DataSourceChooser extends JDialog {
      */
     private void setDataType(Object dataType) {
         switch(dataType){
-            case SqlDialect.NONE, FileType.NONE:
+            case SqlDialect.NONE, FileType.NONE, PhpType.NONE:
             case null:
                 button_submit.setEnabled(false);
                 return;

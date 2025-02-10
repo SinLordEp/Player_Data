@@ -86,7 +86,7 @@ public class ClassRegister {
         Reflections reflections = new Reflections("data");
         Set<Class<? extends GeneralDAO>> dataSet = reflections.getSubTypesOf(GeneralDAO.class);
         for (Class<? extends GeneralDAO> dataClass : dataSet) {
-            dataAccessMap.put(dataClass.getSimpleName().replace("DataAccess",""), dataClass);
+            dataAccessMap.put(dataClass.getSimpleName().replace("DAO",""), dataClass);
         }
     }
 
