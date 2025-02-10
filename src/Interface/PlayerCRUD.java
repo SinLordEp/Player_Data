@@ -12,7 +12,7 @@ import java.util.TreeMap;
 public interface PlayerCRUD<T> {
     PlayerCRUD<T> prepare(T input);
     void release();
-    TreeMap<Integer, Player> read();
-    void update(HashMap<Player, DataOperation> changed_player_map);
-    void export(TreeMap<Integer, Player> player_map);
+    PlayerCRUD<T> read(TreeMap<Integer, Player> player_map);
+    PlayerCRUD<T> update(HashMap<Player, DataOperation> changed_player_map);
+    PlayerCRUD<T> export(TreeMap<Integer, Player> player_map);
 }

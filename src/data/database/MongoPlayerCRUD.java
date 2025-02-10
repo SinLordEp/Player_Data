@@ -44,9 +44,8 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public TreeMap<Integer, Player> read() {
+    public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map) {
         logger.info("Reading data from MongoDB");
-        TreeMap<Integer, Player> playerMap = new TreeMap<>();
         try(MongoCursor<Document> cursor = playerCollection.find().iterator()){
             while(cursor.hasNext()){
                 Document document = cursor.next();
@@ -55,15 +54,14 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 player.setName(document.getString("name"));
                 player.setRegion(new Region(document.getString("region")));
                 player.setServer(new Server(document.getString("server"), player.getRegion()));
-                playerMap.put(player.getID(), player);
+                player_map.put(player.getID(), player);
             }
         }
-        release();
-        return playerMap;
+        return this;
     }
 
     @Override
-    public void export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
         logger.info("Dropping possible existed collection");
         playerCollection.drop();
         for(Player player : player_map.values()){
@@ -75,11 +73,11 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             playerCollection.insertOne(document);
             logger.info("Player with id {} was exported", player.getID());
         }
-        release();
+        return this;
     }
 
     @Override
-    public void update(HashMap<Player, DataOperation> changed_player_map) {
+    public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
         for(Map.Entry<Player, DataOperation> playerEntry : changed_player_map.entrySet()){
             Document document = new Document();
             Player player = playerEntry.getKey();
@@ -104,6 +102,6 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                     break;
             }
         }
-        release();
+        return this;
     }
 }

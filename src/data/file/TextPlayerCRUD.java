@@ -50,8 +50,7 @@ public class TextPlayerCRUD implements PlayerCRUD<String> {
      * @throws FileManageException if there is an error during file reading.
      */
     @Override
-    public TreeMap<Integer, Player> read() {
-        TreeMap<Integer, Player> player_data = new TreeMap<>();
+    public PlayerCRUD<String> read(TreeMap<Integer, Player> player_map) {
         try(Scanner scanner = new Scanner(file)){
             if(!scanner.hasNext()){
                 PlayerText.getDialog().popup("player_map_null");
@@ -63,19 +62,18 @@ public class TextPlayerCRUD implements PlayerCRUD<String> {
                     player.setRegion(new Region(player_txt[1]));
                     player.setServer(new Server(player_txt[2], player.getRegion()));
                     player.setName(player_txt[3]);
-                    player_data.put(player.getID(),player);
+                    player_map.put(player.getID(),player);
                 }
             }
         }catch (Exception e) {
             throw new FileManageException("Error reading this txt data.file");
         }
-        release();
-        return player_data;
+        return this;
     }
 
     @Override
-    public void update(HashMap<Player, DataOperation> changed_player_map) {
-
+    public PlayerCRUD<String> update(HashMap<Player, DataOperation> changed_player_map) {
+        return this;
     }
 
     /**
@@ -93,7 +91,7 @@ public class TextPlayerCRUD implements PlayerCRUD<String> {
      * @throws FileManageException if an error occurs during the file writing process.
      */
     @Override
-    public void export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<String> export(TreeMap<Integer, Player> player_map) {
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(file,false))){
             for(Player player : player_map.values()){
                 bw.write(player.getID() + ",");
@@ -105,7 +103,7 @@ public class TextPlayerCRUD implements PlayerCRUD<String> {
         }catch (Exception e){
             throw new FileManageException("Failed to write player data via TXT. Cause: " + e.getMessage());
         }
-        release();
+        return this;
     }
 
 }

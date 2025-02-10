@@ -42,11 +42,10 @@ public class DatPlayerCRUD implements PlayerCRUD<String> {
      * @throws FileManageException if a read error occurs or if the data is corrupted.
      */
     @Override
-    public TreeMap<Integer, Player> read() {
-        TreeMap<Integer, Player> player_data = new TreeMap<>();
+    public PlayerCRUD<String> read(TreeMap<Integer, Player> player_map) {
         if (file.length() == 0) {
             PlayerText.getDialog().popup("player_map_null");
-            return player_data;
+            return this;
         }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             while (true) {
@@ -57,21 +56,21 @@ public class DatPlayerCRUD implements PlayerCRUD<String> {
                 if(!(temp instanceof Player player)){
                     throw new OpenDataException("Data is corrupted");
                 }else{
-                    player_data.put(player.getID(), player);
+                    player_map.put(player.getID(), player);
                 }
             }
         }catch (Exception e){
             throw new FileManageException("Failed to read DAT file. Cause: " + e.getMessage());
         }
-        if (player_data.isEmpty()) {
+        if (player_map.isEmpty()) {
             PlayerText.getDialog().popup("player_map_null");
         }
-        release();
-        return player_data;
+        return this;
     }
 
     @Override
-    public void update(HashMap<Player, DataOperation> changed_player_map) {
+    public PlayerCRUD<String> update(HashMap<Player, DataOperation> changed_player_map) {
+        return this;
     }
 
     /**
@@ -84,7 +83,7 @@ public class DatPlayerCRUD implements PlayerCRUD<String> {
      * @throws FileManageException if an error occurs during file writing, such as an {@code IOException}.
      */
     @Override
-    public void export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<String> export(TreeMap<Integer, Player> player_map) {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file,false))){
             if(player_map != null) {
                 for (Player player : player_map.values()) {
@@ -95,7 +94,7 @@ public class DatPlayerCRUD implements PlayerCRUD<String> {
         }catch (IOException e){
             throw new FileManageException("Failed to write player data via DAT. Cause: " + e.getMessage());
         }
-        release();
+        return this;
     }
 
 }

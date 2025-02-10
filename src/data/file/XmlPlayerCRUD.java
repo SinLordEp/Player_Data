@@ -72,8 +72,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
      *                             root element is invalid.
      */
     @Override
-    public TreeMap<Integer, Player> read() {
-        TreeMap<Integer, Player> player_data = new TreeMap<>();
+    public PlayerCRUD<String> read(TreeMap<Integer, Player> player_map) {
         Element root;
         try {
             if(parseRawXML){
@@ -89,7 +88,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
         }
         if (!root.hasChildNodes()) {
             PlayerText.getDialog().popup("player_map_null");
-            return player_data;
+            return this;
         }
         NodeList playerNodes = root.getElementsByTagName("player");
         for (int i = 0; i < playerNodes.getLength(); i++) {
@@ -101,16 +100,15 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
                 player.setRegion(new Region(xml_utils.getElementTextContent(playerElement, "region")));
                 player.setServer(new Server(xml_utils.getElementTextContent(playerElement, "server"), player.getRegion()));
                 player.setName(xml_utils.getElementTextContent(playerElement, "name"));
-                player_data.put(player.getID(), player);
+                player_map.put(player.getID(), player);
             }
         }
-        release();
-        return player_data;
+        return this;
     }
 
     @Override
-    public void update(HashMap<Player, DataOperation> changed_player_map) {
-
+    public PlayerCRUD<String> update(HashMap<Player, DataOperation> changed_player_map) {
+        return this;
     }
 
     /**
@@ -125,7 +123,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
      * @throws FileManageException if an error occurs during XML creation, data population, or file writing.
      */
     @Override
-    public void export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<String> export(TreeMap<Integer, Player> player_map) {
         try {
             Document document = xml_utils.createDocument();
             Element root = document.createElement("Player");
@@ -137,7 +135,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
         } catch (Exception e) {
             throw new FileManageException("Failed to write player data via XML. Cause: " + e.getMessage());
         }
-        release();
+        return this;
     }
 
     /**

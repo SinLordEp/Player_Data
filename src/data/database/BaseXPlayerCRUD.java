@@ -46,23 +46,22 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public TreeMap<Integer, Player> read() {
+    public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map) {
         String query = "/Player";
         try {
             String result =  new XQuery(query).execute(context);
-            return PlayerCRUDFactory.getInstance()
+            PlayerCRUDFactory.getInstance()
                     .getCRUD(FileType.XML)
                     .prepare(result)
-                    .read();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            release();
+                    .read(player_map);
+            return this;
+        } catch (BaseXException e) {
+            throw new DatabaseException("Error communicating with ObjectDB. \nCause: " + e.getMessage());
         }
     }
 
     @Override
-    public void update(HashMap<Player, DataOperation> changed_player_map) {
+    public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
         try {
             for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {
                 Player player = player_operation.getKey();
@@ -76,14 +75,14 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 new XQuery(query).execute(context);
                 logger.info("Player {} has been updated", player.getID());
             }
+            return this;
         } catch (BaseXException e) {
             throw new DatabaseException("Failed to update BaseX. Cause: " + e.getMessage());
         }
-
     }
 
     @Override
-    public void export(TreeMap<Integer, Player> playerMap) {
+    public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> playerMap) {
         try {
             new CreateDB(databaseInfo.getDatabase(), databaseInfo.getUrl()).execute(context);
             for(Player player : playerMap.values()) {
@@ -91,6 +90,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                         .formatted(player.getID(), player.getRegion(), player.getServer(), player.getName());
                 new XQuery(query).execute(context);
             }
+            return this;
         } catch (BaseXException e) {
             throw new DatabaseException("Failed to export BaseX. Cause: " + e.getMessage());
         }

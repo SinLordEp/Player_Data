@@ -199,24 +199,27 @@ public class PlayerDAO extends GeneralDAO {
                     break;
                 case FILE:
                     logger.info("Reading file from {}PlayerCRUD", fileType);
-                    player_map = PlayerCRUDFactory.getInstance()
+                    PlayerCRUDFactory.getInstance()
                             .getCRUD(fileType)
                             .prepare(file_path)
-                            .read();
+                            .read(player_map)
+                            .release();
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB, BASEX, MONGO:
                     logger.info("Reading data from {}PlayerCRUD", dataSource);
-                    player_map = PlayerCRUDFactory.getInstance()
+                    PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
-                            .read();
+                            .read(player_map)
+                            .release();
                     break;
                 case PHP:
                     logger.info("Reading data through PHP");
-                    player_map = PlayerCRUDFactory.getInstance()
+                    PlayerCRUDFactory.getInstance()
                             .getCRUD()
                             .prepare(phpType)
-                            .read();
+                            .read(player_map)
+                            .release();
                     break;
                 default:
                     throw new OperationException("Unknown data source: " + dataSource);
@@ -274,14 +277,16 @@ public class PlayerDAO extends GeneralDAO {
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(fileType)
                             .prepare(file_path)
-                            .export(player_map);
+                            .export(player_map)
+                            .release();
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB, MONGO:
                     logger.info("Saving data to {}PlayerCRUD", dataSource);
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
-                            .update(changed_player_map);
+                            .update(changed_player_map)
+                            .release();
                     changed_player_map.clear();
                     break;
                 case PHP:
@@ -289,7 +294,8 @@ public class PlayerDAO extends GeneralDAO {
                     PlayerCRUDFactory.getInstance()
                             .getCRUD()
                             .prepare(phpType)
-                            .update(changed_player_map);
+                            .update(changed_player_map)
+                            .release();
                     changed_player_map.clear();
                     break;
                 case BASEX:
@@ -297,7 +303,8 @@ public class PlayerDAO extends GeneralDAO {
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
-                            .export(player_map);
+                            .export(player_map)
+                            .release();
                     break;
                 default:
                     throw new OperationException("Save: Unknown data source: " + dataSource);

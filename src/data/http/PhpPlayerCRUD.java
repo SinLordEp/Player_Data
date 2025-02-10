@@ -49,9 +49,8 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
     }
 
     @Override
-    public TreeMap<Integer, Player> read() {
+    public PlayerCRUD<PhpType> read(TreeMap<Integer, Player> player_map) {
         logger.info("Reading player data from {}", url + readUrl);
-        TreeMap<Integer, Player> playerMap = new TreeMap<>();
         try {
             String rawJson = api.getRequest(url + readUrl);
             JSONObject parsedJson = (JSONObject) JSONValue.parse(rawJson);
@@ -73,20 +72,20 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
                 player.setName(playerObject.get("name").toString());
                 player.setRegion(new Region(playerObject.get("region").toString()));
                 player.setServer(new Server(playerObject.get("server").toString(), player.getRegion()));
-                playerMap.put(player.getID(), player);
+                player_map.put(player.getID(), player);
             }
         } catch (IOException e) {
             logger.error("Failed to read data with cause: {}", e.getMessage());
             throw new HttpPhpException("Failed to read from target php server with cause: " + e.getMessage());
         }
         logger.info("Completed reading from PHP server");
-        return playerMap;
+        return this;
     }
 
     //TODO: 更新逻辑有问题
     @Override
     @SuppressWarnings("unchecked")
-    public void update(HashMap<Player, DataOperation> changed_player_map) {
+    public PlayerCRUD<PhpType> update(HashMap<Player, DataOperation> changed_player_map) {
         JSONArray playerArray = new JSONArray();
         for(Player player : changed_player_map.keySet()) {
             JSONObject playerObject = new JSONObject();
@@ -113,11 +112,13 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
             logger.error("Failed to update data with cause: {}", e.getMessage());
             throw new HttpPhpException("Failed to update data on target php server with cause: " + e.getMessage());
         }
+        return this;
     }
 
     @Override
-    public void export(TreeMap<Integer, Player> player_map) {
-        TreeMap<Integer, Player> existed_player_map = read();
+    public PlayerCRUD<PhpType> export(TreeMap<Integer, Player> player_map) {
+        TreeMap<Integer, Player> existed_player_map = new TreeMap<>();
+        read(existed_player_map);
         HashMap<Player, DataOperation> export_player_map = new HashMap<>();
         for(Map.Entry<Integer, Player> idAndPlayer : existed_player_map.entrySet() ) {
             if(!player_map.containsKey(idAndPlayer.getKey())) {
@@ -136,5 +137,6 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
         }
         update(export_player_map);
         logger.info("Completed exporting data to target php server");
+        return this;
     }
 }

@@ -47,10 +47,10 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      */
     @Override
     public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) throws DatabaseException {
-        logger.info("Connect hibernate: Fetching hibernate configuration");
+        logger.info("Fetching hibernate configuration");
         URL resource = getClass().getResource(getProperty("hibernateConfig"));
         configuration.configure(resource);
-        logger.info("Connect hibernate: Connecting to database with dialect {}", databaseInfo.getDialect());
+        logger.info("Connecting to database with dialect {}", databaseInfo.getDialect());
         switch (databaseInfo.getDialect()){
             case MYSQL:
                 setURL("%s:%s/%s".formatted(
@@ -66,7 +66,7 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
         }
         try {
             sessionFactory = configuration.buildSessionFactory();
-            logger.info("Connect hibernate: Success");
+            logger.info("Success");
             if(sessionFactory != null){
                 return this;
             }else{
@@ -96,9 +96,8 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      *         where the keys are player IDs, and the values are {@code Player} objects.
      */
     @Override
-    public TreeMap<Integer, Player> read() {
-        logger.info("Read Hibernate: Reading data from database");
-        TreeMap<Integer, Player> player_map = new TreeMap<>();
+    public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map){
+        logger.info("Reading data from database");
         try (Session session = sessionFactory.openSession()) {
             String HQL = "FROM Player p LEFT JOIN FETCH p.region LEFT JOIN FETCH p.server";
             List<Player> list = session.createQuery(HQL, Player.class).getResultList();
@@ -108,9 +107,7 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
         }catch (Exception e){
             throw new DatabaseException("Failed to read data via hibernate. Cause: " + e.getMessage());
         }
-        logger.info("Read Hibernate: Finished reading from database!");
-        release();
-        return player_map;
+        return this;
     }
 
     /**
@@ -124,8 +121,8 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      * @throws DatabaseException if there is an error during the database update process
      */
     @Override
-    public void update(HashMap<Player, DataOperation> changed_player_map) {
-        logger.info("Update Hibernate: Updating database...");
+    public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
+        logger.info("Updating database...");
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
@@ -137,16 +134,15 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 }
             }
             transaction.commit();
+            return this;
         }catch(Exception e){
-            logger.error("Update Hibernate: Failed to update database, rollback data. Cause: {}", e.getMessage());
+            logger.error("Failed to update database, rollback data. Cause: {}", e.getMessage());
             if(transaction != null){
                 transaction.rollback();
-                logger.info("Update Hibernate: Data is rollback");
+                logger.info("Data is rollback");
             }
             throw new DatabaseException("Failed to modify player via Hibernate. Cause: " + e.getMessage());
         }
-        logger.info("Update Hibernate: Finished!");
-        release();
     }
 
     /**
@@ -168,12 +164,13 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      *                            the cause of the failure.
      */
     @Override
-    public void export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
         logger.info("Export Hibernate: Exporting player data...");
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            TreeMap<Integer, Player> existed_player_map = read();
+            TreeMap<Integer, Player> existed_player_map = new TreeMap<>();
+            read(existed_player_map);
             for(Map.Entry<Integer, Player> entry : existed_player_map.entrySet()){
                 if(!player_map.containsKey(entry.getKey())){
                     session.remove(entry.getValue());
@@ -183,6 +180,7 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 session.merge(player);
             }
             transaction.commit();
+            return this;
         } catch (Exception e) {
             logger.error("Export Hibernate: Failed to export data, rollback data. Cause: {}", e.getMessage());
             if (transaction != null) {
@@ -191,8 +189,6 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             }
             throw new DatabaseException("Failed to exportFile via hibernate. Cause: " + e.getMessage());
         }
-        logger.info("Export Hibernate: Finished!");
-        release();
     }
 
     /**

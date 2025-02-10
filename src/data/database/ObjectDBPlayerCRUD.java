@@ -22,14 +22,14 @@ import java.util.TreeMap;
  */
 public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private EntityManager entityManager = null;
+    private EntityManager entityManager;
 
     @Override
     public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) throws DatabaseException {
         logger.info("Connecting to ObjectDB file server");
         try{
             entityManager = Persistence.createEntityManagerFactory(databaseInfo.getUrl()).createEntityManager();
-            if(entityManager.isOpen()){
+            if(entityManager != null && entityManager.isOpen()){
                 return this;
             }else {
                 throw new DatabaseException("Entity manager is closed");
@@ -46,9 +46,8 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public TreeMap<Integer, Player> read() {
+    public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map) {
         logger.info("Reading data from ObjectDB file");
-        TreeMap<Integer, Player> player_map = new TreeMap<>();
         try{
             entityManager.getTransaction().begin();
             TypedQuery<Player> query = entityManager.createQuery("SELECT s FROM Player s", Player.class);
@@ -58,15 +57,14 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                     player_map.put(player.getID(), player);
                 }
             }
+            return this;
         }catch (Exception e){
             throw new ObjectDBException("Failed to read data via ObjectDB. Cause: "+e.getMessage());
         }
-        release();
-        return player_map;
     }
 
     @Override
-    public void update(HashMap<Player, DataOperation> changed_player_map) {
+    public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
         logger.info("Updating database...");
         try {
             entityManager.getTransaction().begin();
@@ -84,15 +82,15 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 entityManager.getTransaction().rollback();
             }
         }
-        logger.info("Finished!");
-        release();
+        return this;
     }
 
     @Override
-    public void export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
         logger.info("Exporting player data...");
         try{
-            TreeMap<Integer, Player> existed_player_map = read();
+            TreeMap<Integer, Player> existed_player_map = new TreeMap<>();
+            read(existed_player_map);
             for(Map.Entry<Integer, Player> entry : existed_player_map.entrySet()){
                 if(!player_map.containsKey(entry.getKey())){
                     entityManager.remove(entry.getValue());
@@ -109,8 +107,7 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             }
             throw new ObjectDBException("Failed to export data via ObjectDB. Cause: " + e.getMessage());
         }
-        logger.info("Finished!");
-        release();
+        return this;
     }
 
 }
