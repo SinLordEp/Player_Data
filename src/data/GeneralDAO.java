@@ -6,8 +6,6 @@ import data.http.PhpType;
 import exceptions.FileManageException;
 import exceptions.OperationCancelledException;
 import model.DatabaseInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -32,7 +30,6 @@ public abstract class GeneralDAO {
     protected DatabaseInfo databaseInfo = new DatabaseInfo();
     public abstract void read();
     public abstract void save();
-    private static final Logger logger = LoggerFactory.getLogger(GeneralDAO.class);
 
     /**
      * Sets the file path and updates the associated {@code dataSource} to {@code DataSource.FILE}.
@@ -42,9 +39,7 @@ public abstract class GeneralDAO {
      */
     public void setFilePath(String file_path) {
         this.file_path = file_path;
-        logger.info("Set file path: Path is set to {}", file_path);
         this.dataSource = DataSource.FILE;
-        logger.info("Set file path: DataSource is set to: File");
     }
 
     /**
@@ -60,7 +55,6 @@ public abstract class GeneralDAO {
      * @throws IllegalArgumentException if the provided {@code FileType} is not recognized.
      */
     public static String getExtension(FileType fileType) {
-        logger.info("Get extension: Getting extension for {}", fileType);
         return switch (fileType) {
             case FileType.DAT -> ".dat";
             case FileType.XML -> ".xml";
@@ -79,7 +73,6 @@ public abstract class GeneralDAO {
      * @throws OperationCancelledException if the user cancels the operation or does not select any file.
      */
     public static String getPath(FileType fileType) {
-        logger.info("Get path: Getting path with file type paragram: {}", fileType);
         JFileChooser fileChooser = new JFileChooser(new File(getProperty("defaultFilePath")).getAbsolutePath());
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setDialogTitle("Choosing " + fileType);
@@ -95,7 +88,6 @@ public abstract class GeneralDAO {
                 break;
         }
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            logger.info("Get path: Finished get path with paragram!");
             return fileChooser.getSelectedFile().getPath();
         }else {
             throw new OperationCancelledException();
@@ -111,12 +103,10 @@ public abstract class GeneralDAO {
      * @throws OperationCancelledException if the user cancels the directory selection.
      */
     public static String getPath(){
-        logger.info("Get path: Getting path without paragram...");
         JFileChooser fileChooser = new JFileChooser(new File(getProperty("defaultFilePath")).getAbsolutePath());
         fileChooser.setDialogTitle("Choosing path");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            logger.info("Get path: Finished get path without paragram!");
             return fileChooser.getSelectedFile().getPath();
         }else{
             throw new OperationCancelledException();
@@ -136,12 +126,10 @@ public abstract class GeneralDAO {
      *         user input file name, and file extension.
      */
     public static String newPathBuilder(FileType fileType) {
-        logger.info("New path builder: Building new path...");
         String target_path = GeneralDAO.getPath();
         String target_extension = getExtension(fileType);
         String target_file_name = PlayerText.getDialog().input("file_name");
         target_path += "/" +target_file_name + target_extension;
-        logger.info("New path builder: Finished building new path: {}", target_path);
         return target_path;
     }
 
@@ -154,9 +142,7 @@ public abstract class GeneralDAO {
     }
 
     public void setDataSource(DataSource dataSource) {
-        logger.info("Setting DataSource...");
         this.dataSource = dataSource;
-        logger.info("DataSource is set to: {}", dataSource);
     }
 
     public FileType getFileType() {
@@ -164,9 +150,7 @@ public abstract class GeneralDAO {
     }
 
     public void setFileType(FileType fileType) {
-        logger.info("Setting FileType...");
         this.fileType = fileType;
-        logger.info("FileType is set to: {}", fileType);
     }
 
     public void setPhpType(PhpType phpType) {
@@ -188,13 +172,7 @@ public abstract class GeneralDAO {
      */
     public void createNewFile() throws FileManageException {
         try {
-            logger.info("Create new file: Creating new file...");
-            if(new File(file_path).createNewFile()){
-                PlayerText.getDialog().popup("file_created");
-                logger.info("Create new file: New file has been created!");
-            }else{
-                logger.info("Create new file: File already exists, no file will be created");
-            }
+            new File(file_path).createNewFile();
         } catch (IOException e) {
             throw new FileManageException(e.getMessage());
         }

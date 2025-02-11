@@ -6,8 +6,6 @@ import exceptions.DatabaseException;
 import exceptions.ObjectDBException;
 import model.DatabaseInfo;
 import model.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
@@ -21,12 +19,10 @@ import java.util.TreeMap;
  * @author SIN
  */
 public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private EntityManager entityManager;
 
     @Override
     public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) throws DatabaseException {
-        logger.info("Connecting to ObjectDB file server");
         try{
             entityManager = Persistence.createEntityManagerFactory(databaseInfo.getUrl()).createEntityManager();
             if(entityManager != null && entityManager.isOpen()){
@@ -47,7 +43,6 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
 
     @Override
     public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map) {
-        logger.info("Reading data from ObjectDB file");
         try{
             entityManager.getTransaction().begin();
             TypedQuery<Player> query = entityManager.createQuery("SELECT s FROM Player s", Player.class);
@@ -65,7 +60,6 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
 
     @Override
     public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
-        logger.info("Updating database...");
         try {
             entityManager.getTransaction().begin();
             for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {
@@ -77,7 +71,6 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             }
             entityManager.getTransaction().commit();
         }catch(Exception e){
-            logger.error("Failed to update database, rollback data. Cause: {}", e.getMessage());
             if(entityManager.getTransaction() != null){
                 entityManager.getTransaction().rollback();
             }
@@ -87,7 +80,6 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
 
     @Override
     public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
-        logger.info("Exporting player data...");
         try{
             TreeMap<Integer, Player> existed_player_map = new TreeMap<>();
             read(existed_player_map);
@@ -101,7 +93,6 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             }
             entityManager.getTransaction().commit();
         }catch(Exception e){
-            logger.error("Failed to export data, rollback data. Cause: {}", e.getMessage());
             if (entityManager.getTransaction() != null) {
                 entityManager.getTransaction().rollback();
             }

@@ -223,18 +223,42 @@ text:
     en: "Failed to build player panel!"
     es: "No ha podido construir el panel de jugador!"
     cn: "未能构建玩家面板"
-  added_player:
-    en: "Player added"
-    es: "Jugador añadida"
-    cn: "已添加玩家"
-  modified_player:
-    en: "Player  modified"
-    es: "Jugador modificada"
-    cn: "已修改玩家"
-  deleted_player:
-    en: "Player deleted"
-    es: "Jugador eliminada"
-    cn: "已删除玩家"
+  addPlayer_ongoing:
+    en: "Adding player..."
+    es: "Añadiendo jugador..."
+    cn: "正在添加玩家..."
+  addPlayer_pass:
+    en: "Player added!"
+    es: "Jugador añadida!"
+    cn: "已添加玩家!"
+  addPlayer_fail:
+    en: "Failed to add player!"
+    es: "No ha podido añadir jugador!"
+    cn: "未能添加玩家!"
+  modifyPlayer_ongoing:
+    en: "Modifying player..."
+    es: "Modificando jugador..."
+    cn: "正在修改玩家数据..."
+  modifyPlayer_pass:
+    en: "Player modified!"
+    es: "Jugador modificado!"
+    cn: "已修改玩家数据!"
+  modifyPlayer_fail:
+    en: "Failed to modify player!"
+    es: "No ha podido modificar jugador!"
+    cn: "未能修改玩家数据!"
+  deletePlayer_ongoing:
+    en: "Deleting player..."
+    es: "Eliminando jugador..."
+    cn: "正在删除玩家..."
+  deletePlayer_pass:
+    en: "Player deleted!"
+    es: "Jugador eliminado!"
+    cn: "已删除玩家!"
+  deletePlayer_fail:
+    en: "Failed to delete player!"
+    es: "No ha podido eliminar jugador!"
+    cn: "未能删除玩家!"
   player_map_null:
     en: "No player data registered"
     es: "No hay jugador registrada"

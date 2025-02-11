@@ -66,7 +66,7 @@ public class TextPlayerCRUD implements PlayerCRUD<String> {
                 }
             }
         }catch (Exception e) {
-            throw new FileManageException("Error reading this txt data.file");
+            throw new FileManageException("Error reading this txt file");
         }
         return this;
     }
@@ -101,7 +101,7 @@ public class TextPlayerCRUD implements PlayerCRUD<String> {
                 bw.newLine();
             }
         }catch (Exception e){
-            throw new FileManageException("Failed to write player data via TXT. Cause: " + e.getMessage());
+            throw new FileManageException(e.getMessage());
         }
         return this;
     }

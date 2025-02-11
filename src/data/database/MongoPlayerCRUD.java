@@ -11,8 +11,6 @@ import model.Player;
 import model.Region;
 import model.Server;
 import org.bson.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,30 +20,25 @@ import java.util.TreeMap;
  * @author SIN
  */
 public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
-    Logger logger = LoggerFactory.getLogger(MongoPlayerCRUD.class);
     DatabaseInfo databaseInfo;
     MongoClient mongoClient;
     MongoCollection<Document> playerCollection;
     @Override
     public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) {
-        logger.info("Preparing connection to MongoDB");
         this.databaseInfo = databaseInfo;
         mongoClient = new MongoClient(databaseInfo.getUrl(), Integer.parseInt(databaseInfo.getPort()));
         MongoDatabase database = mongoClient.getDatabase(databaseInfo.getDatabase());
         playerCollection = database.getCollection("player");
-        logger.info("Connection established");
         return this;
     }
 
     @Override
     public void release() {
-        logger.info("Releasing connection of MongoDB");
         mongoClient.close();
     }
 
     @Override
     public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map) {
-        logger.info("Reading data from MongoDB");
         try(MongoCursor<Document> cursor = playerCollection.find().iterator()){
             while(cursor.hasNext()){
                 Document document = cursor.next();
@@ -62,7 +55,6 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
 
     @Override
     public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
-        logger.info("Dropping possible existed collection");
         playerCollection.drop();
         for(Player player : player_map.values()){
             Document document = new Document();
@@ -71,7 +63,6 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             document.put("region", player.getRegion().getName());
             document.put("server", player.getServer().getName());
             playerCollection.insertOne(document);
-            logger.info("Player with id {} was exported", player.getID());
         }
         return this;
     }
@@ -87,18 +78,15 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                     document.put("region", player.getRegion().getName());
                     document.put("server", player.getServer().getName());
                     playerCollection.insertOne(document);
-                    logger.info("Player with id {} was added", player.getID());
                     break;
                 case MODIFY: document.put("id", player.getID());
                     document.put("name", player.getName());
                     document.put("region", player.getRegion().getName());
                     document.put("server", player.getServer().getName());
                     playerCollection.updateOne(new Document("id",player.getID()), new Document("$set", document));
-                    logger.info("Player with id {} was modified", player.getID());
                     break;
                 case DELETE: document.put("id", player.getID());
                     playerCollection.deleteOne(document);
-                    logger.info("Player with id {} was deleted", player.getID());
                     break;
             }
         }

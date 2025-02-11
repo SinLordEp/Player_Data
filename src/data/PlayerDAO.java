@@ -9,8 +9,6 @@ import model.DatabaseInfo;
 import model.Player;
 import model.Region;
 import model.Server;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -34,7 +32,6 @@ public class PlayerDAO extends GeneralDAO {
     private TreeMap<Integer, Player> player_map = new TreeMap<>();
     private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
     private HashMap<Region, Server[]> region_server_map;
-    private static final Logger logger = LoggerFactory.getLogger(PlayerDAO.class);
     private boolean isDataChanged = false;
 
     /**
@@ -53,7 +50,6 @@ public class PlayerDAO extends GeneralDAO {
      * Logs the initialization process to indicate successful instantiation of the object.
      */
     public PlayerDAO() {
-        logger.info("Instantiated");
     }
 
 
@@ -83,10 +79,10 @@ public class PlayerDAO extends GeneralDAO {
      */
     public void initializeRegionServer(){
         DatabaseInfo info = PlayerExceptionHandler.getInstance().handle(() -> getDefaultDatabaseInfo(SqlDialect.SQLITE),
-                "PlayerDAO-getDefaultDatabaseInfo", "default_database");
+                "PlayerDAO-getDefaultDatabaseInfo()", "default_database");
         info.setDataSource(DataSource.DATABASE);
         region_server_map = PlayerExceptionHandler.getInstance().handle(() -> DataBasePlayerCRUD.readRegionServer(info),
-                "PlayerDA-initializeRegionServer()", "region_server");
+                "PlayerDAO-initializeRegionServer()", "region_server");
     }
 
     /**
@@ -103,7 +99,6 @@ public class PlayerDAO extends GeneralDAO {
      */
     @SuppressWarnings("unchecked")
     public DatabaseInfo getDefaultDatabaseInfo(SqlDialect dialect, DataSource... dataSource) throws ConfigErrorException, IOException {
-        logger.info("Reading default database info for dialect: {}", dialect);
         DatabaseInfo databaseInfo = new DatabaseInfo();
         databaseInfo.setDialect(dialect);
         HashMap<String, Object> default_info = null;
@@ -153,7 +148,6 @@ public class PlayerDAO extends GeneralDAO {
             default:
                 throw new OperationException("Unknown SQL dialect");
         }
-        logger.info("Finished reading database info!");
         if(dataSource.length > 0){
             databaseInfo.setDataSource(dataSource[0]);
             this.databaseInfo = databaseInfo;
@@ -194,11 +188,9 @@ public class PlayerDAO extends GeneralDAO {
         try {
             switch (dataSource){
                 case NONE :
-                    logger.info("Resetting player map...");
                     player_map = new TreeMap<>();
                     break;
                 case FILE:
-                    logger.info("Reading file from {}PlayerCRUD", fileType);
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(fileType)
                             .prepare(file_path)
@@ -206,7 +198,6 @@ public class PlayerDAO extends GeneralDAO {
                             .release();
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB, BASEX, MONGO:
-                    logger.info("Reading data from {}PlayerCRUD", dataSource);
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
@@ -214,7 +205,6 @@ public class PlayerDAO extends GeneralDAO {
                             .release();
                     break;
                 case PHP:
-                    logger.info("Reading data through PHP");
                     PlayerCRUDFactory.getInstance()
                             .getCRUD()
                             .prepare(phpType)
@@ -227,11 +217,10 @@ public class PlayerDAO extends GeneralDAO {
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();
             }
-            logger.info("Finished reading data!");
         } catch (Exception e) {
             player_map = new TreeMap<>();
             dataSource = DataSource.NONE;
-            throw new OperationException("Failed to read data. Cause: " + e.getMessage());
+            throw new OperationException(e.getMessage());
         }
     }
 
@@ -273,7 +262,6 @@ public class PlayerDAO extends GeneralDAO {
         try{
             switch (dataSource){
                 case FILE:
-                    logger.info("Saving file to {}PlayerCRUD", fileType);
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(fileType)
                             .prepare(file_path)
@@ -281,7 +269,6 @@ public class PlayerDAO extends GeneralDAO {
                             .release();
                     break;
                 case DATABASE, HIBERNATE, OBJECTDB, MONGO:
-                    logger.info("Saving data to {}PlayerCRUD", dataSource);
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
@@ -290,7 +277,6 @@ public class PlayerDAO extends GeneralDAO {
                     changed_player_map.clear();
                     break;
                 case PHP:
-                    logger.info("Saving data through PHP");
                     PlayerCRUDFactory.getInstance()
                             .getCRUD()
                             .prepare(phpType)
@@ -299,7 +285,6 @@ public class PlayerDAO extends GeneralDAO {
                     changed_player_map.clear();
                     break;
                 case BASEX:
-                    logger.info("Saving data through BASEX");
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
@@ -310,9 +295,8 @@ public class PlayerDAO extends GeneralDAO {
                     throw new OperationException("Save: Unknown data source: " + dataSource);
             }
             isDataChanged = false;
-            logger.info("Finished saving data!");
         } catch (Exception e) {
-            throw new OperationException("Failed to save data with cause: " + e.getMessage());
+            throw new OperationException(e.getMessage());
         }
     }
 
@@ -333,16 +317,12 @@ public class PlayerDAO extends GeneralDAO {
      *               relevant player details and unique identifier.
      */
     public void add(Player player) {
-        logger.info("Adding player with ID: {}", player.getID());
         switch(dataSource){
             case DATABASE, HIBERNATE, PHP, OBJECTDB, BASEX, MONGO:
-                logger.info("Add: Adding player to changed player map");
                 changed_player_map.put(player, DataOperation.ADD);
         }
-        logger.info("Adding player to current player map");
         player_map.put(player.getID(), player);
         isDataChanged = true;
-        logger.info("Finished adding player!");
     }
 
     /**
@@ -354,21 +334,17 @@ public class PlayerDAO extends GeneralDAO {
      *               Ensure the {@code Player} object is valid and contains a proper ID.
      */
     public void modify(Player player) {
-        logger.info("Modifying player with ID: {}", player.getID());
         switch(dataSource){
             case DATABASE, HIBERNATE, PHP, OBJECTDB, MONGO:
-                logger.info("Adding modified player with ID: {} to changed player map", player.getID());
                 changed_player_map.put(player, DataOperation.MODIFY);
                 //Always trigger case FILE
             case FILE, BASEX:
-                logger.info("Adding modified player with ID: {} to current player map", player.getID());
                 player_map.put(player.getID(), player);
                 break;
             default:
                 throw new OperationException("Unknown data source: " + dataSource);
         }
         isDataChanged = true;
-        logger.info("Finished modifying player!");
     }
 
     /**
@@ -383,21 +359,17 @@ public class PlayerDAO extends GeneralDAO {
      * @param selected_player_id the ID of the player to be deleted
      */
     public void delete(int selected_player_id) {
-        logger.info("Deleting player with ID: {}", selected_player_id);
         switch(dataSource){
             case DATABASE, HIBERNATE, PHP, OBJECTDB, MONGO:
-                logger.info("Adding deleted player with ID: {} to changed player map", selected_player_id);
                 changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
                 //Always trigger case FILE
             case FILE, BASEX:
-                logger.info("Deleting player with ID: {} from current player map", selected_player_id);
                 player_map.remove(selected_player_id);
                 break;
             default:
                 throw new OperationException("Deletion operation not implemented for this data source");
         }
         isDataChanged = true;
-        logger.info("Finished deleting player!");
     }
 
     /**
@@ -418,13 +390,11 @@ public class PlayerDAO extends GeneralDAO {
         String target_path = getPath();
         String target_name = PlayerText.getDialog().input("new_file_name");
         target_path += "/" + target_name + target_extension;
-        logger.info("Target path is set to {}", target_path);
         try {
             PlayerCRUDFactory.getInstance()
                     .getCRUD(fileType)
                     .prepare(target_path)
                     .export(player_map);
-            logger.info("Finished exporting file!");
         } catch (Exception e) {
             throw new FileManageException("Failed to export file with cause: " + e.getMessage());
         }
@@ -438,7 +408,6 @@ public class PlayerDAO extends GeneralDAO {
      */
     public void exportDB(DatabaseInfo exportDataBaseInfo) {
         try {
-            logger.info("Exporting to database by {}PlayerCRDU", exportDataBaseInfo.getDataSource());
             PlayerCRUDFactory.getInstance()
                     .getCRUD(exportDataBaseInfo.getDataSource())
                     .prepare(exportDataBaseInfo)
@@ -455,7 +424,6 @@ public class PlayerDAO extends GeneralDAO {
      * @param phpType the data type that needs to be exported
      */
     public void exportPHP(PhpType phpType) {
-        logger.info("Export data through PHP");
         PlayerCRUDFactory.getInstance()
                 .getCRUD()
                 .prepare(phpType)
@@ -521,11 +489,9 @@ public class PlayerDAO extends GeneralDAO {
      * and logs messages before and after the validation process.
      */
     private void isDataValid(){
-        logger.info("Validating imported data...");
         for(Player player : player_map.values()){
             isPlayerInvalid(player);
         }
-        logger.info("Data is valid");
     }
 
     public HashMap<Region, Server[]> getRegion_server_map() {
@@ -550,9 +516,7 @@ public class PlayerDAO extends GeneralDAO {
      * Finally, it logs a message confirming successful clearing of the data.
      */
     public void clearData(){
-        logger.info("Clearing current data...");
         player_map.clear();
-        logger.info("Player data is cleared successfully");
     }
 
     public boolean isDataChanged() {

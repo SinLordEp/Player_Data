@@ -35,11 +35,13 @@ public class PlayerExceptionHandler {
 
     public <T> T handle(ExceptionWithReturn<T> function, String className, String... playerTextSubType) {
         boolean success = true;
-        String message = "Class&Function: %s, ".formatted(className);
+        String message = "Class&Function: %s - ".formatted(className);
         try{
             if(playerTextSubType.length == 1){
+                logger.info("Method with return {} - Processing", className);
                 notifyLog(LogStage.ONGOING, playerTextSubType[0] + "_ongoing");
             }else {
+                logger.info("Method with return {} - Processing {}", className, playerTextSubType[1]);
                 notifyLog(LogStage.ONGOING, playerTextSubType[0] + "_ongoing", playerTextSubType[1]);
             }
             return function.run();
@@ -80,9 +82,8 @@ public class PlayerExceptionHandler {
                 logger.error(message);
                 notifyLog(LogStage.FAIL, playerTextSubType[0] + "_fail");
             } else{
-                if(!"dataSourceChooser".equals(playerTextSubType[0]) && !"playerInfo".equals(playerTextSubType[0]) && !"default_database".equals(playerTextSubType[0])) {
-                    notifyLog(LogStage.PASS, playerTextSubType[0] + "_pass");
-                }
+                logger.info("Method with return {} - Success", className);
+                notifyLog(LogStage.PASS, playerTextSubType[0] + "_pass");
             }
         }
         return null;
@@ -91,10 +92,13 @@ public class PlayerExceptionHandler {
     public void handle(ExceptionWithoutReturn function, String className, String... playerTextSubType) {
         boolean success = false;
         String message = "Class&Function: %s, ".formatted(className);
+
         try{
             if(playerTextSubType.length == 1){
+                logger.info("Method without return {} - Processing", className);
                 notifyLog(LogStage.ONGOING, playerTextSubType[0] + "_ongoing");
             }else {
+                logger.info("Method without return {} - Processing {}", className, playerTextSubType[1]);
                 notifyLog(LogStage.ONGOING, playerTextSubType[0] + "_ongoing", playerTextSubType[1]);
             }
             function.run();
@@ -127,6 +131,8 @@ public class PlayerExceptionHandler {
             if (!success) {
                 logger.error(message);
                 notifyLog(LogStage.FAIL, playerTextSubType[0] + "_fail");
+            } else{
+                logger.info("Method without return {} - Success", className);
             }
         }
     }

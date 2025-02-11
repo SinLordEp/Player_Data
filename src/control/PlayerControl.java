@@ -17,8 +17,7 @@ import data.http.PhpType;
 import exceptions.*;
 import model.DatabaseInfo;
 import model.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.util.*;
 
@@ -34,7 +33,6 @@ import java.util.*;
  * @author SIN
  */
 public class PlayerControl implements GeneralControl {
-    private static final Logger logger = LoggerFactory.getLogger(PlayerControl.class);
     private PlayerDAO playerDA;
     private final List<EventListener<TreeMap<Integer, Player>>> listeners = new ArrayList<>();
 
@@ -84,7 +82,6 @@ public class PlayerControl implements GeneralControl {
     @Override
     public void onWindowClosing() {
         save();
-        logger.info("Shutting down");
         System.exit(0);
     }
 
@@ -102,10 +99,8 @@ public class PlayerControl implements GeneralControl {
      */
     public void createFile() {
         save();
-        logger.info("Calling DataSourceChooser...");
         notifyLog(LogStage.ONGOING, "createFile_ongoing");
-        PlayerExceptionHandler.getInstance().handle(() -> new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile),
-                "PlayerControl-createFile", "createFile");
+        new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile);
     }
 
     /**
@@ -132,15 +127,14 @@ public class PlayerControl implements GeneralControl {
      * @param dataType   The type of the file to be created. This is expected to be of type {@code FileType}.
      */
     private void handleDataSourceForCreateFile(DataSource dataSource, Object dataType){
-        logger.info("Processing DataSource-{} and DataType-{} to create file", dataSource, dataType);
-        playerDA.setFilePath(GeneralDAO.newPathBuilder((FileType) dataType));
-        playerDA.createNewFile();
+        PlayerExceptionHandler.getInstance().handle(() -> {
+            playerDA.setFilePath(GeneralDAO.newPathBuilder((FileType) dataType));
+            playerDA.createNewFile();
+        }, "PlayerControl-handleDataSourceForCreateFile()", "createFile");
         playerDA.setDataSource(dataSource);
         notifyEvent("dataSource_set",null);
         playerDA.clearData();
         notifyEvent("data_changed", playerDA.getPlayerMap());
-        logger.info("File created");
-        notifyLog(LogStage.PASS, "createFile_pass");
     }
 
     /**
@@ -166,11 +160,8 @@ public class PlayerControl implements GeneralControl {
      * errors or cancellations are gracefully handled.
      */
     public void importData() {
-        logger.info("Importing data...");
         save();
-        logger.info("Calling Data source chooser...");
-        PlayerExceptionHandler.getInstance().handle(() -> new DataSourceChooser(null, this::handleDataSourceForImportData),
-                "PlayerControl-importData", "dataSourceChooser");
+        new DataSourceChooser(null, this::handleDataSourceForImportData);
     }
 
     /**
@@ -199,7 +190,6 @@ public class PlayerControl implements GeneralControl {
      *                   This defines the specific logic for handling the provided data.
      */
     private void handleDataSourceForImportData(DataSource dataSource, Object dataType){
-        logger.info("Processing DataSource-{} and DataType-{} to import data", dataSource, dataType);
         playerDA.setDataSource(dataSource);
         notifyEvent("dataSource_set",null);
         switch(dataSource){
@@ -228,16 +218,13 @@ public class PlayerControl implements GeneralControl {
      *                 of the file, such as {@code TXT}, {@code DAT}, or {@code XML}.
      */
     private void importFile(FileType fileType) {
-        logger.info("Processing file type-{} to import", fileType);
         playerDA.setFileType(fileType);
-        logger.info("Fetching file path");
         String file_path = PlayerExceptionHandler.getInstance().handle(() -> GeneralDAO.getPath(playerDA.getFileType()),
                 "GeneralDataAccess-getPath()", "getPath");
         playerDA.setFilePath(file_path);
         PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
-                "PlayerControl-importFile", "importFile", "\n>>>" + file_path);
+                "PlayerControl-importFile()", "importFile", "\n>>>" + file_path);
         notifyEvent("data_changed", playerDA.getPlayerMap());
-        logger.info("File data imported");
     }
 
     /**
@@ -259,7 +246,6 @@ public class PlayerControl implements GeneralControl {
      *                   This specifies the type of database operation to configure.
      */
     private void importDB(DataSource dataSource, SqlDialect sqlDialect)  {
-        logger.info("Processing DataSource-{} and SQL Dialect-{} to import", dataSource, sqlDialect);
         PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(sqlDialect, dataSource), this::handleDatabaseLoginForImport),
                 "PlayerControl-importDB()", "default_database");
     }
@@ -282,7 +268,6 @@ public class PlayerControl implements GeneralControl {
         PlayerExceptionHandler.getInstance().handle(()-> playerDA.read(),
                 "PlayerControl-handleDatabaseLoginForImport()", "importDB", "\n>>>" + databaseInfo.getUrl());
         notifyEvent("data_changed", playerDA.getPlayerMap());
-        logger.info("Database data imported");
     }
 
     /**
@@ -296,13 +281,10 @@ public class PlayerControl implements GeneralControl {
      *                 provided data access layer.
      */
     private void importPHP(PhpType phpType) {
-        logger.info("Processing PHP type-{} to import", phpType);
         playerDA.setPhpType(phpType);
-        notifyLog(LogStage.ONGOING, "importPHP_ongoing");
         PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
-                "PlayerControl-importPHP" , "importPHP");
+                "PlayerControl-importPHP()" , "importPHP", "\n>>>" + phpType);
         notifyEvent("data_changed", playerDA.getPlayerMap());
-        logger.info("PHP data imported");
     }
 
 
@@ -319,9 +301,7 @@ public class PlayerControl implements GeneralControl {
      * {@code logger} to record the workflow.
      */
     public void add() {
-        logger.info("Calling Player info dialog...");
-        PlayerExceptionHandler.getInstance().handle(() -> new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player(), this::handlePlayerInfoForAdd),
-                "PlayerControl-add()", "playerInfo");
+        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player(), this::handlePlayerInfoForAdd);
     }
 
     /**
@@ -332,10 +312,9 @@ public class PlayerControl implements GeneralControl {
      * @param player The Player object containing the details to be added.
      */
     private void handlePlayerInfoForAdd(Player player){
-        playerDA.add(player);
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.add(player),
+                "PlayerControl-handlePlayerInfoForAdd()", "addPlayer", ">>>ID: " + player.getID());
         notifyEvent("data_changed", playerDA.getPlayerMap());
-        logger.info("Player with id-{} has been added", player.getID());
-        notifyLog(LogStage.INFO, "added_player");
     }
 
     /**
@@ -349,9 +328,7 @@ public class PlayerControl implements GeneralControl {
      * @param selected_player_id the unique identifier of the player to be modified
      */
     public void modify(int selected_player_id){
-        logger.info("Calling Player info dialog with player id: {}", selected_player_id);
-        PlayerExceptionHandler.getInstance().handle(() -> new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id), this::handlePlayerInfoForModify),
-                "PlayerControl-modify()", "playerInfo");
+        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id), this::handlePlayerInfoForModify);
     }
 
     /**
@@ -361,10 +338,9 @@ public class PlayerControl implements GeneralControl {
      * @param player The player object containing the information to be modified.
      */
     private void handlePlayerInfoForModify(Player player){
-        playerDA.modify(player);
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.modify(player),
+                "PlayerControl-handlePlayerInfoForModify()", "modifyPlayer", ">>>ID: " + player.getID());
         notifyEvent("data_changed", playerDA.getPlayerMap());
-        logger.info("Player with id-{} has been modified", player.getID());
-        notifyLog(LogStage.INFO, "modified_player");
     }
 
     /**
@@ -375,10 +351,9 @@ public class PlayerControl implements GeneralControl {
      * @param selected_player_id the unique identifier of the player to be deleted
      */
     public void delete(int selected_player_id) {
-        playerDA.delete(selected_player_id);
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.delete(selected_player_id),
+                "PlayerControl-delete()", "deletePlayer", ">>>ID: " + selected_player_id);
         notifyEvent("data_changed", playerDA.getPlayerMap());
-        logger.info("Player with id-{} has been deleted", selected_player_id);
-        notifyLog(LogStage.INFO, "deleted_player");
     }
 
     /**
@@ -397,14 +372,11 @@ public class PlayerControl implements GeneralControl {
      * and is responsible for processing the export operation once the user selects a destination for data export.
      */
     public void export() {
-        logger.info("Checking current player data");
         if(playerDA.isEmpty()){
-            logger.info("Exportation is cancelled. Cause: No player data found");
             notifyLog(LogStage.INFO, "player_map_null");
             return;
         }
-        PlayerExceptionHandler.getInstance().handle(() -> new DataSourceChooser(null, this::handleDataSourceForExport),
-                "PlayerControl-export()", "dataSourceChooser");
+        new DataSourceChooser(null, this::handleDataSourceForExport);
     }
 
     /**
@@ -422,7 +394,6 @@ public class PlayerControl implements GeneralControl {
      *                   - For PHP, dataType is an instance of DataType.
      */
     private void handleDataSourceForExport(DataSource dataSource, Object dataType){
-        logger.info("Processing DataSource-{} and DataType-{} to export", dataSource, dataType);
         switch (dataSource){
             case FILE -> exportFile((FileType) dataType);
             case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
@@ -442,11 +413,9 @@ public class PlayerControl implements GeneralControl {
      *                 Must not be null, and should represent a valid file type.
      */
     private void exportFile(FileType fileType) {
-        logger.info("Processing file type-{} to export", fileType);
         playerDA.setFileType(fileType);
         PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportFile(),
                 "PlayerControl-exportFile()", "exportFile");
-        logger.info("Completed exporting to file");
     }
 
     /**
@@ -458,7 +427,6 @@ public class PlayerControl implements GeneralControl {
      * @param target_dialect The SQL dialect to be used for the export operation.
      */
     private void exportDB(DataSource target_source, SqlDialect target_dialect) {
-        logger.info("Processing target DataSource-{} and SQL dialect {} to export", target_source,  target_dialect);
         PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(target_dialect, target_source), this::handleDatabaseLoginForExport),
                 "PlayerControl-exportDB()", "default_database");
     }
@@ -494,10 +462,8 @@ public class PlayerControl implements GeneralControl {
      *                 the export is determined by the `playerDA.exportPHP` method.
      */
     private void exportPHP(PhpType phpType) {
-        logger.info("Processing PHP type-{} to export", phpType);
         PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportPHP(phpType),
                 "PlayerControl-exportPHP()", "exportPHP");
-        logger.info("Completed exporting to PHP");
     }
 
     /**
@@ -519,19 +485,10 @@ public class PlayerControl implements GeneralControl {
      * This function ensures proper logging and listener notification during its operation.
      */
     public void save(){
-        if(!playerDA.isDataChanged()){
-            logger.info("Process cancelled with cause: No datas were changed");
-            return;
-        }
-        if (Objects.requireNonNull(playerDA.getDataSource()) == DataSource.NONE) {
-            logger.info("Current data source is NONE, returning...");
-            return;
-        } else {
-            logger.info("Current data source is {}, saving...", playerDA.getDataSource());
+        if(playerDA.isDataChanged() && Objects.requireNonNull(playerDA.getDataSource()) != DataSource.NONE){
             PlayerExceptionHandler.getInstance().handle(() -> playerDA.save(),
                     "PlayerControl-save()", "save");
         }
-        logger.info("Data saved");
     }
 
     /**
@@ -544,11 +501,9 @@ public class PlayerControl implements GeneralControl {
      * process.
      */
     private void clearDataSource(){
-        logger.info("Clearing current data source");
         playerDA.setDataSource(DataSource.NONE);
         playerDA.setFileType(FileType.NONE);
         playerDA.setDatabaseInfo(new DatabaseInfo());
-        logger.info("Completed clearing current data source");
     }
 
     /**
@@ -577,7 +532,6 @@ public class PlayerControl implements GeneralControl {
                 case 2 -> "cn";
                 default -> throw new IllegalStateException("Unexpected language value.");
             };
-            logger.info("Language is set to {}", language);
             PlayerText.getDialog().setLanguage(language);
             notifyEvent("language_changed",null);
         } catch (OperationCancelledException e) {
@@ -604,7 +558,6 @@ public class PlayerControl implements GeneralControl {
      * @param data the data associated with the event, passed as a {@code SortedMap} object
      */
     private void notifyEvent(String event, TreeMap<Integer, Player> data){
-        logger.info("Notifying listener with code: {}", event);
         for(EventListener<TreeMap<Integer, Player>> listener : listeners){
             listener.onEvent(event, data);
         }

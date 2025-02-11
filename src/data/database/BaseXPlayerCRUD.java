@@ -12,8 +12,6 @@ import org.basex.core.Context;
 import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.Open;
 import org.basex.core.cmd.XQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +22,6 @@ import java.util.TreeMap;
  */
 
 public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
-    private final Logger logger = LoggerFactory.getLogger(BaseXPlayerCRUD.class);
     Context context = new Context();
     DatabaseInfo databaseInfo;
 
@@ -35,8 +32,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             new Open(databaseInfo.getDatabase()).execute(context);
             return this;
         } catch (BaseXException e) {
-            logger.error("Failed to prepare BaseX. Cause: {}", e.getMessage());
-            throw new RuntimeException(e);
+            throw new DatabaseException(e.getMessage());
         }
     }
 
@@ -73,11 +69,10 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                     case DELETE -> "delete node /Player/player[@id='%s']".formatted(player.getID());
                 };
                 new XQuery(query).execute(context);
-                logger.info("Player {} has been updated", player.getID());
             }
             return this;
         } catch (BaseXException e) {
-            throw new DatabaseException("Failed to update BaseX. Cause: " + e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
     }
 
@@ -92,7 +87,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             }
             return this;
         } catch (BaseXException e) {
-            throw new DatabaseException("Failed to export BaseX. Cause: " + e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
     }
 

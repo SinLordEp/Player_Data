@@ -60,7 +60,7 @@ public class DatPlayerCRUD implements PlayerCRUD<String> {
                 }
             }
         }catch (Exception e){
-            throw new FileManageException("Failed to read DAT file. Cause: " + e.getMessage());
+            throw new FileManageException(e.getMessage());
         }
         if (player_map.isEmpty()) {
             PlayerText.getDialog().popup("player_map_null");
@@ -92,7 +92,7 @@ public class DatPlayerCRUD implements PlayerCRUD<String> {
             }
             oos.writeObject("EOF");
         }catch (IOException e){
-            throw new FileManageException("Failed to write player data via DAT. Cause: " + e.getMessage());
+            throw new FileManageException(e.getMessage());
         }
         return this;
     }

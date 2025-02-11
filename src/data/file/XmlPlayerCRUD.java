@@ -81,7 +81,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
                 root = xml_utils.readXml(file);
             }
         } catch (Exception e) {
-            throw new FileManageException("Failed to read xml file. Cause: " + e.getMessage());
+            throw new FileManageException(e.getMessage());
         }
         if (!"Player".equals(root.getNodeName())) {
             throw new FileManageException("Invalid XML: Root element is not Player");
@@ -133,7 +133,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
             }
             xml_utils.writeXml(document, file);
         } catch (Exception e) {
-            throw new FileManageException("Failed to write player data via XML. Cause: " + e.getMessage());
+            throw new FileManageException(e.getMessage());
         }
         return this;
     }

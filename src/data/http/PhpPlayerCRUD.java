@@ -10,8 +10,6 @@ import model.Server;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,7 +22,6 @@ import static main.principal.getProperty;
  * @author SIN
  */
 public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
-    private static final Logger logger = LoggerFactory.getLogger(PhpPlayerCRUD.class);
     ApiRequests api;
     private String url;
     private String readUrl;
@@ -50,20 +47,18 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
 
     @Override
     public PlayerCRUD<PhpType> read(TreeMap<Integer, Player> player_map) {
-        logger.info("Reading player data from {}", url + readUrl);
         try {
             String rawJson = api.getRequest(url + readUrl);
             JSONObject parsedJson = (JSONObject) JSONValue.parse(rawJson);
             if(parsedJson == null) {
-                throw new DataCorruptedException("Failed to parse data from target php with cause: Data is null");
+                throw new DataCorruptedException("Data is null");
             }
             if("error".equals(parsedJson.get("status").toString())) {
                 throw new HttpPhpException(parsedJson.get("message").toString());
             }
             JSONArray playersArray = (JSONArray) parsedJson.get("players");
             if(playersArray.isEmpty()) {
-                logger.error("Read JSON: No player datas found");
-                throw new DataCorruptedException("Failed to parse data from target php with cause: No players found");
+                throw new DataCorruptedException("No players found");
             }
             for (Object object : playersArray) {
                 Player player = new Player();
@@ -75,10 +70,8 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
                 player_map.put(player.getID(), player);
             }
         } catch (IOException e) {
-            logger.error("Failed to read data with cause: {}", e.getMessage());
-            throw new HttpPhpException("Failed to read from target php server with cause: " + e.getMessage());
+            throw new HttpPhpException(e.getMessage());
         }
-        logger.info("Completed reading from PHP server");
         return this;
     }
 
@@ -105,12 +98,8 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
             if("error".equals(response.get("status").toString())) {
                 throw new HttpPhpException(response.get("message").toString());
             }
-            if("success".equals(response.get("status").toString())) {
-                logger.info("Successfully updated data on PHP server");
-            }
         } catch (IOException e) {
-            logger.error("Failed to update data with cause: {}", e.getMessage());
-            throw new HttpPhpException("Failed to update data on target php server with cause: " + e.getMessage());
+            throw new HttpPhpException(e.getMessage());
         }
         return this;
     }
@@ -122,21 +111,17 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
         HashMap<Player, DataOperation> export_player_map = new HashMap<>();
         for(Map.Entry<Integer, Player> idAndPlayer : existed_player_map.entrySet() ) {
             if(!player_map.containsKey(idAndPlayer.getKey())) {
-                logger.info("Eliminating none existing player with id {}", idAndPlayer.getKey());
                 export_player_map.put(idAndPlayer.getValue(), DataOperation.DELETE);
             }else{
-                logger.info("Modifying existing player with id {}", idAndPlayer.getKey());
                 export_player_map.put(player_map.get(idAndPlayer.getKey()), DataOperation.MODIFY);
             }
         }
         for(Map.Entry<Integer, Player> idAndPlayer : player_map.entrySet() ) {
             if(!existed_player_map.containsKey(idAndPlayer.getKey())) {
-                logger.info("Adding new player with id {}", idAndPlayer.getKey());
                 export_player_map.put(idAndPlayer.getValue(), DataOperation.ADD);
             }
         }
         update(export_player_map);
-        logger.info("Completed exporting data to target php server");
         return this;
     }
 }

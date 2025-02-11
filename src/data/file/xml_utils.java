@@ -66,7 +66,7 @@ public class xml_utils {
             StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
         } catch (Exception e) {
-            throw new FileManageException("Failed to write xml file. Cause: " + e.getMessage());
+            throw new FileManageException(e.getMessage());
         }
     }
 
@@ -87,7 +87,7 @@ public class xml_utils {
             DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
             return documentBuilder.newDocument();
         } catch (Exception e) {
-            throw new FileManageException("Failed to create document. Cause: " + e.getMessage());
+            throw new FileManageException(e.getMessage());
         }
     }
 

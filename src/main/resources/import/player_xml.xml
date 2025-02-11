@@ -25,4 +25,9 @@
         <server>Wolvendom</server>
         <name>Uno</name>
     </player>
+    <player id="6">
+        <region>South America</region>
+        <server>Chasm</server>
+        <name>Dos</name>
+    </player>
 </Player>

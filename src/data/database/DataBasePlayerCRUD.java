@@ -7,8 +7,6 @@ import model.DatabaseInfo;
 import model.Player;
 import model.Region;
 import model.Server;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
@@ -17,11 +15,9 @@ import java.util.*;
  * @author SIN
  */
 public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private Connection connection = null;
     @Override
     public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) throws DatabaseException {
-        logger.info("Connecting to database with dialect {}", databaseInfo.getDialect());
         try {
             switch (databaseInfo.getDialect()){
                 case MYSQL:
@@ -37,13 +33,12 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                     break;
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Failed to connect via database. Cause: " + e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
         if(connection != null){
-            logger.info("Success");
             return this;
         }else{
-            throw new DatabaseException("Failed to connect via database. Connection is null");
+            throw new DatabaseException("Connection is null");
         }
     }
 
@@ -71,7 +66,6 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
         if(connection == null){
             throw new DatabaseException("Database is not connected");
         }
-        logger.info("Reading data from database");
         String query = "SELECT * FROM player";
         try(PreparedStatement statement = connection.prepareStatement(query)){
             ResultSet resultSet = statement.executeQuery();
@@ -84,9 +78,8 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 player_map.put(player.getID(), player);
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Failed to read data via database. Cause: "+e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
-        logger.info("Finished reading from database!");
         return this;
     }
 
@@ -105,7 +98,6 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      */
     @Override
     public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
-        logger.info("Update Database: Updating database...");
         try {
             connection.setAutoCommit(false);
             for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {
@@ -116,13 +108,12 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 }
             }
             connection.commit();
-            logger.info("Update Database: Finished!");
             return this;
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                throw new DatabaseException("Failed to rollback transaction. Cause: "+ex.getMessage());
+                throw new DatabaseException(ex.getMessage());
             }
             throw new DatabaseException("Data rolled back with cause: " + e.getMessage());
         }
@@ -140,7 +131,6 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      * @throws DatabaseException If the player could not be added due to a database error.
      */
     private void addPlayer(Player player) throws DatabaseException {
-        logger.info("Add Player: Adding player with ID: {}", player.getID());
         String query = "INSERT INTO player (id, region, server, name) VALUES (?,?,?,?)";
         try(PreparedStatement statement = connection.prepareStatement(query)){
             statement.setInt(1, player.getID());
@@ -149,9 +139,8 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             statement.setString(4, player.getName());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseException("Failed to add player via database. Cause: " + e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
-        logger.info("Add Player: Finished adding player!");
     }
 
     /**
@@ -166,7 +155,6 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      *                           database operation due to an SQL error.
      */
     private void modifyPlayer(Player player) throws DatabaseException {
-        logger.info("Modify Player: Modifying player with ID: {}", player.getID());
         String query = "UPDATE player SET region = ?, server = ?, name = ? WHERE id = ?";
         try(PreparedStatement statement = connection.prepareStatement(query)){
             statement.setString(1, player.getRegion().toString());
@@ -175,9 +163,8 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             statement.setInt(4, player.getID());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseException("Failed to modify player via database. Cause: " + e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
-        logger.info("Modify Player: Finished Modifying player!");
     }
 
     /**
@@ -192,15 +179,13 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      * @throws DatabaseException If an error occurs while executing the delete operation in the database.
      */
     private void deletePlayer(Player player) throws DatabaseException {
-        logger.info("Delete Player: Deleting player with ID: {}", player.getID());
         String query = "DELETE FROM player WHERE id = ?";
         try(PreparedStatement statement = connection.prepareStatement(query)){
             statement.setInt(1, player.getID());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseException("Failed to delete player via database. Cause: " + e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
-        logger.info("Delete Player: Finished Deleting player!");
     }
 
     /**
@@ -224,29 +209,21 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      */
     @Override
     public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
-        logger.info("Export Database: Exporting player data...");
-        try {
-            TreeMap<Integer, Player> target_player_map = new TreeMap<>();
-            read(target_player_map);
-            for(Integer player_id: target_player_map.keySet()){
-                if(!player_map.containsKey(player_id)){
-                    deletePlayer(target_player_map.get(player_id));
-                }
+        TreeMap<Integer, Player> target_player_map = new TreeMap<>();
+        read(target_player_map);
+        for(Integer player_id: target_player_map.keySet()){
+            if(!player_map.containsKey(player_id)){
+                deletePlayer(target_player_map.get(player_id));
             }
-            for(Integer player_id : player_map.keySet()){
-                if(target_player_map.containsKey(player_id)){
-                    modifyPlayer(player_map.get(player_id));
-                }else{
-                    addPlayer(player_map.get(player_id));
-                }
-            }
-            logger.info("Export Database: Finished!");
-            return this;
-        } catch (DatabaseException e) {
-            throw new DatabaseException("Failed to exportFile via database. Cause: " + e.getMessage());
-        } catch (Exception e) {
-            throw new DatabaseException("Failed to read existed data in database. Cause: " + e.getMessage());
         }
+        for(Integer player_id : player_map.keySet()){
+            if(target_player_map.containsKey(player_id)){
+                modifyPlayer(player_map.get(player_id));
+            }else{
+                addPlayer(player_map.get(player_id));
+            }
+        }
+        return this;
     }
 
     /**
@@ -275,9 +252,7 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
 
             while (resultSet.next()) {
                 Region region = new Region(resultSet.getString("region_name"));
-
                 Server server = new Server(resultSet.getString("server_name"), region);
-
                 regionServerListMap.computeIfAbsent(region, _ -> new ArrayList<>()).add(server);
             }
 
@@ -285,10 +260,9 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 regionServerMap.put(entry.getKey(), entry.getValue().toArray(new Server[0]));
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Failed to read region-server data from database. Cause: " + e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
         return regionServerMap;
     }
-
 
 }
