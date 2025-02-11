@@ -1,6 +1,8 @@
 package data.database;
 
+import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
+import Interface.VerifiedEntity;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -38,7 +40,7 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<DatabaseInfo> read(ParserCallBack<DatabaseInfo> data) {
         try(MongoCursor<Document> cursor = playerCollection.find().iterator()){
             while(cursor.hasNext()){
                 Document document = cursor.next();
@@ -54,9 +56,9 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<DatabaseInfo> export(ParserCallBack<R> parser, TreeMap<Integer, VerifiedEntity> dataMap) {
         playerCollection.drop();
-        for(Player player : player_map.values()){
+        for(Player player : dataMap.values()){
             Document document = new Document();
             document.put("id", player.getID());
             document.put("name", player.getName());

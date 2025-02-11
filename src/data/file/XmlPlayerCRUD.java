@@ -1,7 +1,9 @@
 package data.file;
 
 import GUI.Player.PlayerText;
+import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
+import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.FileManageException;
 import model.Player;
@@ -72,7 +74,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
      *                             root element is invalid.
      */
     @Override
-    public PlayerCRUD<String> read(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<String> read(ParserCallBack<String> data) {
         Element root;
         try {
             if(parseRawXML){
@@ -117,19 +119,20 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
      * {@code add_PlayerElements} to populate the XML with player data, and
      * {@code xml_utils.writeXml} to write the generated XML structure to the provided file.
      *
-     * @param player_map a {@code TreeMap<Integer, Player>} containing player data to write. If the map
-     *                    is null, the resulting XML file will contain only the root element without any
-     *                    player data.
+     * @param parser
+     * @param dataMap a {@code TreeMap<Integer, Player>} containing player data to write. If the map
+     *                is null, the resulting XML file will contain only the root element without any
+     *                player data.
      * @throws FileManageException if an error occurs during XML creation, data population, or file writing.
      */
     @Override
-    public PlayerCRUD<String> export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<String> export(ParserCallBack<R> parser, TreeMap<Integer, VerifiedEntity> dataMap) {
         try {
             Document document = xml_utils.createDocument();
             Element root = document.createElement("Player");
             document.appendChild(root);
-            if(player_map != null){
-                add_PlayerElements(document, root, player_map);
+            if(dataMap != null){
+                add_PlayerElements(document, root, dataMap);
             }
             xml_utils.writeXml(document, file);
         } catch (Exception e) {

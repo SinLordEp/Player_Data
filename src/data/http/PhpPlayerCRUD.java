@@ -1,6 +1,8 @@
 package data.http;
 
+import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
+import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.DataCorruptedException;
 import exceptions.HttpPhpException;
@@ -46,7 +48,7 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
     }
 
     @Override
-    public PlayerCRUD<PhpType> read(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<PhpType> read(ParserCallBack<PhpType> data) {
         try {
             String rawJson = api.getRequest(url + readUrl);
             JSONObject parsedJson = (JSONObject) JSONValue.parse(rawJson);
@@ -105,18 +107,18 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
     }
 
     @Override
-    public PlayerCRUD<PhpType> export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<PhpType> export(ParserCallBack<R> parser, TreeMap<Integer, VerifiedEntity> dataMap) {
         TreeMap<Integer, Player> existed_player_map = new TreeMap<>();
         read(existed_player_map);
         HashMap<Player, DataOperation> export_player_map = new HashMap<>();
         for(Map.Entry<Integer, Player> idAndPlayer : existed_player_map.entrySet() ) {
-            if(!player_map.containsKey(idAndPlayer.getKey())) {
+            if(!dataMap.containsKey(idAndPlayer.getKey())) {
                 export_player_map.put(idAndPlayer.getValue(), DataOperation.DELETE);
             }else{
-                export_player_map.put(player_map.get(idAndPlayer.getKey()), DataOperation.MODIFY);
+                export_player_map.put(dataMap.get(idAndPlayer.getKey()), DataOperation.MODIFY);
             }
         }
-        for(Map.Entry<Integer, Player> idAndPlayer : player_map.entrySet() ) {
+        for(Map.Entry<Integer, Player> idAndPlayer : dataMap.entrySet() ) {
             if(!existed_player_map.containsKey(idAndPlayer.getKey())) {
                 export_player_map.put(idAndPlayer.getValue(), DataOperation.ADD);
             }

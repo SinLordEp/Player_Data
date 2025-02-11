@@ -8,6 +8,7 @@ import GUI.Player.PlayerText;
 import GUI.Player.PlayerUI;
 import Interface.EventListener;
 import Interface.GeneralControl;
+import Interface.VerifiedEntity;
 import data.DataSource;
 import data.GeneralDAO;
 import data.PlayerDAO;
@@ -34,7 +35,7 @@ import java.util.*;
  */
 public class PlayerControl implements GeneralControl {
     private PlayerDAO playerDA;
-    private final List<EventListener<TreeMap<Integer, Player>>> listeners = new ArrayList<>();
+    private final List<EventListener<TreeMap<Integer, VerifiedEntity>>> listeners = new ArrayList<>();
 
     /**
      * Executes the logic for initializing and managing the player user interface (UI)
@@ -545,7 +546,7 @@ public class PlayerControl implements GeneralControl {
      * @param listener the event listener to be added. It must implement the EventListener interface
      *                 and handle events related to a SortedMap with any key-value pair types.
      */
-    public void addListener(EventListener<TreeMap<Integer, Player>> listener){
+    public void addListener(EventListener<TreeMap<Integer, VerifiedEntity>> listener){
         listeners.add(listener);
     }
 
@@ -556,14 +557,14 @@ public class PlayerControl implements GeneralControl {
      * @param event the name or identifier of the event to notify about
      * @param data the data associated with the event, passed as a {@code SortedMap} object
      */
-    private void notifyEvent(String event, TreeMap<Integer, Player> data){
-        for(EventListener<TreeMap<Integer, Player>> listener : listeners){
+    private void notifyEvent(String event, TreeMap<Integer, VerifiedEntity> data){
+        for(EventListener<TreeMap<Integer, VerifiedEntity>> listener : listeners){
             listener.onEvent(event, data);
         }
     }
 
     private void notifyLog(LogStage stage, String... message){
-        for(EventListener<TreeMap<Integer, Player>> listener : listeners){
+        for(EventListener<TreeMap<Integer, VerifiedEntity>> listener : listeners){
             listener.onLog(stage, message);
         }
     }

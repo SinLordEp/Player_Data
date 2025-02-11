@@ -1,21 +1,26 @@
 package data.database;
 
+import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
 import data.DataOperation;
 import exceptions.DatabaseException;
+import exceptions.OperationException;
 import model.DatabaseInfo;
-import model.Player;
 import model.Region;
 import model.Server;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author SIN
  */
 public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     private Connection connection = null;
+    private DatabaseInfo databaseInfo;
     @Override
     public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) throws DatabaseException {
         try {
@@ -32,10 +37,12 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                     connection = DriverManager.getConnection(databaseInfo.getUrl());
                     break;
             }
+            connection.setAutoCommit(false);
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
         if(connection != null){
+            this.databaseInfo = databaseInfo;
             return this;
         }else{
             throw new DatabaseException("Connection is null");
@@ -48,7 +55,7 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     /**
-     * Reads all player data from the database and returns it as a {@code TreeMap}.
+     * Reads all player parser from the database and returns it as a {@code TreeMap}.
      * This method executes a SQL query to retrieve player records, constructs {@code Player} objects
      * for each record, and maps them by their IDs.
      * It logs the process of reading players from the database and handles any {@code SQLException}
@@ -58,57 +65,21 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      * and {@code Player.setServer} to populate player attributes. It also creates associated objects
      * like {@code Region} and {@code Server} for each player.
      *
-     * @return a {@code TreeMap<Integer, Player>} containing the player data retrieved from the database,
+     * @return a {@code TreeMap<Integer, Player>} containing the player parser retrieved from the database,
      * where the keys are player IDs and the values are {@code Player} objects.
      */
     @Override
-    public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map) {
+    @SuppressWarnings("unchecked")
+    public <R,U> PlayerCRUD<DatabaseInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap) {
         if(connection == null){
             throw new DatabaseException("Database is not connected");
         }
-        String query = "SELECT * FROM player";
+        String query = "SELECT * FROM %s".formatted(databaseInfo.getTable());
         try(PreparedStatement statement = connection.prepareStatement(query)){
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
-                Player player = new Player();
-                player.setID(resultSet.getInt("id"));
-                player.setName(resultSet.getString("name"));
-                player.setRegion(new Region(resultSet.getString("region")));
-                player.setServer(new Server(resultSet.getString("server"), player.getRegion()));
-                player_map.put(player.getID(), player);
+               parser.parse((R)resultSet, operation, dataMap);
             }
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getMessage());
-        }
-        return this;
-    }
-
-    /**
-     * Updates the database with the changes specified in the {@code changed_player_map}.
-     * The method performs operations such as adding, modifying, or deleting players
-     * in the database based on the mapped {@code DataOperation} for each {@code Player}.
-     * It uses a transaction to ensure consistency and rolls back changes in case
-     * of an error.
-     *
-     * @param changed_player_map A map containing {@code Player} objects as keys and
-     *                           their corresponding {@code DataOperation} values representing
-     *                           the operations to be performed (ADD, MODIFY, DELETE).
-     *
-     * @throws DatabaseException if the transaction fails or rollback is unsuccessful.
-     */
-    @Override
-    public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
-        try {
-            connection.setAutoCommit(false);
-            for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {
-                switch (player_operation.getValue()) {
-                    case ADD -> addPlayer(player_operation.getKey());
-                    case MODIFY -> modifyPlayer(player_operation.getKey());
-                    case DELETE -> deletePlayer(player_operation.getKey());
-                }
-            }
-            connection.commit();
-            return this;
         } catch (SQLException e) {
             try {
                 connection.rollback();
@@ -117,111 +88,24 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             }
             throw new DatabaseException("Data rolled back with cause: " + e.getMessage());
         }
+        return this;
     }
 
-    /**
-     * Adds a new player to the database. This method inserts the player's details,
-     * including their ID, region, server, and name, into the player table in the database.
-     * Logs the actions performed during the process and throws an exception
-     * if the operation fails due to database issues.
-     *
-     * @param player The Player object containing the details of the player to be added.
-     *               Includes attributes like ID, name, region, and server, which are
-     *               required during the database insertion.
-     * @throws DatabaseException If the player could not be added due to a database error.
-     */
-    private void addPlayer(Player player) throws DatabaseException {
-        String query = "INSERT INTO player (id, region, server, name) VALUES (?,?,?,?)";
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setInt(1, player.getID());
-            statement.setString(2, player.getRegion().toString());
-            statement.setString(3, player.getServer().toString());
-            statement.setString(4, player.getName());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getMessage());
-        }
-    }
-
-    /**
-     * Modifies the details of the specified player in the database.
-     * This method updates the player's region, server, and name based on
-     * the provided {@code Player} object. The operation is logged for tracking.
-     *
-     * @param player the {@code Player} object containing the updated fields
-     *               (region, server, name) and the unique identifier (ID).
-     *               The player's ID is used to identify the record to update.
-     * @throws DatabaseException if there is a failure to execute the
-     *                           database operation due to an SQL error.
-     */
-    private void modifyPlayer(Player player) throws DatabaseException {
-        String query = "UPDATE player SET region = ?, server = ?, name = ? WHERE id = ?";
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setString(1, player.getRegion().toString());
-            statement.setString(2, player.getServer().toString());
-            statement.setString(3, player.getName());
-            statement.setInt(4, player.getID());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getMessage());
-        }
-    }
-
-    /**
-     * Deletes a player from the database.
-     * <p>
-     * This method removes a player record using the player's ID. It executes a
-     * SQL DELETE query to ensure the player is deleted from the database.
-     * If there is a failure during the database operation, it throws a
-     * {@code DatabaseException}.
-     *
-     * @param player The {@code Player} object representing the player to be deleted.
-     * @throws DatabaseException If an error occurs while executing the delete operation in the database.
-     */
-    private void deletePlayer(Player player) throws DatabaseException {
-        String query = "DELETE FROM player WHERE id = ?";
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setInt(1, player.getID());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getMessage());
-        }
-    }
-
-    /**
-     * Exports player data from the provided {@code player_map} to the target database.
-     * Updates the database by synchronizing player data, where it adds, updates, or
-     * deletes players as necessary to match the provided data.
-     * <p>
-     * This method performs the following actions:
-     * - Compares the provided player data map with the current database state.
-     * - Deletes records in the database that do not exist in the provided {@code player_map}.
-     * - Updates records in the database that have matching IDs in the {@code player_map}.
-     * - Adds new records for player data in the {@code player_map} that do not exist in the database.
-     * <p>
-     * Calls {@code read}, {@code deletePlayer}, {@code modifyPlayer}, and {@code addPlayer}
-     * for database operations and internal synchronization.
-     *
-     * @param player_map a {@code TreeMap<Integer, Player>} where the key represents player IDs
-     *                   and the value represents player objects to be exported to the database.
-     *                   The provided player map reflects the desired state of the database.
-     * @throws DatabaseException if an error occurs during any database operation.
-     */
     @Override
-    public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
-        TreeMap<Integer, Player> target_player_map = new TreeMap<>();
-        read(target_player_map);
-        for(Integer player_id: target_player_map.keySet()){
-            if(!player_map.containsKey(player_id)){
-                deletePlayer(target_player_map.get(player_id));
-            }
-        }
-        for(Integer player_id : player_map.keySet()){
-            if(target_player_map.containsKey(player_id)){
-                modifyPlayer(player_map.get(player_id));
-            }else{
-                addPlayer(player_map.get(player_id));
-            }
+    @SuppressWarnings("unchecked")
+    public <R, U> PlayerCRUD<DatabaseInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+        String query = switch (operation){
+            case READ -> throw new OperationException("Read operation is not supported at update method");
+            case ADD -> databaseInfo.getQueryADD();
+            case MODIFY -> databaseInfo.getQueryModify();
+            case DELETE -> databaseInfo.getQueryDelete();
+        };
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            parser.parse((R)statement, operation, object);
+            statement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
         }
         return this;
     }

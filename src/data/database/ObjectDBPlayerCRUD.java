@@ -1,6 +1,8 @@
 package data.database;
 
+import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
+import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.DatabaseException;
 import exceptions.ObjectDBException;
@@ -19,6 +21,7 @@ import java.util.TreeMap;
  * @author SIN
  */
 public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
+    private DatabaseInfo databaseInfo;
     private EntityManager entityManager;
 
     @Override
@@ -26,6 +29,7 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
         try{
             entityManager = Persistence.createEntityManagerFactory(databaseInfo.getUrl()).createEntityManager();
             if(entityManager != null && entityManager.isOpen()){
+                this.databaseInfo = databaseInfo;
                 return this;
             }else {
                 throw new DatabaseException("Entity manager is closed");
@@ -42,15 +46,14 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map) {
+    @SuppressWarnings("unchecked")
+    public <R, U> PlayerCRUD<DatabaseInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         try{
             entityManager.getTransaction().begin();
-            TypedQuery<Player> query = entityManager.createQuery("SELECT s FROM Player s", Player.class);
+            TypedQuery<VerifiedEntity> query = entityManager.createQuery("SELECT s FROM %s s".formatted(databaseInfo.getTable()), VerifiedEntity.class);
             if(!query.getResultList().isEmpty()){
-                List<Player> playerList = query.getResultList();
-                for(Player player : playerList){
-                    player_map.put(player.getID(), player);
-                }
+                List<VerifiedEntity> list = query.getResultList();
+                parser.parse((R)list, dataMap);
             }
             return this;
         }catch (Exception e){
@@ -59,6 +62,20 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <R, U> PlayerCRUD<DatabaseInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+        try {
+            entityManager.getTransaction().begin();
+            parser.parse((R)entityManager, operation, object);
+            entityManager.getTransaction().commit();
+        }catch(Exception e){
+            if(entityManager.getTransaction() != null){
+                entityManager.getTransaction().rollback();
+            }
+        }
+        return this;
+    }
+
     public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
         try {
             entityManager.getTransaction().begin();
@@ -79,16 +96,16 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<DatabaseInfo> export(ParserCallBack<R> parser, TreeMap<Integer, VerifiedEntity> dataMap) {
         try{
             TreeMap<Integer, Player> existed_player_map = new TreeMap<>();
             read(existed_player_map);
             for(Map.Entry<Integer, Player> entry : existed_player_map.entrySet()){
-                if(!player_map.containsKey(entry.getKey())){
+                if(!dataMap.containsKey(entry.getKey())){
                     entityManager.remove(entry.getValue());
                 }
             }
-            for(Player player : player_map.values()){
+            for(Player player : dataMap.values()){
                 entityManager.merge(player);
             }
             entityManager.getTransaction().commit();

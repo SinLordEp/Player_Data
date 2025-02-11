@@ -4,8 +4,8 @@ import GUI.LogStage;
 import GUI.UiUtils;
 import Interface.EventListener;
 import Interface.GeneralUI;
+import Interface.VerifiedEntity;
 import control.PlayerControl;
-import model.Player;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  * It connects to player-specific logic through {@code PlayerControl} to execute commands
  * such as adding, modifying, exporting, or deleting player data.
  */
-public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Player>> {
+public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, VerifiedEntity>> {
     private final PlayerControl playerControl;
     private JTable table_data;
 
@@ -50,7 +50,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
     private PlayerTableModel tableModel;
     private int selected_player_id;
 
-    private final HashMap<String, Consumer<TreeMap<Integer, Player>>> eventWithMapHandler = new HashMap<>();
+    private final HashMap<String, Consumer<TreeMap<Integer, VerifiedEntity>>> eventWithMapHandler = new HashMap<>();
     private final HashMap<String, Runnable> eventWithoutDataHandler = new HashMap<>();
     private final StyledDocument log_document;
 
@@ -118,7 +118,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
      *               containing player IDs as keys and their corresponding {@code Player} objects as values.
      *               This map is used to update the table model data.
      */
-    private void refresh(TreeMap<Integer, Player> playerMap) {
+    private void refresh(TreeMap<Integer, VerifiedEntity> playerMap) {
         tableModel.update_data(playerMap);
         onLog(LogStage.PASS, "refresh_pass");
     }
@@ -243,7 +243,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Playe
      *             updated player data for refreshing the table view.
      */
     @Override
-    public void onEvent(String event, TreeMap<Integer,Player> data) {
+    public void onEvent(String event, TreeMap<Integer,VerifiedEntity> data) {
         if(eventWithMapHandler.containsKey(event)){
             eventWithMapHandler.get(event).accept(data);
         } else if (eventWithoutDataHandler.containsKey(event)) {

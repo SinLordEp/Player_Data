@@ -1,5 +1,6 @@
 package model;
 
+import Interface.VerifiedEntity;
 import jakarta.persistence.*;
 
 /**
@@ -8,7 +9,7 @@ import jakarta.persistence.*;
 @javax.persistence.Entity
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Person implements java.io.Serializable{
+public abstract class Person implements java.io.Serializable, VerifiedEntity {
     @javax.persistence.Id
     @javax.persistence.GeneratedValue
     @Id

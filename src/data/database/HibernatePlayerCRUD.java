@@ -1,10 +1,11 @@
 package data.database;
 
+import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
+import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.DatabaseException;
 import model.DatabaseInfo;
-import model.Player;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,10 +13,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import static main.principal.getProperty;
 
@@ -23,6 +21,7 @@ import static main.principal.getProperty;
  * @author SIN
  */
 public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
+    DatabaseInfo databaseInfo;
     private SessionFactory sessionFactory;
     private final Configuration configuration = new Configuration();
 
@@ -62,6 +61,7 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
         try {
             sessionFactory = configuration.buildSessionFactory();
             if(sessionFactory != null){
+                this.databaseInfo = databaseInfo;
                 return this;
             }else{
                 throw new DatabaseException("SessionFactory is null");
@@ -90,88 +90,28 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      *         where the keys are player IDs, and the values are {@code Player} objects.
      */
     @Override
-    public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map){
+    @SuppressWarnings("unchecked")
+    public <R,U> PlayerCRUD<DatabaseInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap){
         try (Session session = sessionFactory.openSession()) {
-            String HQL = "FROM Player p LEFT JOIN FETCH p.region LEFT JOIN FETCH p.server";
-            List<Player> list = session.createQuery(HQL, Player.class).getResultList();
-            for(Player player : list){
-                player_map.put(player.getID(), player);
-            }
+            List<VerifiedEntity> list = session.createQuery(databaseInfo.getQueryRead(), VerifiedEntity.class).getResultList();
+            parser.parse((R)list, DataOperation.READ, dataMap);
         }catch (Exception e){
             throw new DatabaseException(e.getMessage());
         }
         return this;
     }
 
-    /**
-     * Updates the database using Hibernate operations based on the specified map of players and their corresponding
-     * {@code DataOperation}. This method processes each entry in the provided map and performs the appropriate Hibernate action
-     * (add, modify, or delete) for each player. The method commits the transaction upon successful execution or rolls back changes
-     * in case of failure. After execution, the input map will be cleared.
-     *
-     * @param changed_player_map a map containing {@code Player} objects as keys and {@code DataOperation} values indicating the
-     *                           action to apply (ADD, MODIFY, or DELETE) for each player in the database
-     * @throws DatabaseException if there is an error during the database update process
-     */
     @Override
-    public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
+    @SuppressWarnings("unchecked")
+    public <R, U> PlayerCRUD<DatabaseInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {
-                switch (player_operation.getValue()) {
-                    case ADD -> session.persist(player_operation.getKey());
-                    case MODIFY -> session.merge(player_operation.getKey());
-                    case DELETE -> session.remove(player_operation.getKey());
-                }
-            }
+            parser.parse((R)session, operation, object);
             transaction.commit();
             return this;
         }catch(Exception e){
             if(transaction != null){
-                transaction.rollback();
-            }
-            throw new DatabaseException(e.getMessage());
-        }
-    }
-
-    /**
-     * Exports player data to Hibernate by synchronizing it between the given {@code player_map}
-     * and the database. It removes any players from the database that are not present
-     * in the {@code player_map} and updates or merges the rest of the player data.
-     * This method also handles transaction management to ensure data consistency.
-     * <p>
-     * This method performs the following steps:
-     * 1. Reads the existing player data from the database using {@code read(DataSource.HIBERNATE)}.
-     * 2. Removes any players from the database that are not present in the {@code player_map}.
-     * 3. Updates or merges player information for all players in {@code player_map}.
-     * 4. Commits the transaction if successful, otherwise rolls back the transaction in case of an exception.
-     *
-     * @param player_map a {@code TreeMap<Integer, Player>} containing the player data to be exported,
-     *                   where the key is the player's ID and the value is the {@code Player} object.
-     *                   This data is used to synchronize with the database.
-     * @throws DatabaseException if an error occurs during the export operation. The exception contains
-     *                            the cause of the failure.
-     */
-    @Override
-    public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> player_map) {
-        Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()){
-            transaction = session.beginTransaction();
-            TreeMap<Integer, Player> existed_player_map = new TreeMap<>();
-            read(existed_player_map);
-            for(Map.Entry<Integer, Player> entry : existed_player_map.entrySet()){
-                if(!player_map.containsKey(entry.getKey())){
-                    session.remove(entry.getValue());
-                }
-            }
-            for(Player player : player_map.values()){
-                session.merge(player);
-            }
-            transaction.commit();
-            return this;
-        } catch (Exception e) {
-            if (transaction != null) {
                 transaction.rollback();
             }
             throw new DatabaseException(e.getMessage());

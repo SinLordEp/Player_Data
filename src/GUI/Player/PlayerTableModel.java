@@ -1,5 +1,6 @@
 package GUI.Player;
 
+import Interface.VerifiedEntity;
 import model.Player;
 
 import javax.swing.table.AbstractTableModel;
@@ -26,7 +27,7 @@ public class PlayerTableModel extends AbstractTableModel {
      * @param player_data a {@code TreeMap} mapping player IDs to their corresponding {@code Player} objects,
      *                    which is used to populate the table model.
      */
-    public PlayerTableModel(TreeMap<Integer, Player> player_data) {
+    public PlayerTableModel(TreeMap<Integer, VerifiedEntity> player_data) {
         columns_name = PlayerText.getDialog().getOptions("table_column");
         parse_data(player_data);
     }
@@ -40,11 +41,11 @@ public class PlayerTableModel extends AbstractTableModel {
      *                    {@code Player} objects as values. This map is used to populate the
      *                    {@code data} array for further use in the table model.
      */
-    private void parse_data(TreeMap<Integer, Player> player_data){
+    private void parse_data(TreeMap<Integer, VerifiedEntity> player_data){
         this.data = new Object[player_data.size()][2];
         int rowIndex = 0;
-        Set<Map.Entry<Integer, Player>> entrySet = player_data.entrySet();
-        for (Map.Entry<Integer, Player> entry : entrySet) {
+        Set<Map.Entry<Integer, VerifiedEntity>> entrySet = player_data.entrySet();
+        for (Map.Entry<Integer, VerifiedEntity> entry : entrySet) {
             data[rowIndex][0] = entry.getKey();
             data[rowIndex][1] = entry.getValue();
             rowIndex++;
@@ -106,7 +107,7 @@ public class PlayerTableModel extends AbstractTableModel {
      *                    {@code Player} objects as values. This map is used to update the
      *                    table model data for display.
      */
-    public void update_data(TreeMap<Integer, Player> player_data) {
+    public void update_data(TreeMap<Integer, VerifiedEntity> player_data) {
         parse_data(player_data);
         fireTableDataChanged();
     }

@@ -1,6 +1,8 @@
 package data;
 
 import GUI.Player.PlayerText;
+import Interface.PlayerCRUD;
+import Interface.VerifiedEntity;
 import data.database.DataBasePlayerCRUD;
 import data.database.SqlDialect;
 import data.http.PhpType;
@@ -9,12 +11,18 @@ import model.DatabaseInfo;
 import model.Player;
 import model.Region;
 import model.Server;
+import org.hibernate.Session;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import static main.principal.getProperty;
@@ -29,8 +37,7 @@ import static main.principal.getProperty;
  * @author SIN
  */
 public class PlayerDAO extends GeneralDAO {
-    private TreeMap<Integer, Player> player_map = new TreeMap<>();
-    private final HashMap<Player, DataOperation> changed_player_map = new HashMap<>();
+    private TreeMap<Integer, VerifiedEntity> player_map = new TreeMap<>();
     private HashMap<Region, Server[]> region_server_map;
     private boolean isDataChanged = false;
 
@@ -120,6 +127,11 @@ public class PlayerDAO extends GeneralDAO {
                 databaseInfo.setDatabase((String) mysql_info.get("text_database"));
                 databaseInfo.setUser((String) mysql_info.get("text_user"));
                 databaseInfo.setPassword((String) mysql_info.get("text_pwd"));
+                databaseInfo.setTable((String) mysql_info.get("text_table"));
+                databaseInfo.setQueryRead((String) mysql_info.get("text_query_read"));
+                databaseInfo.setQueryADD((String) mysql_info.get("text_query_add"));
+                databaseInfo.setQueryModify((String) mysql_info.get("text_query_modify"));
+                databaseInfo.setQueryDelete((String) mysql_info.get("text_query_delete"));
                 break;
             case SQLITE:
                 HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
@@ -194,21 +206,30 @@ public class PlayerDAO extends GeneralDAO {
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(fileType)
                             .prepare(file_path)
-                            .read(player_map)
+                            .read(this::parse, , player_map)
                             .release();
                     break;
-                case DATABASE, HIBERNATE, OBJECTDB, BASEX, MONGO:
+                case DATABASE:
+                    PlayerCRUDFactory.getInstance()
+                            .getCRUD(DataSource.DATABASE)
+                            .prepare(databaseInfo)
+                            .read(this::parseResultSet, DataOperation.READ, player_map)
+                            .release();
+                    break;
+                case HIBERNATE, OBJECTDB:
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(dataSource)
                             .prepare(databaseInfo)
-                            .read(player_map)
+                            .read(this::parseList, DataOperation.READ, player_map)
                             .release();
                     break;
+                case BASEX, MONGO:
+
                 case PHP:
                     PlayerCRUDFactory.getInstance()
                             .getCRUD()
                             .prepare(phpType)
-                            .read(player_map)
+                            .read(this::parse, , player_map)
                             .release();
                     break;
                 default:
@@ -265,31 +286,9 @@ public class PlayerDAO extends GeneralDAO {
                     PlayerCRUDFactory.getInstance()
                             .getCRUD(fileType)
                             .prepare(file_path)
-                            .export(player_map)
                             .release();
                     break;
-                case DATABASE, HIBERNATE, OBJECTDB, MONGO:
-                    PlayerCRUDFactory.getInstance()
-                            .getCRUD(dataSource)
-                            .prepare(databaseInfo)
-                            .update(changed_player_map)
-                            .release();
-                    changed_player_map.clear();
-                    break;
-                case PHP:
-                    PlayerCRUDFactory.getInstance()
-                            .getCRUD()
-                            .prepare(phpType)
-                            .update(changed_player_map)
-                            .release();
-                    changed_player_map.clear();
-                    break;
-                case BASEX:
-                    PlayerCRUDFactory.getInstance()
-                            .getCRUD(dataSource)
-                            .prepare(databaseInfo)
-                            .export(player_map)
-                            .release();
+                case DATABASE, HIBERNATE, OBJECTDB, MONGO, PHP, BASEX:
                     break;
                 default:
                     throw new OperationException("Save: Unknown data source: " + dataSource);
@@ -318,8 +317,21 @@ public class PlayerDAO extends GeneralDAO {
      */
     public void add(Player player) {
         switch(dataSource){
-            case DATABASE, HIBERNATE, PHP, OBJECTDB, BASEX, MONGO:
-                changed_player_map.put(player, DataOperation.ADD);
+            case DATABASE:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataSource)
+                        .prepare(databaseInfo)
+                        .update(this::playerToUpdateStatement, DataOperation.ADD, player)
+                        .release();
+                break;
+            case HIBERNATE:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(DataSource.HIBERNATE)
+                        .prepare(databaseInfo)
+                        .update(this::playerToUpdateSession, DataOperation.ADD, player)
+                        .release();
+                break;
+            case PHP, OBJECTDB, BASEX, MONGO:
         }
         player_map.put(player.getID(), player);
         isDataChanged = true;
@@ -335,8 +347,21 @@ public class PlayerDAO extends GeneralDAO {
      */
     public void modify(Player player) {
         switch(dataSource){
-            case DATABASE, HIBERNATE, PHP, OBJECTDB, MONGO:
-                changed_player_map.put(player, DataOperation.MODIFY);
+            case DATABASE:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataSource)
+                        .prepare(databaseInfo)
+                        .update(this::playerToModifyStatement, DataOperation.MODIFY, player)
+                        .release();
+                break;
+            case HIBERNATE:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataSource)
+                        .prepare(databaseInfo)
+                        .update(this::playerToUpdateSession, DataOperation.MODIFY, player)
+                        .release();
+                break;
+            case PHP, OBJECTDB, MONGO:
                 //Always trigger case FILE
             case FILE, BASEX:
                 player_map.put(player.getID(), player);
@@ -356,15 +381,25 @@ public class PlayerDAO extends GeneralDAO {
      * For {@code dataSource} scenarios such as FILE, the method directly removes
      * the player from {@code player_map}.
      *
-     * @param selected_player_id the ID of the player to be deleted
      */
-    public void delete(int selected_player_id) {
+    public void delete(Player player) {
         switch(dataSource){
-            case DATABASE, HIBERNATE, PHP, OBJECTDB, MONGO:
-                changed_player_map.put(player_map.get(selected_player_id), DataOperation.DELETE);
+            case DATABASE:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataSource)
+                        .prepare(databaseInfo)
+                        .update(this::playerToUpdateStatement, DataOperation.DELETE, player)
+                        .release();
+                break;
+            case HIBERNATE:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(DataSource.HIBERNATE)
+                        .prepare(databaseInfo)
+                        .update(this::playerToUpdateSession, DataOperation.DELETE, player);
+            case PHP, OBJECTDB, MONGO:
                 //Always trigger case FILE
             case FILE, BASEX:
-                player_map.remove(selected_player_id);
+
                 break;
             default:
                 throw new OperationException("Deletion operation not implemented for this data source");
@@ -393,8 +428,7 @@ public class PlayerDAO extends GeneralDAO {
         try {
             PlayerCRUDFactory.getInstance()
                     .getCRUD(fileType)
-                    .prepare(target_path)
-                    .export(player_map);
+                    .prepare(target_path);
         } catch (Exception e) {
             throw new FileManageException("Failed to export file with cause: " + e.getMessage());
         }
@@ -407,13 +441,9 @@ public class PlayerDAO extends GeneralDAO {
      * @param exportDataBaseInfo the database info used for the export operation
      */
     public void exportDB(DatabaseInfo exportDataBaseInfo) {
-        try {
-            PlayerCRUDFactory.getInstance()
-                    .getCRUD(exportDataBaseInfo.getDataSource())
-                    .prepare(exportDataBaseInfo)
-                    .export(player_map);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        switch (exportDataBaseInfo.getDataSource()){
+            case DATABASE -> exportDatabase(exportDataBaseInfo);
+            case HIBERNATE -> exportHibernate(exportDataBaseInfo);
         }
     }
 
@@ -426,15 +456,14 @@ public class PlayerDAO extends GeneralDAO {
     public void exportPHP(PhpType phpType) {
         PlayerCRUDFactory.getInstance()
                 .getCRUD()
-                .prepare(phpType)
-                .export(player_map);
+                .prepare(phpType);
     }
 
     public boolean isEmpty(){
         return player_map.isEmpty();
     }
 
-    public TreeMap<Integer, Player> getPlayerMap() {
+    public TreeMap<Integer, VerifiedEntity> getPlayerMap() {
         return player_map;
     }
 
@@ -489,8 +518,8 @@ public class PlayerDAO extends GeneralDAO {
      * and logs messages before and after the validation process.
      */
     private void isDataValid(){
-        for(Player player : player_map.values()){
-            isPlayerInvalid(player);
+        for(VerifiedEntity player : player_map.values()){
+            isPlayerInvalid((Player) player);
         }
     }
 
@@ -499,7 +528,7 @@ public class PlayerDAO extends GeneralDAO {
     }
 
     public Player getPlayer(int id){
-        Player player = player_map.get(id);
+        Player player = (Player) player_map.get(id);
         Player playerCopy = new Player();
         playerCopy.setID(id);
         playerCopy.setName(player.getName());
@@ -521,5 +550,104 @@ public class PlayerDAO extends GeneralDAO {
 
     public boolean isDataChanged() {
         return isDataChanged;
+    }
+
+    private void parseResultSet(ResultSet resultSet, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        try {
+            Player player = new Player();
+            player.setID(resultSet.getInt("id"));
+            player.setName(resultSet.getString("name"));
+            player.setRegion(new Region(resultSet.getString("region")));
+            player.setServer(new Server(resultSet.getString("server"), player.getRegion()));
+            isPlayerInvalid(player);
+            dataMap.put(player.getID(), player);
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    private void playerToUpdateStatement(PreparedStatement statement, DataOperation operation, Player player){
+        try {
+            switch (operation){
+                case ADD:
+                    statement.setInt(1, player.getID());
+                    statement.setString(2, player.getRegion().toString());
+                    statement.setString(3, player.getServer().toString());
+                    statement.setString(4, player.getName());
+                    break;
+                case MODIFY:
+                    statement.setString(1, player.getRegion().toString());
+                    statement.setString(2, player.getServer().toString());
+                    statement.setString(3, player.getName());
+                    statement.setInt(4, player.getID());
+                    break;
+                case DELETE:
+                    statement.setInt(1, player.getID());
+                    break;
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    private void exportDatabase(DatabaseInfo exportDataBaseInfo){
+        TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
+        PlayerCRUD<DatabaseInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+                .getCRUD(exportDataBaseInfo.getDataSource())
+                .prepare(exportDataBaseInfo)
+                .read(this::parseResultSet, , target_player_map);
+        for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
+            if(!player_map.containsKey(entry.getKey())){
+                currentCRUD.update(this::playerToUpdateStatement, DataOperation.DELETE, entry.getValue());
+            }
+        }
+        for(Map.Entry<Integer, VerifiedEntity> entry: player_map.entrySet()){
+            if(target_player_map.containsKey(entry.getKey())){
+                currentCRUD.update(this::playerToUpdateStatement, DataOperation.MODIFY, (Player)entry.getValue());
+            }else{
+                currentCRUD.update(this::playerToUpdateStatement, DataOperation.ADD, (Player)entry.getValue());
+            }
+        }
+        currentCRUD.release();
+    }
+
+    private void parseList(List<VerifiedEntity> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        for(VerifiedEntity verifiedEntity : list){
+            Player player = (Player) verifiedEntity;
+            player_map.put(player.getID(), player);
+        }
+    }
+
+    private void playerToUpdateSession(Session session, DataOperation operation, Player player){
+        switch(operation){
+            case ADD -> session.persist(player);
+            case MODIFY -> session.merge(player);
+            case DELETE -> session.remove(player);
+        }
+    }
+
+    private void exportHibernate(DatabaseInfo exportDataBaseInfo) {
+        TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
+        PlayerCRUD<DatabaseInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+                .getCRUD(exportDataBaseInfo.getDataSource())
+                .prepare(exportDataBaseInfo)
+                .read(this::parseList, DataOperation.READ, target_player_map);
+        for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
+            if(!player_map.containsKey(entry.getKey())){
+                currentCRUD.update(this::playerToUpdateSession, DataOperation.DELETE, (Player)entry.getValue());
+            }
+        }
+        for(Map.Entry<Integer, VerifiedEntity> entry: player_map.entrySet()){
+            if(target_player_map.containsKey(entry.getKey())){
+                currentCRUD.update(this::playerToUpdateSession, DataOperation.MODIFY, (Player)entry.getValue());
+            }else {
+                currentCRUD.update(this::playerToUpdateSession, DataOperation.ADD, (Player)entry.getValue());
+            }
+        }
+        currentCRUD.release();
+    }
+
+    private void playerToEntityManager(){
+
     }
 }

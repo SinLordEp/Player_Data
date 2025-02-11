@@ -1,7 +1,9 @@
 package data.file;
 
 import GUI.Player.PlayerText;
+import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
+import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.FileManageException;
 import model.Player;
@@ -50,7 +52,7 @@ public class TextPlayerCRUD implements PlayerCRUD<String> {
      * @throws FileManageException if there is an error during file reading.
      */
     @Override
-    public PlayerCRUD<String> read(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<String> read(ParserCallBack<String> data) {
         try(Scanner scanner = new Scanner(file)){
             if(!scanner.hasNext()){
                 PlayerText.getDialog().popup("player_map_null");
@@ -84,16 +86,17 @@ public class TextPlayerCRUD implements PlayerCRUD<String> {
      * <p>
      * If writing to the file fails, the method throws a {@code FileManageException}.
      *
-     * @param player_map a {@code TreeMap<Integer, Player>} containing the player data to be written.
-     *                    The map's values represent {@code Player} objects whose properties such as
-     *                    {@code getID}, {@code getRegion}, {@code getServer}, and {@code getName}
-     *                    are used to write the formatted data.
+     * @param parser
+     * @param dataMap a {@code TreeMap<Integer, Player>} containing the player data to be written.
+     *                The map's values represent {@code Player} objects whose properties such as
+     *                {@code getID}, {@code getRegion}, {@code getServer}, and {@code getName}
+     *                are used to write the formatted data.
      * @throws FileManageException if an error occurs during the file writing process.
      */
     @Override
-    public PlayerCRUD<String> export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<String> export(ParserCallBack<R> parser, TreeMap<Integer, VerifiedEntity> dataMap) {
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(file,false))){
-            for(Player player : player_map.values()){
+            for(Player player : dataMap.values()){
                 bw.write(player.getID() + ",");
                 bw.write(player.getRegion() + ",");
                 bw.write(player.getServer() + ",");

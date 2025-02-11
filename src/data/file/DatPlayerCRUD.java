@@ -1,7 +1,9 @@
 package data.file;
 
 import GUI.Player.PlayerText;
+import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
+import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.FileManageException;
 import model.Player;
@@ -42,7 +44,7 @@ public class DatPlayerCRUD implements PlayerCRUD<String> {
      * @throws FileManageException if a read error occurs or if the data is corrupted.
      */
     @Override
-    public PlayerCRUD<String> read(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<String> read(ParserCallBack<String> data) {
         if (file.length() == 0) {
             PlayerText.getDialog().popup("player_map_null");
             return this;
@@ -78,15 +80,16 @@ public class DatPlayerCRUD implements PlayerCRUD<String> {
      * in the {@code player_data} map is serialized using an {@code ObjectOutputStream}. The method
      * appends an "EOF" marker at the end of the file to signify the end of content.
      *
-     * @param player_map a {@code TreeMap<Integer, Player>} containing the player data to be serialized and written to the file.
-     *                    If the map is null or empty, only the "EOF" marker will be written.
+     * @param parser
+     * @param dataMap a {@code TreeMap<Integer, Player>} containing the player data to be serialized and written to the file.
+     *                If the map is null or empty, only the "EOF" marker will be written.
      * @throws FileManageException if an error occurs during file writing, such as an {@code IOException}.
      */
     @Override
-    public PlayerCRUD<String> export(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<String> export(ParserCallBack<R> parser, TreeMap<Integer, VerifiedEntity> dataMap) {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file,false))){
-            if(player_map != null) {
-                for (Player player : player_map.values()) {
+            if(dataMap != null) {
+                for (Player player : dataMap.values()) {
                     oos.writeObject(player);
                 }
             }

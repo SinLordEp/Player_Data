@@ -1,6 +1,8 @@
 package data.database;
 
+import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
+import Interface.VerifiedEntity;
 import data.DataOperation;
 import data.PlayerCRUDFactory;
 import data.file.FileType;
@@ -42,7 +44,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public PlayerCRUD<DatabaseInfo> read(TreeMap<Integer, Player> player_map) {
+    public PlayerCRUD<DatabaseInfo> read(ParserCallBack<DatabaseInfo> data) {
         String query = "/Player";
         try {
             String result =  new XQuery(query).execute(context);
@@ -77,7 +79,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public PlayerCRUD<DatabaseInfo> export(TreeMap<Integer, Player> playerMap) {
+    public PlayerCRUD<DatabaseInfo> export(ParserCallBack<R> parser, TreeMap<Integer, VerifiedEntity> playerMap) {
         try {
             new CreateDB(databaseInfo.getDatabase(), databaseInfo.getUrl()).execute(context);
             for(Player player : playerMap.values()) {
