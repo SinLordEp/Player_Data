@@ -31,7 +31,7 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                 throw new DatabaseException("Entity manager is closed");
             }
         }catch (Exception e){
-            throw new ObjectDBException("Failed to connect via ObjectDB. Cause: " + e.getMessage());
+            throw new ObjectDBException(e.getMessage());
         }
     }
 
@@ -54,7 +54,7 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             }
             return this;
         }catch (Exception e){
-            throw new ObjectDBException("Failed to read data via ObjectDB. Cause: "+e.getMessage());
+            throw new ObjectDBException(e.getMessage());
         }
     }
 
@@ -96,7 +96,7 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             if (entityManager.getTransaction() != null) {
                 entityManager.getTransaction().rollback();
             }
-            throw new ObjectDBException("Failed to export data via ObjectDB. Cause: " + e.getMessage());
+            throw new ObjectDBException(e.getMessage());
         }
         return this;
     }

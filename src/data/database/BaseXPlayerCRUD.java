@@ -52,7 +52,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
                     .read(player_map);
             return this;
         } catch (BaseXException e) {
-            throw new DatabaseException("Error communicating with ObjectDB. \nCause: " + e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
     }
 
