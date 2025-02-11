@@ -99,7 +99,6 @@ public class PlayerControl implements GeneralControl {
      */
     public void createFile() {
         save();
-        notifyLog(LogStage.ONGOING, "createFile_ongoing");
         new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile);
     }
 
