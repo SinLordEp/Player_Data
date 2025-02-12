@@ -273,16 +273,12 @@ public class PlayerDAO extends GeneralDAO {
     @Override
     public void save(){
         try{
-            switch (dataInfo.getDataType()){
-                case FileType ignore:
-                    PlayerCRUDFactory.getInstance()
-                            .getCRUD(dataInfo)
-                            .prepare(dataInfo)
-                            .update(this::playerToText, DataOperation.MODIFY, player_map)
-                            .release();
-                    break;
-                default:
-                    throw new OperationException("Save: Unknown data source: " + dataSource);
+            if (Objects.requireNonNull(dataInfo.getDataType()) instanceof FileType) {
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
+                        .update(this::playerToText, DataOperation.MODIFY, player_map)
+                        .release();
             }
             isDataChanged = false;
         } catch (Exception e) {
