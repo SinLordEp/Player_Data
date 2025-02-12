@@ -47,9 +47,11 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DataInfo> {
     public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         try {
             String result =  new XQuery(dataInfo.getDatabase()).execute(context);
+            DataInfo tempDataInfo = new DataInfo();
+            tempDataInfo.setDataType(FileType.XML);
             PlayerCRUDFactory.getInstance()
-                    .getCRUD(FileType.XML)
-                    .prepare(result)
+                    .getCRUD(tempDataInfo)
+                    .prepare(tempDataInfo)
                     .read();
             return this;
         } catch (BaseXException e) {
