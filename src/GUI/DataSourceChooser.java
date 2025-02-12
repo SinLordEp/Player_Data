@@ -1,12 +1,13 @@
 package GUI;
 
 import GUI.Player.PlayerText;
-import Interface.DataSourceCallBack;
+import Interface.DataInfoCallback;
 import data.DataSource;
 import data.database.SqlDialect;
 import data.file.FileType;
 import data.http.PhpType;
 import exceptions.OperationCancelledException;
+import model.DataInfo;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -29,27 +30,12 @@ public class DataSourceChooser extends JDialog {
     private JComboBox<Object> comboBox_dataType;
     private JPanel panel_info;
     private JPanel panel_button;
-    private DataSource dataSource;
-    private Object dataType;
+    private final DataInfo dataInfo;
 
-    /**
-     * Constructs a {@code DataSourceChooser} dialog that allows the user to choose a data source
-     * and optionally set the data type. Based on the provided {@code DataSource}, the dialog's
-     * components are initialized and configured, with a callback mechanism for submission
-     * or cancellation of the dialog's operations.
-     *
-     * @param dataSource The initial {@code DataSource} to be pre-selected in the combo box. If
-     *                   the value is {@code DataSource.FILE}, the data source selection is
-     *                   locked and cannot be changed.
-     * @param callback   The callback instance implementing {@code DataSourceCallBack<DataSource, Object>}
-     *                   to handle actions for submission and cancellation. Interaction, such as
-     *                   submitting the selected data source and data type, invokes the {@code onSubmit}
-     *                   method of the callback. Cancellation events invoke the {@code onCancel} method.
-     */
-    public DataSourceChooser(DataSource dataSource, DataSourceCallBack<DataSource, Object> callback) {
+    public DataSourceChooser(DataInfo dataInfo, DataInfoCallback callback) {
         initialize(callback);
-        this.dataSource = dataSource;
-        if(dataSource == DataSource.FILE){
+        this.dataInfo = dataInfo;
+        if(dataInfo.getDataType() == DataSource.FILE){
             comboBox_dataSource.setSelectedItem(DataSource.FILE);
             comboBox_dataSource.setEnabled(false);
         }
@@ -68,7 +54,7 @@ public class DataSourceChooser extends JDialog {
      *                 {@code callback.onSubmit(dataSource, dataType)}, while cancellation
      *                 calls {@code callback.onCancel()}.
      */
-    private void initialize(DataSourceCallBack<DataSource, Object> callback){
+    private void initialize(DataInfoCallback callback){
         UiUtils.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
         initializeDataSourceComboBox();
         comboBoxListener();
@@ -99,10 +85,15 @@ public class DataSourceChooser extends JDialog {
      *                 If not null, this method calls {@code callback.onSubmit(dataSource, dataType)}
      *                 to pass the selected data source and data type.
      */
-    private void onOK(DataSourceCallBack<DataSource, Object> callback) {
+    private void onOK(DataInfoCallback callback) {
+        if(comboBox_dataType.isEnabled()){
+            dataInfo.setDataType(comboBox_dataType.getSelectedItem());
+        }else{
+            dataInfo.setDataType(comboBox_dataSource.getSelectedItem());
+        }
         dispose();
         if(callback != null){
-            callback.onSubmit(dataSource, dataType);
+            callback.onSubmit(dataInfo);
         }
     }
 
@@ -114,7 +105,7 @@ public class DataSourceChooser extends JDialog {
      *
      */
     private void onCancel() throws OperationCancelledException {
-        dataSource = DataSource.NONE;
+        dataInfo.setDataType(DataSource.NONE);
         dispose();
     }
 
@@ -171,7 +162,6 @@ public class DataSourceChooser extends JDialog {
      *                   and configure related UI elements.
      */
     private void configureDataType(DataSource dataSource) {
-        this.dataSource = dataSource;
         comboBox_dataType.removeAllItems();
         button_submit.setEnabled(false);
         switch(dataSource){
@@ -220,23 +210,12 @@ public class DataSourceChooser extends JDialog {
      */
     private void setDataType(Object dataType) {
         switch(dataType){
-            case SqlDialect.NONE, FileType.NONE, PhpType.NONE:
-            case null:
-                button_submit.setEnabled(false);
-                return;
-            case FileType ignore:
-                this.dataType = dataType;
-                button_submit.setEnabled(true);
-                break;
-            case SqlDialect ignore:
-                this.dataType = dataType;
-                button_submit.setEnabled(true);
-                break;
-            case PhpType ignore:
-                this.dataType = dataType;
-                button_submit.setEnabled(true);
-                break;
-            default:
+            case SqlDialect.NONE, FileType.NONE, PhpType.NONE -> button_submit.setEnabled(false);
+            case null -> button_submit.setEnabled(false);
+            case FileType ignore -> button_submit.setEnabled(true);
+            case SqlDialect ignore -> button_submit.setEnabled(true);
+            case PhpType ignore -> button_submit.setEnabled(true);
+            default -> throw new IllegalStateException("Unexpected value: " + dataType);
         }
     }
 }

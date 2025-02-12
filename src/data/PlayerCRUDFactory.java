@@ -5,7 +5,7 @@ import data.file.FileType;
 import data.http.PhpType;
 import exceptions.DatabaseException;
 import exceptions.OperationException;
-import model.DatabaseInfo;
+import model.DataInfo;
 
 import java.util.HashMap;
 
@@ -24,10 +24,18 @@ public class PlayerCRUDFactory {
 
     private PlayerCRUDFactory() {}
 
+    public PlayerCRUD<DataInfo> getCRUD(DataInfo dataInfo) {
+        return switch(dataInfo.getDataType()){
+            case FileType ignore -> getCRUD((FileType) dataInfo.getDataType());
+            case PhpType ignore -> getCRUD((PhpType) dataInfo.getDataType());
+            case DataSource ignore -> getCRUD((DataSource) dataInfo.getDataType());
+            default -> throw new IllegalArgumentException("Unsupported data type: " + dataInfo.getDataType());
+        };
+    }
 
     @SuppressWarnings("unchecked")
-    public PlayerCRUD<DatabaseInfo> getCRUD(DataSource dataSource){
-        return (PlayerCRUD<DatabaseInfo>) playerCRUDHashMap.computeIfAbsent(dataSource, _->{
+    private PlayerCRUD<DataInfo> getCRUD(DataSource dataSource){
+        return (PlayerCRUD<DataInfo>) playerCRUDHashMap.computeIfAbsent(dataSource, _->{
             try {
                 String classPackagePath = "data.database.%s".formatted(getProperty(switch (dataSource){
                     case DATABASE -> "playerDatabaseCRUD";
@@ -38,7 +46,7 @@ public class PlayerCRUDFactory {
                     default -> throw new DatabaseException("Unknown database type: " + dataSource);
                 }));
                 Class<?> tempClass = Class.forName(classPackagePath);
-                return (PlayerCRUD<DatabaseInfo>) tempClass.getDeclaredConstructor().newInstance();
+                return (PlayerCRUD<DataInfo>) tempClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 throw new OperationException("PlayerCRUD could not be instantiated");
             }
@@ -46,12 +54,12 @@ public class PlayerCRUDFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public PlayerCRUD<PhpType> getCRUD(){
-        return (PlayerCRUD<PhpType>) playerCRUDHashMap.computeIfAbsent(DataSource.PHP, _->{
+    private PlayerCRUD<DataInfo> getCRUD(PhpType phpType){
+        return (PlayerCRUD<DataInfo>) playerCRUDHashMap.computeIfAbsent(DataSource.PHP, _->{
             try {
                 String classPackagePath = "data.http.%s".formatted(getProperty("playerPhpCRUD"));
                 Class<?> tempClass = Class.forName(classPackagePath);
-                return (PlayerCRUD<PhpType>) tempClass.getDeclaredConstructor().newInstance();
+                return (PlayerCRUD<DataInfo>) tempClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 throw new OperationException("PlayerCRUD could not be instantiated");
             }
@@ -59,8 +67,8 @@ public class PlayerCRUDFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public PlayerCRUD<String> getCRUD(FileType fileType){
-        return (PlayerCRUD<String>) playerCRUDHashMap.computeIfAbsent(fileType, _->{
+    private PlayerCRUD<DataInfo> getCRUD(FileType fileType){
+        return (PlayerCRUD<DataInfo>) playerCRUDHashMap.computeIfAbsent(fileType, _->{
             try {
                 String classPackagePath = "data.file.%s".formatted(getProperty(switch (fileType){
                     case TXT -> "playerTxtCRUD";
@@ -69,7 +77,7 @@ public class PlayerCRUDFactory {
                     default -> throw new DatabaseException("Unknown file type: " + fileType);
                 }));
                 Class<?> tempClass = Class.forName(classPackagePath);
-                return (PlayerCRUD<String>) tempClass.getDeclaredConstructor().newInstance();
+                return (PlayerCRUD<DataInfo>) tempClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 throw new OperationException("PlayerCRUD could not be instantiated");
             }

@@ -5,7 +5,7 @@ import Interface.PlayerCRUD;
 import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.DatabaseException;
-import model.DatabaseInfo;
+import model.DataInfo;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,8 +20,8 @@ import static main.principal.getProperty;
 /**
  * @author SIN
  */
-public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
-    DatabaseInfo databaseInfo;
+public class HibernatePlayerCRUD implements PlayerCRUD<DataInfo> {
+    DataInfo dataInfo;
     private SessionFactory sessionFactory;
     private final Configuration configuration = new Configuration();
 
@@ -33,7 +33,7 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      * Logs the connection activity and throws a {@code DatabaseException} if there is an error during
      * the connection setup.
      *
-     * @param databaseInfo the information required to establish the Hibernate connection,
+     * @param dataInfo the information required to establish the Hibernate connection,
      *                     including the SQL dialect, database URL, port, database name,
      *                     username, and password.
      * @return {@code true} if the Hibernate session is successfully opened;
@@ -42,26 +42,26 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      *                           invalid credentials, or exceptions during session factory creation.
      */
     @Override
-    public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) throws DatabaseException {
+    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
         URL resource = getClass().getResource(getProperty("hibernateConfig"));
         configuration.configure(resource);
-        switch (databaseInfo.getDialect()){
+        switch (dataInfo.getDialect()){
             case MYSQL:
                 setURL("%s:%s/%s".formatted(
-                        databaseInfo.getUrl(),
-                        databaseInfo.getPort(),
-                        databaseInfo.getDatabase()));
-                setUser(databaseInfo.getUser());
-                setPassword(databaseInfo.getPassword());
+                        dataInfo.getUrl(),
+                        dataInfo.getPort(),
+                        dataInfo.getDatabase()));
+                setUser(dataInfo.getUser());
+                setPassword(dataInfo.getPassword());
                 break;
             case SQLITE:
-                setURL(databaseInfo.getUrl());
+                setURL(dataInfo.getUrl());
                 break;
         }
         try {
             sessionFactory = configuration.buildSessionFactory();
             if(sessionFactory != null){
-                this.databaseInfo = databaseInfo;
+                this.dataInfo = dataInfo;
                 return this;
             }else{
                 throw new DatabaseException("SessionFactory is null");
@@ -91,9 +91,9 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <R,U> PlayerCRUD<DatabaseInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap){
+    public <R,U> PlayerCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap){
         try (Session session = sessionFactory.openSession()) {
-            List<VerifiedEntity> list = session.createQuery(databaseInfo.getQueryRead(), VerifiedEntity.class).getResultList();
+            List<VerifiedEntity> list = session.createQuery(dataInfo.getQueryRead(), VerifiedEntity.class).getResultList();
             parser.parse((R)list, DataOperation.READ, dataMap);
         }catch (Exception e){
             throw new DatabaseException(e.getMessage());
@@ -103,7 +103,7 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DatabaseInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();

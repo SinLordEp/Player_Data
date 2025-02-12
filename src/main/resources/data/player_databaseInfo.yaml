@@ -14,6 +14,7 @@ SQLITE:
   text_url: "jdbc:sqlite:person.db"
 OBJECTDB:
   text_url: "./src/main/resources/data/player_data.odb"
+  text_database: "/Player"
 BASEX:
   text_url: "src/main/resources/import/player_xml.xml"
   text_database: "Player"
@@ -21,3 +22,4 @@ MONGO:
   text_url: "localhost"
   text_port: "27017"
   text_database: "person"
+  text_table: "player"

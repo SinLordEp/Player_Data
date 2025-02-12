@@ -2,7 +2,7 @@ package GUI;
 
 import GUI.Player.PlayerText;
 import Interface.CallBack;
-import model.DatabaseInfo;
+import model.DataInfo;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -33,18 +33,18 @@ public class DatabaseLogin extends JDialog {
     private JPasswordField passwordField_pwd;
     private JPanel panel_info;
     private JPanel panel_button;
-    private final DatabaseInfo databaseInfo;
+    private final DataInfo dataInfo;
 
     /**
      * Creates a new {@code DatabaseLogin} dialog for user interaction to collect database login
      * information and provides callbacks for submission or cancellation.
      *
-     * @param databaseInfo an instance of {@code DatabaseInfo} containing initial database configuration details.
+     * @param dataInfo an instance of {@code DatabaseInfo} containing initial database configuration details.
      * @param callBack a {@code CallBack<DatabaseInfo>} implementation used for handling subsequent
      *                 actions upon submission or cancellation, invoking {@code onSubmit(T object)} or {@code onCancel()}.
      */
-    public DatabaseLogin(DatabaseInfo databaseInfo, CallBack<DatabaseInfo> callBack) {
-        this.databaseInfo = databaseInfo;
+    public DatabaseLogin(DataInfo dataInfo, CallBack<DataInfo> callBack) {
+        this.dataInfo = dataInfo;
         setTitle(PlayerText.getDialog().getText("db_login_title"));
         UiUtils.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
         configureTextFieldText();
@@ -76,28 +76,28 @@ public class DatabaseLogin extends JDialog {
      * @param callBack a {@code CallBack<DatabaseInfo>} implementation to handle the submitted
      *                 database login information or perform actions based on the user's input.
      */
-    private void onOK(CallBack<DatabaseInfo> callBack) {
+    private void onOK(CallBack<DataInfo> callBack) {
         dispose();
         if(hasBlank()){
             PlayerText.getDialog().popup("db_field_empty");
             return;
         }
-        databaseInfo.setUrl(text_url.getText());
+        dataInfo.setUrl(text_url.getText());
         if(text_port.isVisible()){
-            databaseInfo.setPort(text_port.getText());
+            dataInfo.setPort(text_port.getText());
         }
         if(text_database.isVisible()){
-            databaseInfo.setDatabase(text_database.getText());
+            dataInfo.setDatabase(text_database.getText());
         }
         if(text_user.isVisible()){
-            databaseInfo.setUser(text_user.getText());
+            dataInfo.setUser(text_user.getText());
         }
         if(passwordField_pwd.isVisible()){
             String pwd = new String(this.passwordField_pwd.getPassword());
-            databaseInfo.setPassword(pwd);
+            dataInfo.setPassword(pwd);
         }
         if(callBack != null){
-            callBack.onSubmit(databaseInfo);
+            callBack.onSubmit(dataInfo);
         }
     }
 
@@ -126,24 +126,24 @@ public class DatabaseLogin extends JDialog {
      * while keeping other fields hidden or unspecified.
      */
     private void configureTextFieldText(){
-        text_url.setText(databaseInfo.getUrl());
-        if(databaseInfo.getPort() != null){
-            text_port.setText(databaseInfo.getPort());
+        text_url.setText(dataInfo.getUrl());
+        if(dataInfo.getPort() != null){
+            text_port.setText(dataInfo.getPort());
             text_port.setVisible(true);
             label_port.setVisible(true);
         }
-        if(databaseInfo.getDatabase() != null){
-            text_database.setText(databaseInfo.getDatabase());
+        if(dataInfo.getDatabase() != null){
+            text_database.setText(dataInfo.getDatabase());
             text_database.setVisible(true);
             label_database.setVisible(true);
         }
-        if(databaseInfo.getUser() != null){
-            text_user.setText(databaseInfo.getUser());
+        if(dataInfo.getUser() != null){
+            text_user.setText(dataInfo.getUser());
             text_user.setVisible(true);
             label_user.setVisible(true);
         }
-        if(databaseInfo.getPassword() != null){
-            passwordField_pwd.setText(databaseInfo.getPassword());
+        if(dataInfo.getPassword() != null){
+            passwordField_pwd.setText(dataInfo.getPassword());
             passwordField_pwd.setVisible(true);
             label_pwd.setVisible(true);
         }

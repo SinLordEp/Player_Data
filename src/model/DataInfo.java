@@ -6,12 +6,25 @@ import data.database.SqlDialect;
 /**
  * @author SIN
  */
-public class DatabaseInfo {
+public class DataInfo {
+    private Object dataType;
     private DataSource dataSource;
     private SqlDialect dialect;
-    private String url, port, database, user, password, table, queryRead, queryADD, queryModify, queryDelete;
+    private String url, port, database, user, password, table, queryRead, queryADD, queryModify, queryDelete, className;
 
-    public DatabaseInfo() {
+    public DataInfo() {
+    }
+
+    public DataInfo(Object dataType) {
+        this.dataType = dataType;
+    }
+
+    public Object getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(Object dataType) {
+        this.dataType = dataType;
     }
 
     public DataSource getDataSource() {
@@ -110,4 +123,11 @@ public class DatabaseInfo {
         this.queryDelete = queryDelete;
     }
 
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
 }

@@ -5,25 +5,25 @@ import Interface.PlayerCRUD;
 import Interface.VerifiedEntity;
 import data.database.DataBasePlayerCRUD;
 import data.database.SqlDialect;
-import data.http.PhpType;
+import data.file.FileType;
 import exceptions.*;
-import model.DatabaseInfo;
+import model.DataInfo;
 import model.Player;
 import model.Region;
 import model.Server;
+import org.bson.Document;
 import org.hibernate.Session;
 import org.yaml.snakeyaml.Yaml;
 
+import javax.persistence.EntityManager;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static main.principal.getProperty;
 
@@ -85,29 +85,18 @@ public class PlayerDAO extends GeneralDAO {
      *                           configuration or connecting to the database.
      */
     public void initializeRegionServer(){
-        DatabaseInfo info = PlayerExceptionHandler.getInstance().handle(() -> getDefaultDatabaseInfo(SqlDialect.SQLITE),
+        DataInfo regionServerInfo = new DataInfo();
+        dataInfo.setDataType(DataSource.DATABASE);
+        dataInfo.setDialect(SqlDialect.SQLITE);
+        PlayerExceptionHandler.getInstance().handle(() -> getDefaultDatabaseInfo(regionServerInfo),
                 "PlayerDAO-getDefaultDatabaseInfo()", "default_database");
-        info.setDataSource(DataSource.DATABASE);
-        region_server_map = PlayerExceptionHandler.getInstance().handle(() -> DataBasePlayerCRUD.readRegionServer(info),
+        region_server_map = PlayerExceptionHandler.getInstance().handle(() -> DataBasePlayerCRUD.readRegionServer(regionServerInfo),
                 "PlayerDAO-initializeRegionServer()", "region_server");
     }
 
-    /**
-     * Retrieves the default database information based on the provided SQL dialect.
-     * This method reads the database configuration from a YAML file and populates
-     * a {@code DatabaseInfo} object with the necessary details such as URL, port,
-     * database name, user, and password. The information changes dynamically based
-     * on the specified SQL dialect (e.g., MySQL or SQLite).
-     * Throws an exception if the configuration cannot be loaded or if it's missing.
-     *
-     * @param dialect the {@link SqlDialect} specifying the database type (e.g., MYSQL, SQLITE)
-     * @return a {@link DatabaseInfo} object populated with database connection details
-     * @throws ConfigErrorException if an error occurs while reading or loading the configuration
-     */
     @SuppressWarnings("unchecked")
-    public DatabaseInfo getDefaultDatabaseInfo(SqlDialect dialect, DataSource... dataSource) throws ConfigErrorException, IOException {
-        DatabaseInfo databaseInfo = new DatabaseInfo();
-        databaseInfo.setDialect(dialect);
+    public DataInfo getDefaultDatabaseInfo(DataInfo dataInfo) throws ConfigErrorException, IOException {
+        dataInfo.setDialect(dataInfo.getDialect());
         HashMap<String, Object> default_info = null;
         URL resource = getClass().getResource(getProperty("defaultPlayerSQL"));
         if (resource != null) {
@@ -119,40 +108,40 @@ public class PlayerDAO extends GeneralDAO {
         if(default_info == null){
             throw new ConfigErrorException("Default database info is null");
         }
-        switch (dialect) {
+        switch (dataInfo.getDialect()) {
             case MYSQL:
                 HashMap<String,Object> mysql_info = (HashMap<String, Object>) default_info.get("MYSQL");
-                databaseInfo.setUrl((String) mysql_info.get("text_url"));
-                databaseInfo.setPort((String) mysql_info.get("text_port"));
-                databaseInfo.setDatabase((String) mysql_info.get("text_database"));
-                databaseInfo.setUser((String) mysql_info.get("text_user"));
-                databaseInfo.setPassword((String) mysql_info.get("text_pwd"));
-                databaseInfo.setTable((String) mysql_info.get("text_table"));
-                databaseInfo.setQueryRead((String) mysql_info.get("text_query_read"));
-                databaseInfo.setQueryADD((String) mysql_info.get("text_query_add"));
-                databaseInfo.setQueryModify((String) mysql_info.get("text_query_modify"));
-                databaseInfo.setQueryDelete((String) mysql_info.get("text_query_delete"));
+                dataInfo.setUrl((String) mysql_info.get("text_url"));
+                dataInfo.setPort((String) mysql_info.get("text_port"));
+                dataInfo.setDatabase((String) mysql_info.get("text_database"));
+                dataInfo.setUser((String) mysql_info.get("text_user"));
+                dataInfo.setPassword((String) mysql_info.get("text_pwd"));
+                dataInfo.setTable((String) mysql_info.get("text_table"));
+                dataInfo.setQueryRead((String) mysql_info.get("text_query_read"));
+                dataInfo.setQueryADD((String) mysql_info.get("text_query_add"));
+                dataInfo.setQueryModify((String) mysql_info.get("text_query_modify"));
+                dataInfo.setQueryDelete((String) mysql_info.get("text_query_delete"));
                 break;
             case SQLITE:
                 HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
-                databaseInfo.setUrl((String) sqlite_info.get("text_url"));
+                dataInfo.setUrl((String) sqlite_info.get("text_url"));
                 break;
-            case NONE:
-                switch(dataSource[0]){
+            case null:
+                switch((DataSource)dataInfo.getDataType()){
                     case OBJECTDB:
                         HashMap<String,Object> objectDB_info = (HashMap<String, Object>) default_info.get("OBJECTDB");
-                        databaseInfo.setUrl((String) objectDB_info.get("text_url"));
+                        dataInfo.setUrl((String) objectDB_info.get("text_url"));
                         break;
                     case BASEX:
                         HashMap<String,Object> baseX_info = (HashMap<String, Object>) default_info.get("BASEX");
-                        databaseInfo.setUrl((String) baseX_info.get("text_url"));
-                        databaseInfo.setDatabase((String) baseX_info.get("text_database"));
+                        dataInfo.setUrl((String) baseX_info.get("text_url"));
+                        dataInfo.setDatabase((String) baseX_info.get("text_database"));
                         break;
                     case MONGO:
                         HashMap<String,Object> mongo_info = (HashMap<String, Object>) default_info.get("MONGO");
-                        databaseInfo.setUrl((String) mongo_info.get("text_url"));
-                        databaseInfo.setPort((String) mongo_info.get("text_port"));
-                        databaseInfo.setDatabase((String) mongo_info.get("text_database"));
+                        dataInfo.setUrl((String) mongo_info.get("text_url"));
+                        dataInfo.setPort((String) mongo_info.get("text_port"));
+                        dataInfo.setDatabase((String) mongo_info.get("text_database"));
                         break;
                     default: throw new OperationException("Unknown database type");
                 }
@@ -160,11 +149,7 @@ public class PlayerDAO extends GeneralDAO {
             default:
                 throw new OperationException("Unknown SQL dialect");
         }
-        if(dataSource.length > 0){
-            databaseInfo.setDataSource(dataSource[0]);
-            this.databaseInfo = databaseInfo;
-        }
-        return databaseInfo;
+        return dataInfo;
     }
 
     /**
@@ -204,32 +189,39 @@ public class PlayerDAO extends GeneralDAO {
                     break;
                 case FILE:
                     PlayerCRUDFactory.getInstance()
-                            .getCRUD(fileType)
-                            .prepare(file_path)
-                            .read(this::parse, , player_map)
+                            .getCRUD(dataInfo)
+                            .prepare(dataInfo)
+                            .read(this::parseArrayListText, DataOperation.READ, player_map)
                             .release();
                     break;
                 case DATABASE:
                     PlayerCRUDFactory.getInstance()
-                            .getCRUD(DataSource.DATABASE)
-                            .prepare(databaseInfo)
+                            .getCRUD(dataInfo)
+                            .prepare(dataInfo)
                             .read(this::parseResultSet, DataOperation.READ, player_map)
                             .release();
                     break;
                 case HIBERNATE, OBJECTDB:
                     PlayerCRUDFactory.getInstance()
-                            .getCRUD(dataSource)
-                            .prepare(databaseInfo)
+                            .getCRUD(dataInfo)
+                            .prepare(dataInfo)
                             .read(this::parseList, DataOperation.READ, player_map)
                             .release();
                     break;
-                case BASEX, MONGO:
+                case MONGO:
+                    PlayerCRUDFactory.getInstance()
+                            .getCRUD(dataInfo)
+                            .prepare(dataInfo)
+                            .read(this::parseDocument, DataOperation.READ, player_map)
+                            .release();
+                    break;
+                case BASEX:
 
                 case PHP:
                     PlayerCRUDFactory.getInstance()
-                            .getCRUD()
-                            .prepare(phpType)
-                            .read(this::parse, , player_map)
+                            .getCRUD(dataInfo)
+                            .prepare(dataInfo)
+                            .read(this::parseList, DataOperation.READ, player_map)
                             .release();
                     break;
                 default:
@@ -281,14 +273,13 @@ public class PlayerDAO extends GeneralDAO {
     @Override
     public void save(){
         try{
-            switch (dataSource){
-                case FILE:
+            switch (dataInfo.getDataType()){
+                case FileType ignore:
                     PlayerCRUDFactory.getInstance()
-                            .getCRUD(fileType)
-                            .prepare(file_path)
+                            .getCRUD(dataInfo)
+                            .prepare(dataInfo)
+                            .update(this::playerToText, DataOperation.MODIFY, player_map)
                             .release();
-                    break;
-                case DATABASE, HIBERNATE, OBJECTDB, MONGO, PHP, BASEX:
                     break;
                 default:
                     throw new OperationException("Save: Unknown data source: " + dataSource);
@@ -319,19 +310,33 @@ public class PlayerDAO extends GeneralDAO {
         switch(dataSource){
             case DATABASE:
                 PlayerCRUDFactory.getInstance()
-                        .getCRUD(dataSource)
-                        .prepare(databaseInfo)
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
                         .update(this::playerToUpdateStatement, DataOperation.ADD, player)
                         .release();
                 break;
             case HIBERNATE:
                 PlayerCRUDFactory.getInstance()
-                        .getCRUD(DataSource.HIBERNATE)
-                        .prepare(databaseInfo)
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
                         .update(this::playerToUpdateSession, DataOperation.ADD, player)
                         .release();
                 break;
-            case PHP, OBJECTDB, BASEX, MONGO:
+            case OBJECTDB:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
+                        .update(this::playerToUpdateEntityManager, DataOperation.ADD, player)
+                        .release();
+                break;
+            case MONGO:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
+                        .update(this::playerToUpdateCollection, DataOperation.ADD, player)
+                        .release();
+                break;
+            case PHP, BASEX:
         }
         player_map.put(player.getID(), player);
         isDataChanged = true;
@@ -349,19 +354,33 @@ public class PlayerDAO extends GeneralDAO {
         switch(dataSource){
             case DATABASE:
                 PlayerCRUDFactory.getInstance()
-                        .getCRUD(dataSource)
-                        .prepare(databaseInfo)
-                        .update(this::playerToModifyStatement, DataOperation.MODIFY, player)
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
+                        .update(this::playerToUpdateStatement, DataOperation.MODIFY, player)
                         .release();
                 break;
             case HIBERNATE:
                 PlayerCRUDFactory.getInstance()
-                        .getCRUD(dataSource)
-                        .prepare(databaseInfo)
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
                         .update(this::playerToUpdateSession, DataOperation.MODIFY, player)
                         .release();
                 break;
-            case PHP, OBJECTDB, MONGO:
+            case OBJECTDB:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
+                        .update(this::playerToUpdateEntityManager, DataOperation.MODIFY, player)
+                        .release();
+                break;
+            case MONGO:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
+                        .update(this::playerToUpdateCollection, DataOperation.MODIFY, player)
+                        .release();
+                break;
+            case PHP:
                 //Always trigger case FILE
             case FILE, BASEX:
                 player_map.put(player.getID(), player);
@@ -386,17 +405,31 @@ public class PlayerDAO extends GeneralDAO {
         switch(dataSource){
             case DATABASE:
                 PlayerCRUDFactory.getInstance()
-                        .getCRUD(dataSource)
-                        .prepare(databaseInfo)
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
                         .update(this::playerToUpdateStatement, DataOperation.DELETE, player)
                         .release();
                 break;
             case HIBERNATE:
                 PlayerCRUDFactory.getInstance()
-                        .getCRUD(DataSource.HIBERNATE)
-                        .prepare(databaseInfo)
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
                         .update(this::playerToUpdateSession, DataOperation.DELETE, player);
-            case PHP, OBJECTDB, MONGO:
+            case OBJECTDB:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
+                        .update(this::playerToUpdateEntityManager, DataOperation.DELETE, player)
+                        .release();
+                break;
+            case MONGO:
+                PlayerCRUDFactory.getInstance()
+                        .getCRUD(dataInfo)
+                        .prepare(dataInfo)
+                        .update(this::playerToUpdateCollection, DataOperation.DELETE, player)
+                        .release();
+                break;
+            case PHP:
                 //Always trigger case FILE
             case FILE, BASEX:
 
@@ -420,15 +453,17 @@ public class PlayerDAO extends GeneralDAO {
      * - Writes the player data to the target path using the {@code fileWriter.write()} method.
      * - Logs progress and success messages during the file export process.
      */
-    public void exportFile() {
-        String target_extension = getExtension(fileType);
+    public void exportFile(DataInfo targetDataInfo) {
+        String target_extension = getExtension((FileType) targetDataInfo.getDataType());
         String target_path = getPath();
         String target_name = PlayerText.getDialog().input("new_file_name");
         target_path += "/" + target_name + target_extension;
+        targetDataInfo.setUrl(target_path);
         try {
             PlayerCRUDFactory.getInstance()
-                    .getCRUD(fileType)
-                    .prepare(target_path);
+                    .getCRUD(targetDataInfo)
+                    .prepare(targetDataInfo);
+            //todo
         } catch (Exception e) {
             throw new FileManageException("Failed to export file with cause: " + e.getMessage());
         }
@@ -440,23 +475,20 @@ public class PlayerDAO extends GeneralDAO {
      *
      * @param exportDataBaseInfo the database info used for the export operation
      */
-    public void exportDB(DatabaseInfo exportDataBaseInfo) {
+    public void exportDB(DataInfo exportDataBaseInfo) {
         switch (exportDataBaseInfo.getDataSource()){
             case DATABASE -> exportDatabase(exportDataBaseInfo);
             case HIBERNATE -> exportHibernate(exportDataBaseInfo);
+            case OBJECTDB -> exportObjectDB(exportDataBaseInfo);
+            case MONGO -> exportMongo(exportDataBaseInfo);
         }
     }
 
-    /**
-     * Exports the given data type to PHP using the {@code playerPhp.export} method.
-     * This method logs an informational message before performing the export operation.
-     *
-     * @param phpType the data type that needs to be exported
-     */
-    public void exportPHP(PhpType phpType) {
+    public void exportPHP(DataInfo targetDataInfo) {
         PlayerCRUDFactory.getInstance()
-                .getCRUD()
-                .prepare(phpType);
+                .getCRUD(targetDataInfo)
+                .prepare(targetDataInfo);
+        //todo
     }
 
     public boolean isEmpty(){
@@ -590,15 +622,15 @@ public class PlayerDAO extends GeneralDAO {
         }
     }
 
-    private void exportDatabase(DatabaseInfo exportDataBaseInfo){
+    private void exportDatabase(DataInfo exportDataBaseInfo){
         TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
-        PlayerCRUD<DatabaseInfo> currentCRUD = PlayerCRUDFactory.getInstance()
-                .getCRUD(exportDataBaseInfo.getDataSource())
+        PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+                .getCRUD(exportDataBaseInfo)
                 .prepare(exportDataBaseInfo)
-                .read(this::parseResultSet, , target_player_map);
+                .read(this::parseResultSet, DataOperation.READ , target_player_map);
         for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
             if(!player_map.containsKey(entry.getKey())){
-                currentCRUD.update(this::playerToUpdateStatement, DataOperation.DELETE, entry.getValue());
+                currentCRUD.update(this::playerToUpdateStatement, DataOperation.DELETE, (Player) entry.getValue());
             }
         }
         for(Map.Entry<Integer, VerifiedEntity> entry: player_map.entrySet()){
@@ -626,10 +658,10 @@ public class PlayerDAO extends GeneralDAO {
         }
     }
 
-    private void exportHibernate(DatabaseInfo exportDataBaseInfo) {
+    private void exportHibernate(DataInfo exportDataBaseInfo) {
         TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
-        PlayerCRUD<DatabaseInfo> currentCRUD = PlayerCRUDFactory.getInstance()
-                .getCRUD(exportDataBaseInfo.getDataSource())
+        PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+                .getCRUD(exportDataBaseInfo)
                 .prepare(exportDataBaseInfo)
                 .read(this::parseList, DataOperation.READ, target_player_map);
         for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
@@ -647,7 +679,106 @@ public class PlayerDAO extends GeneralDAO {
         currentCRUD.release();
     }
 
-    private void playerToEntityManager(){
+    private void playerToUpdateEntityManager(EntityManager entityManager, DataOperation operation, Player player){
+        switch(operation){
+            case ADD -> entityManager.persist(player);
+            case MODIFY -> entityManager.merge(player);
+            case DELETE -> entityManager.remove(player);
+        }
+    }
 
+    private void exportObjectDB(DataInfo exportDataBaseInfo) {
+        TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
+        PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+                .getCRUD(exportDataBaseInfo)
+                .prepare(exportDataBaseInfo)
+                .read(this::parseList, DataOperation.READ, target_player_map);
+        for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
+            if(!player_map.containsKey(entry.getKey())){
+                currentCRUD.update(this::playerToUpdateEntityManager, DataOperation.DELETE, (Player)entry.getValue());
+            }
+        }
+        for(Map.Entry<Integer, VerifiedEntity> entry: player_map.entrySet()){
+            if(target_player_map.containsKey(entry.getKey())){
+                currentCRUD.update(this::playerToUpdateEntityManager, DataOperation.MODIFY, (Player)entry.getValue());
+            }else {
+                currentCRUD.update(this::playerToUpdateEntityManager, DataOperation.ADD, (Player)entry.getValue());
+            }
+        }
+        currentCRUD.release();
+    }
+
+    private void parseDocument(Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        Player player = new Player();
+        player.setID(document.getInteger("id"));
+        player.setName(document.getString("name"));
+        player.setRegion(new Region(document.getString("region")));
+        player.setServer(new Server(document.getString("server"), player.getRegion()));
+        dataMap.put(player.getID(), player);
+    }
+
+    private void playerToUpdateCollection(Document document, DataOperation operation, Player player){
+        switch(operation){
+            case ADD: document.put("id", player.getID());
+                document.put("name", player.getName());
+                document.put("region", player.getRegion().getName());
+                document.put("server", player.getServer().getName());
+                break;
+            case MODIFY: document.put("id", player.getID());
+                document.put("name", player.getName());
+                document.put("region", player.getRegion().getName());
+                document.put("server", player.getServer().getName());
+                break;
+            case DELETE: document.put("id", player.getID());
+                break;
+        }
+    }
+
+    private void exportMongo(DataInfo exportDataBaseInfo) {
+        TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
+        PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+                .getCRUD(exportDataBaseInfo)
+                .prepare(exportDataBaseInfo)
+                .read(this::parseDocument, DataOperation.READ, target_player_map);
+        for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
+            if(!player_map.containsKey(entry.getKey())){
+                currentCRUD.update(this::playerToUpdateCollection, DataOperation.DELETE, (Player)entry.getValue());
+            }
+        }
+        for(Map.Entry<Integer, VerifiedEntity> entry: player_map.entrySet()){
+            if(target_player_map.containsKey(entry.getKey())){
+                currentCRUD.update(this::playerToUpdateCollection, DataOperation.MODIFY, (Player)entry.getValue());
+            }else {
+                currentCRUD.update(this::playerToUpdateCollection, DataOperation.ADD, (Player)entry.getValue());
+            }
+        }
+        currentCRUD.release();
+    }
+
+    private void parseArrayListText(ArrayList<String> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        list.forEach(text -> {
+            String[] player_txt = text.split(";");
+            Player player = new Player();
+            player.setID(Integer.parseInt(player_txt[0]));
+            player.setRegion(new Region(player_txt[1]));
+            player.setServer(new Server(player_txt[2], player.getRegion()));
+            player.setName(player_txt[3]);
+            dataMap.put(player.getID(),player);
+        });
+    }
+
+    private void playerToText(BufferedWriter bufferedWriter, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        try {
+            for(VerifiedEntity entity : dataMap.values()){
+                Player player = (Player) entity;
+                bufferedWriter.write(player.getID() + ",");
+                bufferedWriter.write(player.getRegion() + ",");
+                bufferedWriter.write(player.getServer() + ",");
+                bufferedWriter.write(player.getName());
+                bufferedWriter.newLine();
+            }
+        } catch (IOException e) {
+            throw new FileManageException(e.getMessage());
+        }
     }
 }

@@ -2,7 +2,7 @@ package exceptions;
 
 import GUI.LogStage;
 import Interface.EventListener;
-import model.Player;
+import Interface.VerifiedEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ import java.util.TreeMap;
  */
 public class PlayerExceptionHandler {
     private static final PlayerExceptionHandler INSTANCE = new PlayerExceptionHandler();
-    private final List<EventListener<TreeMap<Integer, Player>>> listeners = new ArrayList<>();
+    private final List<EventListener<TreeMap<Integer, VerifiedEntity>>> listeners = new ArrayList<>();
     private static final Logger logger = LoggerFactory.getLogger(PlayerExceptionHandler.class);
 
     @FunctionalInterface
@@ -137,12 +137,12 @@ public class PlayerExceptionHandler {
         }
     }
 
-    public void addListener(EventListener<TreeMap<Integer, Player>> listener){
+    public void addListener(EventListener<TreeMap<Integer, VerifiedEntity>> listener){
         listeners.add(listener);
     }
 
     private void notifyLog(LogStage stage, String... message){
-        for(EventListener<TreeMap<Integer, Player>> listener : listeners){
+        for(EventListener<TreeMap<Integer, VerifiedEntity>> listener : listeners){
             listener.onLog(stage, message);
         }
     }

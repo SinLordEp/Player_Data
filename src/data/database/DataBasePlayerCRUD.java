@@ -5,7 +5,7 @@ import Interface.PlayerCRUD;
 import data.DataOperation;
 import exceptions.DatabaseException;
 import exceptions.OperationException;
-import model.DatabaseInfo;
+import model.DataInfo;
 import model.Region;
 import model.Server;
 
@@ -18,23 +18,23 @@ import java.util.Map;
 /**
  * @author SIN
  */
-public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
+public class DataBasePlayerCRUD implements PlayerCRUD<DataInfo> {
     private Connection connection = null;
-    private DatabaseInfo databaseInfo;
+    private DataInfo dataInfo;
     @Override
-    public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) throws DatabaseException {
+    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
         try {
-            switch (databaseInfo.getDialect()){
+            switch (dataInfo.getDialect()){
                 case MYSQL:
                     connection = DriverManager.getConnection("%s:%s/%s".formatted(
-                                    databaseInfo.getUrl(),
-                                    databaseInfo.getPort(),
-                                    databaseInfo.getDatabase()),
-                            databaseInfo.getUser(),
-                            databaseInfo.getPassword());
+                                    dataInfo.getUrl(),
+                                    dataInfo.getPort(),
+                                    dataInfo.getDatabase()),
+                            dataInfo.getUser(),
+                            dataInfo.getPassword());
                     break;
                 case SQLITE:
-                    connection = DriverManager.getConnection(databaseInfo.getUrl());
+                    connection = DriverManager.getConnection(dataInfo.getUrl());
                     break;
             }
             connection.setAutoCommit(false);
@@ -42,7 +42,7 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
             throw new DatabaseException(e.getMessage());
         }
         if(connection != null){
-            this.databaseInfo = databaseInfo;
+            this.dataInfo = dataInfo;
             return this;
         }else{
             throw new DatabaseException("Connection is null");
@@ -70,11 +70,11 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <R,U> PlayerCRUD<DatabaseInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap) {
+    public <R,U> PlayerCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap) {
         if(connection == null){
             throw new DatabaseException("Database is not connected");
         }
-        String query = "SELECT * FROM %s".formatted(databaseInfo.getTable());
+        String query = "SELECT * FROM %s".formatted(dataInfo.getTable());
         try(PreparedStatement statement = connection.prepareStatement(query)){
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
@@ -93,12 +93,12 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DatabaseInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         String query = switch (operation){
             case READ -> throw new OperationException("Read operation is not supported at update method");
-            case ADD -> databaseInfo.getQueryADD();
-            case MODIFY -> databaseInfo.getQueryModify();
-            case DELETE -> databaseInfo.getQueryDelete();
+            case ADD -> dataInfo.getQueryADD();
+            case MODIFY -> dataInfo.getQueryModify();
+            case DELETE -> dataInfo.getQueryDelete();
         };
         try(PreparedStatement statement = connection.prepareStatement(query)){
             parser.parse((R)statement, operation, object);
@@ -122,15 +122,15 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DatabaseInfo> {
      * @return a {@code HashMap<Region, Server[]>} where each {@code Region} is a key,
      *         mapped to an array of {@code Server} instances that belong to that region.
      */
-    public static HashMap<Region, Server[]> readRegionServer(DatabaseInfo databaseInfo) throws DatabaseException {
+    public static HashMap<Region, Server[]> readRegionServer(DataInfo dataInfo) throws DatabaseException {
         HashMap<Region, List<Server>> regionServerListMap = new HashMap<>();
         HashMap<Region, Server[]> regionServerMap = new HashMap<>();
         String query = "SELECT r.name_region AS region_name, s.name_server AS server_name " +
                 "FROM region r " +
                 "JOIN server s ON r.name_region = s.region";
-        try (Connection connection = DriverManager.getConnection(databaseInfo.getUrl(),
-                databaseInfo.getUser(),
-                databaseInfo.getPassword());
+        try (Connection connection = DriverManager.getConnection(dataInfo.getUrl(),
+                dataInfo.getUser(),
+                dataInfo.getPassword());
              PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
 

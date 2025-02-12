@@ -2,35 +2,27 @@ package data.database;
 
 import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
-import Interface.VerifiedEntity;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import data.DataOperation;
-import model.DatabaseInfo;
-import model.Player;
-import model.Region;
-import model.Server;
+import model.DataInfo;
 import org.bson.Document;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author SIN
  */
-public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
-    DatabaseInfo databaseInfo;
+public class MongoPlayerCRUD implements PlayerCRUD<DataInfo> {
+    DataInfo dataInfo;
     MongoClient mongoClient;
-    MongoCollection<Document> playerCollection;
+    MongoCollection<Document> collection;
     @Override
-    public PlayerCRUD<DatabaseInfo> prepare(DatabaseInfo databaseInfo) {
-        this.databaseInfo = databaseInfo;
-        mongoClient = new MongoClient(databaseInfo.getUrl(), Integer.parseInt(databaseInfo.getPort()));
-        MongoDatabase database = mongoClient.getDatabase(databaseInfo.getDatabase());
-        playerCollection = database.getCollection("player");
+    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+        mongoClient = new MongoClient(dataInfo.getUrl(), Integer.parseInt(dataInfo.getPort()));
+        MongoDatabase database = mongoClient.getDatabase(dataInfo.getDatabase());
+        collection = database.getCollection(dataInfo.getTable());
         return this;
     }
 
@@ -40,58 +32,28 @@ public class MongoPlayerCRUD implements PlayerCRUD<DatabaseInfo> {
     }
 
     @Override
-    public PlayerCRUD<DatabaseInfo> read(ParserCallBack<DatabaseInfo> data) {
-        try(MongoCursor<Document> cursor = playerCollection.find().iterator()){
+    @SuppressWarnings("unchecked")
+    public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+        try(MongoCursor<Document> cursor = collection.find().iterator()){
             while(cursor.hasNext()){
                 Document document = cursor.next();
-                Player player = new Player();
-                player.setID(document.getInteger("id"));
-                player.setName(document.getString("name"));
-                player.setRegion(new Region(document.getString("region")));
-                player.setServer(new Server(document.getString("server"), player.getRegion()));
-                player_map.put(player.getID(), player);
+                parser.parse((R)document, operation, dataMap);
             }
         }
         return this;
     }
 
     @Override
-    public PlayerCRUD<DatabaseInfo> export(ParserCallBack<R> parser, TreeMap<Integer, VerifiedEntity> dataMap) {
-        playerCollection.drop();
-        for(Player player : dataMap.values()){
-            Document document = new Document();
-            document.put("id", player.getID());
-            document.put("name", player.getName());
-            document.put("region", player.getRegion().getName());
-            document.put("server", player.getServer().getName());
-            playerCollection.insertOne(document);
+    @SuppressWarnings("unchecked")
+    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+        Document document = new Document();
+        parser.parse((R)document, operation, object);
+        switch(operation){
+            case ADD -> collection.insertOne(document);
+            case MODIFY -> collection.updateOne(new Document("id", document.get("id")), new Document("$set", document));
+            case DELETE -> collection.deleteOne(document);
         }
         return this;
     }
 
-    @Override
-    public PlayerCRUD<DatabaseInfo> update(HashMap<Player, DataOperation> changed_player_map) {
-        for(Map.Entry<Player, DataOperation> playerEntry : changed_player_map.entrySet()){
-            Document document = new Document();
-            Player player = playerEntry.getKey();
-            switch(playerEntry.getValue()){
-                case ADD: document.put("id", player.getID());
-                    document.put("name", player.getName());
-                    document.put("region", player.getRegion().getName());
-                    document.put("server", player.getServer().getName());
-                    playerCollection.insertOne(document);
-                    break;
-                case MODIFY: document.put("id", player.getID());
-                    document.put("name", player.getName());
-                    document.put("region", player.getRegion().getName());
-                    document.put("server", player.getServer().getName());
-                    playerCollection.updateOne(new Document("id",player.getID()), new Document("$set", document));
-                    break;
-                case DELETE: document.put("id", player.getID());
-                    playerCollection.deleteOne(document);
-                    break;
-            }
-        }
-        return this;
-    }
 }

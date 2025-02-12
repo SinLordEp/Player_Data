@@ -12,15 +12,17 @@ import Interface.VerifiedEntity;
 import data.DataSource;
 import data.GeneralDAO;
 import data.PlayerDAO;
-import data.database.SqlDialect;
 import data.file.FileType;
 import data.http.PhpType;
-import exceptions.*;
-import model.DatabaseInfo;
+import exceptions.OperationCancelledException;
+import exceptions.PlayerExceptionHandler;
+import model.DataInfo;
 import model.Player;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.TreeMap;
 
 /**
  * The PlayerControl class is responsible for managing the core functionalities of the Player UI,
@@ -100,38 +102,15 @@ public class PlayerControl implements GeneralControl {
      */
     public void createFile() {
         save();
-        new DataSourceChooser(DataSource.FILE, this::handleDataSourceForCreateFile);
+        new DataSourceChooser(new DataInfo(DataSource.FILE), this::handleDataSourceForCreateFile);
     }
 
-    /**
-     * Handles the processing of a data source for creating a new file.
-     * This method is responsible for building the file path, creating a new file,
-     * associating the specified data source with the file, and notifying listeners
-     * of data changes or errors.
-     * <p>
-     * The method performs the following steps:
-     * <p>
-     * - Builds a new file path using the specified {@code dataType}.
-     * <p>
-     * - Creates a new file at the specified path.
-     * <p>
-     * - Sets the provided data source for the file.
-     * <p>
-     * - Notifies listeners of operations, including creating the file
-     *   and data source updates. If an operation fails, it logs the error
-     *   and notifies listeners about the failure.
-     * <p>
-     * - Clears the internal data after processing.
-     *
-     * @param dataSource The data source that needs to be handled and associated with the newly created file.
-     * @param dataType   The type of the file to be created. This is expected to be of type {@code FileType}.
-     */
-    private void handleDataSourceForCreateFile(DataSource dataSource, Object dataType){
+    private void handleDataSourceForCreateFile(DataInfo dataInfo) {
         PlayerExceptionHandler.getInstance().handle(() -> {
-            playerDA.setFilePath(GeneralDAO.newPathBuilder((FileType) dataType));
+            playerDA.setFilePath(GeneralDAO.newPathBuilder((FileType) dataInfo.getDataType()));
             playerDA.createNewFile();
         }, "PlayerControl-handleDataSourceForCreateFile()", "createFile");
-        playerDA.setDataSource(dataSource);
+        playerDA.setDataInfo(dataInfo);
         notifyEvent("dataSource_set",null);
         playerDA.clearData();
         notifyEvent("data_changed", playerDA.getPlayerMap());
@@ -161,43 +140,17 @@ public class PlayerControl implements GeneralControl {
      */
     public void importData() {
         save();
-        new DataSourceChooser(null, this::handleDataSourceForImportData);
+        new DataSourceChooser(new DataInfo(), this::handleDataSourceForImportData);
     }
 
-    /**
-     * Handles the data source and data type for importing data into the system.
-     * <p>
-     * This callback method performs the following operations:
-     * <p>
-     * 1. Configures the specified {@code DataSource} in the current system.
-     * <p>
-     * 2. Based on the {@code dataType} provided, determines the type of import process to execute:
-     *    - Invokes {@code importFile(FileType)} if the {@code dataType} is a {@code FileType}.
-     *    - Invokes {@code importDB(DataSource, SqlDialect)} if the {@code dataType} is a {@code SqlDialect}.
-     *    - Invokes {@code importPHP(DataType)} if the {@code dataType} is a {@code DataType}.
-     * <p>
-     * 3. Notifies listeners about the setting of the data source.
-     * <p>
-     * 4. Handles any unexpected {@code dataType} by throwing an {@code IllegalStateException}.
-     * <p>
-     * This method encapsulates the logic for handling different types of imports dynamically
-     * based on the data source and the associated data type context.
-     *
-     * @param dataSource The selected data source from which the data will be imported.
-     *                   This can be one of {@code NONE}, {@code FILE}, {@code DATABASE},
-     *                   {@code HIBERNATE}, or {@code PHP}.
-     * @param dataType   The type of data to be processed during the import operation.
-     *                   This defines the specific logic for handling the provided data.
-     */
-    private void handleDataSourceForImportData(DataSource dataSource, Object dataType){
-        playerDA.setDataSource(dataSource);
-        notifyEvent("dataSource_set",null);
-        switch(dataSource){
-            case FILE -> importFile((FileType) dataType);
-            case DATABASE, HIBERNATE -> importDB(dataSource, (SqlDialect) dataType);
-            case PHP -> importPHP((PhpType) dataType);
-            case OBJECTDB, BASEX, MONGO -> importDB(dataSource, SqlDialect.NONE);
-            default -> throw new IllegalStateException("Unexpected Data Source: " + dataType);
+    private void handleDataSourceForImportData(DataInfo dataInfo){
+        playerDA.setDataInfo(dataInfo);
+        notifyEvent("dataSource_set",null);//todo
+        switch(dataInfo.getDataType()){
+            case FileType ignore -> importFile((FileType) dataInfo.getDataType());
+            case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> importDB(dataInfo);
+            case PhpType ignore -> importPHP(dataInfo);
+            default -> throw new IllegalStateException("Unexpected Data Source: " + dataInfo.getDataType());
         }
     }
 
@@ -227,26 +180,8 @@ public class PlayerControl implements GeneralControl {
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
-    /**
-     * Initiates the process to import data from a database into the system.
-     * <p>
-     * This method performs the following steps:
-     * 1. Logs the start of the database import process.
-     * 2. Retrieves default database information for the specified SQL dialect.
-     * 3. Configures the database information with the provided data source.
-     * 4. Establishes a database connection by invoking the {@code DatabaseLogin} class
-     *    and handles the logic through the {@code handleDatabaseLoginForImport} callback method.
-     * 5. Catches configuration-related exceptions and logs the error, notifying listeners
-     *    of the failure event.
-     * 6. Logs the completion of the database import process.
-     *
-     * @param dataSource The source of the data to be imported (e.g., DATABASE, FILE, PHP, etc.).
-     *                   This defines the entry point for the data being handled.
-     * @param sqlDialect The SQL dialect being used for the database import, such as MYSQL or SQLITE.
-     *                   This specifies the type of database operation to configure.
-     */
-    private void importDB(DataSource dataSource, SqlDialect sqlDialect)  {
-        PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(sqlDialect, dataSource), this::handleDatabaseLoginForImport),
+    private void importDB(DataInfo dataInfo)  {
+        PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::handleDatabaseLoginForImport),
                 "PlayerControl-importDB()", "default_database");
     }
 
@@ -261,29 +196,18 @@ public class PlayerControl implements GeneralControl {
      * <p>This is typically a callback method used to manage the database login and import data
      * workflow for a specific operation.
      *
-     * @param databaseInfo An object containing the necessary information to establish a
+     * @param dataInfo An object containing the necessary information to establish a
      *                     connection to the database (e.g., credentials, database URL, etc.).
      */
-    private void handleDatabaseLoginForImport(DatabaseInfo databaseInfo){
+    private void handleDatabaseLoginForImport(DataInfo dataInfo){
         PlayerExceptionHandler.getInstance().handle(()-> playerDA.read(),
-                "PlayerControl-handleDatabaseLoginForImport()", "importDB", "\n>>>" + databaseInfo.getUrl());
+                "PlayerControl-handleDatabaseLoginForImport()", "importDB", "\n>>>" + dataInfo.getUrl());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
-    /**
-     * Handles the import process for PHP data. This method processes the given data type
-     * by setting it, reading required information, and notifying listeners about changes
-     * or errors accordingly. It logs the process and handles exceptions that might
-     * occur during the PHP data import operation.
-     *
-     * @param phpType The data type to be set and processed during the PHP import operation.
-     *                 This parameter is applied to fetch and manage data through the
-     *                 provided data access layer.
-     */
-    private void importPHP(PhpType phpType) {
-        playerDA.setPhpType(phpType);
+    private void importPHP(DataInfo dataInfo) {
         PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
-                "PlayerControl-importPHP()" , "importPHP", "\n>>>" + phpType);
+                "PlayerControl-importPHP()" , "importPHP", "\n>>>" + dataInfo.getDataType());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
@@ -351,7 +275,7 @@ public class PlayerControl implements GeneralControl {
      * @param selected_player_id the unique identifier of the player to be deleted
      */
     public void delete(int selected_player_id) {
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.delete(selected_player_id),
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.delete(playerDA.getPlayer(selected_player_id)),
                 "PlayerControl-delete()", "deletePlayer", ">>>ID: " + selected_player_id);
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
@@ -376,59 +300,20 @@ public class PlayerControl implements GeneralControl {
             notifyLog(LogStage.INFO, "player_map_null");
             return;
         }
-        new DataSourceChooser(null, this::handleDataSourceForExport);
+        new DataSourceChooser(new DataInfo(), this::handleDataSourceForExport);
     }
 
-    /**
-     * Handles the specified data source for exporting data. This method processes the given
-     * data source type and delegates the export operation to the appropriate handler based
-     * on the provided data type.
-     *
-     * @param dataSource the type of data source to be processed for export. Supported values
-     *                   include FILE, DATABASE, HIBERNATE, and PHP.
-     * @param dataType   the specific data type associated with the data source. The type of
-     *                   this parameter varies depending on the data source. For example:
-     *                   <p>
-     *                   - For FILE, dataType is an instance of FileType.<br>
-     *                   - For DATABASE and HIBERNATE, dataType is an instance of SqlDialect.<br>
-     *                   - For PHP, dataType is an instance of DataType.
-     */
-    private void handleDataSourceForExport(DataSource dataSource, Object dataType){
-        switch (dataSource){
-            case FILE -> exportFile((FileType) dataType);
-            case DATABASE, HIBERNATE -> exportDB(dataSource, (SqlDialect) dataType);
-            case PHP -> exportPHP((PhpType) dataType);
-            case OBJECTDB, BASEX, MONGO -> exportDB(dataSource, SqlDialect.NONE);
-            default -> throw new IllegalArgumentException("Unknown data source: " + dataSource);
+    private void handleDataSourceForExport(DataInfo targetDataInfo){
+        switch (targetDataInfo.getDataType()){
+            case FileType ignore -> PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportFile(targetDataInfo),
+                    "PlayerControl-exportFile()", "exportFile");
+            case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> PlayerExceptionHandler.getInstance()
+                    .handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(targetDataInfo), this::handleDatabaseLoginForExport),
+                    "PlayerControl-exportDB()", "default_database");
+            case DataSource.PHP -> PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportPHP(targetDataInfo),
+                    "PlayerControl-exportPHP()", "exportPHP");
+            default -> throw new IllegalArgumentException("Unknown data source: " + targetDataInfo.getDataType());
         }
-    }
-
-    /**
-     * Exports data to a file based on the specified file type.
-     * The method sets the file type for the player data access object and attempts to perform
-     * the export operation. Any relevant listeners are notified based on the outcome of the export.
-     *
-     * @param fileType The type of file to which the data will be exported.
-     *                 This determines the format and structure of the exported file.
-     *                 Must not be null, and should represent a valid file type.
-     */
-    private void exportFile(FileType fileType) {
-        playerDA.setFileType(fileType);
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportFile(),
-                "PlayerControl-exportFile()", "exportFile");
-    }
-
-    /**
-     * Exports the database to the specified data source using the provided SQL dialect.
-     * This method manages the configuration, prepares the database connection,
-     * and invokes a callback to handle the login for exporting the database.
-     *
-     * @param target_source The target data source where the database will be exported.
-     * @param target_dialect The SQL dialect to be used for the export operation.
-     */
-    private void exportDB(DataSource target_source, SqlDialect target_dialect) {
-        PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(target_dialect, target_source), this::handleDatabaseLoginForExport),
-                "PlayerControl-exportDB()", "default_database");
     }
 
     /**
@@ -440,31 +325,16 @@ public class PlayerControl implements GeneralControl {
      * This method acts as a callback handler and may notify external listeners about the
      * outcome of the login and export process.
      *
-     * @param databaseInfo the {@code DatabaseInfo} object containing the necessary information
+     * @param dataInfo the {@code DatabaseInfo} object containing the necessary information
      *                     such as database configuration, credentials, and data source details
      *                     required to connect and perform the export operation.
      */
-    private void handleDatabaseLoginForExport(DatabaseInfo databaseInfo) {
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportDB(databaseInfo),
+    private void handleDatabaseLoginForExport(DataInfo dataInfo) {
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportDB(dataInfo),
                 "PlayerControl-exportDB()", "exportDB");
     }
 
-    /**
-     * Exports the provided data type using PHP and notifies listeners of the result.
-     * <p>
-     * This method processes the given data type by delegating the export operation
-     * to the {@code playerDA.exportPHP} method. It logs the export operation, and
-     * upon completion or failure, it notifies any registered listeners with the
-     * appropriate status. If an exception occurs during the export process, it
-     * logs the error and triggers a "php_error" notification.
-     *
-     * @param phpType the data to be exported. The specific implementation of
-     *                 the export is determined by the `playerDA.exportPHP` method.
-     */
-    private void exportPHP(PhpType phpType) {
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportPHP(phpType),
-                "PlayerControl-exportPHP()", "exportPHP");
-    }
+
 
     /**
      * Saves the data based on the current data source type.
@@ -503,7 +373,7 @@ public class PlayerControl implements GeneralControl {
     private void clearDataSource(){
         playerDA.setDataSource(DataSource.NONE);
         playerDA.setFileType(FileType.NONE);
-        playerDA.setDatabaseInfo(new DatabaseInfo());
+        playerDA.setDataInfo(new DataInfo());
     }
 
     /**

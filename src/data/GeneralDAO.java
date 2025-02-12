@@ -5,7 +5,7 @@ import data.file.FileType;
 import data.http.PhpType;
 import exceptions.FileManageException;
 import exceptions.OperationCancelledException;
-import model.DatabaseInfo;
+import model.DataInfo;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -27,7 +27,7 @@ public abstract class GeneralDAO {
     protected DataSource dataSource = DataSource.NONE;
     protected FileType fileType = FileType.NONE;
     protected PhpType phpType = PhpType.NONE;
-    protected DatabaseInfo databaseInfo = new DatabaseInfo();
+    protected DataInfo dataInfo = new DataInfo();
     public abstract void read();
     public abstract void save();
 
@@ -133,8 +133,8 @@ public abstract class GeneralDAO {
         return target_path;
     }
 
-    public void setDatabaseInfo(DatabaseInfo databaseInfo) {
-        this.databaseInfo = databaseInfo;
+    public void setDataInfo(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
     }
 
     public DataSource getDataSource() {
