@@ -6,6 +6,7 @@ import Interface.PlayerCRUD;
 import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.FileManageException;
+import model.DataInfo;
 import model.Player;
 import model.Region;
 import model.Server;
@@ -21,19 +22,21 @@ import java.util.TreeMap;
 /**
  * @author SIN
  */
-public class XmlPlayerCRUD implements PlayerCRUD<String> {
+public class XmlPlayerCRUD implements PlayerCRUD<DataInfo> {
     File file;
     String stringXML;
     boolean parseRawXML = false;
+    DataInfo dataInfo;
 
     @Override
-    public PlayerCRUD<String> prepare(String input) {
-        if(input.startsWith("<Player>")){
-            stringXML = input;
+    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+        if(dataInfo.getUrl().startsWith("<Player>")){
+            stringXML = dataInfo.getUrl();
             parseRawXML = true;
             return this;
         }else{
-            file = new File(input);
+            file = new File(dataInfo.getUrl());
             if (file.exists() && file.canRead() && file.canWrite()){
                 return this;
             }else{
@@ -49,31 +52,34 @@ public class XmlPlayerCRUD implements PlayerCRUD<String> {
         file = null;
     }
 
-    /**
-     * Reads and parses an XML file containing player data, storing the information
-     * in a {@code TreeMap} where the key is the player's ID and the value is the
-     * corresponding {@code Player} object. The XML file must have a root element
-     * named "Player" and child elements named "player" with required attributes and
-     * child elements.
-     * <p>
-     * If the XML file does not meet the expected structure or an error occurs
-     * during the reading process, exceptions are thrown or error handling
-     * mechanisms are invoked.
-     * <p>
-     * This method utilizes {@code xml_utils.readXml} to parse the XML document and
-     * {@code xml_utils.getElementTextContent} to retrieve element contents.
-     * <p>
-     * Displays a popup notification using {@code PlayerText.getDialog().popup}
-     * when the XML document has no child nodes. Throws a {@code FileManageException}
-     * if the root element is invalid or if there is an error during file handling.
-     *
-     * @return A {@code TreeMap<Integer, Player>} where the key is the player ID and
-     *         the value is the corresponding {@code Player} object. Returns an empty
-     *         map if the file is empty or contains no player data.
-     * @throws FileManageException if there is an error during XML reading or if the
-     *                             root element is invalid.
-     */
     @Override
+    @SuppressWarnings("unchecked")
+    public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+        Element root;
+        try {
+            if(parseRawXML){
+                root = xml_utils.parseStringXml(stringXML);
+            }else{
+                root = xml_utils.readXml(file);
+            }
+        } catch (Exception e) {
+            throw new FileManageException(e.getMessage());
+        }
+        if (!dataInfo.getClassName().equals(root.getNodeName())) {
+            throw new FileManageException("Invalid XML: Root element doesn't match XML");
+        }
+        if (!root.hasChildNodes()) {
+            return this;
+        }
+        parser.parse((R)root, null, dataMap);
+        return this;
+    }
+
+    @Override
+    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+        return null;
+    }
+
     public PlayerCRUD<String> read(ParserCallBack<String> data) {
         Element root;
         try {

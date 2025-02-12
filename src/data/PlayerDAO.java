@@ -6,6 +6,7 @@ import Interface.VerifiedEntity;
 import data.database.DataBasePlayerCRUD;
 import data.database.SqlDialect;
 import data.file.FileType;
+import data.file.xml_utils;
 import exceptions.*;
 import model.DataInfo;
 import model.Player;
@@ -13,6 +14,9 @@ import model.Region;
 import model.Server;
 import org.bson.Document;
 import org.hibernate.Session;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.persistence.EntityManager;
@@ -183,50 +187,20 @@ public class PlayerDAO extends GeneralDAO {
     @Override
     public void read() {
         try {
-            switch (dataSource){
-                case NONE :
-                    player_map = new TreeMap<>();
-                    break;
-                case FILE:
-                    PlayerCRUDFactory.getInstance()
-                            .getCRUD(dataInfo)
-                            .prepare(dataInfo)
-                            .read(this::parseArrayListText, DataOperation.READ, player_map)
-                            .release();
-                    break;
-                case DATABASE:
-                    PlayerCRUDFactory.getInstance()
-                            .getCRUD(dataInfo)
-                            .prepare(dataInfo)
-                            .read(this::parseResultSet, DataOperation.READ, player_map)
-                            .release();
-                    break;
-                case HIBERNATE, OBJECTDB:
-                    PlayerCRUDFactory.getInstance()
-                            .getCRUD(dataInfo)
-                            .prepare(dataInfo)
-                            .read(this::parseList, DataOperation.READ, player_map)
-                            .release();
-                    break;
-                case MONGO:
-                    PlayerCRUDFactory.getInstance()
-                            .getCRUD(dataInfo)
-                            .prepare(dataInfo)
-                            .read(this::parseDocument, DataOperation.READ, player_map)
-                            .release();
-                    break;
-                case BASEX:
-
-                case PHP:
-                    PlayerCRUDFactory.getInstance()
-                            .getCRUD(dataInfo)
-                            .prepare(dataInfo)
-                            .read(this::parseList, DataOperation.READ, player_map)
-                            .release();
-                    break;
-                default:
-                    throw new OperationException("Unknown data source: " + dataSource);
+            PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+                    .getCRUD(dataInfo)
+                    .prepare(dataInfo);
+            switch (dataInfo.getDataType()){
+                case FileType.TXT -> currentCRUD.read(this::parseArrayListText, null, player_map);
+                case FileType.DAT -> currentCRUD.read(this::parseVerifiedEntity, null, player_map);
+                case DataSource.DATABASE -> currentCRUD.read(this::parseResultSet, null, player_map);
+                case DataSource.HIBERNATE, DataSource.OBJECTDB -> currentCRUD.read(this::parseList, null, player_map);
+                case DataSource.MONGO -> currentCRUD.read(this::parseDocument, null, player_map);
+                case DataSource.BASEX ->
+                case DataSource.PHP -> currentCRUD.read(this::parseList, null, player_map);
+                default -> throw new OperationException("Unknown data source: " + dataSource);
             }
+            currentCRUD.release();
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();
             }
@@ -274,11 +248,14 @@ public class PlayerDAO extends GeneralDAO {
     public void save(){
         try{
             if (Objects.requireNonNull(dataInfo.getDataType()) instanceof FileType) {
-                PlayerCRUDFactory.getInstance()
+                PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
                         .getCRUD(dataInfo)
-                        .prepare(dataInfo)
-                        .update(this::playerToText, DataOperation.MODIFY, player_map)
-                        .release();
+                        .prepare(dataInfo);
+                switch ((FileType) dataInfo.getDataType()){
+                    case TXT -> currentCRUD.update(this::playerToText, null, player_map);
+                    case DAT -> currentCRUD.update(this::parseVerifiedEntity, null, player_map);
+                }
+                currentCRUD.release();
             }
             isDataChanged = false;
         } catch (Exception e) {
@@ -775,6 +752,31 @@ public class PlayerDAO extends GeneralDAO {
             }
         } catch (IOException e) {
             throw new FileManageException(e.getMessage());
+        }
+    }
+
+    private void parseVerifiedEntity(VerifiedEntity entity, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        Player player = (Player) entity;
+        dataMap.put(player.getID(),player);
+    }
+
+    private void playerToArrayListEntity(ArrayList<VerifiedEntity> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        list.addAll(player_map.values());
+    }
+
+    private void parseElement(Element element, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        NodeList playerNodes = element.getElementsByTagName("player");
+        for (int i = 0; i < playerNodes.getLength(); i++) {
+            Node playerNode = playerNodes.item(i);
+            if (playerNode.getNodeType() == Node.ELEMENT_NODE) {
+                org.w3c.dom.Element playerElement = (org.w3c.dom.Element) playerNode;
+                Player player = new Player();
+                player.setID(Integer.parseInt(playerElement.getAttribute("id")));
+                player.setRegion(new Region(xml_utils.getElementTextContent(playerElement, "region")));
+                player.setServer(new Server(xml_utils.getElementTextContent(playerElement, "server"), player.getRegion()));
+                player.setName(xml_utils.getElementTextContent(playerElement, "name"));
+                dataMap.put(player.getID(), player);
+            }
         }
     }
 }
