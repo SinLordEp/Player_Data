@@ -1,7 +1,7 @@
 package data.file;
 
+import Interface.GeneralCRUD;
 import Interface.ParserCallBack;
-import Interface.PlayerCRUD;
 import data.DataOperation;
 import exceptions.FileManageException;
 import model.DataInfo;
@@ -13,14 +13,14 @@ import java.io.File;
 /**
  * @author SIN
  */
-public class XmlPlayerCRUD implements PlayerCRUD<DataInfo> {
+public class XmlCRUD implements GeneralCRUD<DataInfo> {
     File file;
     String stringXML;
     boolean parseRawXML = false;
     DataInfo dataInfo;
 
     @Override
-    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) {
+    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
         this.dataInfo = dataInfo;
         if(dataInfo.getUrl().startsWith("<Player>")){
             stringXML = dataInfo.getUrl();
@@ -45,7 +45,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         Element element;
         try {
             if(parseRawXML){
@@ -65,7 +65,7 @@ public class XmlPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         try {
             Document document = xml_utils.createDocument();
             parser.parse((R)document,null, object);

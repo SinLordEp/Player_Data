@@ -148,34 +148,17 @@ public class PlayerControl implements GeneralControl {
         playerDA.setDataInfo(dataInfo);
         notifyEvent("dataSource_set",null);//todo
         switch(dataInfo.getDataType()){
-            case FileType ignore -> importFile((FileType) dataInfo.getDataType());
+            case FileType ignore -> importFile(dataInfo);
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> importDB(dataInfo);
             case PhpType ignore -> importPHP(dataInfo);
             default -> throw new IllegalStateException("Unexpected Data Source: " + dataInfo.getDataType());
         }
     }
 
-    /**
-     * Imports a file into the system based on the specified file type.
-     * <p>
-     * This method performs the following operations:
-     * 1. Logs the start of the file import process.
-     * 2. Sets the provided file type in the data access object.
-     * 3. Retrieves the file path associated with the specified file type and sets it in the data access object.
-     * 4. Reads the file data and updates the internal data map.
-     * 5. Notifies listeners about data changes in case of a successful import, or about the operation cancellation if interrupted.
-     * 6. Logs the completion of the file import process.
-     * <p>
-     * The method handles exceptions such as `OperationCancelledException` and ensures listeners are properly notified in such cases.
-     *
-     * @param fileType The type of the file to be imported. This defines the format and properties
-     *                 of the file, such as {@code TXT}, {@code DAT}, or {@code XML}.
-     */
-    private void importFile(FileType fileType) {
-        playerDA.setFileType(fileType);
-        String file_path = PlayerExceptionHandler.getInstance().handle(() -> GeneralDAO.getPath(playerDA.getFileType()),
+    private void importFile(DataInfo dataInfo) {
+        String file_path = PlayerExceptionHandler.getInstance().handle(() -> GeneralDAO.getPath((FileType) dataInfo.getDataType()),
                 "GeneralDataAccess-getPath()", "getPath");
-        playerDA.setFilePath(file_path);
+        dataInfo.setUrl(file_path);
         PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
                 "PlayerControl-importFile()", "importFile", "\n>>>" + file_path);
         notifyEvent("data_changed", playerDA.getPlayerMap());

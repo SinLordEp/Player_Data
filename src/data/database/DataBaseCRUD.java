@@ -1,7 +1,7 @@
 package data.database;
 
 import Interface.ParserCallBack;
-import Interface.PlayerCRUD;
+import Interface.GeneralCRUD;
 import data.DataOperation;
 import exceptions.DatabaseException;
 import model.DataInfo;
@@ -17,11 +17,11 @@ import java.util.Map;
 /**
  * @author SIN
  */
-public class DataBasePlayerCRUD implements PlayerCRUD<DataInfo> {
+public class DataBaseCRUD implements GeneralCRUD<DataInfo> {
     private Connection connection = null;
     private DataInfo dataInfo;
     @Override
-    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
+    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
         try {
             switch (dataInfo.getDialect()){
                 case MYSQL:
@@ -69,7 +69,7 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DataInfo> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <R,U> PlayerCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap) {
+    public <R,U> GeneralCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap) {
         if(connection == null){
             throw new DatabaseException("Database is not connected");
         }
@@ -92,7 +92,7 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         String query = switch (operation){
             case ADD -> dataInfo.getQueryADD();
             case MODIFY -> dataInfo.getQueryModify();

@@ -1,35 +1,25 @@
 package data;
 
 import GUI.Player.PlayerText;
-import Interface.PlayerCRUD;
+import Interface.GeneralCRUD;
 import Interface.VerifiedEntity;
-import data.database.DataBasePlayerCRUD;
+import data.database.DataBaseCRUD;
 import data.database.SqlDialect;
 import data.file.FileType;
-import data.file.xml_utils;
-import data.http.PhpType;
 import exceptions.*;
 import model.DataInfo;
 import model.Player;
 import model.Region;
 import model.Server;
-import org.bson.Document;
-import org.hibernate.Session;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.yaml.snakeyaml.Yaml;
 
-import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
 import static main.principal.getProperty;
 
@@ -92,17 +82,16 @@ public class PlayerDAO extends GeneralDAO {
      */
     public void initializeRegionServer(){
         DataInfo regionServerInfo = new DataInfo();
-        dataInfo.setDataType(DataSource.DATABASE);
-        dataInfo.setDialect(SqlDialect.SQLITE);
+        regionServerInfo.setDataType(DataSource.DATABASE);
+        regionServerInfo.setDialect(SqlDialect.SQLITE);
         PlayerExceptionHandler.getInstance().handle(() -> getDefaultDatabaseInfo(regionServerInfo),
                 "PlayerDAO-getDefaultDatabaseInfo()", "default_database");
-        region_server_map = PlayerExceptionHandler.getInstance().handle(() -> DataBasePlayerCRUD.readRegionServer(regionServerInfo),
+        region_server_map = PlayerExceptionHandler.getInstance().handle(() -> DataBaseCRUD.readRegionServer(regionServerInfo),
                 "PlayerDAO-initializeRegionServer()", "region_server");
     }
 
     @SuppressWarnings("unchecked")
     public DataInfo getDefaultDatabaseInfo(DataInfo dataInfo) throws ConfigErrorException, IOException {
-        dataInfo.setDialect(dataInfo.getDialect());
         HashMap<String, Object> default_info = null;
         URL resource = getClass().getResource(getProperty("defaultPlayerSQL"));
         if (resource != null) {
@@ -189,20 +178,11 @@ public class PlayerDAO extends GeneralDAO {
     @Override
     public void read() {
         try {
-            PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+            CRUDFactory.getInstance()
                     .getCRUD(dataInfo)
-                    .prepare(dataInfo);
-            switch (dataInfo.getDataType()){
-                case FileType.TXT -> currentCRUD.read(this::parseArrayListText, null, player_map);
-                case FileType.DAT -> currentCRUD.read(this::parseVerifiedEntity, null, player_map);
-                case FileType.XML, DataSource.BASEX -> currentCRUD.read(this::parseXmlElement, null, player_map);
-                case DataSource.DATABASE -> currentCRUD.read(this::parseResultSet, null, player_map);
-                case DataSource.HIBERNATE, DataSource.OBJECTDB -> currentCRUD.read(this::parseList, null, player_map);
-                case DataSource.MONGO -> currentCRUD.read(this::parseMongoDocument, null, player_map);
-                case DataSource.PHP -> currentCRUD.read(this::parseJsonObject, null, player_map);
-                default -> throw new OperationException("Unknown data source: " + dataSource);
-            }
-            currentCRUD.release();
+                    .prepare(dataInfo)
+                    .read(PlayerParser.input(dataInfo.getDataType()),null, player_map)
+                    .release();
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();
             }
@@ -250,15 +230,11 @@ public class PlayerDAO extends GeneralDAO {
     public void save(){
         try{
             if (Objects.requireNonNull(dataInfo.getDataType()) instanceof FileType) {
-                PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+                CRUDFactory.getInstance()
                         .getCRUD(dataInfo)
-                        .prepare(dataInfo);
-                switch ((FileType) dataInfo.getDataType()){
-                    case TXT -> currentCRUD.update(this::playerToArrayString, null, player_map);
-                    case DAT -> currentCRUD.update(this::playerToArrayEntity, null, player_map);
-                    case XML -> currentCRUD.update(this::playerToXmlElement, null, player_map);
-                }
-                currentCRUD.release();
+                        .prepare(dataInfo)
+                        .update(PlayerParser.allOutput(dataInfo.getDataType()), null, player_map)
+                        .release();
             }
             isDataChanged = false;
         } catch (Exception e) {
@@ -267,18 +243,10 @@ public class PlayerDAO extends GeneralDAO {
     }
 
     public void update(DataOperation operation, Player player){
-        PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+        GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getInstance()
                 .getCRUD(dataInfo)
-                .prepare(dataInfo);
-        switch(dataInfo.getDataType()){
-            case DataSource.DATABASE -> currentCRUD.update(this::playerToUpdateStatement, operation, player);
-            case DataSource.HIBERNATE -> currentCRUD.update(this::playerToUpdateSession, operation, player);
-            case DataSource.OBJECTDB -> currentCRUD.update(this::playerToUpdateEntityManager, operation, player);
-            case DataSource.MONGO -> currentCRUD.update(this::playerToMongoDocument, operation, player);
-            case DataSource.BASEX -> currentCRUD.update(this::playerToBaseXQuery, operation, player);
-            case PhpType.JSON -> currentCRUD.update(this::playerToJsonObject, operation, player);
-            default -> throw new IllegalStateException("Unexpected value: " + dataInfo.getDataType());
-        }
+                .prepare(dataInfo)
+                .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player);
         switch (operation){
             case ADD, MODIFY -> player_map.put(player.getID(), player);
             case DELETE -> player_map.remove(player.getID());
@@ -307,10 +275,11 @@ public class PlayerDAO extends GeneralDAO {
         target_path += "/" + target_name + target_extension;
         targetDataInfo.setUrl(target_path);
         try {
-            PlayerCRUDFactory.getInstance()
+            CRUDFactory.getInstance()
                     .getCRUD(targetDataInfo)
-                    .prepare(targetDataInfo);
-            //todo
+                    .prepare(targetDataInfo)
+                    .update(PlayerParser.allOutput(targetDataInfo.getDataType()), null, player_map)
+                    .release();
         } catch (Exception e) {
             throw new FileManageException("Failed to export file with cause: " + e.getMessage());
         }
@@ -324,51 +293,20 @@ public class PlayerDAO extends GeneralDAO {
      */
     public void exportDB(DataInfo exportDataBaseInfo) {
         TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
-        PlayerCRUD<DataInfo> currentCRUD = PlayerCRUDFactory.getInstance()
+        GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getInstance()
                 .getCRUD(exportDataBaseInfo)
-                .prepare(exportDataBaseInfo);
-        switch (exportDataBaseInfo.getDataType()){
-            case DataSource.DATABASE -> currentCRUD.read(this::parseResultSet, null, target_player_map);
-            case DataSource.HIBERNATE, DataSource.OBJECTDB -> currentCRUD.read(this::parseList, null, target_player_map);
-            case DataSource.MONGO -> currentCRUD.read(this::parseMongoDocument, null, target_player_map);
-            case DataSource.BASEX -> currentCRUD.read(this::parseXmlElement, null, player_map);
-            case PhpType.JSON -> currentCRUD.read(this::parseJsonObject, null, target_player_map);
-            default -> throw new IllegalStateException("Unexpected value: " + exportDataBaseInfo.getDataType());
-        }
+                .prepare(exportDataBaseInfo)
+                .read(PlayerParser.input(dataInfo.getDataType()),null, target_player_map);
         for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
             if(!player_map.containsKey(entry.getKey())){
-                switch (exportDataBaseInfo.getDataType()){
-                    case DataSource.DATABASE -> currentCRUD.update(this::playerToUpdateStatement, DataOperation.DELETE, (Player) entry.getValue());
-                    case DataSource.HIBERNATE -> currentCRUD.update(this::playerToUpdateSession, DataOperation.DELETE, (Player)entry.getValue());
-                    case DataSource.OBJECTDB -> currentCRUD.update(this::playerToUpdateEntityManager, DataOperation.DELETE, (Player)entry.getValue());
-                    case DataSource.MONGO -> currentCRUD.update(this::playerToMongoDocument, DataOperation.DELETE, (Player)entry.getValue());
-                    case DataSource.BASEX -> currentCRUD.update(this::playerToBaseXQuery, DataOperation.DELETE, (Player)entry.getValue());
-                    case PhpType.JSON -> currentCRUD.update(this::playerToJsonObject, DataOperation.DELETE, (Player)entry.getValue());
-                    default -> throw new IllegalStateException("Unexpected value: " + exportDataBaseInfo.getDataType());
-                }
+                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()), DataOperation.DELETE, (Player) entry.getValue());
             }
         }
         for(Map.Entry<Integer, VerifiedEntity> entry: player_map.entrySet()){
             if(target_player_map.containsKey(entry.getKey())){
-                switch (exportDataBaseInfo.getDataType()){
-                    case DataSource.DATABASE -> currentCRUD.update(this::playerToUpdateStatement, DataOperation.MODIFY, (Player)entry.getValue());
-                    case DataSource.HIBERNATE -> currentCRUD.update(this::playerToUpdateSession, DataOperation.MODIFY, (Player)entry.getValue());
-                    case DataSource.OBJECTDB -> currentCRUD.update(this::playerToUpdateEntityManager, DataOperation.MODIFY, (Player)entry.getValue());
-                    case DataSource.MONGO -> currentCRUD.update(this::playerToMongoDocument, DataOperation.MODIFY, (Player)entry.getValue());
-                    case DataSource.BASEX -> currentCRUD.update(this::playerToBaseXQuery, DataOperation.MODIFY, (Player)entry.getValue());
-                    case PhpType.JSON -> currentCRUD.update(this::playerToJsonObject, DataOperation.MODIFY, (Player)entry.getValue());
-                    default -> throw new IllegalStateException("Unexpected value: " + exportDataBaseInfo.getDataType());
-                }
+                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()),DataOperation.MODIFY, (Player)entry.getValue());
             }else{
-                switch (exportDataBaseInfo.getDataType()){
-                    case DataSource.DATABASE -> currentCRUD.update(this::playerToUpdateStatement, DataOperation.ADD, (Player)entry.getValue());
-                    case DataSource.HIBERNATE -> currentCRUD.update(this::playerToUpdateSession, DataOperation.ADD, (Player)entry.getValue());
-                    case DataSource.OBJECTDB -> currentCRUD.update(this::playerToUpdateEntityManager, DataOperation.ADD, (Player)entry.getValue());
-                    case DataSource.MONGO -> currentCRUD.update(this::playerToMongoDocument, DataOperation.ADD, (Player)entry.getValue());
-                    case DataSource.BASEX -> currentCRUD.update(this::playerToBaseXQuery, DataOperation.ADD, (Player)entry.getValue());
-                    case PhpType.JSON -> currentCRUD.update(this::playerToJsonObject, DataOperation.ADD, (Player)entry.getValue());
-                    default -> throw new IllegalStateException("Unexpected value: " + exportDataBaseInfo.getDataType());
-                }
+                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()), DataOperation.ADD, (Player) entry.getValue());
             }
         }
         currentCRUD.release();
@@ -465,187 +403,6 @@ public class PlayerDAO extends GeneralDAO {
 
     public boolean isDataChanged() {
         return isDataChanged;
-    }
-
-    private void parseResultSet(ResultSet resultSet, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        try {
-            Player player = new Player();
-            player.setID(resultSet.getInt("id"));
-            player.setName(resultSet.getString("name"));
-            player.setRegion(new Region(resultSet.getString("region")));
-            player.setServer(new Server(resultSet.getString("server"), player.getRegion()));
-            isPlayerInvalid(player);
-            dataMap.put(player.getID(), player);
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getMessage());
-        }
-    }
-
-    private void playerToUpdateStatement(PreparedStatement statement, DataOperation operation, Player player){
-        try {
-            switch (operation){
-                case ADD:
-                    statement.setInt(1, player.getID());
-                    statement.setString(2, player.getRegion().toString());
-                    statement.setString(3, player.getServer().toString());
-                    statement.setString(4, player.getName());
-                    break;
-                case MODIFY:
-                    statement.setString(1, player.getRegion().toString());
-                    statement.setString(2, player.getServer().toString());
-                    statement.setString(3, player.getName());
-                    statement.setInt(4, player.getID());
-                    break;
-                case DELETE:
-                    statement.setInt(1, player.getID());
-                    break;
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getMessage());
-        }
-    }
-
-    private void parseList(List<VerifiedEntity> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        for(VerifiedEntity verifiedEntity : list){
-            Player player = (Player) verifiedEntity;
-            player_map.put(player.getID(), player);
-        }
-    }
-
-    private void playerToUpdateSession(Session session, DataOperation operation, Player player){
-        switch(operation){
-            case ADD -> session.persist(player);
-            case MODIFY -> session.merge(player);
-            case DELETE -> session.remove(player);
-        }
-    }
-
-    private void playerToUpdateEntityManager(EntityManager entityManager, DataOperation operation, Player player){
-        switch(operation){
-            case ADD -> entityManager.persist(player);
-            case MODIFY -> entityManager.merge(player);
-            case DELETE -> entityManager.remove(player);
-        }
-    }
-
-    private void parseMongoDocument(Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        Player player = new Player();
-        player.setID(document.getInteger("id"));
-        player.setName(document.getString("name"));
-        player.setRegion(new Region(document.getString("region")));
-        player.setServer(new Server(document.getString("server"), player.getRegion()));
-        dataMap.put(player.getID(), player);
-    }
-
-    private void playerToMongoDocument(Document document, DataOperation operation, Player player){
-        switch(operation){
-            case ADD: document.put("id", player.getID());
-                document.put("name", player.getName());
-                document.put("region", player.getRegion().getName());
-                document.put("server", player.getServer().getName());
-                break;
-            case MODIFY: document.put("id", player.getID());
-                document.put("name", player.getName());
-                document.put("region", player.getRegion().getName());
-                document.put("server", player.getServer().getName());
-                break;
-            case DELETE: document.put("id", player.getID());
-                break;
-        }
-    }
-
-    private void parseArrayListText(ArrayList<String> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        list.forEach(text -> {
-            String[] player_txt = text.split(";");
-            Player player = new Player();
-            player.setID(Integer.parseInt(player_txt[0]));
-            player.setRegion(new Region(player_txt[1]));
-            player.setServer(new Server(player_txt[2], player.getRegion()));
-            player.setName(player_txt[3]);
-            dataMap.put(player.getID(),player);
-        });
-    }
-
-    private void playerToArrayString(ArrayList<String> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        for(VerifiedEntity entity : dataMap.values()){
-            Player player = (Player) entity;
-            list.add("%s;%s;%s;%s".formatted(player.getID(),player.getRegion(),player.getServer(),player.getName()));
-        }
-    }
-
-    private void parseVerifiedEntity(VerifiedEntity entity, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        Player player = (Player) entity;
-        dataMap.put(player.getID(),player);
-    }
-
-    private void playerToArrayEntity(ArrayList<VerifiedEntity> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        list.addAll(player_map.values());
-    }
-
-    private void parseXmlElement(Element element, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        NodeList playerNodes = element.getElementsByTagName("player");
-        for (int i = 0; i < playerNodes.getLength(); i++) {
-            Node playerNode = playerNodes.item(i);
-            if (playerNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element playerElement = (Element) playerNode;
-                Player player = new Player();
-                player.setID(Integer.parseInt(playerElement.getAttribute("id")));
-                player.setRegion(new Region(xml_utils.getElementTextContent(playerElement, "region")));
-                player.setServer(new Server(xml_utils.getElementTextContent(playerElement, "server"), player.getRegion()));
-                player.setName(xml_utils.getElementTextContent(playerElement, "name"));
-                dataMap.put(player.getID(), player);
-            }
-        }
-    }
-
-    private void playerToXmlElement(org.w3c.dom.Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        Element rootElement = document.createElement("Player");
-        document.appendChild(rootElement);
-        for (VerifiedEntity entity : dataMap.values()) {
-            Player player = (Player) entity;
-            Element playerElement = document.createElement("player");
-            playerElement.setAttribute("id", String.valueOf(player.getID()));
-            xml_utils.createElementWithText(document, playerElement, "region", player.getRegion().toString());
-            xml_utils.createElementWithText(document, playerElement, "server", player.getServer().toString());
-            xml_utils.createElementWithText(document, playerElement, "name", player.getName());
-            rootElement.appendChild(playerElement);
-        }
-    }
-
-    private void playerToBaseXQuery(String query, DataOperation operation, VerifiedEntity entity){
-        Player player = (Player) entity;
-        query = switch (operation){
-            case ADD -> "insert node <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player> into /Player"
-                    .formatted(player.getID(), player.getRegion(), player.getServer(), player.getName());
-            case MODIFY -> "replace node /Player/player[@id='%s'] with <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player>"
-                    .formatted(player.getID(), player.getID(), player.getRegion(), player.getServer(), player.getName());
-            case DELETE -> "delete node /Player/player[@id='%s']".formatted(player.getID());
-        };
-    }
-
-    private void parseJsonObject(JSONObject jsonObject, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        JSONArray playersArray = (JSONArray) jsonObject.get("players");
-        if(playersArray.isEmpty()) {
-            throw new DataCorruptedException("No players found");
-        }
-        for (Object object : playersArray) {
-            Player player = new Player();
-            JSONObject playerObject = (JSONObject) object;
-            player.setID(Integer.parseInt(playerObject.get("id").toString()));
-            player.setName(playerObject.get("name").toString());
-            player.setRegion(new Region(playerObject.get("region").toString()));
-            player.setServer(new Server(playerObject.get("server").toString(), player.getRegion()));
-            dataMap.put(player.getID(), player);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void playerToJsonObject(JSONObject jsonObject, DataOperation operation, Player player){
-        jsonObject.put("id", player.getID());
-        jsonObject.put("name", player.getName());
-        jsonObject.put("region", player.getRegion().toString());
-        jsonObject.put("server", player.getServer().toString());
-        jsonObject.put("operation", operation.toString());
     }
 
 }

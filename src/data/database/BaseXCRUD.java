@@ -1,9 +1,9 @@
 package data.database;
 
+import Interface.GeneralCRUD;
 import Interface.ParserCallBack;
-import Interface.PlayerCRUD;
 import data.DataOperation;
-import data.PlayerCRUDFactory;
+import data.CRUDFactory;
 import data.file.FileType;
 import exceptions.DatabaseException;
 import model.DataInfo;
@@ -16,12 +16,12 @@ import org.basex.core.cmd.XQuery;
  * @author SIN
  */
 
-public class BaseXPlayerCRUD implements PlayerCRUD<DataInfo> {
+public class BaseXCRUD implements GeneralCRUD<DataInfo> {
     Context context = new Context();
     DataInfo dataInfo;
 
     @Override
-    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) {
+    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
         try {
             new Open(dataInfo.getDatabase()).execute(context);
             this.dataInfo = dataInfo;
@@ -37,13 +37,13 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DataInfo> {
     }
 
     @Override
-    public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         try {
             String result =  new XQuery(dataInfo.getDatabase()).execute(context);
             DataInfo tempDataInfo = new DataInfo();
             tempDataInfo.setDataType(FileType.XML);
             tempDataInfo.setUrl(result);
-            PlayerCRUDFactory.getInstance()
+            CRUDFactory.getInstance()
                     .getCRUD(tempDataInfo)
                     .prepare(tempDataInfo)
                     .read(parser, operation, dataMap)
@@ -56,7 +56,7 @@ public class BaseXPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         try {
             String query = "";
             parser.parse((R)query, operation, object);

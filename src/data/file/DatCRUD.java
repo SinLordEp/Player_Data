@@ -1,7 +1,7 @@
 package data.file;
 
+import Interface.GeneralCRUD;
 import Interface.ParserCallBack;
-import Interface.PlayerCRUD;
 import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.FileManageException;
@@ -14,10 +14,10 @@ import java.util.ArrayList;
  * @author SIN
  */
 
-public class DatPlayerCRUD implements PlayerCRUD<DataInfo> {
+public class DatCRUD implements GeneralCRUD<DataInfo> {
     File file;
     @Override
-    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) {
+    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
         file = new File(dataInfo.getUrl());
         if (file.exists() && file.canRead() && file.canWrite()){
             return this;
@@ -33,7 +33,7 @@ public class DatPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         if (file.length() == 0) {
             return this;
         }
@@ -57,7 +57,7 @@ public class DatPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file,false))){
             parser.parse(null, null, object);
             ArrayList<VerifiedEntity> verifiedEntities = (ArrayList<VerifiedEntity>) object;

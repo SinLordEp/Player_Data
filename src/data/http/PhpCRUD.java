@@ -1,7 +1,7 @@
 package data.http;
 
+import Interface.GeneralCRUD;
 import Interface.ParserCallBack;
-import Interface.PlayerCRUD;
 import data.DataOperation;
 import exceptions.DataCorruptedException;
 import exceptions.HttpPhpException;
@@ -16,7 +16,7 @@ import static main.principal.getProperty;
 /**
  * @author SIN
  */
-public class PhpPlayerCRUD implements PlayerCRUD<DataInfo> {
+public class PhpCRUD implements GeneralCRUD<DataInfo> {
     ApiRequests api;
     private String url;
     private String readUrl;
@@ -24,7 +24,7 @@ public class PhpPlayerCRUD implements PlayerCRUD<DataInfo> {
     DataInfo dataInfo;
 
     @Override
-    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) {
+    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
         this.dataInfo = dataInfo;
         if(dataInfo.getDataType() == PhpType.JSON){
             api = new ApiRequests();
@@ -42,7 +42,7 @@ public class PhpPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         try {
             String rawJson = api.getRequest(url + readUrl);
             JSONObject parsedJson = (JSONObject) JSONValue.parse(rawJson);
@@ -61,7 +61,7 @@ public class PhpPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         JSONObject jsonObject = new JSONObject();
         try {
             parser.parse((R) jsonObject, operation, object);

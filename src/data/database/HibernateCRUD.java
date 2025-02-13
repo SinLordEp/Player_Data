@@ -1,7 +1,7 @@
 package data.database;
 
+import Interface.GeneralCRUD;
 import Interface.ParserCallBack;
-import Interface.PlayerCRUD;
 import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.DatabaseException;
@@ -20,7 +20,7 @@ import static main.principal.getProperty;
 /**
  * @author SIN
  */
-public class HibernatePlayerCRUD implements PlayerCRUD<DataInfo> {
+public class HibernateCRUD implements GeneralCRUD<DataInfo> {
     DataInfo dataInfo;
     private SessionFactory sessionFactory;
     private final Configuration configuration = new Configuration();
@@ -42,7 +42,7 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DataInfo> {
      *                           invalid credentials, or exceptions during session factory creation.
      */
     @Override
-    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
+    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
         URL resource = getClass().getResource(getProperty("hibernateConfig"));
         configuration.configure(resource);
         switch (dataInfo.getDialect()){
@@ -91,10 +91,10 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DataInfo> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <R,U> PlayerCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap){
+    public <R,U> GeneralCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap){
         try (Session session = sessionFactory.openSession()) {
             List<VerifiedEntity> list = session.createQuery(dataInfo.getQueryRead(), VerifiedEntity.class).getResultList();
-            parser.parse((R)list, DataOperation.READ, dataMap);
+            parser.parse((R)list, null, dataMap);
         }catch (Exception e){
             throw new DatabaseException(e.getMessage());
         }
@@ -103,7 +103,7 @@ public class HibernatePlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();

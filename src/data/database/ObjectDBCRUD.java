@@ -1,7 +1,7 @@
 package data.database;
 
+import Interface.GeneralCRUD;
 import Interface.ParserCallBack;
-import Interface.PlayerCRUD;
 import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.DatabaseException;
@@ -19,12 +19,12 @@ import java.util.Map;
 /**
  * @author SIN
  */
-public class ObjectDBPlayerCRUD implements PlayerCRUD<DataInfo> {
+public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
     private DataInfo dataInfo;
     private EntityManager entityManager;
 
     @Override
-    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
+    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
         try{
             entityManager = Persistence.createEntityManagerFactory(dataInfo.getUrl()).createEntityManager();
             if(entityManager != null && entityManager.isOpen()){
@@ -46,7 +46,7 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         try{
             entityManager.getTransaction().begin();
             TypedQuery<VerifiedEntity> query = entityManager.createQuery("SELECT s FROM %s s".formatted(dataInfo.getTable()), VerifiedEntity.class);
@@ -62,7 +62,7 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         try {
             entityManager.getTransaction().begin();
             parser.parse((R)entityManager, operation, object);
@@ -75,7 +75,7 @@ public class ObjectDBPlayerCRUD implements PlayerCRUD<DataInfo> {
         return this;
     }
 
-    public PlayerCRUD<DataInfo> update(HashMap<Player, DataOperation> changed_player_map) {
+    public GeneralCRUD<DataInfo> update(HashMap<Player, DataOperation> changed_player_map) {
         try {
             entityManager.getTransaction().begin();
             for(Map.Entry<Player, DataOperation> player_operation : changed_player_map.entrySet()) {

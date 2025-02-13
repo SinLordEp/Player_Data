@@ -1,7 +1,7 @@
 package data.file;
 
+import Interface.GeneralCRUD;
 import Interface.ParserCallBack;
-import Interface.PlayerCRUD;
 import data.DataOperation;
 import exceptions.FileManageException;
 import model.DataInfo;
@@ -16,12 +16,12 @@ import java.util.Scanner;
 /**
  * @author SIN
  */
-public class TextPlayerCRUD implements PlayerCRUD<DataInfo> {
+public class TxtCRUD implements GeneralCRUD<DataInfo> {
     File file;
     DataInfo dataInfo;
 
     @Override
-    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) {
+    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
         file = new File(dataInfo.getUrl());
         if (file.exists() && file.canRead() && file.canWrite()){
             this.dataInfo = dataInfo;
@@ -38,11 +38,11 @@ public class TextPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         ArrayList<String> list = new ArrayList<>();
         try(Scanner scanner = new Scanner(file)){
             while(scanner.hasNext()){
-                list.add(scanner.next());
+                list.add(scanner.nextLine());
             }
             parser.parse((R)list, operation, dataMap);
         }catch (Exception e) {
@@ -53,7 +53,7 @@ public class TextPlayerCRUD implements PlayerCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         ArrayList<String> list = new ArrayList<>();
         parser.parse((R)list, operation, object);
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(file,false))){
