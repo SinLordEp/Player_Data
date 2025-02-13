@@ -8365,3 +8365,129 @@ Cause: Stopped at ., 1/1:
 >>>src/main/resources/import/player_xml.xml
 2025-02-13 20:31:25 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-handleDatabaseLoginForImport() - Success
 2025-02-13 20:31:25 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerControl-importDB() - Success
+2025-02-13 20:34:53 [main] INFO  main.principal - initializeLogger - Logger loaded
+2025-02-13 20:34:53 [main] INFO  main.principal - main - Getting controller...
+2025-02-13 20:34:54 [main] INFO  main.principal - main - Controller loaded
+2025-02-13 20:34:54 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Processing
+2025-02-13 20:34:54 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Success
+2025-02-13 20:34:54 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Processing
+2025-02-13 20:34:55 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Success
+2025-02-13 20:34:59 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Processing
+2025-02-13 20:35:01 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Success
+2025-02-13 20:35:01 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Processing 
+>>>C:\Sin\Player_Data\src\main\resources\import\player_txt.txt
+2025-02-13 20:35:01 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Success
+2025-02-13 20:35:05 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-exportFile() - Processing
+2025-02-13 20:35:26 [AWT-EventQueue-0] ERROR exceptions.PlayerExceptionHandler - handle - Class&Function: PlayerControl-exportFile(), Failed to manage file.
+Cause: Failed to export file with cause: Cannot invoke "java.util.ArrayList.add(Object)" because "list" is null
+2025-02-13 20:37:06 [main] INFO  main.principal - initializeLogger - Logger loaded
+2025-02-13 20:37:06 [main] INFO  main.principal - main - Getting controller...
+2025-02-13 20:37:54 [main] INFO  main.principal - initializeLogger - Logger loaded
+2025-02-13 20:37:54 [main] INFO  main.principal - main - Getting controller...
+2025-02-13 20:37:55 [main] INFO  main.principal - main - Controller loaded
+2025-02-13 20:37:55 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Processing
+2025-02-13 20:37:55 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Success
+2025-02-13 20:37:55 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Processing
+2025-02-13 20:37:56 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Success
+2025-02-13 20:37:59 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Processing
+2025-02-13 20:38:00 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Success
+2025-02-13 20:38:00 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Processing 
+>>>C:\Sin\Player_Data\src\main\resources\import\player_txt.txt
+2025-02-13 20:38:03 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Success
+2025-02-13 20:38:12 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-exportFile() - Processing
+2025-02-13 20:39:04 [AWT-EventQueue-0] ERROR exceptions.PlayerExceptionHandler - handle - Class&Function: PlayerControl-exportFile(), Failed to manage file.
+Cause: Failed to export file with cause: File cannot be read or write
+2025-02-13 20:39:17 [main] INFO  main.principal - initializeLogger - Logger loaded
+2025-02-13 20:39:17 [main] INFO  main.principal - main - Getting controller...
+2025-02-13 20:39:18 [main] INFO  main.principal - main - Controller loaded
+2025-02-13 20:39:18 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Processing
+2025-02-13 20:39:18 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Success
+2025-02-13 20:39:18 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Processing
+2025-02-13 20:39:19 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Success
+2025-02-13 20:39:26 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Processing
+2025-02-13 20:39:28 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Success
+2025-02-13 20:39:28 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Processing 
+>>>C:\Sin\Player_Data\src\main\resources\import\player_txt.txt
+2025-02-13 20:39:29 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Success
+2025-02-13 20:39:37 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-exportFile() - Processing
+2025-02-13 20:40:30 [AWT-EventQueue-0] ERROR exceptions.PlayerExceptionHandler - handle - Class&Function: PlayerControl-exportFile(), Failed to manage file.
+Cause: Failed to export file with cause: Cannot invoke "java.util.ArrayList.add(Object)" because "list" is null
+2025-02-13 20:40:39 [main] INFO  main.principal - initializeLogger - Logger loaded
+2025-02-13 20:40:39 [main] INFO  main.principal - main - Getting controller...
+2025-02-13 20:40:41 [main] INFO  main.principal - main - Controller loaded
+2025-02-13 20:40:41 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Processing
+2025-02-13 20:40:41 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Success
+2025-02-13 20:40:41 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Processing
+2025-02-13 20:40:42 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Success
+2025-02-13 20:40:45 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Processing
+2025-02-13 20:40:46 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Success
+2025-02-13 20:40:46 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Processing 
+>>>C:\Sin\Player_Data\src\main\resources\import\player_txt.txt
+2025-02-13 20:40:46 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Success
+2025-02-13 20:40:52 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-exportFile() - Processing
+2025-02-13 20:42:16 [AWT-EventQueue-0] ERROR exceptions.PlayerExceptionHandler - handle - Class&Function: PlayerControl-exportFile(), Failed to manage file.
+Cause: Failed to export file with cause: Cannot invoke "java.util.ArrayList.add(Object)" because "list" is null
+2025-02-13 20:42:20 [main] INFO  main.principal - initializeLogger - Logger loaded
+2025-02-13 20:42:20 [main] INFO  main.principal - main - Getting controller...
+2025-02-13 20:42:21 [main] INFO  main.principal - main - Controller loaded
+2025-02-13 20:42:22 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Processing
+2025-02-13 20:42:22 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Success
+2025-02-13 20:42:22 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Processing
+2025-02-13 20:42:22 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Success
+2025-02-13 20:42:25 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Processing
+2025-02-13 20:42:27 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Success
+2025-02-13 20:42:27 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Processing 
+>>>C:\Sin\Player_Data\src\main\resources\import\player_txt.txt
+2025-02-13 20:42:27 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Success
+2025-02-13 20:42:31 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-exportFile() - Processing
+2025-02-13 20:43:00 [AWT-EventQueue-0] ERROR exceptions.PlayerExceptionHandler - handle - Class&Function: PlayerControl-exportFile(), Failed to manage file.
+Cause: Failed to export file with cause: Cannot invoke "java.util.ArrayList.add(Object)" because "list" is null
+2025-02-13 20:43:58 [main] INFO  main.principal - initializeLogger - Logger loaded
+2025-02-13 20:43:58 [main] INFO  main.principal - main - Getting controller...
+2025-02-13 20:43:59 [main] INFO  main.principal - main - Controller loaded
+2025-02-13 20:44:00 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Processing
+2025-02-13 20:44:00 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Success
+2025-02-13 20:44:00 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Processing
+2025-02-13 20:44:00 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Success
+2025-02-13 20:44:05 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Processing
+2025-02-13 20:44:06 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Success
+2025-02-13 20:44:06 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Processing 
+>>>C:\Sin\Player_Data\src\main\resources\import\player_txt.txt
+2025-02-13 20:44:06 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Success
+2025-02-13 20:44:09 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-exportFile() - Processing
+2025-02-13 20:44:19 [AWT-EventQueue-0] ERROR exceptions.PlayerExceptionHandler - handle - Class&Function: PlayerControl-exportFile(), Failed to manage file.
+Cause: Failed to export file with cause: model.Region
+2025-02-13 20:45:24 [main] INFO  main.principal - initializeLogger - Logger loaded
+2025-02-13 20:45:24 [main] INFO  main.principal - main - Getting controller...
+2025-02-13 20:45:26 [main] INFO  main.principal - main - Controller loaded
+2025-02-13 20:45:26 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Processing
+2025-02-13 20:45:26 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Success
+2025-02-13 20:45:26 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Processing
+2025-02-13 20:45:26 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Success
+2025-02-13 20:46:02 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Processing
+2025-02-13 20:46:04 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Success
+2025-02-13 20:46:04 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Processing 
+>>>C:\Sin\Player_Data\src\main\resources\import\player_txt.txt
+2025-02-13 20:46:04 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Success
+2025-02-13 20:46:08 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-exportFile() - Processing
+2025-02-13 20:47:41 [AWT-EventQueue-0] ERROR exceptions.PlayerExceptionHandler - handle - Class&Function: PlayerControl-exportFile(), Failed to manage file.
+Cause: Failed to export file with cause: model.Region
+2025-02-13 20:47:47 [main] INFO  main.principal - initializeLogger - Logger loaded
+2025-02-13 20:47:47 [main] INFO  main.principal - main - Getting controller...
+2025-02-13 20:47:48 [main] INFO  main.principal - main - Controller loaded
+2025-02-13 20:47:48 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Processing
+2025-02-13 20:47:48 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-getDefaultDatabaseInfo() - Success
+2025-02-13 20:47:48 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Processing
+2025-02-13 20:47:49 [main] INFO  exceptions.PlayerExceptionHandler - handle - Method with return PlayerDAO-initializeRegionServer() - Success
+2025-02-13 20:47:51 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Processing
+2025-02-13 20:47:52 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Success
+2025-02-13 20:47:52 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Processing 
+>>>C:\Sin\Player_Data\src\main\resources\import\player_txt.txt
+2025-02-13 20:47:52 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Success
+2025-02-13 20:47:55 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-exportFile() - Processing
+2025-02-13 20:48:27 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-exportFile() - Success
+2025-02-13 20:48:33 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Processing
+2025-02-13 20:48:36 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method with return GeneralDataAccess-getPath() - Success
+2025-02-13 20:48:36 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Processing 
+>>>C:\Sin\Player_Data\src\main\resources\import\player_data.dat
+2025-02-13 20:48:39 [AWT-EventQueue-0] INFO  exceptions.PlayerExceptionHandler - handle - Method without return PlayerControl-importFile() - Success

@@ -345,19 +345,6 @@ public class PlayerControl implements GeneralControl {
     }
 
     /**
-     * Clears the current data source of the player data access object (playerDA).
-     * <p>
-     * This method resets the data source by setting it to {@code DataSource.NONE},
-     * clears the file type by setting it to {@code FileType.NONE}, and initializes
-     * the database information to a new instance of {@code DatabaseInfo}.
-     * Logging statements are included to indicate the start and completion of this
-     * process.
-     */
-    private void clearDataSource(){
-        playerDA.setDataInfo(new DataInfo());
-    }
-
-    /**
      * Changes the application's language based on user selection.
      * <p>
      * Prompts a dialog for the user to select a language. The available language options are:

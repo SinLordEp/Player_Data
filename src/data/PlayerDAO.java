@@ -286,6 +286,7 @@ public class PlayerDAO extends GeneralDAO {
         String target_path = getPath();
         String target_name = PlayerText.getDialog().input("new_file_name");
         target_path += "/" + target_name + target_extension;
+        createNewFile(target_path);
         targetDataInfo.setUrl(target_path);
         try {
             CRUDFactory.getInstance()

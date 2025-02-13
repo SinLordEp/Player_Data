@@ -1,7 +1,12 @@
 package model;
 
-import jakarta.persistence.*;
+import Interface.VerifiedEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -10,11 +15,12 @@ import java.util.Objects;
 @javax.persistence.Entity
 @Entity
 @Table(name = "region")
-public class Region {
+public class Region implements Serializable, VerifiedEntity {
     @javax.persistence.Id
     @Id
     @Column(name = "name_region")
     private String name;
+    private static final long SERIAL_VERSION = 1L;
 
     public Region() {
 

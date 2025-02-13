@@ -59,8 +59,8 @@ public class DatCRUD implements GeneralCRUD<DataInfo> {
     @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file,false))){
-            parser.parse(null, null, object);
-            ArrayList<VerifiedEntity> verifiedEntities = (ArrayList<VerifiedEntity>) object;
+            ArrayList<VerifiedEntity> verifiedEntities = new ArrayList<>();
+            parser.parse((R)verifiedEntities, null, object);
             for(VerifiedEntity verifiedEntity : verifiedEntities){
                 oos.writeObject(verifiedEntity);
             }

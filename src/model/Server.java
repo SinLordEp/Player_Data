@@ -1,7 +1,9 @@
 package model;
 
+import Interface.VerifiedEntity;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -10,11 +12,12 @@ import java.util.Objects;
 @javax.persistence.Entity
 @Entity
 @Table(name = "server")
-public class Server {
+public class Server implements Serializable,VerifiedEntity {
     @javax.persistence.Id
     @Id
     @Column(name = "name_server")
     private String name;
+    private static final long SERIAL_VERSION = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region", referencedColumnName = "name_region")
