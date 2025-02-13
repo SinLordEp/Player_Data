@@ -71,6 +71,7 @@ public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
             if(entityManager.getTransaction() != null){
                 entityManager.getTransaction().rollback();
             }
+            throw new ObjectDBException(e.getMessage());
         }
         return this;
     }
@@ -90,6 +91,7 @@ public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
             if(entityManager.getTransaction() != null){
                 entityManager.getTransaction().rollback();
             }
+            throw new ObjectDBException(e.getMessage());
         }
         return this;
     }
