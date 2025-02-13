@@ -115,9 +115,14 @@ public class PlayerParser {
 
     public static void playerToUpdateEntityManager(EntityManager entityManager, DataOperation operation, Player player){
         switch(operation){
-            case ADD -> entityManager.persist(player);
-            case MODIFY -> entityManager.merge(player);
-            case DELETE -> entityManager.remove(player);
+            case ADD : entityManager.persist(player);
+                break;
+            case MODIFY : entityManager.merge(player);
+                break;
+            case DELETE :
+                Player playerToDelete = entityManager.find(Player.class, player.getID());
+                entityManager.remove(playerToDelete);
+                break;
         }
     }
 
