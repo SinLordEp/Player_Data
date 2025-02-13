@@ -92,6 +92,9 @@ public class DataSourceChooser extends JDialog {
                     dataInfo.setDataType(comboBox_dataSource.getSelectedItem());
                     dataInfo.setDialect((SqlDialect) comboBox_dataType.getSelectedItem());
                     break;
+                case DataSource.FILE, DataSource.PHP:
+                    dataInfo.setDataType(comboBox_dataType.getSelectedItem());
+                    break;
                 case null : throw new IllegalArgumentException("Invalid data type");
                 default : dataInfo.setDataType(comboBox_dataSource.getSelectedItem());
             }

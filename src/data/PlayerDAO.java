@@ -182,6 +182,7 @@ public class PlayerDAO extends GeneralDAO {
      */
     @Override
     public void read() {
+        player_map.clear();
         try {
             CRUDFactory.getInstance()
                     .getCRUD(dataInfo)
@@ -248,11 +249,13 @@ public class PlayerDAO extends GeneralDAO {
     }
 
     public void update(DataOperation operation, Player player){
-        CRUDFactory.getInstance()
-                .getCRUD(dataInfo)
-                .prepare(dataInfo)
-                .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player)
-                .release();
+       if(!(dataInfo.getDataType() instanceof FileType)){
+           CRUDFactory.getInstance()
+                   .getCRUD(dataInfo)
+                   .prepare(dataInfo)
+                   .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player)
+                   .release();
+       }
         switch (operation){
             case ADD, MODIFY: player_map.put(player.getID(), player);
                 player_map.put(player.getID(), player);

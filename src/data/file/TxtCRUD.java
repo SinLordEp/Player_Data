@@ -59,6 +59,7 @@ public class TxtCRUD implements GeneralCRUD<DataInfo> {
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(file,false))){
             for(String string : list){
                 bw.write(string);
+                bw.newLine();
             }
         }catch (IOException e){
             throw new FileManageException(e.getMessage());

@@ -3,3 +3,5 @@
 3;Asia;Jueyun Karst;Jaime
 4;Asia;Inazuma City;as
 5;North America;Wolvendom;Uno
+6;South America;Chasm;QS
+7;South America;Chasm;AAS
