@@ -58,9 +58,9 @@ public class BaseXCRUD implements GeneralCRUD<DataInfo> {
     @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         try {
-            String query = "";
+            String[] query = new String[1];
             parser.parse((R)query, operation, object);
-            new XQuery(query).execute(context);
+            new XQuery(query[0]).execute(context);
             return this;
         } catch (BaseXException e) {
             throw new DatabaseException(e.getMessage());

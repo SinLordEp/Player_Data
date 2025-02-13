@@ -48,7 +48,7 @@ public class PlayerParser {
             case DataSource.HIBERNATE -> (ParserCallBack<Session, Player>) PlayerParser::playerToUpdateSession;
             case DataSource.OBJECTDB -> (ParserCallBack<EntityManager, Player>) PlayerParser::playerToUpdateEntityManager;
             case DataSource.MONGO -> (ParserCallBack<Document, Player>) PlayerParser::playerToMongoDocument;
-            case DataSource.BASEX -> (ParserCallBack<String, Player>) PlayerParser::playerToBaseXQuery;
+            case DataSource.BASEX -> (ParserCallBack<String[], Player>) PlayerParser::playerToBaseXQuery;
             case PhpType.JSON -> (ParserCallBack<JSONObject, Player>) PlayerParser::playerToJsonObject;
             default -> throw new IllegalStateException("Unexpected value: " + dataType);
         };
@@ -213,8 +213,8 @@ public class PlayerParser {
         }
     }
 
-    public static void playerToBaseXQuery(String query, DataOperation operation, Player player){
-        query = switch (operation){
+    public static void playerToBaseXQuery(String[] query, DataOperation operation, Player player){
+        query[0] = switch (operation){
             case ADD -> "insert node <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player> into /Player"
                     .formatted(player.getID(), player.getRegion(), player.getServer(), player.getName());
             case MODIFY -> "replace node /Player/player[@id='%s'] with <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player>"
