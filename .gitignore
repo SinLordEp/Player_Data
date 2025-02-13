@@ -7,8 +7,7 @@ out/
 .idea/dataSources.local.xml
 .idea/workspace.xml
 .idea/shelf
-!**/log/
-!**/logs/
+
 
 ### Eclipse ###
 .apt_generated
@@ -31,3 +30,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/log/
