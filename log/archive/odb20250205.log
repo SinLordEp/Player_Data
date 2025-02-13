@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------------------------------------------------
+
+[2025-02-05 16:45:23 #1 store] 
+Database 'C:\main\resources\data\player_data.odb' has been recovered (tr. 8-8)
+
+[2025-02-05 16:45:23 #2 store] 
+Database 'C:\main\resources\data\player_data.odb' is opened by 9492@Administrador
+
+[2025-02-05 16:45:23 #3 store] 
+Configuration path: ?
+
+[2025-02-05 16:45:23 #4 type] 
+Type model.Person is not enhanced.
+
+[2025-02-05 16:45:23 #5 type] 
+Type model.Player is not enhanced.
+
+[2025-02-05 16:45:23 #6 type] 
+Type model.Region is not enhanced.
+
+[2025-02-05 16:45:23 #7 type] 
+Type model.Server is not enhanced.
+
