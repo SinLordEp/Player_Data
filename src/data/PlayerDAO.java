@@ -143,6 +143,7 @@ public class PlayerDAO extends GeneralDAO {
                         dataInfo.setUrl((String) mongo_info.get("text_url"));
                         dataInfo.setPort((String) mongo_info.get("text_port"));
                         dataInfo.setDatabase((String) mongo_info.get("text_database"));
+                        dataInfo.setTable((String) mongo_info.get("text_table"));
                         break;
                     default: throw new OperationException("Unknown database type");
                 }
