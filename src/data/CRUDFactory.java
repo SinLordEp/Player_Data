@@ -16,17 +16,11 @@ public class CRUDFactory {
     private final static CRUDFactory INSTANCE = new CRUDFactory();
     private final HashMap<Enum<?>, GeneralCRUD<?>> CRUDHashMap = new HashMap<>();
 
-    public static CRUDFactory getInstance() {
-        return INSTANCE;
-    }
-
-    private CRUDFactory() {}
-
-    public GeneralCRUD<DataInfo> getCRUD(DataInfo dataInfo) {
+    public static GeneralCRUD<DataInfo> getCRUD(DataInfo dataInfo) {
         return switch(dataInfo.getDataType()){
-            case FileType ignore -> getCRUD((FileType) dataInfo.getDataType());
-            case PhpType ignore -> getCRUD((PhpType) dataInfo.getDataType());
-            case DataSource ignore -> getCRUD((DataSource) dataInfo.getDataType());
+            case FileType ignore -> INSTANCE.getCRUD((FileType) dataInfo.getDataType());
+            case PhpType ignore -> INSTANCE.getCRUD((PhpType) dataInfo.getDataType());
+            case DataSource ignore -> INSTANCE.getCRUD((DataSource) dataInfo.getDataType());
             default -> throw new IllegalArgumentException("Unsupported data type: " + dataInfo.getDataType());
         };
     }
@@ -59,7 +53,7 @@ public class CRUDFactory {
                 Class<?> tempClass = Class.forName(classPackagePath);
                 return (GeneralCRUD<DataInfo>) tempClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
-                throw new OperationException("CRUD could not be instantiated");
+                throw new OperationException("%sCRUD could not be instantiated".formatted(phpType));
             }
         });
     }

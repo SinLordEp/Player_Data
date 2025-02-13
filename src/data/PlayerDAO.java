@@ -186,8 +186,7 @@ public class PlayerDAO extends GeneralDAO {
     public void read() {
         player_map.clear();
         try {
-            CRUDFactory.getInstance()
-                    .getCRUD(dataInfo)
+            CRUDFactory.getCRUD(dataInfo)
                     .prepare(dataInfo)
                     .read(PlayerParser.input(dataInfo.getDataType()),null, player_map)
                     .release();
@@ -238,8 +237,7 @@ public class PlayerDAO extends GeneralDAO {
     public void save(){
         try{
             if (Objects.requireNonNull(dataInfo.getDataType()) instanceof FileType) {
-                CRUDFactory.getInstance()
-                        .getCRUD(dataInfo)
+                CRUDFactory.getCRUD(dataInfo)
                         .prepare(dataInfo)
                         .update(PlayerParser.allOutput(dataInfo.getDataType()), null, player_map)
                         .release();
@@ -252,8 +250,7 @@ public class PlayerDAO extends GeneralDAO {
 
     public void update(DataOperation operation, Player player){
        if(!(dataInfo.getDataType() instanceof FileType)){
-           CRUDFactory.getInstance()
-                   .getCRUD(dataInfo)
+           CRUDFactory.getCRUD(dataInfo)
                    .prepare(dataInfo)
                    .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player)
                    .release();
@@ -289,8 +286,7 @@ public class PlayerDAO extends GeneralDAO {
         createNewFile(target_path);
         targetDataInfo.setUrl(target_path);
         try {
-            CRUDFactory.getInstance()
-                    .getCRUD(targetDataInfo)
+            CRUDFactory.getCRUD(targetDataInfo)
                     .prepare(targetDataInfo)
                     .update(PlayerParser.allOutput(targetDataInfo.getDataType()), null, player_map)
                     .release();
@@ -307,8 +303,7 @@ public class PlayerDAO extends GeneralDAO {
      */
     public void exportDB(DataInfo exportDataBaseInfo) {
         TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
-        GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getInstance()
-                .getCRUD(exportDataBaseInfo)
+        GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getCRUD(exportDataBaseInfo)
                 .prepare(exportDataBaseInfo)
                 .read(PlayerParser.input(dataInfo.getDataType()),null, target_player_map);
         for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){

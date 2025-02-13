@@ -194,7 +194,6 @@ public class PlayerControl implements GeneralControl {
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
-
     /**
      * Initiates the process for adding a new player entry. This method performs the following:
      * <p>
@@ -316,8 +315,6 @@ public class PlayerControl implements GeneralControl {
         PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportDB(dataInfo),
                 "PlayerControl-exportDB()", "exportDB");
     }
-
-
 
     /**
      * Saves the data based on the current data source type.

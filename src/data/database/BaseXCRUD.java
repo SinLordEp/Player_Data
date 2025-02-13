@@ -43,8 +43,7 @@ public class BaseXCRUD implements GeneralCRUD<DataInfo> {
             DataInfo tempDataInfo = new DataInfo();
             tempDataInfo.setDataType(FileType.XML);
             tempDataInfo.setUrl(result);
-            CRUDFactory.getInstance()
-                    .getCRUD(tempDataInfo)
+            CRUDFactory.getCRUD(tempDataInfo)
                     .prepare(tempDataInfo)
                     .read(parser, operation, dataMap)
                     .release();
