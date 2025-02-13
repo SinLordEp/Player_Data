@@ -3,7 +3,7 @@ package data;
 import GUI.Player.PlayerText;
 import Interface.GeneralCRUD;
 import Interface.VerifiedEntity;
-import data.database.DataBaseCRUD;
+import data.database.DatabaseCRUD;
 import data.database.SqlDialect;
 import data.file.FileType;
 import exceptions.*;
@@ -86,7 +86,7 @@ public class PlayerDAO extends GeneralDAO {
         regionServerInfo.setDialect(SqlDialect.SQLITE);
         PlayerExceptionHandler.getInstance().handle(() -> getDefaultDatabaseInfo(regionServerInfo),
                 "PlayerDAO-getDefaultDatabaseInfo()", "default_database");
-        region_server_map = PlayerExceptionHandler.getInstance().handle(() -> DataBaseCRUD.readRegionServer(regionServerInfo),
+        region_server_map = PlayerExceptionHandler.getInstance().handle(() -> DatabaseCRUD.readRegionServer(regionServerInfo),
                 "PlayerDAO-initializeRegionServer()", "region_server");
     }
 
@@ -120,6 +120,10 @@ public class PlayerDAO extends GeneralDAO {
             case SQLITE:
                 HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
                 dataInfo.setUrl((String) sqlite_info.get("text_url"));
+                dataInfo.setTable((String) sqlite_info.get("text_table"));
+                dataInfo.setQueryADD((String) sqlite_info.get("text_query_add"));
+                dataInfo.setQueryModify((String) sqlite_info.get("text_query_modify"));
+                dataInfo.setQueryDelete((String) sqlite_info.get("text_query_delete"));
                 break;
             case null:
                 switch((DataSource)dataInfo.getDataType()){
@@ -188,7 +192,7 @@ public class PlayerDAO extends GeneralDAO {
             }
         } catch (Exception e) {
             player_map = new TreeMap<>();
-            dataSource = DataSource.NONE;
+            dataInfo = new DataInfo();
             throw new OperationException(e.getMessage());
         }
     }

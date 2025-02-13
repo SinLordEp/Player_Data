@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author SIN
  */
-public class DataBaseCRUD implements GeneralCRUD<DataInfo> {
+public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
     private Connection connection = null;
     private DataInfo dataInfo;
     @Override

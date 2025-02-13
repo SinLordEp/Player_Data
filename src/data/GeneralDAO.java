@@ -2,7 +2,6 @@ package data;
 
 import GUI.Player.PlayerText;
 import data.file.FileType;
-import data.http.PhpType;
 import exceptions.FileManageException;
 import exceptions.OperationCancelledException;
 import model.DataInfo;
@@ -23,24 +22,9 @@ import static main.principal.getProperty;
  * @author SIN
  */
 public abstract class GeneralDAO {
-    protected String file_path = null;
-    protected DataSource dataSource = DataSource.NONE;
-    protected FileType fileType = FileType.NONE;
-    protected PhpType phpType = PhpType.NONE;
     protected DataInfo dataInfo = new DataInfo();
     public abstract void read();
     public abstract void save();
-
-    /**
-     * Sets the file path and updates the associated {@code dataSource} to {@code DataSource.FILE}.
-     * Logs information about the updated file path and data source.
-     *
-     * @param file_path the file path to be set. It must be a valid string path for proper functionality.
-     */
-    public void setFilePath(String file_path) {
-        this.file_path = file_path;
-        this.dataSource = DataSource.FILE;
-    }
 
     /**
      * Retrieves the file extension corresponding to the given {@code FileType}.
@@ -137,24 +121,8 @@ public abstract class GeneralDAO {
         this.dataInfo = dataInfo;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    public FileType getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(FileType fileType) {
-        this.fileType = fileType;
-    }
-
-    public void setPhpType(PhpType phpType) {
-        this.phpType = phpType;
+    public DataInfo getDataInfo() {
+        return dataInfo;
     }
 
     /**
@@ -170,7 +138,7 @@ public abstract class GeneralDAO {
      *
      * @throws FileManageException if an {@code IOException} occurs during file creation.
      */
-    public void createNewFile() throws FileManageException {
+    public void createNewFile(String file_path) throws FileManageException {
         try {
             new File(file_path).createNewFile();
         } catch (IOException e) {

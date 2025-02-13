@@ -22,7 +22,6 @@ import model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.TreeMap;
 
 /**
@@ -108,8 +107,8 @@ public class PlayerControl implements GeneralControl {
 
     private void handleDataSourceForCreateFile(DataInfo dataInfo) {
         PlayerExceptionHandler.getInstance().handle(() -> {
-            playerDA.setFilePath(GeneralDAO.newPathBuilder((FileType) dataInfo.getDataType()));
-            playerDA.createNewFile();
+           dataInfo.setUrl(GeneralDAO.newPathBuilder((FileType) dataInfo.getDataType()));
+            playerDA.createNewFile(dataInfo.getUrl());
         }, "PlayerControl-handleDataSourceForCreateFile()", "createFile");
         playerDA.setDataInfo(dataInfo);
         notifyEvent("dataSource_set",null);
@@ -339,7 +338,7 @@ public class PlayerControl implements GeneralControl {
      * This function ensures proper logging and listener notification during its operation.
      */
     public void save(){
-        if(playerDA.isDataChanged() && Objects.requireNonNull(playerDA.getDataSource()) != DataSource.NONE){
+        if(playerDA.isDataChanged() && playerDA.getDataInfo() != null){
             PlayerExceptionHandler.getInstance().handle(() -> playerDA.save(),
                     "PlayerControl-save()", "save");
         }
@@ -355,8 +354,6 @@ public class PlayerControl implements GeneralControl {
      * process.
      */
     private void clearDataSource(){
-        playerDA.setDataSource(DataSource.NONE);
-        playerDA.setFileType(FileType.NONE);
         playerDA.setDataInfo(new DataInfo());
     }
 
