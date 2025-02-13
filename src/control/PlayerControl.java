@@ -145,7 +145,7 @@ public class PlayerControl implements GeneralControl {
 
     private void handleDataSourceForImportData(DataInfo dataInfo){
         playerDA.setDataInfo(dataInfo);
-        notifyEvent("dataSource_set",null);//todo
+        notifyEvent("dataSource_set",null);
         switch(dataInfo.getDataType()){
             case FileType ignore -> importFile(dataInfo);
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> importDB(dataInfo);
@@ -280,7 +280,7 @@ public class PlayerControl implements GeneralControl {
      */
     public void export() {
         if(playerDA.isEmpty()){
-            notifyLog(LogStage.INFO, "player_map_null");
+            notifyLog("player_map_null");
             return;
         }
         new DataSourceChooser(new DataInfo(), this::handleDataSourceForExport);
@@ -373,7 +373,7 @@ public class PlayerControl implements GeneralControl {
             PlayerText.getDialog().setLanguage(language);
             notifyEvent("language_changed",null);
         } catch (OperationCancelledException e) {
-            notifyLog(LogStage.INFO, "operation_cancelled");
+            notifyLog("operation_cancelled");
         }
     }
 
@@ -401,9 +401,9 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    private void notifyLog(LogStage stage, String... message){
+    private void notifyLog(String... message){
         for(EventListener<TreeMap<Integer, VerifiedEntity>> listener : listeners){
-            listener.onLog(stage, message);
+            listener.onLog(LogStage.INFO, message);
         }
     }
 
