@@ -9,6 +9,7 @@ import model.DataInfo;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -53,9 +54,13 @@ public class TextPlayerCRUD implements PlayerCRUD<DataInfo> {
     @Override
     @SuppressWarnings("unchecked")
     public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+        ArrayList<String> list = new ArrayList<>();
+        parser.parse((R)list, operation, object);
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(file,false))){
-            parser.parse((R)bw, operation, object);
-        }catch (Exception e){
+            for(String string : list){
+                bw.write(string);
+            }
+        }catch (IOException e){
             throw new FileManageException(e.getMessage());
         }
         return this;

@@ -5,5 +5,5 @@ package data;
  */
 
 public enum DataOperation {
-    READ, ADD, MODIFY, DELETE
+    ADD, MODIFY, DELETE
 }

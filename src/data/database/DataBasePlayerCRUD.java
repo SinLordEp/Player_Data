@@ -4,7 +4,6 @@ import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
 import data.DataOperation;
 import exceptions.DatabaseException;
-import exceptions.OperationException;
 import model.DataInfo;
 import model.Region;
 import model.Server;
@@ -95,7 +94,6 @@ public class DataBasePlayerCRUD implements PlayerCRUD<DataInfo> {
     @SuppressWarnings("unchecked")
     public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         String query = switch (operation){
-            case READ -> throw new OperationException("Read operation is not supported at update method");
             case ADD -> dataInfo.getQueryADD();
             case MODIFY -> dataInfo.getQueryModify();
             case DELETE -> dataInfo.getQueryDelete();

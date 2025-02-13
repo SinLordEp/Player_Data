@@ -2,38 +2,31 @@ package data.http;
 
 import Interface.ParserCallBack;
 import Interface.PlayerCRUD;
-import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.DataCorruptedException;
 import exceptions.HttpPhpException;
-import model.Player;
-import model.Region;
-import model.Server;
-import org.json.simple.JSONArray;
+import model.DataInfo;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 import static main.principal.getProperty;
 
 /**
  * @author SIN
  */
-public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
+public class PhpPlayerCRUD implements PlayerCRUD<DataInfo> {
     ApiRequests api;
     private String url;
     private String readUrl;
     private String writeUrl;
-    PhpType phpType;
+    DataInfo dataInfo;
 
     @Override
-    public PlayerCRUD<PhpType> prepare(PhpType phpType) {
-        this.phpType = phpType;
-        if(phpType == PhpType.JSON){
+    public PlayerCRUD<DataInfo> prepare(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+        if(dataInfo.getDataType() == PhpType.JSON){
             api = new ApiRequests();
             url = getProperty("phpURL");
             readUrl = getProperty("phpReadURL");
@@ -48,7 +41,8 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
     }
 
     @Override
-    public PlayerCRUD<PhpType> read(ParserCallBack<PhpType> data) {
+    @SuppressWarnings("unchecked")
+    public <R, U> PlayerCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         try {
             String rawJson = api.getRequest(url + readUrl);
             JSONObject parsedJson = (JSONObject) JSONValue.parse(rawJson);
@@ -58,41 +52,20 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
             if("error".equals(parsedJson.get("status").toString())) {
                 throw new HttpPhpException(parsedJson.get("message").toString());
             }
-            JSONArray playersArray = (JSONArray) parsedJson.get("players");
-            if(playersArray.isEmpty()) {
-                throw new DataCorruptedException("No players found");
-            }
-            for (Object object : playersArray) {
-                Player player = new Player();
-                JSONObject playerObject = (JSONObject) object;
-                player.setID(Integer.parseInt(playerObject.get("id").toString()));
-                player.setName(playerObject.get("name").toString());
-                player.setRegion(new Region(playerObject.get("region").toString()));
-                player.setServer(new Server(playerObject.get("server").toString(), player.getRegion()));
-                player_map.put(player.getID(), player);
-            }
+            parser.parse((R)parsedJson, operation, dataMap);
         } catch (IOException e) {
             throw new HttpPhpException(e.getMessage());
         }
         return this;
     }
 
-    //TODO: 更新逻辑有问题
     @Override
     @SuppressWarnings("unchecked")
-    public PlayerCRUD<PhpType> update(HashMap<Player, DataOperation> changed_player_map) {
-        JSONArray playerArray = new JSONArray();
-        for(Player player : changed_player_map.keySet()) {
-            JSONObject playerObject = new JSONObject();
-            playerObject.put("id", player.getID());
-            playerObject.put("name", player.getName());
-            playerObject.put("region", player.getRegion().toString());
-            playerObject.put("server", player.getServer().toString());
-            playerObject.put("operation", changed_player_map.get(player).toString());
-            playerArray.add(playerObject);
-        }
+    public <R, U> PlayerCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+        JSONObject jsonObject = new JSONObject();
         try {
-            String postRequest = api.postRequest(url + writeUrl, playerArray.toJSONString());
+            parser.parse((R) jsonObject, operation, object);
+            String postRequest = api.postRequest(url + writeUrl, jsonObject.toJSONString());
             JSONObject response = (JSONObject) JSONValue.parse(postRequest);
             if(response == null) {
                 throw new HttpPhpException("Json was sent to server but did not receive a correct response");
@@ -106,24 +79,4 @@ public class PhpPlayerCRUD implements PlayerCRUD<PhpType> {
         return this;
     }
 
-    @Override
-    public PlayerCRUD<PhpType> export(ParserCallBack<R> parser, TreeMap<Integer, VerifiedEntity> dataMap) {
-        TreeMap<Integer, Player> existed_player_map = new TreeMap<>();
-        read(existed_player_map);
-        HashMap<Player, DataOperation> export_player_map = new HashMap<>();
-        for(Map.Entry<Integer, Player> idAndPlayer : existed_player_map.entrySet() ) {
-            if(!dataMap.containsKey(idAndPlayer.getKey())) {
-                export_player_map.put(idAndPlayer.getValue(), DataOperation.DELETE);
-            }else{
-                export_player_map.put(dataMap.get(idAndPlayer.getKey()), DataOperation.MODIFY);
-            }
-        }
-        for(Map.Entry<Integer, Player> idAndPlayer : dataMap.entrySet() ) {
-            if(!existed_player_map.containsKey(idAndPlayer.getKey())) {
-                export_player_map.put(idAndPlayer.getValue(), DataOperation.ADD);
-            }
-        }
-        update(export_player_map);
-        return this;
-    }
 }

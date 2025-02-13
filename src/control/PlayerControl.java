@@ -9,6 +9,7 @@ import GUI.Player.PlayerUI;
 import Interface.EventListener;
 import Interface.GeneralControl;
 import Interface.VerifiedEntity;
+import data.DataOperation;
 import data.DataSource;
 import data.GeneralDAO;
 import data.PlayerDAO;
@@ -236,7 +237,7 @@ public class PlayerControl implements GeneralControl {
      * @param player The Player object containing the details to be added.
      */
     private void handlePlayerInfoForAdd(Player player){
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.add(player),
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.update(DataOperation.ADD, player),
                 "PlayerControl-handlePlayerInfoForAdd()", "addPlayer", ">>>ID: " + player.getID());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
@@ -262,7 +263,7 @@ public class PlayerControl implements GeneralControl {
      * @param player The player object containing the information to be modified.
      */
     private void handlePlayerInfoForModify(Player player){
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.modify(player),
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.update(DataOperation.MODIFY, player),
                 "PlayerControl-handlePlayerInfoForModify()", "modifyPlayer", ">>>ID: " + player.getID());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
@@ -275,7 +276,7 @@ public class PlayerControl implements GeneralControl {
      * @param selected_player_id the unique identifier of the player to be deleted
      */
     public void delete(int selected_player_id) {
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.delete(playerDA.getPlayer(selected_player_id)),
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.update(DataOperation.DELETE, playerDA.getPlayer(selected_player_id)),
                 "PlayerControl-delete()", "deletePlayer", ">>>ID: " + selected_player_id);
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
@@ -310,7 +311,7 @@ public class PlayerControl implements GeneralControl {
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> PlayerExceptionHandler.getInstance()
                     .handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(targetDataInfo), this::handleDatabaseLoginForExport),
                     "PlayerControl-exportDB()", "default_database");
-            case DataSource.PHP -> PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportPHP(targetDataInfo),
+            case DataSource.PHP -> PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportDB(targetDataInfo),
                     "PlayerControl-exportPHP()", "exportPHP");
             default -> throw new IllegalArgumentException("Unknown data source: " + targetDataInfo.getDataType());
         }

@@ -1,6 +1,5 @@
 package model;
 
-import data.DataSource;
 import data.database.SqlDialect;
 
 /**
@@ -8,9 +7,8 @@ import data.database.SqlDialect;
  */
 public class DataInfo {
     private Object dataType;
-    private DataSource dataSource;
     private SqlDialect dialect;
-    private String url, port, database, user, password, table, queryRead, queryADD, queryModify, queryDelete, className;
+    private String url, port, database, user, password, table, queryRead, queryADD, queryModify, queryDelete;
 
     public DataInfo() {
     }
@@ -25,14 +23,6 @@ public class DataInfo {
 
     public void setDataType(Object dataType) {
         this.dataType = dataType;
-    }
-
-    public DataSource getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
     }
 
     public SqlDialect getDialect() {
@@ -123,11 +113,4 @@ public class DataInfo {
         this.queryDelete = queryDelete;
     }
 
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
 }
