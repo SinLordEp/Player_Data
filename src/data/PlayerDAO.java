@@ -121,6 +121,7 @@ public class PlayerDAO extends GeneralDAO {
                 HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
                 dataInfo.setUrl((String) sqlite_info.get("text_url"));
                 dataInfo.setTable((String) sqlite_info.get("text_table"));
+                dataInfo.setQueryRead((String) sqlite_info.get("text_query_read"));
                 dataInfo.setQueryADD((String) sqlite_info.get("text_query_add"));
                 dataInfo.setQueryModify((String) sqlite_info.get("text_query_modify"));
                 dataInfo.setQueryDelete((String) sqlite_info.get("text_query_delete"));
@@ -247,15 +248,18 @@ public class PlayerDAO extends GeneralDAO {
     }
 
     public void update(DataOperation operation, Player player){
-        GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getInstance()
+        CRUDFactory.getInstance()
                 .getCRUD(dataInfo)
                 .prepare(dataInfo)
-                .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player);
+                .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player)
+                .release();
         switch (operation){
-            case ADD, MODIFY -> player_map.put(player.getID(), player);
-            case DELETE -> player_map.remove(player.getID());
+            case ADD, MODIFY: player_map.put(player.getID(), player);
+                player_map.put(player.getID(), player);
+                break;
+            case DELETE: player_map.remove(player.getID());
+                break;
         }
-        player_map.put(player.getID(), player);
         isDataChanged = true;
     }
 
