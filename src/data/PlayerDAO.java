@@ -131,6 +131,7 @@ public class PlayerDAO extends GeneralDAO {
                     case OBJECTDB:
                         HashMap<String,Object> objectDB_info = (HashMap<String, Object>) default_info.get("OBJECTDB");
                         dataInfo.setUrl((String) objectDB_info.get("text_url"));
+                        dataInfo.setTable((String) objectDB_info.get("text_table"));
                         break;
                     case BASEX:
                         HashMap<String,Object> baseX_info = (HashMap<String, Object>) default_info.get("BASEX");
