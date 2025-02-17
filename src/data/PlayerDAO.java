@@ -55,7 +55,6 @@ public class PlayerDAO extends GeneralDAO {
     public PlayerDAO() {
     }
 
-
     /**
      * Initializes the region server by setting up the database connection,
      * retrieving configuration data, and updating the region server map.
