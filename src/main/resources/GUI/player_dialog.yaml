@@ -47,6 +47,10 @@ text:
     en: "Cancel"
     es: "Cancelar"
     cn: "取消"
+  button_search:
+    en: "Import by ID"
+    es: "Importar por ID"
+    cn: "由ID导入"
   label_search:
     en: "Search by ID:"
     es: "Buscar por ID:"
@@ -351,6 +355,30 @@ text:
     en: "Failed to build Data source choosing panel!"
     es: "No ha podido construir el panel para elegir origen del dato!"
     cn: "未能构建数据来源面板"
+  input_id_ongoing:
+    en: "Please input the ID: "
+    es: "Introduce el ID por favor: "
+    cn: "请输入ID: "
+  input_id_pass:
+    en: "ID format is correct!"
+    es: "El formato de ID es correcto!"
+    cn: "ID格式正确!"
+  input_id_fail:
+    en: "ID format is incorrect, please input integer number only!"
+    es: "El formato de ID es incorrecto, debe introducir solo número entero!"
+    cn: "ID格式不正确, 请输入整数!"
+  search_ongoing:
+    en: "Searching by id..."
+    es: "Buscando por el id..."
+    cn: "正在以ID搜索..."
+  search_pass:
+    en: "Found!"
+    es: "Encontrado!"
+    cn: "已寻获"
+  search_fail:
+    en: "ID does not exist!"
+    es: "Este ID no existe!"
+    cn: "此ID不存在!"
 
 
 

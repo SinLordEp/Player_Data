@@ -8,7 +8,7 @@ import data.database.SqlDialect;
 public class DataInfo {
     private Object dataType;
     private SqlDialect dialect;
-    private String url, port, database, user, password, table, queryRead, queryADD, queryModify, queryDelete;
+    private String url, port, database, user, password, table, queryRead, queryADD, queryModify, queryDelete, querySearch;
 
     public DataInfo() {
     }
@@ -113,4 +113,11 @@ public class DataInfo {
         this.queryDelete = queryDelete;
     }
 
+    public String getQuerySearch() {
+        return querySearch;
+    }
+
+    public void setQuerySearch(String querySearch) {
+        this.querySearch = querySearch;
+    }
 }

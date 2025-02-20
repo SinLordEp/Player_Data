@@ -9,6 +9,7 @@ MYSQL:
   text_query_modify: "UPDATE player SET region = ?, server = ?, name = ? WHERE id = ?"
   text_query_delete: "DELETE FROM player WHERE id = ?"
   text_query_read: "FROM Player p LEFT JOIN FETCH p.region LEFT JOIN FETCH p.server"
+  text_query_search: "FROM Player p LEFT JOIN FETCH p.region LEFT JOIN FETCH p.server WHERE p.id = :id"
 SQLITE:
   text_url: "jdbc:sqlite:person.db"
   text_table: "player"
@@ -16,6 +17,7 @@ SQLITE:
   text_query_add: "INSERT INTO player (id, region, server, name) VALUES (?,?,?,?)"
   text_query_modify: "UPDATE player SET region = ?, server = ?, name = ? WHERE id = ?"
   text_query_delete: "DELETE FROM player WHERE id = ?"
+  text_query_search: "FROM Player p LEFT JOIN FETCH p.region LEFT JOIN FETCH p.server WHERE p.id = :id"
 OBJECTDB:
   text_url: "./src/main/resources/data/player_data.odb"
   text_database: "/Player"
@@ -23,6 +25,7 @@ OBJECTDB:
 BASEX:
   text_url: "src/main/resources/import/player_xml.xml"
   text_database: "Player"
+  text_query_search: "<Player>{ /Player/player[@id='%s'] }</Player>"
 MONGO:
   text_url: "localhost"
   text_port: "27017"

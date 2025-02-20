@@ -104,7 +104,9 @@ public class PlayerParser {
         }
     }
 
+
     public static void parseMongoDocument(Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        dataMap.clear();
         Player player = new Player();
         player.setID(document.getInteger("id"));
         player.setName(document.getString("name"));
@@ -126,6 +128,7 @@ public class PlayerParser {
     }
 
     public static void parseArrayListText(ArrayList<String> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        dataMap.clear();
         list.forEach(text -> {
             String[] player_txt = text.split(";");
             Player player = new Player();

@@ -1,7 +1,7 @@
 package data.database;
 
-import Interface.ParserCallBack;
 import Interface.GeneralCRUD;
+import Interface.ParserCallBack;
 import data.DataOperation;
 import exceptions.DatabaseException;
 import model.DataInfo;
@@ -9,10 +9,7 @@ import model.Region;
 import model.Server;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author SIN
@@ -53,6 +50,25 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
         connection = null;
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+        if(connection == null){
+            throw new DatabaseException("Database is not connected");
+        }
+        String query = "SELECT * FROM %s where id = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataMap).firstKey());
+        ((TreeMap<?, ?>) dataMap).clear();
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                parser.parse((R)resultSet, operation, dataMap);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Data rolled back with cause: " + e.getMessage());
+        }
+        return this;
+    }
+
     /**
      * Reads all player parser from the database and returns it as a {@code TreeMap}.
      * This method executes a SQL query to retrieve player records, constructs {@code Player} objects
@@ -80,11 +96,6 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
                parser.parse((R)resultSet, operation, dataMap);
             }
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new DatabaseException(ex.getMessage());
-            }
             throw new DatabaseException("Data rolled back with cause: " + e.getMessage());
         }
         return this;

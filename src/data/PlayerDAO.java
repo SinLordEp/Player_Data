@@ -13,6 +13,7 @@ import model.Region;
 import model.Server;
 import org.yaml.snakeyaml.Yaml;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -102,55 +103,46 @@ public class PlayerDAO extends GeneralDAO {
         if(default_info == null){
             throw new ConfigErrorException("Default database info is null");
         }
-        switch (dataInfo.getDialect()) {
-            case MYSQL:
-                HashMap<String,Object> mysql_info = (HashMap<String, Object>) default_info.get("MYSQL");
-                dataInfo.setUrl((String) mysql_info.get("text_url"));
-                dataInfo.setPort((String) mysql_info.get("text_port"));
-                dataInfo.setDatabase((String) mysql_info.get("text_database"));
-                dataInfo.setUser((String) mysql_info.get("text_user"));
-                dataInfo.setPassword((String) mysql_info.get("text_pwd"));
-                dataInfo.setTable((String) mysql_info.get("text_table"));
-                dataInfo.setQueryRead((String) mysql_info.get("text_query_read"));
-                dataInfo.setQueryADD((String) mysql_info.get("text_query_add"));
-                dataInfo.setQueryModify((String) mysql_info.get("text_query_modify"));
-                dataInfo.setQueryDelete((String) mysql_info.get("text_query_delete"));
-                break;
-            case SQLITE:
-                HashMap<String,Object> sqlite_info = (HashMap<String, Object>) default_info.get("SQLITE");
-                dataInfo.setUrl((String) sqlite_info.get("text_url"));
-                dataInfo.setTable((String) sqlite_info.get("text_table"));
-                dataInfo.setQueryRead((String) sqlite_info.get("text_query_read"));
-                dataInfo.setQueryADD((String) sqlite_info.get("text_query_add"));
-                dataInfo.setQueryModify((String) sqlite_info.get("text_query_modify"));
-                dataInfo.setQueryDelete((String) sqlite_info.get("text_query_delete"));
-                break;
-            case null:
-                switch((DataSource)dataInfo.getDataType()){
-                    case OBJECTDB:
-                        HashMap<String,Object> objectDB_info = (HashMap<String, Object>) default_info.get("OBJECTDB");
-                        dataInfo.setUrl((String) objectDB_info.get("text_url"));
-                        dataInfo.setTable((String) objectDB_info.get("text_table"));
-                        break;
-                    case BASEX:
-                        HashMap<String,Object> baseX_info = (HashMap<String, Object>) default_info.get("BASEX");
-                        dataInfo.setUrl((String) baseX_info.get("text_url"));
-                        dataInfo.setDatabase((String) baseX_info.get("text_database"));
-                        break;
-                    case MONGO:
-                        HashMap<String,Object> mongo_info = (HashMap<String, Object>) default_info.get("MONGO");
-                        dataInfo.setUrl((String) mongo_info.get("text_url"));
-                        dataInfo.setPort((String) mongo_info.get("text_port"));
-                        dataInfo.setDatabase((String) mongo_info.get("text_database"));
-                        dataInfo.setTable((String) mongo_info.get("text_table"));
-                        break;
-                    default: throw new OperationException("Unknown database type");
-                }
-                break;
-            default:
-                throw new OperationException("Unknown SQL dialect");
+        HashMap<String,Object> database_info = switch (dataInfo.getDialect()) {
+            case MYSQL -> (HashMap<String, Object>) default_info.get("MYSQL");
+            case SQLITE -> (HashMap<String, Object>) default_info.get("SQLITE");
+            case null -> switch((DataSource)dataInfo.getDataType()){
+                    case OBJECTDB ->(HashMap<String, Object>) default_info.get("OBJECTDB");
+                    case BASEX -> (HashMap<String, Object>) default_info.get("BASEX");
+                    case MONGO -> (HashMap<String, Object>) default_info.get("MONGO");
+                    default ->throw new OperationException("Unknown database type");
+                };
+            default -> throw new OperationException("Unknown SQL dialect");
+        };
+        for(Map.Entry<String,Object> entry : database_info.entrySet()){
+            switch (entry.getKey()){
+                case "text_url" -> dataInfo.setUrl((String) entry.getValue());
+                case "text_port" -> dataInfo.setPort((String)entry.getValue());
+                case "text_database" -> dataInfo.setDatabase((String) entry.getValue());
+                case "text_user" -> dataInfo.setUser((String) entry.getValue());
+                case "text_pwd" -> dataInfo.setPassword((String) entry.getValue());
+                case "text_table" -> dataInfo.setTable((String) entry.getValue());
+                case "text_query_read" -> dataInfo.setQueryRead((String) entry.getValue());
+                case "text_query_add" -> dataInfo.setQueryADD((String) entry.getValue());
+                case "text_query_modify" -> dataInfo.setQueryModify((String) entry.getValue());
+                case "text_query_delete" -> dataInfo.setQueryDelete((String) entry.getValue());
+                case "text_query_search" -> dataInfo.setQuerySearch((String) entry.getValue());
+            }
         }
         return dataInfo;
+    }
+
+    public void search(DataInfo dataInfo){
+        int id = Integer.parseInt(JOptionPane.showInputDialog(null,PlayerText.getDialog().getText("input_id_ongoing")));
+        player_map.clear();
+        player_map.put(id, null);
+        CRUDFactory.getCRUD(dataInfo)
+                .prepare(dataInfo)
+                .search(PlayerParser.input(dataInfo.getDataType()),null, player_map)
+                .release();
+        if(player_map.isEmpty()){
+            throw new OperationException("No player found");
+        }
     }
 
     /**
@@ -304,7 +296,7 @@ public class PlayerDAO extends GeneralDAO {
         TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
         GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getCRUD(exportDataBaseInfo)
                 .prepare(exportDataBaseInfo)
-                .read(PlayerParser.input(dataInfo.getDataType()),null, target_player_map);
+                .read(PlayerParser.input(exportDataBaseInfo.getDataType()),null, target_player_map);
         for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
             if(!player_map.containsKey(entry.getKey())){
                 currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()), DataOperation.DELETE, (Player) entry.getValue());

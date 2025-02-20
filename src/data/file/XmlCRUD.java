@@ -30,7 +30,7 @@ public class XmlCRUD implements GeneralCRUD<DataInfo> {
     @Override
     public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
         this.dataInfo = dataInfo;
-        if(dataInfo.getUrl().startsWith("<Player>")){
+        if(dataInfo.getUrl().startsWith("<")){
             stringXML = dataInfo.getUrl();
             parseRawXML = true;
             return this;
@@ -49,6 +49,11 @@ public class XmlCRUD implements GeneralCRUD<DataInfo> {
     @Override
     public void release() {
         file = null;
+    }
+
+    @Override
+    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+        return this;
     }
 
     @Override

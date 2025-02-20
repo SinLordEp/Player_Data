@@ -6,9 +6,12 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import data.DataOperation;
 import model.DataInfo;
 import org.bson.Document;
+
+import java.util.TreeMap;
 
 /**
  * @author SIN
@@ -29,6 +32,19 @@ public class MongoCRUD implements GeneralCRUD<DataInfo> {
     @Override
     public void release() {
         mongoClient.close();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+        try(MongoCursor<Document> cursor = collection.find(Filters.eq("id",((TreeMap<?, ?>) dataMap).firstKey())).iterator()){
+            ((TreeMap<?, ?>) dataMap).clear();
+            while(cursor.hasNext()){
+                Document document = cursor.next();
+                parser.parse((R)document, operation, dataMap);
+            }
+        }
+        return this;
     }
 
     @Override

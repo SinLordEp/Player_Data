@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.io.IOException;
+import java.util.TreeMap;
 
 import static main.principal.getProperty;
 
@@ -21,6 +22,7 @@ public class PhpCRUD implements GeneralCRUD<DataInfo> {
     private String url;
     private String readUrl;
     private String writeUrl;
+    private String searchUrl;
     DataInfo dataInfo;
 
     @Override
@@ -31,6 +33,7 @@ public class PhpCRUD implements GeneralCRUD<DataInfo> {
             url = getProperty("phpURL");
             readUrl = getProperty("phpReadURL");
             writeUrl = getProperty("phpWriteURL");
+            searchUrl = getProperty("phpSearchURL");
             return this;
         }
         throw new HttpPhpException("Invalid php type");
@@ -38,6 +41,27 @@ public class PhpCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     public void release() {
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", ((TreeMap<?,?>) dataMap).firstKey());
+        try {
+            String postRequest = api.postRequest(url + searchUrl, jsonObject.toJSONString());
+            JSONObject parsedJson = (JSONObject) JSONValue.parse(postRequest);
+            if(parsedJson == null) {
+                throw new DataCorruptedException("Data is null");
+            }
+            if("error".equals(parsedJson.get("status").toString())) {
+                throw new HttpPhpException(parsedJson.get("message").toString());
+            }
+            parser.parse((R)parsedJson, operation, dataMap);
+        } catch (IOException e) {
+            throw new HttpPhpException(e.getMessage());
+        }
+        return this;
     }
 
     @Override

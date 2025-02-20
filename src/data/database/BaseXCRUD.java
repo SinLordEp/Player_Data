@@ -2,8 +2,8 @@ package data.database;
 
 import Interface.GeneralCRUD;
 import Interface.ParserCallBack;
-import data.DataOperation;
 import data.CRUDFactory;
+import data.DataOperation;
 import data.file.FileType;
 import exceptions.DatabaseException;
 import model.DataInfo;
@@ -11,6 +11,8 @@ import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Open;
 import org.basex.core.cmd.XQuery;
+
+import java.util.TreeMap;
 
 /**
  * @author SIN
@@ -34,6 +36,24 @@ public class BaseXCRUD implements GeneralCRUD<DataInfo> {
     @Override
     public void release() {
         context.close();
+    }
+
+    @Override
+    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+        try {
+            String result = new XQuery(dataInfo.getQuerySearch().formatted(String.valueOf(((TreeMap<?, ?>) dataMap).firstKey()))).execute(context);
+            ((TreeMap<?, ?>) dataMap).clear();
+            DataInfo tempDataInfo = new DataInfo();
+            tempDataInfo.setDataType(FileType.XML);
+            tempDataInfo.setUrl(result);
+            CRUDFactory.getCRUD(tempDataInfo)
+                    .prepare(tempDataInfo)
+                    .read(parser, operation, dataMap)
+                    .release();
+            return this;
+        } catch (BaseXException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     @Override

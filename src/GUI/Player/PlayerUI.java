@@ -47,6 +47,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
     private JPanel main_panel;
     private JScrollPane scroll_data;
     private JTextPane textPane_log;
+    private JButton button_search;
     private PlayerTableModel tableModel;
     private int selected_player_id;
 
@@ -186,6 +187,8 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
         button_import.addActionListener(_ -> playerControl.importData());
 
         button_language.addActionListener(_ -> playerControl.changeLanguage());
+
+        button_search.addActionListener(_ -> playerControl.search());
     }
 
     private void tableListener(){

@@ -31,8 +31,12 @@ public class DataSourceChooser extends JDialog {
     private JPanel panel_info;
     private JPanel panel_button;
     private final DataInfo dataInfo;
+    private boolean isFileBanned = false;
 
     public DataSourceChooser(DataInfo dataInfo, DataInfoCallback callback) {
+        if(dataInfo.getDataType() == DataSource.NONE){
+            isFileBanned = true;
+        }
         initialize(callback);
         this.dataInfo = dataInfo;
         if(dataInfo.getDataType() == DataSource.FILE){
@@ -129,6 +133,9 @@ public class DataSourceChooser extends JDialog {
      */
     private void initializeDataSourceComboBox(){
         for(DataSource dataSource : DataSource.values()){
+            if(dataSource == DataSource.FILE && isFileBanned){
+                continue;
+            }
             comboBox_dataSource.addItem(dataSource);
         }
         comboBox_dataSource.setSelectedItem(DataSource.NONE);

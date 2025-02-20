@@ -107,7 +107,7 @@ public class PlayerControl implements GeneralControl {
 
     private void handleDataSourceForCreateFile(DataInfo dataInfo) {
         PlayerExceptionHandler.getInstance().handle(() -> {
-           dataInfo.setUrl(GeneralDAO.newPathBuilder((FileType) dataInfo.getDataType()));
+            dataInfo.setUrl(GeneralDAO.newPathBuilder((FileType) dataInfo.getDataType()));
             playerDA.createNewFile(dataInfo.getUrl());
         }, "PlayerControl-handleDataSourceForCreateFile()", "createFile");
         playerDA.setDataInfo(dataInfo);
@@ -154,12 +154,16 @@ public class PlayerControl implements GeneralControl {
         }
     }
 
-    private void importFile(DataInfo dataInfo) {
+    private void configureFilePath(DataInfo dataInfo){
         String file_path = PlayerExceptionHandler.getInstance().handle(() -> GeneralDAO.getPath((FileType) dataInfo.getDataType()),
                 "GeneralDataAccess-getPath()", "getPath");
         dataInfo.setUrl(file_path);
+    }
+
+    private void importFile(DataInfo dataInfo) {
+        configureFilePath(dataInfo);
         PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
-                "PlayerControl-importFile()", "importFile", "\n>>>" + file_path);
+                "PlayerControl-importFile()", "importFile", "\n>>>" + dataInfo.getUrl());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
@@ -193,6 +197,33 @@ public class PlayerControl implements GeneralControl {
                 "PlayerControl-importPHP()" , "importPHP", "\n>>>" + dataInfo.getDataType());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
+
+    public void search() {
+        new DataSourceChooser(new DataInfo(DataSource.NONE), this::handleDataSourceForSearch);
+    }
+
+    private void handleDataSourceForSearch(DataInfo dataInfo){
+        playerDA.setDataInfo(dataInfo);
+        notifyEvent("dataSource_set",null);
+        switch(dataInfo.getDataType()){
+            case FileType ignore :
+                configureFilePath(dataInfo);
+                searchID(dataInfo);
+                break;
+            case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO :
+                PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::searchID),
+                    "PlayerControl-searchDB()", "default_database");
+                break;
+            case PhpType ignore : searchID(dataInfo); break;
+            default : throw new IllegalStateException("Unexpected Data Source: " + dataInfo.getDataType());
+        }
+    }
+
+    private void searchID(DataInfo dataInfo) {
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.search(dataInfo), "PlayerControl-searchID()", "search", "\n>>>" + dataInfo.getUrl());
+        notifyEvent("data_changed", playerDA.getPlayerMap());
+    }
+
 
     /**
      * Initiates the process for adding a new player entry. This method performs the following:
@@ -291,7 +322,7 @@ public class PlayerControl implements GeneralControl {
                     "PlayerControl-exportFile()", "exportFile");
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> PlayerExceptionHandler.getInstance()
                     .handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(targetDataInfo), this::handleDatabaseLoginForExport),
-                    "PlayerControl-exportDB()", "default_database");
+                            "PlayerControl-exportDB()", "default_database");
             case DataSource.PHP -> PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportDB(targetDataInfo),
                     "PlayerControl-exportPHP()", "exportPHP");
             default -> throw new IllegalArgumentException("Unknown data source: " + targetDataInfo.getDataType());

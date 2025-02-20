@@ -11,9 +11,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import java.net.URL;
 import java.util.List;
+import java.util.TreeMap;
 
 import static main.principal.getProperty;
 
@@ -74,6 +76,21 @@ public class HibernateCRUD implements GeneralCRUD<DataInfo> {
     @Override
     public void release() {
         sessionFactory = null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<VerifiedEntity> query = session.createQuery(dataInfo.getQuerySearch(), VerifiedEntity.class);
+            query.setParameter("id", ((TreeMap<?, ?>) dataMap).firstKey());
+            ((TreeMap<?, ?>) dataMap).clear();
+            List<VerifiedEntity> list = query.getResultList();
+            parser.parse((R)list, null, dataMap);
+        }catch (Exception e){
+            throw new DatabaseException(e.getMessage());
+        }
+        return this;
     }
 
     /**

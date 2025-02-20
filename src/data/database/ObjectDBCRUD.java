@@ -15,6 +15,7 @@ import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author SIN
@@ -42,6 +43,23 @@ public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
     public void release() {
         entityManager.close();
         entityManager = null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+        try{
+            entityManager.getTransaction().begin();
+            TypedQuery<VerifiedEntity> query = entityManager.createQuery("SELECT s FROM %s s WHERE s.ID = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataMap).firstKey()), VerifiedEntity.class);
+            ((TreeMap<?, ?>) dataMap).clear();
+            if(!query.getResultList().isEmpty()){
+                List<VerifiedEntity> list = query.getResultList();
+                parser.parse((R)list, operation, dataMap);
+            }
+            return this;
+        }catch (Exception e){
+            throw new ObjectDBException(e.getMessage());
+        }
     }
 
     @Override
