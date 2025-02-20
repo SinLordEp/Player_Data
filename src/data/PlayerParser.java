@@ -11,18 +11,18 @@ import model.Player;
 import model.Region;
 import model.Server;
 import org.bson.Document;
-import org.hibernate.Session;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.persistence.EntityManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * @author SIN
@@ -45,8 +45,7 @@ public class PlayerParser {
     public static ParserCallBack<?, Player> singleOutput(Object dataType) {
         return switch (dataType) {
             case DataSource.DATABASE -> (ParserCallBack<PreparedStatement, Player>) PlayerParser::playerToUpdateStatement;
-            case DataSource.HIBERNATE -> (ParserCallBack<Session, Player>) PlayerParser::playerToUpdateSession;
-            case DataSource.OBJECTDB -> (ParserCallBack<EntityManager, Player>) PlayerParser::playerToUpdateEntityManager;
+            case DataSource.HIBERNATE, DataSource.OBJECTDB -> null;
             case DataSource.MONGO -> (ParserCallBack<Document, Player>) PlayerParser::playerToMongoDocument;
             case DataSource.BASEX -> (ParserCallBack<String[], Player>) PlayerParser::playerToBaseXQuery;
             case PhpType.JSON -> (ParserCallBack<JSONObject, Player>) PlayerParser::playerToJsonObject;
@@ -105,27 +104,6 @@ public class PlayerParser {
         }
     }
 
-    public static void playerToUpdateSession(Session session, DataOperation operation, Player player){
-        switch(operation){
-            case ADD -> session.persist(player);
-            case MODIFY -> session.merge(player);
-            case DELETE -> session.remove(player);
-        }
-    }
-
-    public static void playerToUpdateEntityManager(EntityManager entityManager, DataOperation operation, Player player){
-        switch(operation){
-            case ADD : entityManager.persist(player);
-                break;
-            case MODIFY : entityManager.merge(player);
-                break;
-            case DELETE :
-                Player playerToDelete = entityManager.find(Player.class, player.getID());
-                entityManager.remove(playerToDelete);
-                break;
-        }
-    }
-
     public static void parseMongoDocument(Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         Player player = new Player();
         player.setID(document.getInteger("id"));
@@ -137,12 +115,7 @@ public class PlayerParser {
 
     public static void playerToMongoDocument(Document document, DataOperation operation, Player player){
         switch(operation){
-            case ADD: document.put("id", player.getID());
-                document.put("name", player.getName());
-                document.put("region", player.getRegion().getName());
-                document.put("server", player.getServer().getName());
-                break;
-            case MODIFY: document.put("id", player.getID());
+            case ADD, MODIFY: document.put("id", player.getID());
                 document.put("name", player.getName());
                 document.put("region", player.getRegion().getName());
                 document.put("server", player.getServer().getName());

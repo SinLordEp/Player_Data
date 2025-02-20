@@ -102,12 +102,15 @@ public class HibernateCRUD implements GeneralCRUD<DataInfo> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            parser.parse((R)session, operation, object);
+            switch(operation){
+                case ADD -> session.persist(object);
+                case MODIFY -> session.merge(object);
+                case DELETE -> session.remove(object);
+            }
             transaction.commit();
             return this;
         }catch(Exception e){
