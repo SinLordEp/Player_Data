@@ -2,7 +2,6 @@ package GUI.Player;
 
 import GUI.UiUtils;
 import Interface.CallBack;
-import exceptions.OperationCancelledException;
 import model.Player;
 import model.Region;
 import model.Server;
@@ -155,7 +154,6 @@ public class PlayerInfoDialog extends JDialog {
      */
     private void onCancel() {
         dispose();
-        throw new OperationCancelledException();
     }
 
     /**
