@@ -61,11 +61,14 @@ public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
         try {
             entityManager.getTransaction().begin();
-            parser.parse((R)entityManager, operation, object);
+            switch(operation){
+                case ADD -> entityManager.persist(object);
+                case MODIFY -> entityManager.merge(object);
+                case DELETE -> entityManager.remove(entityManager.merge(object));
+            }
             entityManager.getTransaction().commit();
         }catch(Exception e){
             if(entityManager.getTransaction() != null){
