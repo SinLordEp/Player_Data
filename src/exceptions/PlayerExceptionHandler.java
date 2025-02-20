@@ -6,7 +6,6 @@ import Interface.VerifiedEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -35,7 +34,6 @@ public class PlayerExceptionHandler {
 
     public <T> T handle(ExceptionWithReturn<T> function, String className, String... playerTextSubType) {
         boolean success = true;
-        String message = "Class&Function: %s - ".formatted(className);
         try{
             if(playerTextSubType.length == 1){
                 logger.info("Method with return {} - Processing", className);
@@ -45,43 +43,13 @@ public class PlayerExceptionHandler {
                 notifyLog(LogStage.ONGOING, playerTextSubType[0] + "_ongoing", playerTextSubType[1]);
             }
             return function.run();
-        } catch (ConfigErrorException e){
-            success = false;
-            message += "Failed to read configuration.\nCause: " + e.getMessage();
-        } catch (DatabaseException e){
-            success = false;
-            message += "Failed to communicate with database.\nCause: " + e.getMessage();
-        } catch (DataCorruptedException e){
-            success = false;
-            message += "Data imported is corrupted.";
-        } catch (DataTypeException e){
-            success = false;
-            message += "Data type is not supported.";
-        } catch (FileManageException e){
-            success = false;
-            message += "Failed to manage file.\nCause: " + e.getMessage();
-        } catch (HttpPhpException e){
-            success = false;
-            message += "Failed to communicate with PHP server.\nCause: " + e.getMessage();
-        } catch (ObjectDBException e){
-            success = false;
-            message += "Failed to communicate with ObjectDB database.\nCause: " + e.getMessage();
-        } catch (OperationCancelledException e){
+        }catch (OperationCancelledException e){
             notifyLog(LogStage.INFO, "operation_cancelled");
-        } catch (OperationException e){
+        }catch (Exception e){
             success = false;
-            message += "Failed to proceed current operation.\nCause: " + e.getMessage();
-        } catch (IOException e) {
-            success = false;
-            message += "IO exception has occurred.\nCause: " + e.getMessage();
-        } catch (Exception e){
-            success = false;
-            message += "Undefined exception occurred.\nCause: " + e.getMessage();
+            handleException(e, className, playerTextSubType);
         } finally {
-            if (!success) {
-                logger.error(message);
-                notifyLog(LogStage.FAIL, playerTextSubType[0] + "_fail");
-            } else{
+            if (success) {
                 logger.info("Method with return {} - Success", className);
                 notifyLog(LogStage.PASS, playerTextSubType[0] + "_pass");
             }
@@ -90,9 +58,6 @@ public class PlayerExceptionHandler {
     }
 
     public void handle(ExceptionWithoutReturn function, String className, String... playerTextSubType) {
-        boolean success = false;
-        String message = "Class&Function: %s, ".formatted(className);
-
         try{
             if(playerTextSubType.length == 1){
                 logger.info("Method without return {} - Processing", className);
@@ -102,41 +67,31 @@ public class PlayerExceptionHandler {
                 notifyLog(LogStage.ONGOING, playerTextSubType[0] + "_ongoing", playerTextSubType[1]);
             }
             function.run();
-            if(!"dataSourceChooser".equals(playerTextSubType[0]) && !"playerInfo".equals(playerTextSubType[0]) && !"default_database".equals(playerTextSubType[0])) {
-                notifyLog(LogStage.PASS, playerTextSubType[0] + "_pass");
-            }
-            success = true;
-        } catch (ConfigErrorException e){
-            message += "Failed to read configuration.\nCause: " + e.getMessage();
-        } catch (DatabaseException e){
-            message += "Failed to communicate with database.\nCause: " + e.getMessage();
-        } catch (DataCorruptedException e){
-            message += "Data imported is corrupted.";
-        } catch (DataTypeException e){
-            message += "Data type is not supported.";
-        } catch (FileManageException e){
-            message += "Failed to manage file.\nCause: " + e.getMessage();
-        } catch (HttpPhpException e){
-            message += "Failed to communicate with PHP server.\nCause: " + e.getMessage();
-        } catch (ObjectDBException e){
-            message += "Failed to communicate with ObjectDB database.\nCause: " + e.getMessage();
-        } catch (OperationCancelledException e){
+            notifyLog(LogStage.PASS, playerTextSubType[0] + "_pass");
+            logger.info("Method without return {} - Success", className);
+        }catch (OperationCancelledException e){
             notifyLog(LogStage.INFO, "operation_cancelled");
-            success = true;
-        } catch (OperationException e){
-            message += "Failed to proceed current operation.\nCause: " + e.getMessage();
-        } catch (Exception e){
-            message += "Undefined exception occurred.\nCause: " + e.getMessage();
-        }finally{
-            if (!success) {
-                logger.error(message);
-                notifyLog(LogStage.FAIL, playerTextSubType[0] + "_fail");
-            } else{
-                logger.info("Method without return {} - Success", className);
-            }
+        }catch (Exception e){
+            handleException(e, className, playerTextSubType);
         }
     }
 
+    private void handleException(Exception e, String className, String... playerTextSubType){
+        String message = "Class&Function: %s, ".formatted(className);
+        switch (e) {
+            case ConfigErrorException _ -> message += "Failed to read configuration.\nCause: " + e.getMessage();
+            case DatabaseException _ -> message += "Failed to communicate with database.\nCause: " + e.getMessage();
+            case DataCorruptedException _ -> message += "Data imported is corrupted.";
+            case DataTypeException _ -> message += "Data type is not supported.";
+            case FileManageException _ -> message += "Failed to manage file.\nCause: " + e.getMessage();
+            case HttpPhpException _ -> message += "Failed to communicate with PHP server.\nCause: " + e.getMessage();
+            case ObjectDBException _ -> message += "Failed to communicate with ObjectDB database.\nCause: " + e.getMessage();
+            case OperationException _ -> message += "Failed to proceed current operation.\nCause: " + e.getMessage();
+            default -> message += "Undefined exception occurred.\nCause: " + e.getMessage();
+        }
+        logger.error(message);
+        notifyLog(LogStage.FAIL, playerTextSubType[0] + "_fail");
+    }
     public void addListener(EventListener<TreeMap<Integer, VerifiedEntity>> listener){
         listeners.add(listener);
     }
