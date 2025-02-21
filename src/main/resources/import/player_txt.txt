@@ -1,7 +1,16 @@
-1;North America;Stormterror's Lair;John Doe
-2;Asia;Narukami Shrine;SB
-3;Asia;Jueyun Karst;Jaime
-4;Asia;Inazuma City;as
+1;Asia;Liyue Harbor;John Doe
+2;Europe;Springvale;Jane Smith
+3;Asia;Jueyun Karst;Alex Chen
+4;South America;Port Ormos;Maria Lopez
 5;North America;Wolvendom;Uno
-6;South America;Chasm;QS
-7;South America;Chasm;AAS
+6;South America;Port Ormos;Pepe
+7;Asia;Liyue Harbor;sa
+8;Asia;Inazuma City;Asasa
+9;Europe;Mingyun Village;David
+10;Oceania;Musoujin Gorge;Pablo
+11;Asia;Liyue Harbor;Tesa
+12;South America;Chasm;ASD
+13;South America;Port Ormos;13
+14;South America;Chasm;SSS
+15;Europe;Mingyun Village;WWW
+16;North America;Brightcrown Canyon;QQQS

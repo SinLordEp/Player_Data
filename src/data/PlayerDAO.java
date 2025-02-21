@@ -140,7 +140,9 @@ public class PlayerDAO extends GeneralDAO {
                 .prepare(dataInfo)
                 .read(PlayerParser.input(dataInfo.getDataType()),DataOperation.SEARCH, player_map)
                 .release();
-        if(player_map.isEmpty()){
+        if(player_map != null && !player_map.isEmpty()){
+            isDataValid();
+        }else{
             throw new OperationException("No player found");
         }
     }
@@ -247,11 +249,8 @@ public class PlayerDAO extends GeneralDAO {
                    .release();
        }
         switch (operation){
-            case ADD, MODIFY: player_map.put(player.getID(), player);
-                player_map.put(player.getID(), player);
-                break;
-            case DELETE: player_map.remove(player.getID());
-                break;
+            case ADD, MODIFY -> player_map.put(player.getID(), player);
+            case DELETE -> player_map.remove(player.getID());
         }
         isDataChanged = true;
     }
