@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import data.DataOperation;
+import exceptions.OperationException;
 import model.DataInfo;
 import org.bson.Document;
 
@@ -36,21 +37,13 @@ public class MongoCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        try(MongoCursor<Document> cursor = collection.find(Filters.eq("id",((TreeMap<?, ?>) dataMap).firstKey())).iterator()){
-            ((TreeMap<?, ?>) dataMap).clear();
-            while(cursor.hasNext()){
-                Document document = cursor.next();
-                parser.parse((R)document, operation, dataMap);
-            }
-        }
-        return this;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        try(MongoCursor<Document> cursor = collection.find().iterator()){
+        try(MongoCursor<Document> cursor = switch (operation){
+            case READ -> collection.find().iterator();
+            case SEARCH -> collection.find(Filters.eq("id",((TreeMap<?, ?>) dataMap).firstKey())).iterator();
+            default -> throw new OperationException("Unexpected DataOperation for reading: " + operation);
+        }){
+            ((TreeMap<?, ?>) dataMap).clear();
             while(cursor.hasNext()){
                 Document document = cursor.next();
                 parser.parse((R)document, operation, dataMap);

@@ -7,6 +7,7 @@ import data.file.xml_utils;
 import data.http.PhpType;
 import exceptions.DataCorruptedException;
 import exceptions.DatabaseException;
+import exceptions.OperationException;
 import model.Player;
 import model.Region;
 import model.Server;
@@ -196,6 +197,7 @@ public class PlayerParser {
             case MODIFY -> "replace node /Player/player[@id='%s'] with <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player>"
                     .formatted(player.getID(), player.getID(), player.getRegion(), player.getServer(), player.getName());
             case DELETE -> "delete node /Player/player[@id='%s']".formatted(player.getID());
+            default -> throw new OperationException("Invalid DataOperation");
         };
     }
 

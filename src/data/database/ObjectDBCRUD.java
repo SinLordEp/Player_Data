@@ -6,6 +6,7 @@ import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.DatabaseException;
 import exceptions.ObjectDBException;
+import exceptions.OperationException;
 import model.DataInfo;
 import model.Player;
 
@@ -47,27 +48,15 @@ public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        try{
-            entityManager.getTransaction().begin();
-            TypedQuery<VerifiedEntity> query = entityManager.createQuery("SELECT s FROM %s s WHERE s.ID = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataMap).firstKey()), VerifiedEntity.class);
-            ((TreeMap<?, ?>) dataMap).clear();
-            if(!query.getResultList().isEmpty()){
-                List<VerifiedEntity> list = query.getResultList();
-                parser.parse((R)list, operation, dataMap);
-            }
-            return this;
-        }catch (Exception e){
-            throw new ObjectDBException(e.getMessage());
-        }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         try{
             entityManager.getTransaction().begin();
-            TypedQuery<VerifiedEntity> query = entityManager.createQuery("SELECT s FROM %s s".formatted(dataInfo.getTable()), VerifiedEntity.class);
+            TypedQuery<VerifiedEntity> query = switch (operation){
+                case READ -> entityManager.createQuery("SELECT s FROM %s s".formatted(dataInfo.getTable()), VerifiedEntity.class);
+                case SEARCH -> entityManager.createQuery("SELECT s FROM %s s WHERE s.ID = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataMap).firstKey()), VerifiedEntity.class);
+                default -> throw new OperationException("Unexpected DataOperation for reading: " + operation);
+            };
+            ((TreeMap<?, ?>) dataMap).clear();
             if(!query.getResultList().isEmpty()){
                 List<VerifiedEntity> list = query.getResultList();
                 parser.parse((R)list, operation, dataMap);

@@ -5,6 +5,7 @@ import Interface.ParserCallBack;
 import data.DataOperation;
 import exceptions.DataCorruptedException;
 import exceptions.HttpPhpException;
+import exceptions.OperationException;
 import model.DataInfo;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -45,31 +46,19 @@ public class PhpCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", ((TreeMap<?,?>) dataMap).firstKey());
-        try {
-            String postRequest = api.postRequest(url + searchUrl, jsonObject.toJSONString());
-            JSONObject parsedJson = (JSONObject) JSONValue.parse(postRequest);
-            if(parsedJson == null) {
-                throw new DataCorruptedException("Data is null");
-            }
-            if("error".equals(parsedJson.get("status").toString())) {
-                throw new HttpPhpException(parsedJson.get("message").toString());
-            }
-            parser.parse((R)parsedJson, operation, dataMap);
-        } catch (IOException e) {
-            throw new HttpPhpException(e.getMessage());
-        }
-        return this;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         try {
-            String rawJson = api.getRequest(url + readUrl);
-            JSONObject parsedJson = (JSONObject) JSONValue.parse(rawJson);
+            String response;
+            switch (operation){
+                case SEARCH: JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("id", ((TreeMap<?,?>) dataMap).firstKey());
+                    response = api.postRequest(url + searchUrl, jsonObject.toJSONString());
+                    break;
+                case READ: response = api.getRequest(url + readUrl);
+                break;
+                default: throw new OperationException("Unexpected DataOperation for reading: " + operation);
+            }
+            JSONObject parsedJson = (JSONObject) JSONValue.parse(response);
             if(parsedJson == null) {
                 throw new DataCorruptedException("Data is null");
             }

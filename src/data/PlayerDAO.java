@@ -138,7 +138,7 @@ public class PlayerDAO extends GeneralDAO {
         player_map.put(id, null);
         CRUDFactory.getCRUD(dataInfo)
                 .prepare(dataInfo)
-                .search(PlayerParser.input(dataInfo.getDataType()),null, player_map)
+                .read(PlayerParser.input(dataInfo.getDataType()),DataOperation.SEARCH, player_map)
                 .release();
         if(player_map.isEmpty()){
             throw new OperationException("No player found");
@@ -179,7 +179,7 @@ public class PlayerDAO extends GeneralDAO {
         try {
             CRUDFactory.getCRUD(dataInfo)
                     .prepare(dataInfo)
-                    .read(PlayerParser.input(dataInfo.getDataType()),null, player_map)
+                    .read(PlayerParser.input(dataInfo.getDataType()),DataOperation.READ, player_map)
                     .release();
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();

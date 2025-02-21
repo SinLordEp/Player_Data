@@ -6,6 +6,7 @@ import data.CRUDFactory;
 import data.DataOperation;
 import data.file.FileType;
 import exceptions.DatabaseException;
+import exceptions.OperationException;
 import model.DataInfo;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
@@ -39,27 +40,13 @@ public class BaseXCRUD implements GeneralCRUD<DataInfo> {
     }
 
     @Override
-    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        try {
-            String result = new XQuery(dataInfo.getQuerySearch().formatted(String.valueOf(((TreeMap<?, ?>) dataMap).firstKey()))).execute(context);
-            ((TreeMap<?, ?>) dataMap).clear();
-            DataInfo tempDataInfo = new DataInfo();
-            tempDataInfo.setDataType(FileType.XML);
-            tempDataInfo.setUrl(result);
-            CRUDFactory.getCRUD(tempDataInfo)
-                    .prepare(tempDataInfo)
-                    .read(parser, operation, dataMap)
-                    .release();
-            return this;
-        } catch (BaseXException e) {
-            throw new DatabaseException(e.getMessage());
-        }
-    }
-
-    @Override
     public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         try {
-            String result =  new XQuery(dataInfo.getDatabase()).execute(context);
+            String result = switch (operation){
+                case READ -> new XQuery(dataInfo.getDatabase()).execute(context);
+                case SEARCH -> new XQuery(dataInfo.getQuerySearch().formatted(String.valueOf(((TreeMap<?, ?>) dataMap).firstKey()))).execute(context);
+                default -> throw new OperationException("Unexpected DataOperation for reading: " + operation);
+            };
             DataInfo tempDataInfo = new DataInfo();
             tempDataInfo.setDataType(FileType.XML);
             tempDataInfo.setUrl(result);

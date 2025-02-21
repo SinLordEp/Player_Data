@@ -2,8 +2,11 @@
 <component inherit-compiler-output="true" jdk="openjdk-23" jdk_type="JavaSDK">
 	<output-test url="file://$MODULE_DIR$/out/test/Player_Data"/>
 	<exclude-output/>
-	<contentEntry url="file://$MODULE_DIR$"/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<excludeFolder url="file://$MODULE_DIR$/.idea/dataSources"/>
+	</contentEntry>
 	<levels>
 		<level name="lib" value="project"/>
+		<level name="mongo" value="project"/>
 	</levels>
 </component>

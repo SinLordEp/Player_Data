@@ -52,11 +52,6 @@ public class XmlCRUD implements GeneralCRUD<DataInfo> {
     }
 
     @Override
-    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        return this;
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
         Element element;

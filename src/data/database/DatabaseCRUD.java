@@ -4,6 +4,7 @@ import Interface.GeneralCRUD;
 import Interface.ParserCallBack;
 import data.DataOperation;
 import exceptions.DatabaseException;
+import exceptions.OperationException;
 import model.DataInfo;
 import model.Region;
 import model.Server;
@@ -50,25 +51,6 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
         connection = null;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        if(connection == null){
-            throw new DatabaseException("Database is not connected");
-        }
-        String query = "SELECT * FROM %s where id = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataMap).firstKey());
-        ((TreeMap<?, ?>) dataMap).clear();
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()){
-                parser.parse((R)resultSet, operation, dataMap);
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException("Data rolled back with cause: " + e.getMessage());
-        }
-        return this;
-    }
-
     /**
      * Reads all player parser from the database and returns it as a {@code TreeMap}.
      * This method executes a SQL query to retrieve player records, constructs {@code Player} objects
@@ -89,14 +71,19 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
         if(connection == null){
             throw new DatabaseException("Database is not connected");
         }
-        String query = "SELECT * FROM %s".formatted(dataInfo.getTable());
+        String query = switch (operation){
+            case READ -> "SELECT * FROM %s".formatted(dataInfo.getTable());
+            case SEARCH -> "SELECT * FROM %s where id = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataMap).firstKey());
+            default -> throw new OperationException("Unexpected DataOperation for reading: " + operation);
+        };
+        ((TreeMap<?, ?>) dataMap).clear();
         try(PreparedStatement statement = connection.prepareStatement(query)){
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
                parser.parse((R)resultSet, operation, dataMap);
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Data rolled back with cause: " + e.getMessage());
+            throw new DatabaseException("Cannot read from database. Cause: " + e.getMessage());
         }
         return this;
     }
@@ -108,6 +95,7 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
             case ADD -> dataInfo.getQueryADD();
             case MODIFY -> dataInfo.getQueryModify();
             case DELETE -> dataInfo.getQueryDelete();
+            default -> throw new OperationException("Unexpected DataOperation for updating: " + operation);
         };
         try(PreparedStatement statement = connection.prepareStatement(query)){
             parser.parse((R)statement, operation, object);

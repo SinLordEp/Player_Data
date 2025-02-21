@@ -5,6 +5,7 @@ import Interface.ParserCallBack;
 import Interface.VerifiedEntity;
 import data.DataOperation;
 import exceptions.DatabaseException;
+import exceptions.OperationException;
 import model.DataInfo;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -78,21 +79,6 @@ public class HibernateCRUD implements GeneralCRUD<DataInfo> {
         sessionFactory = null;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> search(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        try (Session session = sessionFactory.openSession()) {
-            Query<VerifiedEntity> query = session.createQuery(dataInfo.getQuerySearch(), VerifiedEntity.class);
-            query.setParameter("id", ((TreeMap<?, ?>) dataMap).firstKey());
-            ((TreeMap<?, ?>) dataMap).clear();
-            List<VerifiedEntity> list = query.getResultList();
-            parser.parse((R)list, null, dataMap);
-        }catch (Exception e){
-            throw new DatabaseException(e.getMessage());
-        }
-        return this;
-    }
-
     /**
      * Reads all player data from the database using Hibernate and returns it as a {@code TreeMap}.
      * This method utilizes a Hibernate session to execute an HQL query that retrieves {@code Player}
@@ -110,7 +96,16 @@ public class HibernateCRUD implements GeneralCRUD<DataInfo> {
     @SuppressWarnings("unchecked")
     public <R,U> GeneralCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap){
         try (Session session = sessionFactory.openSession()) {
-            List<VerifiedEntity> list = session.createQuery(dataInfo.getQueryRead(), VerifiedEntity.class).getResultList();
+            Query<VerifiedEntity> query;
+             switch (operation){
+                case READ : query = session.createQuery(dataInfo.getQueryRead(), VerifiedEntity.class);
+                break;
+                case SEARCH:  query = session.createQuery(dataInfo.getQuerySearch(), VerifiedEntity.class);
+                    query.setParameter("id", ((TreeMap<?, ?>) dataMap).firstKey());
+                    break;
+                 default: throw new OperationException("Unexpected DataOperation for reading: " + operation);
+            }
+            List<VerifiedEntity> list = query.getResultList();
             parser.parse((R)list, null, dataMap);
         }catch (Exception e){
             throw new DatabaseException(e.getMessage());
