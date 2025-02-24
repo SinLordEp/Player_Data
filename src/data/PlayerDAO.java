@@ -132,7 +132,7 @@ public class PlayerDAO extends GeneralDAO {
         return dataInfo;
     }
 
-    public void search(DataInfo dataInfo){
+    public void search(){
         int id = Integer.parseInt(JOptionPane.showInputDialog(null,PlayerText.getDialog().getText("input_id_ongoing")));
         player_map.clear();
         player_map.put(id, null);

@@ -203,13 +203,8 @@ public class PlayerControl implements GeneralControl {
     }
 
     private void handleDataSourceForSearch(DataInfo dataInfo){
-        playerDA.setDataInfo(dataInfo);
         notifyEvent("dataSource_set",null);
         switch(dataInfo.getDataType()){
-            case FileType ignore :
-                configureFilePath(dataInfo);
-                searchID(dataInfo);
-                break;
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO :
                 PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::searchID),
                     "PlayerControl-searchDB()", "default_database");
@@ -220,7 +215,8 @@ public class PlayerControl implements GeneralControl {
     }
 
     private void searchID(DataInfo dataInfo) {
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.search(dataInfo), "PlayerControl-searchID()", "search", "\n>>>" + dataInfo.getUrl());
+        playerDA.setDataInfo(dataInfo);
+        PlayerExceptionHandler.getInstance().handle(() -> playerDA.search(), "PlayerControl-searchID()", "search", "\n>>>" + dataInfo.getUrl());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
