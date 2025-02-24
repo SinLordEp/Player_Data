@@ -1,8 +1,8 @@
 # 🚀 **项目简介 / Project Overview**
 
-This project was developed as part of the "Acceso de Datos" course over an academic year. It follows a multi-layer architecture, including control, data, and GUI layers.
+本项目是作为 "Acceso de Datos" 课程的一部分，它采用多层架构，包括控制层、数据层和 GUI 层。
 
-本项目是作为 "Acceso de Datos" 课程的一部分，历时一个学年完成。它采用多层架构，包括控制层、数据层和 GUI 层。
+This project was developed as part of the "Acceso de Datos" course. It follows a multi-layer architecture, including control, data, and GUI layers.
 
 本项目是一个基于 Java 的多层结构应用程序，包含控制层、数据层和 GUI 层。主要用于管理玩家信息，并支持多种数据源和操作方式。
 
