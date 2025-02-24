@@ -22,15 +22,18 @@ import java.util.TreeMap;
  * @author SIN
  */
 public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
-    private DataInfo dataInfo;
+    private final DataInfo dataInfo;
     private EntityManager entityManager;
 
+    public ObjectDBCRUD(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
+
     @Override
-    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
+    public GeneralCRUD<DataInfo> prepare() throws DatabaseException {
         try{
             entityManager = Persistence.createEntityManagerFactory(dataInfo.getUrl()).createEntityManager();
             if(entityManager != null && entityManager.isOpen()){
-                this.dataInfo = dataInfo;
                 return this;
             }else {
                 throw new DatabaseException("Entity manager is closed");
@@ -43,7 +46,6 @@ public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
     @Override
     public void release() {
         entityManager.close();
-        entityManager = null;
     }
 
     @Override

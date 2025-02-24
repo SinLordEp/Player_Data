@@ -15,9 +15,15 @@ import java.util.ArrayList;
  */
 
 public class DatCRUD implements GeneralCRUD<DataInfo> {
-    File file;
+    private final DataInfo dataInfo;
+    private File file;
+
+    public DatCRUD(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
+
     @Override
-    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
+    public GeneralCRUD<DataInfo> prepare() {
         file = new File(dataInfo.getUrl());
         if (file.exists() && file.canRead() && file.canWrite()){
             return this;

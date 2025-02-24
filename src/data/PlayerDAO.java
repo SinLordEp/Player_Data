@@ -137,7 +137,7 @@ public class PlayerDAO extends GeneralDAO {
         player_map.clear();
         player_map.put(id, null);
         CRUDFactory.getCRUD(dataInfo)
-                .prepare(dataInfo)
+                .prepare()
                 .read(PlayerParser.input(dataInfo.getDataType()),DataOperation.SEARCH, player_map)
                 .release();
         if(player_map != null && !player_map.isEmpty()){
@@ -180,7 +180,7 @@ public class PlayerDAO extends GeneralDAO {
         player_map.clear();
         try {
             CRUDFactory.getCRUD(dataInfo)
-                    .prepare(dataInfo)
+                    .prepare()
                     .read(PlayerParser.input(dataInfo.getDataType()),DataOperation.READ, player_map)
                     .release();
             if(player_map != null && !player_map.isEmpty()){
@@ -231,7 +231,7 @@ public class PlayerDAO extends GeneralDAO {
         try{
             if (Objects.requireNonNull(dataInfo.getDataType()) instanceof FileType) {
                 CRUDFactory.getCRUD(dataInfo)
-                        .prepare(dataInfo)
+                        .prepare()
                         .update(PlayerParser.allOutput(dataInfo.getDataType()), null, player_map)
                         .release();
             }
@@ -244,7 +244,7 @@ public class PlayerDAO extends GeneralDAO {
     public void update(DataOperation operation, Player player){
        if(!(dataInfo.getDataType() instanceof FileType)){
            CRUDFactory.getCRUD(dataInfo)
-                   .prepare(dataInfo)
+                   .prepare()
                    .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player)
                    .release();
        }
@@ -277,7 +277,7 @@ public class PlayerDAO extends GeneralDAO {
         targetDataInfo.setUrl(target_path);
         try {
             CRUDFactory.getCRUD(targetDataInfo)
-                    .prepare(targetDataInfo)
+                    .prepare()
                     .update(PlayerParser.allOutput(targetDataInfo.getDataType()), null, player_map)
                     .release();
         } catch (Exception e) {
@@ -294,7 +294,7 @@ public class PlayerDAO extends GeneralDAO {
     public void exportDB(DataInfo exportDataBaseInfo) {
         TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
         GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getCRUD(exportDataBaseInfo)
-                .prepare(exportDataBaseInfo)
+                .prepare()
                 .read(PlayerParser.input(exportDataBaseInfo.getDataType()),null, target_player_map);
         for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
             if(!player_map.containsKey(entry.getKey())){

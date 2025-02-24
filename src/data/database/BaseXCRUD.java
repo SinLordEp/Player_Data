@@ -20,14 +20,17 @@ import java.util.TreeMap;
  */
 
 public class BaseXCRUD implements GeneralCRUD<DataInfo> {
-    Context context = new Context();
-    DataInfo dataInfo;
+    private final Context context = new Context();
+    private final DataInfo dataInfo;
+
+    public BaseXCRUD(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
 
     @Override
-    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
+    public GeneralCRUD<DataInfo> prepare() {
         try {
             new Open(dataInfo.getDatabase()).execute(context);
-            this.dataInfo = dataInfo;
             return this;
         } catch (BaseXException e) {
             throw new DatabaseException(e.getMessage());
@@ -51,7 +54,7 @@ public class BaseXCRUD implements GeneralCRUD<DataInfo> {
             tempDataInfo.setDataType(FileType.XML);
             tempDataInfo.setUrl(result);
             CRUDFactory.getCRUD(tempDataInfo)
-                    .prepare(tempDataInfo)
+                    .prepare()
                     .read(parser, operation, dataMap)
                     .release();
             return this;

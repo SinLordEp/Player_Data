@@ -22,14 +22,17 @@ import java.io.File;
  * @author SIN
  */
 public class XmlCRUD implements GeneralCRUD<DataInfo> {
-    File file;
-    String stringXML;
-    boolean parseRawXML = false;
-    DataInfo dataInfo;
+    private File file;
+    private String stringXML;
+    private boolean parseRawXML = false;
+    private final DataInfo dataInfo;
+
+    public XmlCRUD(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
 
     @Override
-    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
-        this.dataInfo = dataInfo;
+    public GeneralCRUD<DataInfo> prepare() {
         if(dataInfo.getUrl().startsWith("<")){
             stringXML = dataInfo.getUrl();
             parseRawXML = true;

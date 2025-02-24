@@ -24,9 +24,13 @@ import static main.principal.getProperty;
  * @author SIN
  */
 public class HibernateCRUD implements GeneralCRUD<DataInfo> {
-    DataInfo dataInfo;
+    private final DataInfo dataInfo;
     private SessionFactory sessionFactory;
     private final Configuration configuration = new Configuration();
+
+    public HibernateCRUD(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
 
     /**
      * Establishes a Hibernate-based connection to a database using the provided {@code DatabaseInfo}.
@@ -36,16 +40,13 @@ public class HibernateCRUD implements GeneralCRUD<DataInfo> {
      * Logs the connection activity and throws a {@code DatabaseException} if there is an error during
      * the connection setup.
      *
-     * @param dataInfo the information required to establish the Hibernate connection,
-     *                     including the SQL dialect, database URL, port, database name,
-     *                     username, and password.
      * @return {@code true} if the Hibernate session is successfully opened;
      *         otherwise throws a {@code DatabaseException}.
      * @throws DatabaseException if the connection fails due to errors in configuration,
      *                           invalid credentials, or exceptions during session factory creation.
      */
     @Override
-    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
+    public GeneralCRUD<DataInfo> prepare() throws DatabaseException {
         URL resource = getClass().getResource(getProperty("hibernateConfig"));
         configuration.configure(resource);
         switch (dataInfo.getDialect()){
@@ -64,7 +65,6 @@ public class HibernateCRUD implements GeneralCRUD<DataInfo> {
         try {
             sessionFactory = configuration.buildSessionFactory();
             if(sessionFactory != null){
-                this.dataInfo = dataInfo;
                 return this;
             }else{
                 throw new DatabaseException("SessionFactory is null");
@@ -76,7 +76,7 @@ public class HibernateCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     public void release() {
-        sessionFactory = null;
+        sessionFactory.close();
     }
 
     /**

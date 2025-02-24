@@ -18,12 +18,16 @@ import java.util.TreeMap;
  * @author SIN
  */
 public class MongoCRUD implements GeneralCRUD<DataInfo> {
-    DataInfo dataInfo;
+    private final DataInfo dataInfo;
     MongoClient mongoClient;
     MongoCollection<Document> collection;
-    @Override
-    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
+
+    public MongoCRUD(DataInfo dataInfo) {
         this.dataInfo = dataInfo;
+    }
+
+    @Override
+    public GeneralCRUD<DataInfo> prepare() {
         mongoClient = new MongoClient(dataInfo.getUrl(), Integer.parseInt(dataInfo.getPort()));
         MongoDatabase database = mongoClient.getDatabase(dataInfo.getDatabase());
         collection = database.getCollection(dataInfo.getTable());

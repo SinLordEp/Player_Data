@@ -17,14 +17,17 @@ import java.util.Scanner;
  * @author SIN
  */
 public class TxtCRUD implements GeneralCRUD<DataInfo> {
-    File file;
-    DataInfo dataInfo;
+    private File file;
+    private final DataInfo dataInfo;
+
+    public TxtCRUD(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
 
     @Override
-    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
+    public GeneralCRUD<DataInfo> prepare() {
         file = new File(dataInfo.getUrl());
         if (file.exists() && file.canRead() && file.canWrite()){
-            this.dataInfo = dataInfo;
             return this;
         }else{
             throw new FileManageException("File cannot be read or write");

@@ -18,17 +18,20 @@ import static main.principal.getProperty;
 /**
  * @author SIN
  */
-public class PhpCRUD implements GeneralCRUD<DataInfo> {
+public class JsonCRUD implements GeneralCRUD<DataInfo> {
     ApiRequests api;
     private String url;
     private String readUrl;
     private String writeUrl;
     private String searchUrl;
-    DataInfo dataInfo;
+    private final DataInfo dataInfo;
+
+    public JsonCRUD(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
 
     @Override
-    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) {
-        this.dataInfo = dataInfo;
+    public GeneralCRUD<DataInfo> prepare() {
         if(dataInfo.getDataType() == PhpType.JSON){
             api = new ApiRequests();
             url = getProperty("phpURL");

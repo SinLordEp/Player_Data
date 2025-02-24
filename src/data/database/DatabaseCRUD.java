@@ -17,9 +17,14 @@ import java.util.*;
  */
 public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
     private Connection connection = null;
-    private DataInfo dataInfo;
+    private final DataInfo dataInfo;
+
+    public DatabaseCRUD(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
+
     @Override
-    public GeneralCRUD<DataInfo> prepare(DataInfo dataInfo) throws DatabaseException {
+    public GeneralCRUD<DataInfo> prepare() throws DatabaseException {
         try {
             switch (dataInfo.getDialect()){
                 case MYSQL:
@@ -39,7 +44,6 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
             throw new DatabaseException(e.getMessage());
         }
         if(connection != null){
-            this.dataInfo = dataInfo;
             return this;
         }else{
             throw new DatabaseException("Connection is null");
@@ -48,7 +52,11 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     public void release() {
-        connection = null;
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error closing connection");
+        }
     }
 
     /**
