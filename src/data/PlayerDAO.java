@@ -132,13 +132,14 @@ public class PlayerDAO extends GeneralDAO {
         return dataInfo;
     }
 
+    @Override
     public void search(){
         int id = Integer.parseInt(JOptionPane.showInputDialog(null,PlayerText.getDialog().getText("input_id_ongoing")));
         player_map.clear();
         player_map.put(id, null);
         CRUDFactory.getCRUD(dataInfo)
                 .prepare()
-                .read(PlayerParser.input(dataInfo.getDataType()),DataOperation.SEARCH, player_map)
+                .read(PlayerParser.input(dataInfo.getDataType()), DataOperation.SEARCH, player_map)
                 .release();
         if(player_map != null && !player_map.isEmpty()){
             isDataValid();
@@ -181,7 +182,7 @@ public class PlayerDAO extends GeneralDAO {
         try {
             CRUDFactory.getCRUD(dataInfo)
                     .prepare()
-                    .read(PlayerParser.input(dataInfo.getDataType()),DataOperation.READ, player_map)
+                    .read(PlayerParser.input(dataInfo.getDataType()), DataOperation.READ, player_map)
                     .release();
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();

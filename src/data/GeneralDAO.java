@@ -23,6 +23,7 @@ import static main.principal.getProperty;
  */
 public abstract class GeneralDAO {
     protected DataInfo dataInfo = new DataInfo();
+    public abstract void search();
     public abstract void read();
     public abstract void save();
 
