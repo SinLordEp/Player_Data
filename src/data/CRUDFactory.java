@@ -12,7 +12,6 @@ import static main.principal.getProperty;
  * @author SIN
  */
 public class CRUDFactory {
-
     @SuppressWarnings("unchecked")
     public static GeneralCRUD<DataInfo> getCRUD(DataInfo dataInfo) {
         String classPackagePath = "data.%s".formatted(getProperty(dataInfo.getDataType().toString()));
