@@ -110,11 +110,11 @@ public class PlayerDAO extends GeneralDAO {
             case MYSQL -> (HashMap<String, Object>) default_info.get("MYSQL");
             case SQLITE -> (HashMap<String, Object>) default_info.get("SQLITE");
             case null -> switch((DataSource)dataInfo.getDataType()){
-                    case OBJECTDB ->(HashMap<String, Object>) default_info.get("OBJECTDB");
-                    case BASEX -> (HashMap<String, Object>) default_info.get("BASEX");
-                    case MONGO -> (HashMap<String, Object>) default_info.get("MONGO");
-                    default ->throw new OperationException("Unknown database type");
-                };
+                case OBJECTDB ->(HashMap<String, Object>) default_info.get("OBJECTDB");
+                case BASEX -> (HashMap<String, Object>) default_info.get("BASEX");
+                case MONGO -> (HashMap<String, Object>) default_info.get("MONGO");
+                default ->throw new OperationException("Unknown database type");
+            };
             default -> throw new OperationException("Unknown SQL dialect");
         };
         for(Map.Entry<String,Object> entry : database_info.entrySet()){
@@ -232,28 +232,24 @@ public class PlayerDAO extends GeneralDAO {
      */
     @Override
     public void save(){
-        try{
-            if (Objects.requireNonNull(dataInfo.getDataType()) instanceof FileType) {
-                CRUDFactory.getCRUD(dataInfo)
-                        .prepare()
-                        .update(PlayerParser.allOutput(dataInfo.getDataType()), null, player_map)
-                        .release();
-                isSaveToFileNeeded = false;
-            }
-        } catch (Exception e) {
-            throw new OperationException(e.getMessage());
+        if (Objects.requireNonNull(dataInfo.getDataType()) instanceof FileType) {
+            CRUDFactory.getCRUD(dataInfo)
+                    .prepare()
+                    .update(PlayerParser.allOutput(dataInfo.getDataType()), null, player_map)
+                    .release();
+            isSaveToFileNeeded = false;
         }
     }
 
     public void update(DataOperation operation, Player player){
-       if(!(dataInfo.getDataType() instanceof FileType)){
-           CRUDFactory.getCRUD(dataInfo)
-                   .prepare()
-                   .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player)
-                   .release();
-       }else{
-           isSaveToFileNeeded = true;
-       }
+        if(!(dataInfo.getDataType() instanceof FileType)){
+            CRUDFactory.getCRUD(dataInfo)
+                    .prepare()
+                    .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player)
+                    .release();
+        }else{
+            isSaveToFileNeeded = true;
+        }
         switch (operation){
             case ADD, MODIFY -> player_map.put(player.getID(), player);
             case DELETE -> player_map.remove(player.getID());
@@ -281,14 +277,10 @@ public class PlayerDAO extends GeneralDAO {
         target_path += "/" + target_name + target_extension;
         createNewFile(target_path);
         targetDataInfo.setUrl(target_path);
-        try {
-            CRUDFactory.getCRUD(targetDataInfo)
-                    .prepare()
-                    .update(PlayerParser.allOutput(targetDataInfo.getDataType()), null, player_map)
-                    .release();
-        } catch (Exception e) {
-            throw new FileManageException("Failed to export file with cause: " + e.getMessage());
-        }
+        CRUDFactory.getCRUD(targetDataInfo)
+                .prepare()
+                .update(PlayerParser.allOutput(targetDataInfo.getDataType()), null, player_map)
+                .release();
     }
 
     /**
