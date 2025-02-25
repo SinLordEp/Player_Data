@@ -19,6 +19,7 @@ import java.util.TreeMap;
  * @author SIN
  */
 
+@SuppressWarnings("unused")
 public class BaseXCRUD implements GeneralCRUD<DataInfo> {
     private final Context context = new Context();
     private final DataInfo dataInfo;

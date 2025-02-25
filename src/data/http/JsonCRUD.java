@@ -18,6 +18,7 @@ import static main.principal.getProperty;
 /**
  * @author SIN
  */
+@SuppressWarnings("unused")
 public class JsonCRUD implements GeneralCRUD<DataInfo> {
     ApiRequests api;
     private String url;

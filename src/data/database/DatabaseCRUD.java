@@ -15,6 +15,7 @@ import java.util.*;
 /**
  * @author SIN
  */
+@SuppressWarnings("unused")
 public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
     private Connection connection = null;
     private final DataInfo dataInfo;

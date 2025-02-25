@@ -16,6 +16,7 @@ import java.util.Scanner;
 /**
  * @author SIN
  */
+@SuppressWarnings("unused")
 public class TxtCRUD implements GeneralCRUD<DataInfo> {
     private File file;
     private final DataInfo dataInfo;

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * @author SIN
  */
-
+@SuppressWarnings("unused")
 public class DatCRUD implements GeneralCRUD<DataInfo> {
     private final DataInfo dataInfo;
     private File file;

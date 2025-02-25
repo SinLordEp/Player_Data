@@ -17,6 +17,7 @@ import java.util.TreeMap;
 /**
  * @author SIN
  */
+@SuppressWarnings("unused")
 public class MongoCRUD implements GeneralCRUD<DataInfo> {
     private final DataInfo dataInfo;
     MongoClient mongoClient;

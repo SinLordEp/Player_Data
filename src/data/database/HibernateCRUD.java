@@ -23,6 +23,7 @@ import static main.principal.getProperty;
 /**
  * @author SIN
  */
+@SuppressWarnings("unused")
 public class HibernateCRUD implements GeneralCRUD<DataInfo> {
     private final DataInfo dataInfo;
     private SessionFactory sessionFactory;

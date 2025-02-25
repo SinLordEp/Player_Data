@@ -21,6 +21,7 @@ import java.io.File;
 /**
  * @author SIN
  */
+@SuppressWarnings("unused")
 public class XmlCRUD implements GeneralCRUD<DataInfo> {
     private File file;
     private String stringXML;

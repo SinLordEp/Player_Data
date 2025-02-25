@@ -21,6 +21,7 @@ import java.util.TreeMap;
 /**
  * @author SIN
  */
+@SuppressWarnings("unused")
 public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
     private final DataInfo dataInfo;
     private EntityManager entityManager;
