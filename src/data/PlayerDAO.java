@@ -91,17 +91,20 @@ public class PlayerDAO extends GeneralDAO {
     }
 
     @SuppressWarnings("unchecked")
-    public DataInfo getDefaultDatabaseInfo(DataInfo dataInfo) throws ConfigErrorException, IOException {
-        HashMap<String, Object> default_info = null;
+    public DataInfo getDefaultDatabaseInfo(DataInfo dataInfo) throws ConfigErrorException {
+        HashMap<String, Object> default_info;
         URL resource = getClass().getResource(getProperty("defaultPlayerSQL"));
-        if (resource != null) {
-            try(InputStream inputStream = resource.openStream()){
-                Yaml yaml = new Yaml();
-                default_info = yaml.load(inputStream);
-            }
+        if (resource == null) {
+            throw new ConfigErrorException("Player default database configuration file not found");
+        }
+        try(InputStream inputStream = resource.openStream()){
+            Yaml yaml = new Yaml();
+            default_info = yaml.load(inputStream);
+        }catch (IOException e){
+            throw new ConfigErrorException("Player default database configuration file cannot be read");
         }
         if(default_info == null){
-            throw new ConfigErrorException("Default database info is null");
+            throw new ConfigErrorException("Player default database configuration info is empty");
         }
         HashMap<String,Object> database_info = switch (dataInfo.getDialect()) {
             case MYSQL -> (HashMap<String, Object>) default_info.get("MYSQL");
