@@ -421,15 +421,11 @@ public class PlayerControl implements GeneralControl {
      * @param data the data associated with the event, passed as a {@code SortedMap} object
      */
     private void notifyEvent(String event, TreeMap<Integer, VerifiedEntity> data){
-        for(EventListener<TreeMap<Integer, VerifiedEntity>> listener : listeners){
-            listener.onEvent(event, data);
-        }
+        listeners.forEach(listener -> listener.onEvent(event, data));
     }
 
     private void notifyLog(String... message){
-        for(EventListener<TreeMap<Integer, VerifiedEntity>> listener : listeners){
-            listener.onLog(LogStage.INFO, message);
-        }
+        listeners.forEach(listener -> listener.onLog(LogStage.INFO, message));
     }
 
 }
