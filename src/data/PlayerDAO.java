@@ -294,18 +294,18 @@ public class PlayerDAO extends GeneralDAO {
         GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getCRUD(exportDataBaseInfo)
                 .prepare()
                 .read(PlayerParser.input(exportDataBaseInfo.getDataType()),null, target_player_map);
-        for(Map.Entry<Integer, VerifiedEntity> entry: target_player_map.entrySet()){
-            if(!player_map.containsKey(entry.getKey())){
-                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()), DataOperation.DELETE, (Player) entry.getValue());
+        target_player_map.forEach((current_player_id, verified_entity) -> {
+            if(!player_map.containsKey(current_player_id)){
+                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()), DataOperation.DELETE, (Player) verified_entity);
             }
-        }
-        for(Map.Entry<Integer, VerifiedEntity> entry: player_map.entrySet()){
-            if(target_player_map.containsKey(entry.getKey())){
-                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()),DataOperation.MODIFY, (Player)entry.getValue());
+        });
+        player_map.forEach((current_player_id, verified_entity) -> {
+            if(target_player_map.containsKey(current_player_id)){
+                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()),DataOperation.MODIFY, (Player) verified_entity);
             }else{
-                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()), DataOperation.ADD, (Player) entry.getValue());
+                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()), DataOperation.ADD, (Player) verified_entity);
             }
-        }
+        });
         currentCRUD.release();
     }
 
