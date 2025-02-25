@@ -362,7 +362,7 @@ public class PlayerControl implements GeneralControl {
      * This function ensures proper logging and listener notification during its operation.
      */
     public void save(){
-        if(playerDA.isDataChanged() && playerDA.getDataInfo() != null){
+        if(playerDA.isSaveToFileNeeded() && playerDA.getDataInfo() != null){
             PlayerExceptionHandler.getInstance().handle(() -> playerDA.save(),
                     "PlayerControl-save()", "save");
         }

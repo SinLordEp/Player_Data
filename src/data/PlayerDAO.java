@@ -36,7 +36,7 @@ import static main.principal.getProperty;
 public class PlayerDAO extends GeneralDAO {
     private TreeMap<Integer, VerifiedEntity> player_map = new TreeMap<>();
     private HashMap<Region, Server[]> region_server_map;
-    private boolean isDataChanged = false;
+    private boolean isSaveToFileNeeded = false;
 
     /**
      * Constructs a new instance of the PlayerDataAccess class and initializes
@@ -235,8 +235,8 @@ public class PlayerDAO extends GeneralDAO {
                         .prepare()
                         .update(PlayerParser.allOutput(dataInfo.getDataType()), null, player_map)
                         .release();
+                isSaveToFileNeeded = false;
             }
-            isDataChanged = false;
         } catch (Exception e) {
             throw new OperationException(e.getMessage());
         }
@@ -248,12 +248,14 @@ public class PlayerDAO extends GeneralDAO {
                    .prepare()
                    .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player)
                    .release();
+       }else{
+           isSaveToFileNeeded = true;
        }
         switch (operation){
             case ADD, MODIFY -> player_map.put(player.getID(), player);
             case DELETE -> player_map.remove(player.getID());
         }
-        isDataChanged = true;
+
     }
 
     /**
@@ -401,8 +403,8 @@ public class PlayerDAO extends GeneralDAO {
         player_map.clear();
     }
 
-    public boolean isDataChanged() {
-        return isDataChanged;
+    public boolean isSaveToFileNeeded() {
+        return isSaveToFileNeeded;
     }
 
 }
