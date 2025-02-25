@@ -155,15 +155,15 @@ public class PlayerControl implements GeneralControl {
     }
 
     private void configureFilePath(DataInfo dataInfo){
-        String file_path = PlayerExceptionHandler.getInstance().handle(() -> GeneralDAO.getPath((FileType) dataInfo.getDataType()),
-                "GeneralDataAccess-getPath()", "getPath");
+        String file_path = PlayerExceptionHandler.getInstance()
+                .handle(() -> GeneralDAO.getPath((FileType) dataInfo.getDataType()), "GeneralDataAccess-getPath()", "getPath");
         dataInfo.setUrl(file_path);
     }
 
     private void importFile(DataInfo dataInfo) {
         configureFilePath(dataInfo);
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
-                "PlayerControl-importFile()", "importFile", "\n>>>" + dataInfo.getUrl());
+        PlayerExceptionHandler.getInstance()
+                .handle(() -> playerDA.read(), "PlayerControl-importFile()", "importFile", "\n>>>" + dataInfo.getUrl());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
@@ -187,14 +187,14 @@ public class PlayerControl implements GeneralControl {
      *                     connection to the database (e.g., credentials, database URL, etc.).
      */
     private void handleDatabaseLoginForImport(DataInfo dataInfo){
-        PlayerExceptionHandler.getInstance().handle(()-> playerDA.read(),
-                "PlayerControl-handleDatabaseLoginForImport()", "importDB", "\n>>>" + dataInfo.getUrl());
+        PlayerExceptionHandler.getInstance()
+                .handle(()-> playerDA.read(), "PlayerControl-handleDatabaseLoginForImport()", "importDB", "\n>>>" + dataInfo.getUrl());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
     private void importPHP(DataInfo dataInfo) {
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.read(),
-                "PlayerControl-importPHP()" , "importPHP", "\n>>>" + dataInfo.getDataType());
+        PlayerExceptionHandler.getInstance()
+                .handle(() -> playerDA.read(), "PlayerControl-importPHP()" , "importPHP", "\n>>>" + dataInfo.getDataType());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
@@ -207,7 +207,7 @@ public class PlayerControl implements GeneralControl {
         switch(dataInfo.getDataType()){
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO :
                 PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::searchID),
-                    "PlayerControl-searchDB()", "default_database");
+                        "PlayerControl-searchDB()", "default_database");
                 break;
             case PhpType ignore : searchID(dataInfo); break;
             default : throw new IllegalStateException("Unexpected Data Source: " + dataInfo.getDataType());
@@ -216,7 +216,8 @@ public class PlayerControl implements GeneralControl {
 
     private void searchID(DataInfo dataInfo) {
         playerDA.setDataInfo(dataInfo);
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.search(), "PlayerControl-searchID()", "search", "\n>>>" + dataInfo.getUrl());
+        PlayerExceptionHandler.getInstance()
+                .handle(() -> playerDA.search(), "PlayerControl-searchID()", "search", "\n>>>" + dataInfo.getUrl());
         notifyEvent("data_changed", playerDA.getPlayerMap());
     }
 
@@ -314,13 +315,13 @@ public class PlayerControl implements GeneralControl {
 
     private void handleDataSourceForExport(DataInfo targetDataInfo){
         switch (targetDataInfo.getDataType()){
-            case FileType ignore -> PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportFile(targetDataInfo),
-                    "PlayerControl-exportFile()", "exportFile");
+            case FileType ignore -> PlayerExceptionHandler.getInstance()
+                    .handle(() -> playerDA.exportFile(targetDataInfo), "PlayerControl-exportFile()", "exportFile");
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> PlayerExceptionHandler.getInstance()
                     .handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(targetDataInfo), this::handleDatabaseLoginForExport),
                             "PlayerControl-exportDB()", "default_database");
-            case DataSource.PHP -> PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportDB(targetDataInfo),
-                    "PlayerControl-exportPHP()", "exportPHP");
+            case DataSource.PHP -> PlayerExceptionHandler.getInstance()
+                    .handle(() -> playerDA.exportDB(targetDataInfo), "PlayerControl-exportPHP()", "exportPHP");
             default -> throw new IllegalArgumentException("Unknown data source: " + targetDataInfo.getDataType());
         }
     }
@@ -339,8 +340,8 @@ public class PlayerControl implements GeneralControl {
      *                     required to connect and perform the export operation.
      */
     private void handleDatabaseLoginForExport(DataInfo dataInfo) {
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.exportDB(dataInfo),
-                "PlayerControl-exportDB()", "exportDB");
+        PlayerExceptionHandler.getInstance()
+                .handle(() -> playerDA.exportDB(dataInfo), "PlayerControl-exportDB()", "exportDB");
     }
 
     /**
@@ -363,8 +364,8 @@ public class PlayerControl implements GeneralControl {
      */
     public void save(){
         if(playerDA.isSaveToFileNeeded() && playerDA.getDataInfo() != null){
-            PlayerExceptionHandler.getInstance().handle(() -> playerDA.save(),
-                    "PlayerControl-save()", "save");
+            PlayerExceptionHandler.getInstance()
+                    .handle(() -> playerDA.save(), "PlayerControl-save()", "save");
         }
     }
 
