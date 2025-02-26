@@ -30,7 +30,6 @@ public class CRUDFactory {
                     throw new OperationException("%sCRUD could not be instantiated".formatted(dataType));
                 }
             });
-
         });
     }
 
