@@ -37,7 +37,7 @@ public class PlayerParser {
             case DataSource.MONGO -> (ParserCallBack<Document, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseMongoDocument;
             case DataSource.BASEX, FileType.XML -> (ParserCallBack<Element, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseXmlElement;
             case PhpType.JSON -> (ParserCallBack<JSONObject, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseJsonObject;
-            case FileType.TXT -> (ParserCallBack<ArrayList<String>, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseArrayListText;
+            case FileType.TXT -> (ParserCallBack<String, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseStringLine;
             case FileType.DAT -> (ParserCallBack<VerifiedEntity, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseVerifiedEntity;
             default -> throw new IllegalStateException("Unexpected value: " + dataType);
         };
@@ -128,17 +128,14 @@ public class PlayerParser {
         }
     }
 
-    public static void parseArrayListText(ArrayList<String> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        dataMap.clear();
-        list.forEach(text -> {
-            String[] player_txt = text.split(";");
-            Player player = new Player();
-            player.setID(Integer.parseInt(player_txt[0]));
-            player.setRegion(new Region(player_txt[1]));
-            player.setServer(new Server(player_txt[2], player.getRegion()));
-            player.setName(player_txt[3]);
-            dataMap.put(player.getID(),player);
-        });
+    public static void parseStringLine(String line, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+        String[] player_txt = line.split(";");
+        Player player = new Player();
+        player.setID(Integer.parseInt(player_txt[0]));
+        player.setRegion(new Region(player_txt[1]));
+        player.setServer(new Server(player_txt[2], player.getRegion()));
+        player.setName(player_txt[3]);
+        dataMap.put(player.getID(),player);
     }
 
     public static void playerToArrayString(ArrayList<String> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){

@@ -6,19 +6,20 @@ import data.DataOperation;
 import exceptions.FileManageException;
 import model.DataInfo;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author SIN
  */
 @SuppressWarnings("unused")
 public class TxtCRUD implements GeneralCRUD<DataInfo> {
-    private File file;
+    private Path path;
     private final DataInfo dataInfo;
 
     public TxtCRUD(DataInfo dataInfo) {
@@ -27,30 +28,26 @@ public class TxtCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     public GeneralCRUD<DataInfo> prepare() {
-        file = new File(dataInfo.getUrl());
-        if (file.exists() && file.canRead() && file.canWrite()){
+        path = Paths.get(dataInfo.getUrl());
+        if(Files.exists(path) && Files.isRegularFile(path) && Files.isWritable(path)) {
             return this;
-        }else{
-            throw new FileManageException("File cannot be read or write");
+        } else{
+            throw new FileManageException("File does not exist or cannot be read/write");
         }
     }
 
     @Override
     public void release() {
-        file = null;
+        path = null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        ArrayList<String> list = new ArrayList<>();
-        try(Scanner scanner = new Scanner(file)){
-            while(scanner.hasNext()){
-                list.add(scanner.nextLine());
-            }
-            parser.parse((R)list, operation, dataMap);
-        }catch (Exception e) {
-            throw new FileManageException("Error reading this txt file");
+        try(Stream<String> stream = Files.lines(path)) {
+            stream.forEach(line -> parser.parse((R) line, operation, dataMap));
+        } catch (IOException e) {
+            throw new FileManageException("Error reading this txt file.>>>" + e.getMessage());
         }
         return this;
     }
@@ -58,15 +55,12 @@ public class TxtCRUD implements GeneralCRUD<DataInfo> {
     @Override
     @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
-        ArrayList<String> list = new ArrayList<>();
-        parser.parse((R)list, operation, object);
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file,false))){
-            for(String string : list){
-                bw.write(string);
-                bw.newLine();
-            }
+        try {
+            List<String> lines = new ArrayList<>();
+            parser.parse((R)lines,operation,object);
+            Files.write(path, lines);
         }catch (IOException e){
-            throw new FileManageException(e.getMessage());
+            throw new FileManageException("Error writing this txt file.>>>" + e.getMessage());
         }
         return this;
     }
