@@ -59,7 +59,6 @@ public class ObjectDBCRUD implements GeneralCRUD<DataInfo> {
                 case SEARCH -> entityManager.createQuery("SELECT s FROM %s s WHERE s.ID = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataMap).firstKey()), VerifiedEntity.class);
                 default -> throw new OperationException("Unexpected DataOperation for reading: " + operation);
             };
-            ((TreeMap<?, ?>) dataMap).clear();
             if(!query.getResultList().isEmpty()){
                 List<VerifiedEntity> list = query.getResultList();
                 parser.parse((R)list, operation, dataMap);

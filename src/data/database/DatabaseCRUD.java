@@ -85,7 +85,6 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
             case SEARCH -> "SELECT * FROM %s where id = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataMap).firstKey());
             default -> throw new OperationException("Unexpected DataOperation for reading: " + operation);
         };
-        ((TreeMap<?, ?>) dataMap).clear();
         try(PreparedStatement statement = connection.prepareStatement(query)){
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){

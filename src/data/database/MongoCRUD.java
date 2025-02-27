@@ -48,7 +48,6 @@ public class MongoCRUD implements GeneralCRUD<DataInfo> {
             case SEARCH -> collection.find(Filters.eq("id",((TreeMap<?, ?>) dataMap).firstKey())).iterator();
             default -> throw new OperationException("Unexpected DataOperation for reading: " + operation);
         }){
-            ((TreeMap<?, ?>) dataMap).clear();
             while(cursor.hasNext()){
                 Document document = cursor.next();
                 parser.parse((R)document, operation, dataMap);
