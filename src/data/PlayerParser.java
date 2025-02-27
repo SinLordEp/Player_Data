@@ -100,9 +100,7 @@ public class PlayerParser {
     }
 
     public static void parseList(List<VerifiedEntity> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        list.forEach(verifiedEntity -> {
-            parseVerifiedEntity(verifiedEntity, null, dataMap);
-        });
+        list.forEach(verifiedEntity -> parseVerifiedEntity(verifiedEntity, null, dataMap));
     }
 
 
