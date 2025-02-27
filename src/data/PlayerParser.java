@@ -100,14 +100,13 @@ public class PlayerParser {
     }
 
     public static void parseList(List<VerifiedEntity> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        for(VerifiedEntity verifiedEntity : list){
+        list.forEach(verifiedEntity -> {
             parseVerifiedEntity(verifiedEntity, null, dataMap);
-        }
+        });
     }
 
 
     public static void parseMongoDocument(Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        dataMap.clear();
         Player player = new Player();
         player.setID(document.getInteger("id"));
         player.setName(document.getString("name"));
@@ -139,10 +138,10 @@ public class PlayerParser {
     }
 
     public static void playerToArrayString(ArrayList<String> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        for(VerifiedEntity entity : dataMap.values()){
-            Player player = (Player) entity;
+        dataMap.values().forEach(verifiedEntity -> {
+            Player player = (Player) verifiedEntity;
             list.add("%s;%s;%s;%s".formatted(player.getID(),player.getRegion(),player.getServer(),player.getName()));
-        }
+        });
     }
 
     public static void parseVerifiedEntity(VerifiedEntity entity, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
@@ -151,10 +150,10 @@ public class PlayerParser {
     }
 
     public static void playerToArrayEntity(ArrayList<Player> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
-        for(VerifiedEntity entity : dataMap.values()){
-            Player player = (Player) entity;
+        dataMap.values().forEach(verifiedEntity -> {
+            Player player = (Player) verifiedEntity;
             list.add(player);
-        }
+        });
     }
 
     public static void parseXmlElement(Element element, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
@@ -176,15 +175,15 @@ public class PlayerParser {
     public static void playerToXmlElement(org.w3c.dom.Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         Element rootElement = document.createElement("Player");
         document.appendChild(rootElement);
-        for (VerifiedEntity entity : dataMap.values()) {
-            Player player = (Player) entity;
+        dataMap.values().forEach(verifiedEntity -> {
+            Player player = (Player) verifiedEntity;
             Element playerElement = document.createElement("player");
             playerElement.setAttribute("id", String.valueOf(player.getID()));
             xml_utils.createElementWithText(document, playerElement, "region", player.getRegion().toString());
             xml_utils.createElementWithText(document, playerElement, "server", player.getServer().toString());
             xml_utils.createElementWithText(document, playerElement, "name", player.getName());
             rootElement.appendChild(playerElement);
-        }
+        });
     }
 
     public static void playerToBaseXQuery(String[] query, DataOperation operation, Player player){
