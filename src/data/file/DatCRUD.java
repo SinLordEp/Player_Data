@@ -8,6 +8,9 @@ import exceptions.FileManageException;
 import model.DataInfo;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 @SuppressWarnings("unused")
 public class DatCRUD implements GeneralCRUD<DataInfo> {
     private final DataInfo dataInfo;
-    private File file;
+    private Path path;
 
     public DatCRUD(DataInfo dataInfo) {
         this.dataInfo = dataInfo;
@@ -24,8 +27,8 @@ public class DatCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     public GeneralCRUD<DataInfo> prepare() {
-        file = new File(dataInfo.getUrl());
-        if (file.exists() && file.canRead() && file.canWrite()){
+        path = Paths.get(dataInfo.getUrl());
+        if(Files.exists(path) && Files.isReadable(path) && Files.isWritable(path)){
             return this;
         }else{
             throw new FileManageException("File cannot be read or write");
@@ -34,16 +37,16 @@ public class DatCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     public void release() {
-        file = null;
+        path = null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
-        if (file.length() == 0) {
-            return this;
-        }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path))) {
+            if (Files.size(path) == 0) {
+                return this;
+            }
             while (true) {
                 Object temp = ois.readObject();
                 if("EOF".equals(temp)){
@@ -64,12 +67,16 @@ public class DatCRUD implements GeneralCRUD<DataInfo> {
     @Override
     @SuppressWarnings("unchecked")
     public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
-        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file,false))){
+        try(ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(path))) {
             ArrayList<VerifiedEntity> verifiedEntities = new ArrayList<>();
             parser.parse((R)verifiedEntities, null, object);
-            for(VerifiedEntity verifiedEntity : verifiedEntities){
-                oos.writeObject(verifiedEntity);
-            }
+            verifiedEntities.forEach(verifiedEntity -> {
+                try {
+                    oos.writeObject(verifiedEntity);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             oos.writeObject("EOF");
         }catch (IOException e){
             throw new FileManageException(e.getMessage());
