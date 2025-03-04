@@ -167,6 +167,10 @@ text:
     en: "Failed to import data from file!"
     es: "No ha podido importar datos desde fichero!"
     cn: "从文件导入数据失败!"
+  import_ongoing:
+    en: "Importing data..."
+    es: "Importando datos..."
+    cn: "正在导入数据..."
   import_pass:
     en: "Data imported!"
     es: "Datos importados!"

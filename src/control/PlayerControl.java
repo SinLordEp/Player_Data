@@ -106,14 +106,16 @@ public class PlayerControl implements GeneralControl {
     }
 
     private void handleDataSourceForCreateFile(DataInfo dataInfo) {
-        PlayerExceptionHandler.getInstance().handle(() -> {
-            dataInfo.setUrl(GeneralDAO.newPathBuilder((FileType) dataInfo.getDataType()));
-            playerDA.createNewFile(dataInfo.getUrl());
-        }, "PlayerControl-handleDataSourceForCreateFile()", "createFile");
-        playerDA.setDataInfo(dataInfo);
-        notifyEvent("dataSource_set",null);
-        playerDA.clearData();
-        notifyEvent("data_changed", playerDA.getPlayerMap());
+        PlayerExceptionHandler
+                .getInstance()
+                .handle(() -> {
+                    dataInfo.setUrl(GeneralDAO.newPathBuilder((FileType) dataInfo.getDataType()));
+                    playerDA.createNewFile(dataInfo.getUrl());
+                    playerDA.setDataInfo(dataInfo);
+                    notifyEvent("dataSource_set",null);
+                    playerDA.clearData();
+                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                }, "PlayerControl-handleDataSourceForCreateFile()", "createFile");
     }
 
     /**
@@ -147,55 +149,28 @@ public class PlayerControl implements GeneralControl {
         playerDA.setDataInfo(dataInfo);
         notifyEvent("dataSource_set",null);
         switch(dataInfo.getDataType()){
-            case FileType ignore -> importFile(dataInfo);
-            case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> importDB(dataInfo);
-            case PhpType ignore -> importPHP(dataInfo);
-            default -> throw new IllegalStateException("Unexpected Data Source: " + dataInfo.getDataType());
+            case FileType ignore :
+                String file_path = PlayerExceptionHandler.getInstance()
+                        .handle(() -> GeneralDAO.getPath((FileType) dataInfo.getDataType()), "GeneralDataAccess-getPath()", "getPath");
+                dataInfo.setUrl(file_path);
+                importData(dataInfo);
+                break;
+            case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO :
+                PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::importData),
+                        "PlayerControl-importDB()", "default_database");
+                break;
+            case PhpType ignore : importData(dataInfo);
+                break;
+            default : throw new IllegalStateException("Unexpected Data Source: " + dataInfo.getDataType());
         }
     }
 
-    private void configureFilePath(DataInfo dataInfo){
-        String file_path = PlayerExceptionHandler.getInstance()
-                .handle(() -> GeneralDAO.getPath((FileType) dataInfo.getDataType()), "GeneralDataAccess-getPath()", "getPath");
-        dataInfo.setUrl(file_path);
-    }
-
-    private void importFile(DataInfo dataInfo) {
-        configureFilePath(dataInfo);
+    private void importData(DataInfo dataInfo) {
         PlayerExceptionHandler.getInstance()
-                .handle(() -> playerDA.read(), "PlayerControl-importFile()", "importFile", "\n>>>" + dataInfo.getUrl());
-        notifyEvent("data_changed", playerDA.getPlayerMap());
-    }
-
-    private void importDB(DataInfo dataInfo)  {
-        PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::handleDatabaseLoginForImport),
-                "PlayerControl-importDB()", "default_database");
-    }
-
-    /**
-     * Handles the process of logging into the database and importing data.
-     * This method attempts to establish a connection to the database using the information
-     * provided in the {@code databaseInfo} object. If the connection is successful, it sets
-     * the database information, reads data from the database, and notifies listeners of the
-     * change. If the connection or reading process fails, it logs the error, notifies listeners
-     * of the failure, and clears any data source.
-     *
-     * <p>This is typically a callback method used to manage the database login and import data
-     * workflow for a specific operation.
-     *
-     * @param dataInfo An object containing the necessary information to establish a
-     *                     connection to the database (e.g., credentials, database URL, etc.).
-     */
-    private void handleDatabaseLoginForImport(DataInfo dataInfo){
-        PlayerExceptionHandler.getInstance()
-                .handle(()-> playerDA.read(), "PlayerControl-handleDatabaseLoginForImport()", "importDB", "\n>>>" + dataInfo.getUrl());
-        notifyEvent("data_changed", playerDA.getPlayerMap());
-    }
-
-    private void importPHP(DataInfo dataInfo) {
-        PlayerExceptionHandler.getInstance()
-                .handle(() -> playerDA.read(), "PlayerControl-importPHP()" , "importPHP", "\n>>>" + dataInfo.getDataType());
-        notifyEvent("data_changed", playerDA.getPlayerMap());
+                .handle(() -> {
+                    playerDA.read();
+                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                }, "PlayerControl-importData()" , "import", "\n>>>" + dataInfo.getUrl());
     }
 
     public void search() {
@@ -217,8 +192,10 @@ public class PlayerControl implements GeneralControl {
     private void searchID(DataInfo dataInfo) {
         playerDA.setDataInfo(dataInfo);
         PlayerExceptionHandler.getInstance()
-                .handle(() -> playerDA.search(), "PlayerControl-searchID()", "search", "\n>>>" + dataInfo.getUrl());
-        notifyEvent("data_changed", playerDA.getPlayerMap());
+                .handle(() -> {
+                    playerDA.search();
+                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                }, "PlayerControl-searchID()", "search", "\n>>>" + dataInfo.getUrl());
     }
 
 
@@ -246,9 +223,12 @@ public class PlayerControl implements GeneralControl {
      * @param player The Player object containing the details to be added.
      */
     private void handlePlayerInfoForAdd(Player player){
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.update(DataOperation.ADD, player),
-                "PlayerControl-handlePlayerInfoForAdd()", "addPlayer", ">>>ID: " + player.getID());
-        notifyEvent("data_changed", playerDA.getPlayerMap());
+        PlayerExceptionHandler.getInstance()
+                .handle(() -> {
+                            playerDA.update(DataOperation.ADD, player);
+                            notifyEvent("data_changed", playerDA.getPlayerMap());
+                        },
+                        "PlayerControl-handlePlayerInfoForAdd()", "addPlayer", ">>>ID: " + player.getID());
     }
 
     /**
@@ -272,9 +252,11 @@ public class PlayerControl implements GeneralControl {
      * @param player The player object containing the information to be modified.
      */
     private void handlePlayerInfoForModify(Player player){
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.update(DataOperation.MODIFY, player),
-                "PlayerControl-handlePlayerInfoForModify()", "modifyPlayer", ">>>ID: " + player.getID());
-        notifyEvent("data_changed", playerDA.getPlayerMap());
+        PlayerExceptionHandler.getInstance()
+                .handle(() -> {
+                    playerDA.update(DataOperation.MODIFY, player);
+                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                },"PlayerControl-handlePlayerInfoForModify()", "modifyPlayer", ">>>ID: " + player.getID());
     }
 
     /**
@@ -285,9 +267,11 @@ public class PlayerControl implements GeneralControl {
      * @param selected_player_id the unique identifier of the player to be deleted
      */
     public void delete(int selected_player_id) {
-        PlayerExceptionHandler.getInstance().handle(() -> playerDA.update(DataOperation.DELETE, playerDA.getPlayer(selected_player_id)),
-                "PlayerControl-delete()", "deletePlayer", ">>>ID: " + selected_player_id);
-        notifyEvent("data_changed", playerDA.getPlayerMap());
+        PlayerExceptionHandler.getInstance()
+                .handle(() -> {
+                    playerDA.update(DataOperation.DELETE, playerDA.getPlayer(selected_player_id));
+                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                },"PlayerControl-delete()", "deletePlayer", ">>>ID: " + selected_player_id);
     }
 
     /**
