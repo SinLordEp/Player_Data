@@ -29,7 +29,7 @@ import java.util.Properties;
  */
 public class principal {
     private static final Logger logger = LoggerFactory.getLogger(principal.class);
-    static final ClassRegister CLASS_REGISTER = ClassRegister.getInstance();
+    static final ControllerRegister CLASS_REGISTER = ControllerRegister.getInstance();
     private static final Properties PROPERTIES = new Properties();
 
     public static void main(String[] args){

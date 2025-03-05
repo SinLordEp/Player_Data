@@ -15,9 +15,9 @@ import java.util.Set;
  * maps their simple class names without "Control" or "DataAccess" suffixes, and makes them accessible.
  * @author SIN
  */
-public class ClassRegister {
+public class ControllerRegister {
     public static Map<String, Class<? extends GeneralControl>> classMap = new HashMap<>();
-    private static final ClassRegister INSTANCE = new ClassRegister();
+    private static final ControllerRegister INSTANCE = new ControllerRegister();
 
     /**
      * Private constructor for the {@code ClassRegister} class.
@@ -28,10 +28,10 @@ public class ClassRegister {
      * This constructor is part of the Singleton implementation and is designed to be called once by the
      * static {@code INSTANCE} field to ensure that all required mappings are registered during initialization.
      */
-    private ClassRegister() {
+    private ControllerRegister() {
         registerControl();
     }
-    public static ClassRegister getInstance() {
+    public static ControllerRegister getInstance() {
         return INSTANCE;
     }
 
