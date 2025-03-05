@@ -1,6 +1,5 @@
 package GUI;
 
-import GUI.Player.PlayerText;
 import Interface.CallBack;
 import model.DataInfo;
 
@@ -45,8 +44,8 @@ public class DatabaseLogin extends JDialog {
      */
     public DatabaseLogin(DataInfo dataInfo, CallBack<DataInfo> callBack) {
         this.dataInfo = dataInfo;
-        setTitle(PlayerText.getDialog().getText("db_login_title"));
-        UiUtils.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
+        setTitle(GeneralText.fetch().getText("db_login_title"));
+        UiUtils.setLabelButtonText(GeneralText.fetch(), panel_info, panel_button);
         configureTextFieldText();
         setContentPane(panel_main);
         setModal(true);
@@ -79,7 +78,7 @@ public class DatabaseLogin extends JDialog {
     private void onOK(CallBack<DataInfo> callBack) {
         dispose();
         if(hasBlank()){
-            PlayerText.getDialog().popup("db_field_empty");
+            GeneralText.fetch().popup("db_field_empty");
             return;
         }
         dataInfo.setUrl(text_url.getText());

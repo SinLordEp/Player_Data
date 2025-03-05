@@ -2,17 +2,14 @@ package control;
 
 import GUI.DataSourceChooser;
 import GUI.DatabaseLogin;
+import GUI.GeneralText;
 import GUI.LogStage;
 import GUI.Player.PlayerInfoDialog;
-import GUI.Player.PlayerText;
 import GUI.Player.PlayerUI;
 import Interface.EventListener;
 import Interface.GeneralControl;
 import Interface.VerifiedEntity;
-import data.DataOperation;
-import data.DataSource;
-import data.GeneralDAO;
-import data.PlayerDAO;
+import data.*;
 import data.file.FileType;
 import data.http.PhpType;
 import exceptions.OperationCancelledException;
@@ -39,6 +36,12 @@ public class PlayerControl implements GeneralControl {
     private PlayerDAO playerDA;
     private final List<EventListener<TreeMap<Integer, VerifiedEntity>>> listeners = new ArrayList<>();
 
+    @Override
+    public GeneralControl initialize() {
+        playerDA = new PlayerDAO(PlayerParser.getInstance());
+        return this;
+    }
+
     /**
      * Executes the logic for initializing and managing the player user interface (UI)
      * and its associated dependencies.
@@ -60,16 +63,6 @@ public class PlayerControl implements GeneralControl {
         addListener(playerUI);
         PlayerExceptionHandler.getInstance().addListener(playerUI);
         playerUI.run();
-        playerDA.initializeRegionServer();
-    }
-
-    /**
-     * Set the data access for current controller
-     * @param DA data access manage for player
-     */
-    @Override
-    public void setDA(GeneralDAO DA) {
-        this.playerDA = (PlayerDAO) DA;
     }
 
     /**
@@ -84,7 +77,7 @@ public class PlayerControl implements GeneralControl {
      */
     @Override
     public void onWindowClosing() {
-        save();
+        saveToFile();
         System.exit(0);
     }
 
@@ -101,7 +94,7 @@ public class PlayerControl implements GeneralControl {
      * specific operations related to the chosen data source.
      */
     public void createFile() {
-        save();
+        saveToFile();
         new DataSourceChooser(new DataInfo(DataSource.FILE), this::handleDataSourceForCreateFile);
     }
 
@@ -114,7 +107,7 @@ public class PlayerControl implements GeneralControl {
                     playerDA.setDataInfo(dataInfo);
                     notifyEvent("dataSource_set",null);
                     playerDA.clearData();
-                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                    notifyEvent("data_changed", playerDA.getDataContainer());
                 }, "PlayerControl-handleDataSourceForCreateFile()", "createFile");
     }
 
@@ -141,7 +134,7 @@ public class PlayerControl implements GeneralControl {
      * errors or cancellations are gracefully handled.
      */
     public void importData() {
-        save();
+        saveToFile();
         new DataSourceChooser(new DataInfo(), this::handleDataSourceForImportData);
     }
 
@@ -168,8 +161,8 @@ public class PlayerControl implements GeneralControl {
     private void importData(DataInfo dataInfo) {
         PlayerExceptionHandler.getInstance()
                 .handle(() -> {
-                    playerDA.read();
-                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                    playerDA.findAll();
+                    notifyEvent("data_changed", playerDA.getDataContainer());
                 }, "PlayerControl-importData()" , "import", "\n>>>" + dataInfo.getUrl());
     }
 
@@ -193,11 +186,10 @@ public class PlayerControl implements GeneralControl {
         playerDA.setDataInfo(dataInfo);
         PlayerExceptionHandler.getInstance()
                 .handle(() -> {
-                    playerDA.search();
-                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                    playerDA.findById();
+                    notifyEvent("data_changed", playerDA.getDataContainer());
                 }, "PlayerControl-searchID()", "search", "\n>>>" + dataInfo.getUrl());
     }
-
 
     /**
      * Initiates the process for adding a new player entry. This method performs the following:
@@ -212,7 +204,7 @@ public class PlayerControl implements GeneralControl {
      * {@code logger} to record the workflow.
      */
     public void add() {
-        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerMap().keySet(), new Player(), this::handlePlayerInfoForAdd);
+        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getDataContainer().keySet(), new Player(), this::handlePlayerInfoForAdd);
     }
 
     /**
@@ -226,7 +218,7 @@ public class PlayerControl implements GeneralControl {
         PlayerExceptionHandler.getInstance()
                 .handle(() -> {
                             playerDA.update(DataOperation.ADD, player);
-                            notifyEvent("data_changed", playerDA.getPlayerMap());
+                            notifyEvent("data_changed", playerDA.getDataContainer());
                         },
                         "PlayerControl-handlePlayerInfoForAdd()", "addPlayer", ">>>ID: " + player.getID());
     }
@@ -242,7 +234,7 @@ public class PlayerControl implements GeneralControl {
      * @param selected_player_id the unique identifier of the player to be modified
      */
     public void modify(int selected_player_id){
-        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayer(selected_player_id), this::handlePlayerInfoForModify);
+        new PlayerInfoDialog(playerDA.getRegion_server_map(), playerDA.getPlayerCopy(selected_player_id), this::handlePlayerInfoForModify);
     }
 
     /**
@@ -255,7 +247,7 @@ public class PlayerControl implements GeneralControl {
         PlayerExceptionHandler.getInstance()
                 .handle(() -> {
                     playerDA.update(DataOperation.MODIFY, player);
-                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                    notifyEvent("data_changed", playerDA.getDataContainer());
                 },"PlayerControl-handlePlayerInfoForModify()", "modifyPlayer", ">>>ID: " + player.getID());
     }
 
@@ -269,8 +261,8 @@ public class PlayerControl implements GeneralControl {
     public void delete(int selected_player_id) {
         PlayerExceptionHandler.getInstance()
                 .handle(() -> {
-                    playerDA.update(DataOperation.DELETE, playerDA.getPlayer(selected_player_id));
-                    notifyEvent("data_changed", playerDA.getPlayerMap());
+                    playerDA.update(DataOperation.DELETE, playerDA.getPlayerCopy(selected_player_id));
+                    notifyEvent("data_changed", playerDA.getDataContainer());
                 },"PlayerControl-delete()", "deletePlayer", ">>>ID: " + selected_player_id);
     }
 
@@ -346,10 +338,10 @@ public class PlayerControl implements GeneralControl {
      * <p>
      * This function ensures proper logging and listener notification during its operation.
      */
-    public void save(){
+    public void saveToFile(){
         if(playerDA.isSaveToFileNeeded() && playerDA.getDataInfo() != null){
             PlayerExceptionHandler.getInstance()
-                    .handle(() -> playerDA.save(), "PlayerControl-save()", "save");
+                    .handle(() -> playerDA.saveAllToFile(), "PlayerControl-save()", "save");
         }
     }
 
@@ -373,13 +365,13 @@ public class PlayerControl implements GeneralControl {
     public void changeLanguage(){
         String language;
         try {
-            language = switch(PlayerText.getDialog().selectionDialog("language")){
+            language = switch(GeneralText.fetch().selectionDialog("language")){
                 case 0 -> "en";
                 case 1 -> "es";
                 case 2 -> "cn";
                 default -> throw new IllegalStateException("Unexpected language value.");
             };
-            PlayerText.getDialog().setLanguage(language);
+            GeneralText.fetch().setLanguage(language);
             notifyEvent("language_changed",null);
         } catch (OperationCancelledException e) {
             notifyLog("operation_cancelled");

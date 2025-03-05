@@ -1,5 +1,6 @@
 package GUI.Player;
 
+import GUI.GeneralText;
 import GUI.LogStage;
 import GUI.UiUtils;
 import Interface.EventListener;
@@ -65,7 +66,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scroll_data.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        UiUtils.setLabelButtonText(PlayerText.getDialog(), main_panel);
+        UiUtils.setLabelButtonText(GeneralText.fetch(), main_panel);
         searchListener();
         buttonListener();
         tableListener();
@@ -82,7 +83,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
      * - Invokes {@code initialize()} to set up the application's internal data
      *   structures and user interface elements.
      * - Creates and configures a {@code JFrame} instance with a localized title
-     *   obtained from {@code PlayerText.getDialog().getText("frame_title")}.
+     *   obtained from {@code GeneralText.fetch().getText("frame_title")}.
      * - Sets the main content panel to {@code main_panel}.
      * - Adjusts the window size, disables resizing, and centers the window on the screen.
      * - Makes the window visible and adds a {@code WindowListener} to manage
@@ -95,7 +96,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
     @Override
     public void run() {
         initialize();
-        JFrame frame = new JFrame(PlayerText.getDialog().getText("frame_title"));
+        JFrame frame = new JFrame(GeneralText.fetch().getText("frame_title"));
         frame.setContentPane(main_panel);
         frame.pack();
         frame.setResizable(false);
@@ -206,7 +207,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
     }
 
     private void changeLanguage(){
-        UiUtils.setLabelButtonText(PlayerText.getDialog(), main_panel);
+        UiUtils.setLabelButtonText(GeneralText.fetch(), main_panel);
         tableModel.language_changed();
     }
 
@@ -269,13 +270,13 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
         StyleConstants.setForeground(set, color);
         try {
             if(message.length == 1){
-                log_document.insertString(log_document.getLength(), PlayerText.getDialog().getText(message[0]) + "\n", set);
+                log_document.insertString(log_document.getLength(), GeneralText.fetch().getText(message[0]) + "\n", set);
             }else{
-                log_document.insertString(log_document.getLength(), PlayerText.getDialog().getText(message[0])+ message[1] + "\n", set);
+                log_document.insertString(log_document.getLength(), GeneralText.fetch().getText(message[0])+ message[1] + "\n", set);
             }
             textPane_log.setCaretPosition(log_document.getLength());
         } catch (BadLocationException e) {
-            PlayerText.getDialog().message("Failed to append log message with Cause: " + e.getMessage());
+            GeneralText.fetch().message("Failed to append log message with Cause: " + e.getMessage());
         }
     }
 

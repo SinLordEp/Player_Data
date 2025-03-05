@@ -1,5 +1,6 @@
 package data;
 
+import Interface.EntityParser;
 import Interface.ParserCallBack;
 import Interface.VerifiedEntity;
 import data.file.FileType;
@@ -28,41 +29,52 @@ import java.util.TreeMap;
 /**
  * @author SIN
  */
-public class PlayerParser {
+public class PlayerParser implements EntityParser {
+    public static PlayerParser instance;
 
-    public static ParserCallBack<?, TreeMap<Integer, VerifiedEntity>> parsing(Object dataType){
+    public static PlayerParser getInstance() {
+        if (instance == null) {
+            instance = new PlayerParser();
+        }
+        return instance;
+    }
+
+    @Override
+    public ParserCallBack<?, TreeMap<Integer, VerifiedEntity>> parseAll(Object dataType){
         return switch (dataType){
-            case DataSource.DATABASE -> (ParserCallBack<ResultSet, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseResultSet;
-            case DataSource.HIBERNATE, DataSource.OBJECTDB -> (ParserCallBack<List<VerifiedEntity>, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseList;
-            case DataSource.MONGO -> (ParserCallBack<Document, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseMongoDocument;
-            case DataSource.BASEX, FileType.XML -> (ParserCallBack<Element, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseXmlElement;
-            case PhpType.JSON -> (ParserCallBack<JSONObject, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseJsonObject;
-            case FileType.TXT -> (ParserCallBack<String, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseStringLine;
-            case FileType.DAT -> (ParserCallBack<VerifiedEntity, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseVerifiedEntity;
+            case DataSource.DATABASE -> (ParserCallBack<ResultSet, TreeMap<Integer, VerifiedEntity>>) this::parseResultSet;
+            case DataSource.HIBERNATE, DataSource.OBJECTDB -> (ParserCallBack<List<VerifiedEntity>, TreeMap<Integer, VerifiedEntity>>) this::parseList;
+            case DataSource.MONGO -> (ParserCallBack<Document, TreeMap<Integer, VerifiedEntity>>) this::parseMongoDocument;
+            case DataSource.BASEX, FileType.XML -> (ParserCallBack<Element, TreeMap<Integer, VerifiedEntity>>) this::parseXmlElement;
+            case PhpType.JSON -> (ParserCallBack<JSONObject, TreeMap<Integer, VerifiedEntity>>) this::parseJsonObject;
+            case FileType.TXT -> (ParserCallBack<String, TreeMap<Integer, VerifiedEntity>>) this::parseStringLine;
+            case FileType.DAT -> (ParserCallBack<VerifiedEntity, TreeMap<Integer, VerifiedEntity>>) this::parseVerifiedEntity;
             default -> throw new IllegalStateException("Unexpected value: " + dataType);
         };
     }
 
-    public static ParserCallBack<?, Player> serializeOne(Object dataType) {
+    @Override
+    public ParserCallBack<?, VerifiedEntity> serializeOne(Object dataType) {
         return switch (dataType) {
-            case DataSource.DATABASE -> (ParserCallBack<PreparedStatement, Player>) PlayerParser::playerToUpdateStatement;
+            case DataSource.DATABASE -> (ParserCallBack<PreparedStatement, VerifiedEntity>) this::playerToUpdateStatement;
             case DataSource.HIBERNATE, DataSource.OBJECTDB -> null;
-            case DataSource.MONGO -> (ParserCallBack<Document, Player>) PlayerParser::playerToMongoDocument;
-            case DataSource.BASEX -> (ParserCallBack<String[], Player>) PlayerParser::playerToBaseXQuery;
-            case PhpType.JSON -> (ParserCallBack<JSONObject, Player>) PlayerParser::playerToJsonObject;
+            case DataSource.MONGO -> (ParserCallBack<Document, VerifiedEntity>) this::playerToMongoDocument;
+            case DataSource.BASEX -> (ParserCallBack<String[], VerifiedEntity>) this::playerToBaseXQuery;
+            case PhpType.JSON -> (ParserCallBack<JSONObject, VerifiedEntity>) this::playerToJsonObject;
             default -> throw new IllegalStateException("Unexpected value: " + dataType);
         };
     }
 
-    public static ParserCallBack<?, TreeMap<Integer, VerifiedEntity>> serializeAll(Object dataType){
+    @Override
+    public ParserCallBack<?, TreeMap<Integer, VerifiedEntity>> serializeAll(Object dataType){
         return switch (dataType) {
-            case FileType.XML -> (ParserCallBack<org.w3c.dom.Document, TreeMap<Integer, VerifiedEntity>>) PlayerParser::playerToXmlElement;
-            case FileType.TXT -> (ParserCallBack<ArrayList<String>, TreeMap<Integer, VerifiedEntity>>) PlayerParser::playerToArrayString;
-            case FileType.DAT -> (ParserCallBack<ArrayList<Player>, TreeMap<Integer, VerifiedEntity>>) PlayerParser::playerToArrayEntity;
+            case FileType.XML -> (ParserCallBack<org.w3c.dom.Document, TreeMap<Integer, VerifiedEntity>>) this::playerToXmlElement;
+            case FileType.TXT -> (ParserCallBack<ArrayList<String>, TreeMap<Integer, VerifiedEntity>>) this::playerToArrayString;
+            case FileType.DAT -> (ParserCallBack<ArrayList<Player>, TreeMap<Integer, VerifiedEntity>>) this::playerToArrayEntity;
             default -> throw new IllegalStateException("Unexpected value: " + dataType);
         };
     }
-    public static void parseResultSet(ResultSet resultSet, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void parseResultSet(ResultSet resultSet, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         try {
             Player player = new Player();
             player.setID(resultSet.getInt("id"));
@@ -75,8 +87,9 @@ public class PlayerParser {
         }
     }
 
-    public static void playerToUpdateStatement(PreparedStatement statement, DataOperation operation, Player player){
+    private void playerToUpdateStatement(PreparedStatement statement, DataOperation operation, VerifiedEntity verifiedEntity){
         try {
+            Player player = (Player)  verifiedEntity;
             switch (operation){
                 case ADD:
                     statement.setInt(1, player.getID());
@@ -99,12 +112,12 @@ public class PlayerParser {
         }
     }
 
-    public static void parseList(List<VerifiedEntity> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void parseList(List<VerifiedEntity> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         list.forEach(verifiedEntity -> parseVerifiedEntity(verifiedEntity, null, dataMap));
     }
 
 
-    public static void parseMongoDocument(Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void parseMongoDocument(Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         Player player = new Player();
         player.setID(document.getInteger("id"));
         player.setName(document.getString("name"));
@@ -113,7 +126,8 @@ public class PlayerParser {
         dataMap.put(player.getID(), player);
     }
 
-    public static void playerToMongoDocument(Document document, DataOperation operation, Player player){
+    private void playerToMongoDocument(Document document, DataOperation operation, VerifiedEntity verifiedEntity){
+        Player player = (Player) verifiedEntity;
         switch(operation){
             case ADD, MODIFY: document.put("id", player.getID());
                 document.put("name", player.getName());
@@ -125,7 +139,7 @@ public class PlayerParser {
         }
     }
 
-    public static void parseStringLine(String line, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void parseStringLine(String line, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         String[] player_txt = line.split(";");
         Player player = new Player();
         player.setID(Integer.parseInt(player_txt[0]));
@@ -135,26 +149,26 @@ public class PlayerParser {
         dataMap.put(player.getID(),player);
     }
 
-    public static void playerToArrayString(ArrayList<String> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void playerToArrayString(ArrayList<String> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         dataMap.values().forEach(verifiedEntity -> {
             Player player = (Player) verifiedEntity;
             list.add("%s;%s;%s;%s".formatted(player.getID(),player.getRegion(),player.getServer(),player.getName()));
         });
     }
 
-    public static void parseVerifiedEntity(VerifiedEntity entity, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void parseVerifiedEntity(VerifiedEntity entity, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         Player player = (Player) entity;
         dataMap.put(player.getID(),player);
     }
 
-    public static void playerToArrayEntity(ArrayList<Player> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void playerToArrayEntity(ArrayList<Player> list, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         dataMap.values().forEach(verifiedEntity -> {
             Player player = (Player) verifiedEntity;
             list.add(player);
         });
     }
 
-    public static void parseXmlElement(Element element, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void parseXmlElement(Element element, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         NodeList playerNodes = element.getElementsByTagName("player");
         for (int i = 0; i < playerNodes.getLength(); i++) {
             Node playerNode = playerNodes.item(i);
@@ -170,7 +184,7 @@ public class PlayerParser {
         }
     }
 
-    public static void playerToXmlElement(org.w3c.dom.Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void playerToXmlElement(org.w3c.dom.Document document, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         Element rootElement = document.createElement("Player");
         document.appendChild(rootElement);
         dataMap.values().forEach(verifiedEntity -> {
@@ -184,7 +198,8 @@ public class PlayerParser {
         });
     }
 
-    public static void playerToBaseXQuery(String[] query, DataOperation operation, Player player){
+    private void playerToBaseXQuery(String[] query, DataOperation operation, VerifiedEntity verifiedEntity){
+        Player player = (Player) verifiedEntity;
         query[0] = switch (operation){
             case ADD -> "insert node <player id='%s'><region>%s</region><server>%s</server><name>%s</name></player> into /Player"
                     .formatted(player.getID(), player.getRegion(), player.getServer(), player.getName());
@@ -195,7 +210,7 @@ public class PlayerParser {
         };
     }
 
-    public static void parseJsonObject(JSONObject jsonObject, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
+    private void parseJsonObject(JSONObject jsonObject, DataOperation operation, TreeMap<Integer, VerifiedEntity> dataMap){
         JSONArray playersArray = (JSONArray) jsonObject.get("players");
         if(playersArray.isEmpty()) {
             throw new DataCorruptedException("No players found");
@@ -212,7 +227,8 @@ public class PlayerParser {
     }
 
     @SuppressWarnings("unchecked")
-    public static void playerToJsonObject(JSONObject jsonObject, DataOperation operation, Player player){
+    private void playerToJsonObject(JSONObject jsonObject, DataOperation operation, VerifiedEntity verifiedEntity){
+        Player player = (Player) verifiedEntity;
         jsonObject.put("id", player.getID());
         jsonObject.put("name", player.getName());
         jsonObject.put("region", player.getRegion().toString());

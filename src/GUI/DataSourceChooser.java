@@ -1,6 +1,5 @@
 package GUI;
 
-import GUI.Player.PlayerText;
 import Interface.DataInfoCallback;
 import data.DataSource;
 import data.database.SqlDialect;
@@ -59,7 +58,7 @@ public class DataSourceChooser extends JDialog {
      *                 calls {@code callback.onCancel()}.
      */
     private void initialize(DataInfoCallback callback){
-        UiUtils.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
+        UiUtils.setLabelButtonText(GeneralText.fetch(), panel_info, panel_button);
         initializeDataSourceComboBox();
         comboBoxListener();
         setContentPane(panel_main);
@@ -184,28 +183,28 @@ public class DataSourceChooser extends JDialog {
         switch(dataSource){
             case NONE:
                 comboBox_dataType.setEnabled(false);
-                label_dataType.setText(PlayerText.getDialog().getText("label_dataType"));
+                label_dataType.setText(GeneralText.fetch().getText("label_dataType"));
                 return;
             case FILE:
                 for(FileType fileType : FileType.values()){
                     comboBox_dataType.addItem(fileType);
                 }
-                label_dataType.setText(PlayerText.getDialog().getText("label_file_type"));
+                label_dataType.setText(GeneralText.fetch().getText("label_file_type"));
                 break;
             case DATABASE, HIBERNATE:
                 for(SqlDialect sqlDialect : SqlDialect.values()){
                     comboBox_dataType.addItem(sqlDialect);
                 }
-                label_dataType.setText(PlayerText.getDialog().getText("label_sql_dialect"));
+                label_dataType.setText(GeneralText.fetch().getText("label_sql_dialect"));
                 break;
             case PHP:
                 for(PhpType dataType : PhpType.values()){
                     comboBox_dataType.addItem(dataType);
                 }
-                label_dataType.setText(PlayerText.getDialog().getText("label_dataType"));
+                label_dataType.setText(GeneralText.fetch().getText("label_dataType"));
                 break;
             case OBJECTDB, BASEX, MONGO:
-                label_dataType.setText(PlayerText.getDialog().getText("label_dataType"));
+                label_dataType.setText(GeneralText.fetch().getText("label_dataType"));
                 comboBox_dataType.setEnabled(false);
                 button_submit.setEnabled(true);
                 return;

@@ -1,6 +1,6 @@
 package main;
 
-import GUI.Player.PlayerText;
+import GUI.GeneralText;
 import Interface.GeneralControl;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
@@ -38,7 +38,7 @@ public class principal {
         GeneralControl current_control = initializeControl();
         if (current_control != null) {
             logger.info("Controller loaded");
-            current_control.run();
+            current_control.initialize().run();
         }
     }
 
@@ -105,7 +105,7 @@ public class principal {
      * <p>
      * If an error occurs during the dialog interaction or the retrieval process, it catches
      * the exception and displays the error message using a message dialog accessed via
-     * {@code PlayerText.getDialog().message(String)}. In such cases, the method returns null.
+     * {@code GeneralText.fetch().message(String)}. In such cases, the method returns null.
      * <p>
      * This method handles critical initialization logic that aligns with the application's
      * architecture, particularly in loading and activating user-selected controllers.
@@ -115,10 +115,10 @@ public class principal {
      */
     public static GeneralControl initializeControl(){
         try{
-            String chosen_control = (String) PlayerText.getDialog().selectionDialog("controller", CLASS_REGISTER.getControlClasses());
+            String chosen_control = (String) GeneralText.fetch().selectionDialog("controller", CLASS_REGISTER.getControlClasses());
             return CLASS_REGISTER.getControl(chosen_control);
         }catch (Exception e) {
-            PlayerText.getDialog().message(e.getMessage());
+            GeneralText.fetch().message(e.getMessage());
         }
         return null;
     }

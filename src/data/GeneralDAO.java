@@ -1,15 +1,23 @@
 package data;
 
-import GUI.Player.PlayerText;
+import GUI.GeneralText;
+import Interface.EntityParser;
+import Interface.GeneralCRUD;
+import Interface.VerifiedEntity;
 import data.file.FileType;
+import exceptions.ConfigErrorException;
 import exceptions.FileManageException;
 import exceptions.OperationCancelledException;
+import exceptions.OperationException;
 import model.DataInfo;
+import model.Player;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.TreeMap;
 
 import static main.principal.getProperty;
 
@@ -22,10 +30,119 @@ import static main.principal.getProperty;
  * @author SIN
  */
 public abstract class GeneralDAO {
+    protected EntityParser entityParser;
     protected DataInfo dataInfo = new DataInfo();
-    public abstract void search();
-    public abstract void read();
-    public abstract void save();
+    protected TreeMap<Integer, VerifiedEntity> dataContainer = new TreeMap<>();
+    protected boolean isSaveToFileNeeded = false;
+    protected abstract void isEntityValid(VerifiedEntity entity);
+    public abstract DataInfo getDefaultDatabaseInfo(DataInfo dataInfo) throws ConfigErrorException;
+
+    public GeneralDAO(EntityParser entityParser) {
+        this.entityParser = entityParser;
+    }
+
+    public void findById(){
+        int id = Integer.parseInt(JOptionPane.showInputDialog(null, GeneralText.fetch().getText("input_id_ongoing")));
+        dataContainer.clear();
+        dataContainer.put(id, null);
+        CRUDFactory.getCRUD(dataInfo)
+                .prepare()
+                .read(entityParser.parseAll(dataInfo.getDataType()), DataOperation.SEARCH, dataContainer)
+                .release();
+        if(dataContainer.get(id) != null){
+            validateAllData();
+        }else{
+            throw new OperationException("ID not found");
+        }
+    }
+
+    public void findAll() {
+        dataContainer.clear();
+        try {
+            CRUDFactory.getCRUD(dataInfo)
+                    .prepare()
+                    .read(entityParser.parseAll(dataInfo.getDataType()), DataOperation.READ, dataContainer)
+                    .release();
+            if(dataContainer != null && !dataContainer.isEmpty()){
+                validateAllData();
+            }
+        } catch (Exception e) {
+            dataContainer = new TreeMap<>();
+            dataInfo = new DataInfo();
+            throw new OperationException(e.getMessage());
+        }
+    }
+
+    public void saveAllToFile(){
+        if (Objects.requireNonNull(dataInfo.getDataType()) instanceof FileType) {
+            CRUDFactory.getCRUD(dataInfo)
+                    .prepare()
+                    .update(entityParser.serializeAll(dataInfo.getDataType()), null, dataContainer)
+                    .release();
+            isSaveToFileNeeded = false;
+        }
+    }
+
+    public void update(DataOperation operation, Player player){
+        if(!(dataInfo.getDataType() instanceof FileType)){
+            CRUDFactory.getCRUD(dataInfo)
+                    .prepare()
+                    .update(entityParser.serializeOne(dataInfo.getDataType()), operation, player)
+                    .release();
+        }else{
+            isSaveToFileNeeded = true;
+        }
+        switch (operation){
+            case ADD, MODIFY -> dataContainer.put(player.getID(), player);
+            case DELETE -> dataContainer.remove(player.getID());
+        }
+
+    }
+
+    public void exportFile(DataInfo targetDataInfo) {
+        String target_extension = getExtension((FileType) targetDataInfo.getDataType());
+        String target_path = getPath();
+        String target_name = GeneralText.fetch().input("new_file_name");
+        target_path += "/" + target_name + target_extension;
+        createNewFile(target_path);
+        targetDataInfo.setUrl(target_path);
+        CRUDFactory.getCRUD(targetDataInfo)
+                .prepare()
+                .update(entityParser.serializeAll(targetDataInfo.getDataType()), null, dataContainer)
+                .release();
+    }
+
+    public void exportDB(DataInfo exportDataBaseInfo) {
+        TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
+        GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getCRUD(exportDataBaseInfo)
+                .prepare()
+                .read(entityParser.parseAll(exportDataBaseInfo.getDataType()),null, target_player_map);
+        target_player_map.forEach((current_player_id, verified_entity) -> {
+            if(!dataContainer.containsKey(current_player_id)){
+                currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.DELETE, verified_entity);
+            }
+        });
+        dataContainer.forEach((current_player_id, verified_entity) -> {
+            if(target_player_map.containsKey(current_player_id)){
+                currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()),DataOperation.MODIFY, verified_entity);
+            }else{
+                currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.ADD, verified_entity);
+            }
+        });
+        currentCRUD.release();
+    }
+
+    public boolean isEmpty(){
+        return dataContainer.isEmpty();
+    }
+
+    public TreeMap<Integer, VerifiedEntity> getDataContainer() {
+        return dataContainer;
+    }
+
+    private void validateAllData(){
+        dataContainer.forEach((_, verifiedEntity) -> isEntityValid(verifiedEntity));
+    }
 
     /**
      * Retrieves the file extension corresponding to the given {@code FileType}.
@@ -63,13 +180,13 @@ public abstract class GeneralDAO {
         fileChooser.setDialogTitle("Choosing " + fileType);
         switch(fileType){
             case TXT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(PlayerText.getDialog().getText("extension_txt"), "txt"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.fetch().getText("extension_txt"), "txt"));
                 break;
             case DAT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(PlayerText.getDialog().getText("extension_dat"), "dat"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.fetch().getText("extension_dat"), "dat"));
                 break;
             case XML:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(PlayerText.getDialog().getText("extension_xml"), "xml"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.fetch().getText("extension_xml"), "xml"));
                 break;
         }
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -113,7 +230,7 @@ public abstract class GeneralDAO {
     public static String newPathBuilder(FileType fileType) {
         String target_path = GeneralDAO.getPath();
         String target_extension = getExtension(fileType);
-        String target_file_name = PlayerText.getDialog().input("file_name");
+        String target_file_name =GeneralText.fetch().input("file_name");
         target_path += "/" +target_file_name + target_extension;
         return target_path;
     }
@@ -130,7 +247,7 @@ public abstract class GeneralDAO {
      * Creates a new file at the specified file path. If the file already exists, no file will be created.
      * Logs information about the operation's success or failure.
      * <p>
-     * This method interacts with {@code PlayerText.getDialog()} to display a popup informing the user of a successful
+     * This method interacts with {@code GeneralText.fetch()} to display a popup informing the user of a successful
      * file creation. If an {@code IOException} occurs during the file creation process, the method wraps and throws it
      * as a {@code FileManageException} with the original exception's message.
      * <p>
@@ -145,6 +262,10 @@ public abstract class GeneralDAO {
         } catch (IOException e) {
             throw new FileManageException(e.getMessage());
         }
+    }
+
+    public void clearData(){
+        dataContainer.clear();
     }
 
 }

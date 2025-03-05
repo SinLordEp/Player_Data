@@ -1,5 +1,6 @@
 package GUI.Player;
 
+import GUI.GeneralText;
 import GUI.UiUtils;
 import Interface.CallBack;
 import model.Player;
@@ -105,7 +106,7 @@ public class PlayerInfoDialog extends JDialog {
         getRootPane().setDefaultButton(button_submit);
         setResizable(false);
         setLocationRelativeTo(null);
-        UiUtils.setLabelButtonText(PlayerText.getDialog(), panel_info, panel_button);
+        UiUtils.setLabelButtonText(GeneralText.fetch(), panel_info, panel_button);
         comboBoxListener();
         configureRegion();
         textValidateListener(text_name);
@@ -299,7 +300,7 @@ public class PlayerInfoDialog extends JDialog {
         }
         int id = Integer.parseInt(text_id.getText());
         if(playerIDs.contains(id)){
-            label_id_error.setText(PlayerText.getDialog().getText("label_id_error"));
+            label_id_error.setText(GeneralText.fetch().getText("label_id_error"));
             return false;
         }else{
             label_id_error.setText(" ");

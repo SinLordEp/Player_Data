@@ -19,13 +19,22 @@ import static main.principal.getProperty;
  * pattern to ensure a single instance for managing the dialogs.
  * @author SIN
  */
-public abstract class GeneralText {
-    protected Map<String,Object> texts;
-    protected Map<String,Object> inputs;
-    protected Map<String,Object> popups;
-    protected Map<String,Object> options;
-    protected String language;
+public class GeneralText {
+    private static final GeneralText GENERAL_TEXT = new GeneralText();
+    private Map<String,Object> texts;
+    private Map<String,Object> inputs;
+    private Map<String,Object> popups;
+    private Map<String,Object> options;
+    private String language;
 
+    public GeneralText() {
+        URL resource = getClass().getResource(getProperty("playerDialog"));
+        initialize(resource);
+    }
+
+    public static GeneralText fetch() {
+        return GENERAL_TEXT;
+    }
 
     /**
      * Initializes the dialog configurations by parsing a YAML file from the provided resource URL.

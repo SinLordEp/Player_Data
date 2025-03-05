@@ -1,12 +1,10 @@
 package Interface;
 
-import data.GeneralDAO;
-
 /**
  * @author SIN
  */
 public interface GeneralControl {
+    GeneralControl initialize();
     void run();
-    void setDA(GeneralDAO DA);
     void onWindowClosing();
 }

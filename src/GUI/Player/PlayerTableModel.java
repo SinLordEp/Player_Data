@@ -1,5 +1,6 @@
 package GUI.Player;
 
+import GUI.GeneralText;
 import Interface.VerifiedEntity;
 import model.Player;
 
@@ -21,14 +22,14 @@ public class PlayerTableModel extends AbstractTableModel {
     /**
      * Constructs a {@code PlayerTableModel} object to represent a tabular model of player data.
      * This constructor initializes the column names by retrieving options through
-     * {@code PlayerText.getDialog().getOptions()} and populates the table data by
+     * {@code GeneralText.fetch().getOptions()} and populates the table data by
      * calling {@code parse_data}.
      *
      * @param player_data a {@code TreeMap} mapping player IDs to their corresponding {@code Player} objects,
      *                    which is used to populate the table model.
      */
     public PlayerTableModel(TreeMap<Integer, VerifiedEntity> player_data) {
-        columns_name = PlayerText.getDialog().getOptions("table_column");
+        columns_name = GeneralText.fetch().getOptions("table_column");
         parse_data(player_data);
     }
 
@@ -119,12 +120,12 @@ public class PlayerTableModel extends AbstractTableModel {
      * column names are displayed in the appropriate language.
      * <p>
      * The method retrieves the updated column names by invoking
-     * {@code PlayerText.getDialog().getOptions("table_column")} and assigns the
+     * {@code GeneralText.fetch().getOptions("table_column")} and assigns the
      * resulting array to {@code columns_name}. It then calls {@code fireTableStructureChanged()}
      * to notify all listeners that the table structure has been updated.
      */
     public void language_changed() {
-        columns_name = PlayerText.getDialog().getOptions("table_column");
+        columns_name = GeneralText.fetch().getOptions("table_column");
         fireTableStructureChanged();
     }
 
