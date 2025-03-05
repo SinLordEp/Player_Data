@@ -33,6 +33,7 @@ public abstract class GeneralDAO {
     protected DataInfo dataInfo = new DataInfo();
     protected TreeMap<Integer, VerifiedEntity> dataContainer = new TreeMap<>();
     protected boolean isSaveToFileNeeded = false;
+
     protected abstract void isEntityValid(VerifiedEntity entity);
     public abstract DataInfo getDefaultDatabaseInfo(DataInfo dataInfo) throws ConfigErrorException;
 
@@ -116,16 +117,16 @@ public abstract class GeneralDAO {
         GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getCRUD(exportDataBaseInfo)
                 .prepare()
                 .read(entityParser.parseAll(exportDataBaseInfo.getDataType()),null, target_container);
-        target_container.forEach((id, verified_entity) -> {
+        target_container.forEach((id, verifiedEntity) -> {
             if(!dataContainer.containsKey(id)){
-                currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.DELETE, verified_entity);
+                currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.DELETE, verifiedEntity);
             }
         });
-        dataContainer.forEach((id, verified_entity) -> {
+        dataContainer.forEach((id, verifiedEntity) -> {
             if(target_container.containsKey(id)){
-                currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()),DataOperation.MODIFY, verified_entity);
+                currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()),DataOperation.MODIFY, verifiedEntity);
             }else{
-                currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.ADD, verified_entity);
+                currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.ADD, verifiedEntity);
             }
         });
         currentCRUD.release();
