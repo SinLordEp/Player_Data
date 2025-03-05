@@ -4,6 +4,7 @@ import GUI.TextHandler;
 import Interface.GeneralControl;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
+import exceptions.ConfigErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,11 @@ public class principal {
         GeneralControl current_control = initializeControl();
         if (current_control != null) {
             logger.info("Controller loaded");
-            current_control.initialize().run();
+            try {
+                current_control.initialize().run();
+            } catch (ConfigErrorException e) {
+                TextHandler.fetch().message("ConfigErrorException: " + e.getMessage());
+            }
         }
     }
 

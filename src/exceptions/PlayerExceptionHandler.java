@@ -2,6 +2,7 @@ package exceptions;
 
 import GUI.LogStage;
 import Interface.EventListener;
+import Interface.ExceptionHandler;
 import Interface.VerifiedEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,50 +14,45 @@ import java.util.TreeMap;
 /**
  * @author SIN
  */
-public class PlayerExceptionHandler {
-    private static final PlayerExceptionHandler INSTANCE = new PlayerExceptionHandler();
+public class PlayerExceptionHandler implements ExceptionHandler {
+    private static PlayerExceptionHandler INSTANCE = null;
     private final List<EventListener<TreeMap<Integer, VerifiedEntity>>> listeners = new ArrayList<>();
     private static final Logger logger = LoggerFactory.getLogger(PlayerExceptionHandler.class);
 
-    @FunctionalInterface
-    public interface ExceptionWithReturn<T> {
-        T run() throws Exception;
-    }
-
-    @FunctionalInterface
-    public interface ExceptionWithoutReturn {
-        void run() throws Exception;
-    }
-
     public static PlayerExceptionHandler getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new PlayerExceptionHandler();
+        }
         return INSTANCE;
     }
 
-    public <T> T handle(ExceptionWithReturn<T> function, String className, String... playerTextSubType) {
+    @Override
+    public <T> T handle(ExceptionWithReturn<T> function, String className, String... textSubType) {
         boolean success = true;
         try{
-            if(playerTextSubType.length == 1){
+            if(textSubType.length == 1){
                 logger.info("Method with return {} - Processing", className);
-                notifyLog(LogStage.ONGOING, playerTextSubType[0] + "_ongoing");
+                notifyLog(LogStage.ONGOING, textSubType[0] + "_ongoing");
             }else {
-                logger.info("Method with return {} - Processing {}", className, playerTextSubType[1]);
-                notifyLog(LogStage.ONGOING, playerTextSubType[0] + "_ongoing", playerTextSubType[1]);
+                logger.info("Method with return {} - Processing {}", className, textSubType[1]);
+                notifyLog(LogStage.ONGOING, textSubType[0] + "_ongoing", textSubType[1]);
             }
             return function.run();
         }catch (OperationCancelledException e){
             notifyLog(LogStage.INFO, "operation_cancelled");
         }catch (Exception e){
             success = false;
-            handleException(e, className, playerTextSubType);
+            handleException(e, className, textSubType);
         } finally {
             if (success) {
                 logger.info("Method with return {} - Finished", className);
-                notifyLog(LogStage.PASS, playerTextSubType[0] + "_pass");
+                notifyLog(LogStage.PASS, textSubType[0] + "_pass");
             }
         }
         return null;
     }
 
+    @Override
     public void handle(ExceptionWithoutReturn function, String className, String... playerTextSubType) {
         try{
             if(playerTextSubType.length == 1){
@@ -91,6 +87,8 @@ public class PlayerExceptionHandler {
         logger.error(message);
         notifyLog(LogStage.FAIL, playerTextSubType[0] + "_fail");
     }
+
+    @Override
     public void addListener(EventListener<TreeMap<Integer, VerifiedEntity>> listener){
         listeners.add(listener);
     }

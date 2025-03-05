@@ -2,11 +2,12 @@ package control;
 
 import GUI.DataSourceChooser;
 import GUI.DatabaseLogin;
-import GUI.TextHandler;
 import GUI.LogStage;
 import GUI.Player.PlayerInfoDialog;
 import GUI.Player.PlayerUI;
+import GUI.TextHandler;
 import Interface.EventListener;
+import Interface.ExceptionHandler;
 import Interface.GeneralControl;
 import Interface.VerifiedEntity;
 import data.*;
@@ -34,11 +35,14 @@ import java.util.TreeMap;
  */
 public class PlayerControl implements GeneralControl {
     private PlayerDAO playerDA;
+    private ExceptionHandler exceptionHandler;
     private final List<EventListener<TreeMap<Integer, VerifiedEntity>>> listeners = new ArrayList<>();
 
     @Override
     public GeneralControl initialize() {
         playerDA = new PlayerDAO(PlayerParser.getInstance());
+        exceptionHandler = PlayerExceptionHandler.getInstance();
+        exceptionHandler.handle(() -> playerDA.initializeRegionServer(),"PlayerDAO-initializeRegionServer()", "region_server");
         return this;
     }
 
@@ -61,7 +65,7 @@ public class PlayerControl implements GeneralControl {
     public void run() {
         PlayerUI playerUI = new PlayerUI(this);
         addListener(playerUI);
-        PlayerExceptionHandler.getInstance().addListener(playerUI);
+        exceptionHandler.addListener(playerUI);
         playerUI.run();
     }
 
@@ -99,9 +103,7 @@ public class PlayerControl implements GeneralControl {
     }
 
     private void handleDataSourceForCreateFile(DataInfo dataInfo) {
-        PlayerExceptionHandler
-                .getInstance()
-                .handle(() -> {
+        exceptionHandler.handle(() -> {
                     dataInfo.setUrl(GeneralDAO.newPathBuilder((FileType) dataInfo.getDataType()));
                     playerDA.createNewFile(dataInfo.getUrl());
                     playerDA.setDataInfo(dataInfo);
@@ -143,14 +145,12 @@ public class PlayerControl implements GeneralControl {
         notifyEvent("dataSource_set",null);
         switch(dataInfo.getDataType()){
             case FileType ignore :
-                String file_path = PlayerExceptionHandler.getInstance()
-                        .handle(() -> GeneralDAO.getPath((FileType) dataInfo.getDataType()), "GeneralDataAccess-getPath()", "getPath");
+                String file_path = exceptionHandler.handle(() -> GeneralDAO.getPath((FileType) dataInfo.getDataType()), "GeneralDataAccess-getPath()", "getPath");
                 dataInfo.setUrl(file_path);
                 importData(dataInfo);
                 break;
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO :
-                PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::importData),
-                        "PlayerControl-importDB()", "default_database");
+                exceptionHandler.handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::importData), "PlayerControl-importDB()", "default_database");
                 break;
             case PhpType ignore : importData(dataInfo);
                 break;
@@ -159,8 +159,7 @@ public class PlayerControl implements GeneralControl {
     }
 
     private void importData(DataInfo dataInfo) {
-        PlayerExceptionHandler.getInstance()
-                .handle(() -> {
+        exceptionHandler.handle(() -> {
                     playerDA.findAll();
                     notifyEvent("data_changed", playerDA.getDataContainer());
                 }, "PlayerControl-importData()" , "import", "\n>>>" + dataInfo.getUrl());
@@ -174,7 +173,7 @@ public class PlayerControl implements GeneralControl {
         notifyEvent("dataSource_set",null);
         switch(dataInfo.getDataType()){
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO :
-                PlayerExceptionHandler.getInstance().handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::searchID),
+                exceptionHandler.handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::searchID),
                         "PlayerControl-searchDB()", "default_database");
                 break;
             case PhpType ignore : searchID(dataInfo); break;
@@ -184,8 +183,7 @@ public class PlayerControl implements GeneralControl {
 
     private void searchID(DataInfo dataInfo) {
         playerDA.setDataInfo(dataInfo);
-        PlayerExceptionHandler.getInstance()
-                .handle(() -> {
+        exceptionHandler.handle(() -> {
                     playerDA.findById();
                     notifyEvent("data_changed", playerDA.getDataContainer());
                 }, "PlayerControl-searchID()", "search", "\n>>>" + dataInfo.getUrl());
@@ -215,12 +213,10 @@ public class PlayerControl implements GeneralControl {
      * @param player The Player object containing the details to be added.
      */
     private void handlePlayerInfoForAdd(Player player){
-        PlayerExceptionHandler.getInstance()
-                .handle(() -> {
+        exceptionHandler.handle(() -> {
                             playerDA.update(DataOperation.ADD, player);
                             notifyEvent("data_changed", playerDA.getDataContainer());
-                        },
-                        "PlayerControl-handlePlayerInfoForAdd()", "addPlayer", ">>>ID: " + player.getID());
+                        }, "PlayerControl-handlePlayerInfoForAdd()", "addPlayer", ">>>ID: " + player.getID());
     }
 
     /**
@@ -244,8 +240,7 @@ public class PlayerControl implements GeneralControl {
      * @param player The player object containing the information to be modified.
      */
     private void handlePlayerInfoForModify(Player player){
-        PlayerExceptionHandler.getInstance()
-                .handle(() -> {
+        exceptionHandler.handle(() -> {
                     playerDA.update(DataOperation.MODIFY, player);
                     notifyEvent("data_changed", playerDA.getDataContainer());
                 },"PlayerControl-handlePlayerInfoForModify()", "modifyPlayer", ">>>ID: " + player.getID());
@@ -259,8 +254,7 @@ public class PlayerControl implements GeneralControl {
      * @param selected_player_id the unique identifier of the player to be deleted
      */
     public void delete(int selected_player_id) {
-        PlayerExceptionHandler.getInstance()
-                .handle(() -> {
+        exceptionHandler.handle(() -> {
                     playerDA.update(DataOperation.DELETE, playerDA.getPlayerCopy(selected_player_id));
                     notifyEvent("data_changed", playerDA.getDataContainer());
                 },"PlayerControl-delete()", "deletePlayer", ">>>ID: " + selected_player_id);
@@ -291,13 +285,10 @@ public class PlayerControl implements GeneralControl {
 
     private void handleDataSourceForExport(DataInfo targetDataInfo){
         switch (targetDataInfo.getDataType()){
-            case FileType ignore -> PlayerExceptionHandler.getInstance()
-                    .handle(() -> playerDA.exportFile(targetDataInfo), "PlayerControl-exportFile()", "exportFile");
-            case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> PlayerExceptionHandler.getInstance()
-                    .handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(targetDataInfo), this::handleDatabaseLoginForExport),
+            case FileType ignore -> exceptionHandler.handle(() -> playerDA.exportFile(targetDataInfo), "PlayerControl-exportFile()", "exportFile");
+            case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO -> exceptionHandler.handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(targetDataInfo), this::handleDatabaseLoginForExport),
                             "PlayerControl-exportDB()", "default_database");
-            case DataSource.PHP -> PlayerExceptionHandler.getInstance()
-                    .handle(() -> playerDA.exportDB(targetDataInfo), "PlayerControl-exportPHP()", "exportPHP");
+            case DataSource.PHP -> exceptionHandler.handle(() -> playerDA.exportDB(targetDataInfo), "PlayerControl-exportPHP()", "exportPHP");
             default -> throw new IllegalArgumentException("Unknown data source: " + targetDataInfo.getDataType());
         }
     }
@@ -316,8 +307,7 @@ public class PlayerControl implements GeneralControl {
      *                     required to connect and perform the export operation.
      */
     private void handleDatabaseLoginForExport(DataInfo dataInfo) {
-        PlayerExceptionHandler.getInstance()
-                .handle(() -> playerDA.exportDB(dataInfo), "PlayerControl-exportDB()", "exportDB");
+        exceptionHandler.handle(() -> playerDA.exportDB(dataInfo), "PlayerControl-exportDB()", "exportDB");
     }
 
     /**
@@ -340,8 +330,7 @@ public class PlayerControl implements GeneralControl {
      */
     public void saveToFile(){
         if(playerDA.isSaveToFileNeeded() && playerDA.getDataInfo() != null){
-            PlayerExceptionHandler.getInstance()
-                    .handle(() -> playerDA.saveAllToFile(), "PlayerControl-save()", "save");
+            exceptionHandler.handle(() -> playerDA.saveAllToFile(), "PlayerControl-save()", "save");
         }
     }
 

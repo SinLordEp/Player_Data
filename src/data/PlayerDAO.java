@@ -7,7 +7,6 @@ import data.database.SqlDialect;
 import exceptions.ConfigErrorException;
 import exceptions.DataCorruptedException;
 import exceptions.OperationException;
-import exceptions.PlayerExceptionHandler;
 import model.DataInfo;
 import model.Player;
 import model.Region;
@@ -36,7 +35,6 @@ public class PlayerDAO extends GeneralDAO {
 
     public PlayerDAO(EntityParser entityParser) {
         super(entityParser);
-        initializeRegionServer();
     }
 
     /**
@@ -63,14 +61,16 @@ public class PlayerDAO extends GeneralDAO {
      * @throws RuntimeException if an error occurs while retrieving the
      *                           configuration or connecting to the database.
      */
-    public void initializeRegionServer(){
+    public void initializeRegionServer() throws ConfigErrorException {
         DataInfo regionServerInfo = new DataInfo();
         regionServerInfo.setDataType(DataSource.DATABASE);
         regionServerInfo.setDialect(SqlDialect.SQLITE);
-        PlayerExceptionHandler.getInstance().handle(() -> getDefaultDatabaseInfo(regionServerInfo),
-                "PlayerDAO-getDefaultDatabaseInfo()", "default_database");
-        region_server_map = PlayerExceptionHandler.getInstance().handle(() -> DatabaseCRUD.readRegionServer(regionServerInfo),
-                "PlayerDAO-initializeRegionServer()", "region_server");
+        try {
+            getDefaultDatabaseInfo(regionServerInfo);
+            region_server_map = DatabaseCRUD.readRegionServer(regionServerInfo);
+        } catch (ConfigErrorException e) {
+            throw new ConfigErrorException("Failed to fetch region server info. Cause: " + e.getMessage());
+        }
     }
 
     @SuppressWarnings("unchecked")
