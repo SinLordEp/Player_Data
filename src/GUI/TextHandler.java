@@ -28,7 +28,7 @@ public class TextHandler {
     private String language;
 
     public TextHandler() {
-        URL resource = getClass().getResource(getProperty("playerDialog"));
+        URL resource = getClass().getResource(getProperty("dialog"));
         initialize(resource);
     }
 
