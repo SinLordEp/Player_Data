@@ -4,6 +4,7 @@ import Interface.EntityParser;
 import Interface.VerifiedEntity;
 import data.database.DatabaseCRUD;
 import data.database.SqlDialect;
+import data.http.PhpType;
 import exceptions.ConfigErrorException;
 import exceptions.DataCorruptedException;
 import exceptions.OperationException;
@@ -93,10 +94,11 @@ public class PlayerDAO extends GeneralDAO {
         HashMap<String,Object> database_info = switch (dataInfo.getDialect()) {
             case MYSQL -> (HashMap<String, Object>) default_info.get("MYSQL");
             case SQLITE -> (HashMap<String, Object>) default_info.get("SQLITE");
-            case null -> switch((DataSource)dataInfo.getDataType()){
-                case OBJECTDB ->(HashMap<String, Object>) default_info.get("OBJECTDB");
-                case BASEX -> (HashMap<String, Object>) default_info.get("BASEX");
-                case MONGO -> (HashMap<String, Object>) default_info.get("MONGO");
+            case null -> switch(dataInfo.getDataType()){
+                case DataSource.OBJECTDB ->(HashMap<String, Object>) default_info.get("OBJECTDB");
+                case DataSource.BASEX -> (HashMap<String, Object>) default_info.get("BASEX");
+                case DataSource.MONGO -> (HashMap<String, Object>) default_info.get("MONGO");
+                case PhpType.JSON -> (HashMap<String, Object>) default_info.get("JSON");
                 default ->throw new OperationException("Unknown database type");
             };
             default -> throw new OperationException("Unknown SQL dialect");

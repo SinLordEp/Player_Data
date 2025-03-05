@@ -152,7 +152,9 @@ public class PlayerControl implements GeneralControl {
             case DataSource.DATABASE, DataSource.HIBERNATE, DataSource.OBJECTDB, DataSource.BASEX, DataSource.MONGO :
                 exceptionHandler.handle(() -> new DatabaseLogin(playerDA.getDefaultDatabaseInfo(dataInfo), this::importData), "PlayerControl-importDB()", "default_database");
                 break;
-            case PhpType ignore : importData(dataInfo);
+            case PhpType ignore :
+                exceptionHandler.handle(() -> playerDA.getDefaultDatabaseInfo(dataInfo), "PlayerControl-importPHP()", "default_database");
+                importData(dataInfo);
                 break;
             default : throw new IllegalStateException("Unexpected Data Source: " + dataInfo.getDataType());
         }

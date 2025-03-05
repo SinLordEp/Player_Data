@@ -31,3 +31,8 @@ MONGO:
   text_port: "27017"
   text_database: "person"
   text_table: "player"
+JSON:
+  text_url: "http://localhost/sin/player_data/"
+  text_query_read: "read_player.php"
+  text_query_modify: "write_player.php"
+  text_query_search: "search_player.php"

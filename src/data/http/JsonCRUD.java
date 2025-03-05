@@ -13,8 +13,6 @@ import org.json.simple.JSONValue;
 import java.io.IOException;
 import java.util.TreeMap;
 
-import static main.principal.getProperty;
-
 /**
  * @author SIN
  */
@@ -35,10 +33,10 @@ public class JsonCRUD implements GeneralCRUD<DataInfo> {
     public GeneralCRUD<DataInfo> prepare() {
         if(dataInfo.getDataType() == PhpType.JSON){
             api = new ApiRequests();
-            url = getProperty("phpURL");
-            readUrl = getProperty("phpReadURL");
-            writeUrl = getProperty("phpWriteURL");
-            searchUrl = getProperty("phpSearchURL");
+            url = dataInfo.getUrl();
+            readUrl = dataInfo.getQueryRead();
+            writeUrl = dataInfo.getQueryModify();
+            searchUrl = dataInfo.getQuerySearch();
             return this;
         }
         throw new HttpPhpException("Invalid php type");
