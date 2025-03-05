@@ -50,7 +50,7 @@ public class PlayerExceptionHandler {
             handleException(e, className, playerTextSubType);
         } finally {
             if (success) {
-                logger.info("Method with return {} - Success", className);
+                logger.info("Method with return {} - Finished", className);
                 notifyLog(LogStage.PASS, playerTextSubType[0] + "_pass");
             }
         }
@@ -68,7 +68,7 @@ public class PlayerExceptionHandler {
             }
             function.run();
             notifyLog(LogStage.PASS, playerTextSubType[0] + "_pass");
-            logger.info("Method without return {} - Success", className);
+            logger.info("Method without return {} - Finished", className);
         }catch (OperationCancelledException e){
             notifyLog(LogStage.INFO, "operation_cancelled");
         }catch (Exception e){

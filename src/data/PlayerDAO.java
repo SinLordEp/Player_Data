@@ -144,7 +144,7 @@ public class PlayerDAO extends GeneralDAO {
                 .prepare()
                 .read(PlayerParser.parsing(dataInfo.getDataType()), DataOperation.SEARCH, player_map)
                 .release();
-        if(player_map != null && !player_map.isEmpty()){
+        if(player_map.get(id) != null){
             isDataValid();
         }else{
             throw new OperationException("No player found");
