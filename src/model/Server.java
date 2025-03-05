@@ -65,4 +65,9 @@ public class Server implements Serializable,VerifiedEntity {
     public String toString() {
         return this.name;
     }
+
+    @Override
+    public int getID() {
+        return 0;
+    }
 }

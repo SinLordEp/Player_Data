@@ -10,7 +10,6 @@ import exceptions.FileManageException;
 import exceptions.OperationCancelledException;
 import exceptions.OperationException;
 import model.DataInfo;
-import model.Player;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -83,18 +82,18 @@ public abstract class GeneralDAO {
         }
     }
 
-    public void update(DataOperation operation, Player player){
+    public void update(DataOperation operation, VerifiedEntity verifiedEntity){
         if(!(dataInfo.getDataType() instanceof FileType)){
             CRUDFactory.getCRUD(dataInfo)
                     .prepare()
-                    .update(entityParser.serializeOne(dataInfo.getDataType()), operation, player)
+                    .update(entityParser.serializeOne(dataInfo.getDataType()), operation, verifiedEntity)
                     .release();
         }else{
             isSaveToFileNeeded = true;
         }
         switch (operation){
-            case ADD, MODIFY -> dataContainer.put(player.getID(), player);
-            case DELETE -> dataContainer.remove(player.getID());
+            case ADD, MODIFY -> dataContainer.put(verifiedEntity.getID(), verifiedEntity);
+            case DELETE -> dataContainer.remove(verifiedEntity.getID());
         }
 
     }
@@ -113,17 +112,17 @@ public abstract class GeneralDAO {
     }
 
     public void exportDB(DataInfo exportDataBaseInfo) {
-        TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
+        TreeMap<Integer, VerifiedEntity> target_container = new TreeMap<>();
         GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getCRUD(exportDataBaseInfo)
                 .prepare()
-                .read(entityParser.parseAll(exportDataBaseInfo.getDataType()),null, target_player_map);
-        target_player_map.forEach((current_player_id, verified_entity) -> {
-            if(!dataContainer.containsKey(current_player_id)){
+                .read(entityParser.parseAll(exportDataBaseInfo.getDataType()),null, target_container);
+        target_container.forEach((id, verified_entity) -> {
+            if(!dataContainer.containsKey(id)){
                 currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.DELETE, verified_entity);
             }
         });
-        dataContainer.forEach((current_player_id, verified_entity) -> {
-            if(target_player_map.containsKey(current_player_id)){
+        dataContainer.forEach((id, verified_entity) -> {
+            if(target_container.containsKey(id)){
                 currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()),DataOperation.MODIFY, verified_entity);
             }else{
                 currentCRUD.update(entityParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.ADD, verified_entity);
@@ -258,7 +257,9 @@ public abstract class GeneralDAO {
      */
     public void createNewFile(String file_path) throws FileManageException {
         try {
-            new File(file_path).createNewFile();
+            if(!new File(file_path).createNewFile()){
+                throw new FileManageException("Cannot create new file");
+            }
         } catch (IOException e) {
             throw new FileManageException(e.getMessage());
         }

@@ -29,6 +29,7 @@ public abstract class Person implements java.io.Serializable, VerifiedEntity {
         this.name = name;
     }
 
+    @Override
     public int getID() {
         return this.ID;
     }
