@@ -7,9 +7,7 @@ import Interface.VerifiedEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author SIN
@@ -18,6 +16,15 @@ public class PlayerExceptionHandler implements ExceptionHandler {
     private static PlayerExceptionHandler INSTANCE = null;
     private final List<EventListener<TreeMap<Integer, VerifiedEntity>>> listeners = new ArrayList<>();
     private static final Logger logger = LoggerFactory.getLogger(PlayerExceptionHandler.class);
+    private final Map<Class<? extends Exception>, String> exceptionMessages = Map.of(
+            ConfigErrorException.class,"Failed to read configuration.",
+            DatabaseException.class, "Failed to communicate with database.",
+            DataCorruptedException.class, "Data imported is corrupted.",
+            DataTypeException.class, "Data type is not supported.",
+            FileManageException.class, "Failed to manage file.",
+            HttpPhpException.class, "Failed to communicate with PHP server.",
+            OperationException.class, "Failed to proceed current operation.");
+
 
     public static PlayerExceptionHandler getInstance() {
         if (INSTANCE == null) {
@@ -73,17 +80,8 @@ public class PlayerExceptionHandler implements ExceptionHandler {
     }
 
     private void handleException(Exception e, String className, String... playerTextSubType){
-        String message = "Class&Function: %s, ".formatted(className);
-        switch (e) {
-            case ConfigErrorException _ -> message += "Failed to read configuration.\nCause: " + e.getMessage();
-            case DatabaseException _ -> message += "Failed to communicate with database.\nCause: " + e.getMessage();
-            case DataCorruptedException _ -> message += "Data imported is corrupted.";
-            case DataTypeException _ -> message += "Data type is not supported.";
-            case FileManageException _ -> message += "Failed to manage file.\nCause: " + e.getMessage();
-            case HttpPhpException _ -> message += "Failed to communicate with PHP server.\nCause: " + e.getMessage();
-            case OperationException _ -> message += "Failed to proceed current operation.\nCause: " + e.getMessage();
-            default -> message += "Undefined exception occurred.\nCause: " + e.getMessage();
-        }
+        String message = "Class&Function: %s - %s\nCause: %s"
+                .formatted(className, exceptionMessages.getOrDefault(e.getClass(), "Undefined exception occurred."), e.getMessage());
         logger.error(message);
         notifyLog(LogStage.FAIL, playerTextSubType[0] + "_fail");
     }
