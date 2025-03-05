@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 
 import static main.principal.getProperty;
 
@@ -103,21 +102,21 @@ public class PlayerDAO extends GeneralDAO {
             };
             default -> throw new OperationException("Unknown SQL dialect");
         };
-        for(Map.Entry<String,Object> entry : database_info.entrySet()){
-            switch (entry.getKey()){
-                case "text_url" -> dataInfo.setUrl((String) entry.getValue());
-                case "text_port" -> dataInfo.setPort((String)entry.getValue());
-                case "text_database" -> dataInfo.setDatabase((String) entry.getValue());
-                case "text_user" -> dataInfo.setUser((String) entry.getValue());
-                case "text_pwd" -> dataInfo.setPassword((String) entry.getValue());
-                case "text_table" -> dataInfo.setTable((String) entry.getValue());
-                case "text_query_read" -> dataInfo.setQueryRead((String) entry.getValue());
-                case "text_query_add" -> dataInfo.setQueryADD((String) entry.getValue());
-                case "text_query_modify" -> dataInfo.setQueryModify((String) entry.getValue());
-                case "text_query_delete" -> dataInfo.setQueryDelete((String) entry.getValue());
-                case "text_query_search" -> dataInfo.setQuerySearch((String) entry.getValue());
+        database_info.forEach((key, value) ->{
+            switch (key){
+                case "text_url" -> dataInfo.setUrl((String) value);
+                case "text_port" -> dataInfo.setPort((String)value);
+                case "text_database" -> dataInfo.setDatabase((String) value);
+                case "text_user" -> dataInfo.setUser((String) value);
+                case "text_pwd" -> dataInfo.setPassword((String) value);
+                case "text_table" -> dataInfo.setTable((String) value);
+                case "text_query_read" -> dataInfo.setQueryRead((String) value);
+                case "text_query_add" -> dataInfo.setQueryADD((String) value);
+                case "text_query_modify" -> dataInfo.setQueryModify((String) value);
+                case "text_query_delete" -> dataInfo.setQueryDelete((String) value);
+                case "text_query_search" -> dataInfo.setQuerySearch((String) value);
             }
-        }
+        });
         return dataInfo;
     }
 
