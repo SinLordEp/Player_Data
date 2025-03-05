@@ -43,9 +43,9 @@ public class TxtCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
         try(Stream<String> stream = Files.lines(path)) {
-            stream.forEach(line -> parser.parse((R) line, operation, dataMap));
+            stream.forEach(line -> parser.parse((R) line, dataOperation, dataContainer));
         } catch (IOException e) {
             throw new FileManageException("Error reading this txt file.>>>" + e.getMessage());
         }
@@ -54,10 +54,10 @@ public class TxtCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
         try {
             List<String> lines = new ArrayList<>();
-            parser.parse((R)lines,operation,object);
+            parser.parse((R)lines, dataOperation, dataContainer);
             Files.write(path, lines);
         }catch (IOException e){
             throw new FileManageException("Error writing this txt file.>>>" + e.getMessage());

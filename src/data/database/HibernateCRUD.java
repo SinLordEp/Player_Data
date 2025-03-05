@@ -95,19 +95,19 @@ public class HibernateCRUD implements GeneralCRUD<DataInfo> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <R,U> GeneralCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap){
+    public <R,U> GeneralCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation dataOperation, U dataContainer){
         try (Session session = sessionFactory.openSession()) {
             Query<VerifiedEntity> query;
-             switch (operation){
+             switch (dataOperation){
                 case READ : query = session.createQuery(dataInfo.getQueryRead(), VerifiedEntity.class);
                 break;
                 case SEARCH:  query = session.createQuery(dataInfo.getQuerySearch(), VerifiedEntity.class);
-                    query.setParameter("id", ((TreeMap<?, ?>) dataMap).firstKey());
+                    query.setParameter("id", ((TreeMap<?, ?>) dataContainer).firstKey());
                     break;
-                 default: throw new OperationException("Unexpected DataOperation for reading: " + operation);
+                 default: throw new OperationException("Unexpected DataOperation for reading: " + dataOperation);
             }
             List<VerifiedEntity> list = query.getResultList();
-            parser.parse((R)list, null, dataMap);
+            parser.parse((R)list, null, dataContainer);
         }catch (Exception e){
             throw new DatabaseException(e.getMessage());
         }
@@ -115,23 +115,23 @@ public class HibernateCRUD implements GeneralCRUD<DataInfo> {
     }
 
     @Override
-    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            switch(operation){
-                case ADD -> session.persist(object);
-                case MODIFY -> session.merge(object);
-                case DELETE -> session.remove(object);
+            switch(dataOperation){
+                case ADD -> session.persist(dataContainer);
+                case MODIFY -> session.merge(dataContainer);
+                case DELETE -> session.remove(dataContainer);
             }
             transaction.commit();
-            return this;
         }catch(Exception e){
             if(transaction != null){
                 transaction.rollback();
             }
             throw new DatabaseException(e.getMessage());
         }
+        return this;
     }
 
     /**

@@ -30,7 +30,7 @@ import java.util.TreeMap;
  */
 public class PlayerParser {
 
-    public static ParserCallBack<?, TreeMap<Integer, VerifiedEntity>> input(Object dataType){
+    public static ParserCallBack<?, TreeMap<Integer, VerifiedEntity>> parsing(Object dataType){
         return switch (dataType){
             case DataSource.DATABASE -> (ParserCallBack<ResultSet, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseResultSet;
             case DataSource.HIBERNATE, DataSource.OBJECTDB -> (ParserCallBack<List<VerifiedEntity>, TreeMap<Integer, VerifiedEntity>>) PlayerParser::parseList;
@@ -43,7 +43,7 @@ public class PlayerParser {
         };
     }
 
-    public static ParserCallBack<?, Player> singleOutput(Object dataType) {
+    public static ParserCallBack<?, Player> serializeOne(Object dataType) {
         return switch (dataType) {
             case DataSource.DATABASE -> (ParserCallBack<PreparedStatement, Player>) PlayerParser::playerToUpdateStatement;
             case DataSource.HIBERNATE, DataSource.OBJECTDB -> null;
@@ -54,7 +54,7 @@ public class PlayerParser {
         };
     }
 
-    public static ParserCallBack<?, TreeMap<Integer, VerifiedEntity>> allOutput(Object dataType){
+    public static ParserCallBack<?, TreeMap<Integer, VerifiedEntity>> serializeAll(Object dataType){
         return switch (dataType) {
             case FileType.XML -> (ParserCallBack<org.w3c.dom.Document, TreeMap<Integer, VerifiedEntity>>) PlayerParser::playerToXmlElement;
             case FileType.TXT -> (ParserCallBack<ArrayList<String>, TreeMap<Integer, VerifiedEntity>>) PlayerParser::playerToArrayString;

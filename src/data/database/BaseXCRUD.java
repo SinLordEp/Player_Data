@@ -44,37 +44,37 @@ public class BaseXCRUD implements GeneralCRUD<DataInfo> {
     }
 
     @Override
-    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
         try {
-            String result = switch (operation){
+            String result = switch (dataOperation){
                 case READ -> new XQuery(dataInfo.getDatabase()).execute(context);
-                case SEARCH -> new XQuery(dataInfo.getQuerySearch().formatted(String.valueOf(((TreeMap<?, ?>) dataMap).firstKey()))).execute(context);
-                default -> throw new OperationException("Unexpected DataOperation for reading: " + operation);
+                case SEARCH -> new XQuery(dataInfo.getQuerySearch().formatted(String.valueOf(((TreeMap<?, ?>) dataContainer).firstKey()))).execute(context);
+                default -> throw new OperationException("Unexpected DataOperation for reading: " + dataOperation);
             };
             DataInfo tempDataInfo = new DataInfo();
             tempDataInfo.setDataType(FileType.XML);
             tempDataInfo.setUrl(result);
             CRUDFactory.getCRUD(tempDataInfo)
                     .prepare()
-                    .read(parser, operation, dataMap)
+                    .read(parser, dataOperation, dataContainer)
                     .release();
-            return this;
         } catch (BaseXException e) {
             throw new DatabaseException(e.getMessage());
         }
+        return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
         try {
             String[] query = new String[1];
-            parser.parse((R)query, operation, object);
+            parser.parse((R)query, dataOperation, dataContainer);
             new XQuery(query[0]).execute(context);
-            return this;
         } catch (BaseXException e) {
             throw new DatabaseException(e.getMessage());
         }
+        return this;
     }
 
 }

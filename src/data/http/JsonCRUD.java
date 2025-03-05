@@ -50,17 +50,17 @@ public class JsonCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
         try {
             String response;
-            switch (operation){
+            switch (dataOperation){
                 case SEARCH: JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("id", ((TreeMap<?,?>) dataMap).firstKey());
+                    jsonObject.put("id", ((TreeMap<?,?>) dataContainer).firstKey());
                     response = api.postRequest(url + searchUrl, jsonObject.toJSONString());
                     break;
                 case READ: response = api.getRequest(url + readUrl);
                 break;
-                default: throw new OperationException("Unexpected DataOperation for reading: " + operation);
+                default: throw new OperationException("Unexpected DataOperation for reading: " + dataOperation);
             }
             JSONObject parsedJson = (JSONObject) JSONValue.parse(response);
             if(parsedJson == null) {
@@ -69,7 +69,7 @@ public class JsonCRUD implements GeneralCRUD<DataInfo> {
             if("error".equals(parsedJson.get("status").toString())) {
                 throw new HttpPhpException(parsedJson.get("message").toString());
             }
-            parser.parse((R)parsedJson, operation, dataMap);
+            parser.parse((R)parsedJson, dataOperation, dataContainer);
         } catch (IOException e) {
             throw new HttpPhpException(e.getMessage());
         }
@@ -78,10 +78,10 @@ public class JsonCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
         JSONObject jsonObject = new JSONObject();
         try {
-            parser.parse((R) jsonObject, operation, object);
+            parser.parse((R) jsonObject, dataOperation, dataContainer);
             String postRequest = api.postRequest(url + writeUrl, jsonObject.toJSONString());
             JSONObject response = (JSONObject) JSONValue.parse(postRequest);
             if(response == null) {

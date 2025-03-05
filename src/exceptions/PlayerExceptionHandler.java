@@ -85,7 +85,6 @@ public class PlayerExceptionHandler {
             case DataTypeException _ -> message += "Data type is not supported.";
             case FileManageException _ -> message += "Failed to manage file.\nCause: " + e.getMessage();
             case HttpPhpException _ -> message += "Failed to communicate with PHP server.\nCause: " + e.getMessage();
-            case ObjectDBException _ -> message += "Failed to communicate with ObjectDB database.\nCause: " + e.getMessage();
             case OperationException _ -> message += "Failed to proceed current operation.\nCause: " + e.getMessage();
             default -> message += "Undefined exception occurred.\nCause: " + e.getMessage();
         }

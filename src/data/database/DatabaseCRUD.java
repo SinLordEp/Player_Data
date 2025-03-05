@@ -76,19 +76,19 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <R,U> GeneralCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation operation, U dataMap) {
+    public <R,U> GeneralCRUD<DataInfo> read(ParserCallBack<R,U> parser, DataOperation dataOperation, U dataContainer) {
         if(connection == null){
             throw new DatabaseException("Database is not connected");
         }
-        String query = switch (operation){
+        String query = switch (dataOperation){
             case READ -> "SELECT * FROM %s".formatted(dataInfo.getTable());
-            case SEARCH -> "SELECT * FROM %s where id = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataMap).firstKey());
-            default -> throw new OperationException("Unexpected DataOperation for reading: " + operation);
+            case SEARCH -> "SELECT * FROM %s where id = %s".formatted(dataInfo.getTable(), ((TreeMap<?, ?>) dataContainer).firstKey());
+            default -> throw new OperationException("Unexpected DataOperation for reading: " + dataOperation);
         };
         try(PreparedStatement statement = connection.prepareStatement(query)){
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
-               parser.parse((R)resultSet, operation, dataMap);
+               parser.parse((R)resultSet, dataOperation, dataContainer);
             }
         } catch (SQLException e) {
             throw new DatabaseException("Cannot read from database. Cause: " + e.getMessage());
@@ -98,15 +98,15 @@ public class DatabaseCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
-        String query = switch (operation){
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
+        String query = switch (dataOperation){
             case ADD -> dataInfo.getQueryADD();
             case MODIFY -> dataInfo.getQueryModify();
             case DELETE -> dataInfo.getQueryDelete();
-            default -> throw new OperationException("Unexpected DataOperation for updating: " + operation);
+            default -> throw new OperationException("Unexpected DataOperation for updating: " + dataOperation);
         };
         try(PreparedStatement statement = connection.prepareStatement(query)){
-            parser.parse((R)statement, operation, object);
+            parser.parse((R)statement, dataOperation, dataContainer);
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {

@@ -142,7 +142,7 @@ public class PlayerDAO extends GeneralDAO {
         player_map.put(id, null);
         CRUDFactory.getCRUD(dataInfo)
                 .prepare()
-                .read(PlayerParser.input(dataInfo.getDataType()), DataOperation.SEARCH, player_map)
+                .read(PlayerParser.parsing(dataInfo.getDataType()), DataOperation.SEARCH, player_map)
                 .release();
         if(player_map != null && !player_map.isEmpty()){
             isDataValid();
@@ -185,7 +185,7 @@ public class PlayerDAO extends GeneralDAO {
         try {
             CRUDFactory.getCRUD(dataInfo)
                     .prepare()
-                    .read(PlayerParser.input(dataInfo.getDataType()), DataOperation.READ, player_map)
+                    .read(PlayerParser.parsing(dataInfo.getDataType()), DataOperation.READ, player_map)
                     .release();
             if(player_map != null && !player_map.isEmpty()){
                 isDataValid();
@@ -235,7 +235,7 @@ public class PlayerDAO extends GeneralDAO {
         if (Objects.requireNonNull(dataInfo.getDataType()) instanceof FileType) {
             CRUDFactory.getCRUD(dataInfo)
                     .prepare()
-                    .update(PlayerParser.allOutput(dataInfo.getDataType()), null, player_map)
+                    .update(PlayerParser.serializeAll(dataInfo.getDataType()), null, player_map)
                     .release();
             isSaveToFileNeeded = false;
         }
@@ -245,7 +245,7 @@ public class PlayerDAO extends GeneralDAO {
         if(!(dataInfo.getDataType() instanceof FileType)){
             CRUDFactory.getCRUD(dataInfo)
                     .prepare()
-                    .update(PlayerParser.singleOutput(dataInfo.getDataType()), operation, player)
+                    .update(PlayerParser.serializeOne(dataInfo.getDataType()), operation, player)
                     .release();
         }else{
             isSaveToFileNeeded = true;
@@ -279,7 +279,7 @@ public class PlayerDAO extends GeneralDAO {
         targetDataInfo.setUrl(target_path);
         CRUDFactory.getCRUD(targetDataInfo)
                 .prepare()
-                .update(PlayerParser.allOutput(targetDataInfo.getDataType()), null, player_map)
+                .update(PlayerParser.serializeAll(targetDataInfo.getDataType()), null, player_map)
                 .release();
     }
 
@@ -293,17 +293,17 @@ public class PlayerDAO extends GeneralDAO {
         TreeMap<Integer, VerifiedEntity> target_player_map = new TreeMap<>();
         GeneralCRUD<DataInfo> currentCRUD = CRUDFactory.getCRUD(exportDataBaseInfo)
                 .prepare()
-                .read(PlayerParser.input(exportDataBaseInfo.getDataType()),null, target_player_map);
+                .read(PlayerParser.parsing(exportDataBaseInfo.getDataType()),null, target_player_map);
         target_player_map.forEach((current_player_id, verified_entity) -> {
             if(!player_map.containsKey(current_player_id)){
-                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()), DataOperation.DELETE, (Player) verified_entity);
+                currentCRUD.update(PlayerParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.DELETE, (Player) verified_entity);
             }
         });
         player_map.forEach((current_player_id, verified_entity) -> {
             if(target_player_map.containsKey(current_player_id)){
-                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()),DataOperation.MODIFY, (Player) verified_entity);
+                currentCRUD.update(PlayerParser.serializeOne(exportDataBaseInfo.getDataType()),DataOperation.MODIFY, (Player) verified_entity);
             }else{
-                currentCRUD.update(PlayerParser.singleOutput(exportDataBaseInfo.getDataType()), DataOperation.ADD, (Player) verified_entity);
+                currentCRUD.update(PlayerParser.serializeOne(exportDataBaseInfo.getDataType()), DataOperation.ADD, (Player) verified_entity);
             }
         });
         currentCRUD.release();

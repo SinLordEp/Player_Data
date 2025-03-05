@@ -42,20 +42,20 @@ public class DatCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation operation, U dataMap) {
+    public <R, U> GeneralCRUD<DataInfo> read(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
         try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path))) {
             if (Files.size(path) == 0) {
                 return this;
             }
             while (true) {
-                Object temp = ois.readObject();
-                if("EOF".equals(temp)){
+                Object tempObject = ois.readObject();
+                if("EOF".equals(tempObject)){
                     break;
                 }
-                if(!(temp instanceof VerifiedEntity)){
+                if(!(tempObject instanceof VerifiedEntity)){
                     throw new FileManageException("Object is not VerifiedEntity");
                 }else{
-                    parser.parse((R)temp, operation, dataMap);
+                    parser.parse((R) tempObject, dataOperation, dataContainer);
                 }
             }
         }catch (Exception e){
@@ -66,10 +66,10 @@ public class DatCRUD implements GeneralCRUD<DataInfo> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation operation, U object) {
+    public <R, U> GeneralCRUD<DataInfo> update(ParserCallBack<R, U> parser, DataOperation dataOperation, U dataContainer) {
         try(ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(path))) {
             ArrayList<VerifiedEntity> verifiedEntities = new ArrayList<>();
-            parser.parse((R)verifiedEntities, null, object);
+            parser.parse((R)verifiedEntities, null, dataContainer);
             verifiedEntities.forEach(verifiedEntity -> {
                 try {
                     oos.writeObject(verifiedEntity);

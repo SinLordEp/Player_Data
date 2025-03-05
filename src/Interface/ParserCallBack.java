@@ -7,5 +7,5 @@ import data.DataOperation;
  */
 @FunctionalInterface
 public interface ParserCallBack<T,R> {
-    void parse(T data, DataOperation operation, R object);
+    void parse(T rawData, DataOperation operation, R container);
 }
