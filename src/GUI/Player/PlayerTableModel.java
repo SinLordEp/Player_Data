@@ -1,6 +1,6 @@
 package GUI.Player;
 
-import GUI.GeneralText;
+import GUI.TextHandler;
 import Interface.VerifiedEntity;
 import model.Player;
 
@@ -29,7 +29,7 @@ public class PlayerTableModel extends AbstractTableModel {
      *                    which is used to populate the table model.
      */
     public PlayerTableModel(TreeMap<Integer, VerifiedEntity> player_data) {
-        columns_name = GeneralText.fetch().getOptions("table_column");
+        columns_name = TextHandler.fetch().getOptions("table_column");
         parse_data(player_data);
     }
 
@@ -125,7 +125,7 @@ public class PlayerTableModel extends AbstractTableModel {
      * to notify all listeners that the table structure has been updated.
      */
     public void language_changed() {
-        columns_name = GeneralText.fetch().getOptions("table_column");
+        columns_name = TextHandler.fetch().getOptions("table_column");
         fireTableStructureChanged();
     }
 

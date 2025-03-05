@@ -19,20 +19,20 @@ import static main.principal.getProperty;
  * pattern to ensure a single instance for managing the dialogs.
  * @author SIN
  */
-public class GeneralText {
-    private static final GeneralText GENERAL_TEXT = new GeneralText();
+public class TextHandler {
+    private static final TextHandler GENERAL_TEXT = new TextHandler();
     private Map<String,Object> texts;
     private Map<String,Object> inputs;
     private Map<String,Object> popups;
     private Map<String,Object> options;
     private String language;
 
-    public GeneralText() {
+    public TextHandler() {
         URL resource = getClass().getResource(getProperty("playerDialog"));
         initialize(resource);
     }
 
-    public static GeneralText fetch() {
+    public static TextHandler fetch() {
         return GENERAL_TEXT;
     }
 

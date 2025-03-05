@@ -1,6 +1,6 @@
 package data;
 
-import GUI.GeneralText;
+import GUI.TextHandler;
 import Interface.EntityParser;
 import Interface.GeneralCRUD;
 import Interface.VerifiedEntity;
@@ -42,7 +42,7 @@ public abstract class GeneralDAO {
     }
 
     public void findById(){
-        int id = Integer.parseInt(JOptionPane.showInputDialog(null, GeneralText.fetch().getText("input_id_ongoing")));
+        int id = Integer.parseInt(JOptionPane.showInputDialog(null, TextHandler.fetch().getText("input_id_ongoing")));
         dataContainer.clear();
         dataContainer.put(id, null);
         CRUDFactory.getCRUD(dataInfo)
@@ -102,7 +102,7 @@ public abstract class GeneralDAO {
     public void exportFile(DataInfo targetDataInfo) {
         String target_extension = getExtension((FileType) targetDataInfo.getDataType());
         String target_path = getPath();
-        String target_name = GeneralText.fetch().input("new_file_name");
+        String target_name = TextHandler.fetch().input("new_file_name");
         target_path += "/" + target_name + target_extension;
         createNewFile(target_path);
         targetDataInfo.setUrl(target_path);
@@ -180,13 +180,13 @@ public abstract class GeneralDAO {
         fileChooser.setDialogTitle("Choosing " + fileType);
         switch(fileType){
             case TXT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.fetch().getText("extension_txt"), "txt"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(TextHandler.fetch().getText("extension_txt"), "txt"));
                 break;
             case DAT:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.fetch().getText("extension_dat"), "dat"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(TextHandler.fetch().getText("extension_dat"), "dat"));
                 break;
             case XML:
-                fileChooser.setFileFilter(new FileNameExtensionFilter(GeneralText.fetch().getText("extension_xml"), "xml"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter(TextHandler.fetch().getText("extension_xml"), "xml"));
                 break;
         }
         if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -230,7 +230,7 @@ public abstract class GeneralDAO {
     public static String newPathBuilder(FileType fileType) {
         String target_path = GeneralDAO.getPath();
         String target_extension = getExtension(fileType);
-        String target_file_name =GeneralText.fetch().input("file_name");
+        String target_file_name = TextHandler.fetch().input("file_name");
         target_path += "/" +target_file_name + target_extension;
         return target_path;
     }

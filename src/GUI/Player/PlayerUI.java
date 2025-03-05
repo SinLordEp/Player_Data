@@ -1,6 +1,6 @@
 package GUI.Player;
 
-import GUI.GeneralText;
+import GUI.TextHandler;
 import GUI.LogStage;
 import GUI.UiUtils;
 import Interface.EventListener;
@@ -66,7 +66,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
         table_data.setModel(tableModel);
         table_data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scroll_data.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        UiUtils.setLabelButtonText(GeneralText.fetch(), main_panel);
+        UiUtils.setLabelButtonText(TextHandler.fetch(), main_panel);
         searchListener();
         buttonListener();
         tableListener();
@@ -96,7 +96,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
     @Override
     public void run() {
         initialize();
-        JFrame frame = new JFrame(GeneralText.fetch().getText("frame_title"));
+        JFrame frame = new JFrame(TextHandler.fetch().getText("frame_title"));
         frame.setContentPane(main_panel);
         frame.pack();
         frame.setResizable(false);
@@ -207,7 +207,7 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
     }
 
     private void changeLanguage(){
-        UiUtils.setLabelButtonText(GeneralText.fetch(), main_panel);
+        UiUtils.setLabelButtonText(TextHandler.fetch(), main_panel);
         tableModel.language_changed();
     }
 
@@ -270,13 +270,13 @@ public class PlayerUI implements GeneralUI, EventListener<TreeMap<Integer, Verif
         StyleConstants.setForeground(set, color);
         try {
             if(message.length == 1){
-                log_document.insertString(log_document.getLength(), GeneralText.fetch().getText(message[0]) + "\n", set);
+                log_document.insertString(log_document.getLength(), TextHandler.fetch().getText(message[0]) + "\n", set);
             }else{
-                log_document.insertString(log_document.getLength(), GeneralText.fetch().getText(message[0])+ message[1] + "\n", set);
+                log_document.insertString(log_document.getLength(), TextHandler.fetch().getText(message[0])+ message[1] + "\n", set);
             }
             textPane_log.setCaretPosition(log_document.getLength());
         } catch (BadLocationException e) {
-            GeneralText.fetch().message("Failed to append log message with Cause: " + e.getMessage());
+            TextHandler.fetch().message("Failed to append log message with Cause: " + e.getMessage());
         }
     }
 

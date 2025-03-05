@@ -44,8 +44,8 @@ public class DatabaseLogin extends JDialog {
      */
     public DatabaseLogin(DataInfo dataInfo, CallBack<DataInfo> callBack) {
         this.dataInfo = dataInfo;
-        setTitle(GeneralText.fetch().getText("db_login_title"));
-        UiUtils.setLabelButtonText(GeneralText.fetch(), panel_info, panel_button);
+        setTitle(TextHandler.fetch().getText("db_login_title"));
+        UiUtils.setLabelButtonText(TextHandler.fetch(), panel_info, panel_button);
         configureTextFieldText();
         setContentPane(panel_main);
         setModal(true);
@@ -78,7 +78,7 @@ public class DatabaseLogin extends JDialog {
     private void onOK(CallBack<DataInfo> callBack) {
         dispose();
         if(hasBlank()){
-            GeneralText.fetch().popup("db_field_empty");
+            TextHandler.fetch().popup("db_field_empty");
             return;
         }
         dataInfo.setUrl(text_url.getText());

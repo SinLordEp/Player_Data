@@ -2,7 +2,7 @@ package control;
 
 import GUI.DataSourceChooser;
 import GUI.DatabaseLogin;
-import GUI.GeneralText;
+import GUI.TextHandler;
 import GUI.LogStage;
 import GUI.Player.PlayerInfoDialog;
 import GUI.Player.PlayerUI;
@@ -365,13 +365,13 @@ public class PlayerControl implements GeneralControl {
     public void changeLanguage(){
         String language;
         try {
-            language = switch(GeneralText.fetch().selectionDialog("language")){
+            language = switch(TextHandler.fetch().selectionDialog("language")){
                 case 0 -> "en";
                 case 1 -> "es";
                 case 2 -> "cn";
                 default -> throw new IllegalStateException("Unexpected language value.");
             };
-            GeneralText.fetch().setLanguage(language);
+            TextHandler.fetch().setLanguage(language);
             notifyEvent("language_changed",null);
         } catch (OperationCancelledException e) {
             notifyLog("operation_cancelled");
