@@ -33,24 +33,28 @@ public abstract class GeneralDAO {
     protected DataInfo dataInfo = new DataInfo();
     protected TreeMap<Integer, VerifiedEntity> dataContainer = new TreeMap<>();
     protected boolean isSaveToFileNeeded = false;
+    protected int limit;
 
     protected abstract void isEntityValid(VerifiedEntity entity);
     public abstract DataInfo getDefaultDatabaseInfo(DataInfo dataInfo) throws ConfigErrorException;
 
     public GeneralDAO(EntityParser entityParser) {
         this.entityParser = entityParser;
+        limit = Integer.parseInt(getProperty("dataLimit"));
     }
 
     public void findById(){
         int id = Integer.parseInt(JOptionPane.showInputDialog(null, TextHandler.fetch().getText("input_id_ongoing")));
         dataContainer.clear();
-        dataContainer.put(id, null);
+        TreeMap<Integer, VerifiedEntity> tempContainer = new TreeMap<>();
+        tempContainer.put(id, null);
         CRUDFactory.getCRUD(dataInfo)
                 .prepare()
-                .read(entityParser.parseAll(dataInfo.getDataType()), DataOperation.SEARCH, dataContainer)
+                .read(entityParser.parseAll(dataInfo.getDataType()), DataOperation.SEARCH, tempContainer)
                 .release();
-        if(dataContainer.get(id) != null){
-            validateAllData();
+        if(tempContainer.get(id) != null){
+            validateAllData(tempContainer);
+            dataContainer.putAll(tempContainer);
         }else{
             throw new OperationException("ID not found");
         }
@@ -58,16 +62,17 @@ public abstract class GeneralDAO {
 
     public void findAll() {
         dataContainer.clear();
+        TreeMap<Integer, VerifiedEntity> tempContainer = new TreeMap<>();
         try {
             CRUDFactory.getCRUD(dataInfo)
                     .prepare()
-                    .read(entityParser.parseAll(dataInfo.getDataType()), DataOperation.READ, dataContainer)
+                    .read(entityParser.parseAll(dataInfo.getDataType()), DataOperation.READ, tempContainer)
                     .release();
-            if(dataContainer != null && !dataContainer.isEmpty()){
-                validateAllData();
+            if(!tempContainer.isEmpty()){
+                validateAllData(tempContainer);
+                dataContainer.putAll(tempContainer);
             }
         } catch (Exception e) {
-            dataContainer = new TreeMap<>();
             dataInfo = new DataInfo();
             throw new OperationException(e.getMessage());
         }
@@ -140,8 +145,8 @@ public abstract class GeneralDAO {
         return dataContainer;
     }
 
-    private void validateAllData(){
-        dataContainer.forEach((_, verifiedEntity) -> isEntityValid(verifiedEntity));
+    private void validateAllData(TreeMap<Integer, VerifiedEntity> dataForValidation){
+        dataForValidation.forEach((_, verifiedEntity) -> isEntityValid(verifiedEntity));
     }
 
     /**
