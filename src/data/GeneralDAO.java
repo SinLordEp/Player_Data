@@ -46,15 +46,13 @@ public abstract class GeneralDAO {
     public void findById(){
         int id = Integer.parseInt(JOptionPane.showInputDialog(null, TextHandler.fetch().getText("input_id_ongoing")));
         dataContainer.clear();
-        TreeMap<Integer, VerifiedEntity> tempContainer = new TreeMap<>();
-        tempContainer.put(id, null);
+        dataContainer.put(id, null);
         CRUDFactory.getCRUD(dataInfo)
                 .prepare()
-                .read(entityParser.parseAll(dataInfo.getDataType()), DataOperation.SEARCH, tempContainer)
+                .read(entityParser.parseAll(dataInfo.getDataType()), DataOperation.SEARCH, dataContainer)
                 .release();
-        if(tempContainer.get(id) != null){
-            validateAllData(tempContainer);
-            dataContainer.putAll(tempContainer);
+        if(dataContainer.get(id) != null){
+            validateAllData(dataContainer);
         }else{
             throw new OperationException("ID not found");
         }
